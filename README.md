@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LABITCONF 26 — Web
 
-## Getting Started
+Sitio web oficial de LABITCONF 26. Costa Salguero, Buenos Aires — 30 y 31 de octubre.
 
-First, run the development server:
+---
+
+## Fases del proyecto
+
+| Fase | Estado | Descripción |
+|---|---|---|
+| **Pre-landing** | En progreso | Pantalla interactiva previa al evento — los asistentes escriben su razón para HODL y aparece en tiempo real en la pantalla del venue |
+| **Landing** | Pendiente | Sitio de presentación del evento: speakers, agenda, tickets |
+| **Sitio completo** | Pendiente | Sitio con toda la información del evento |
+
+---
+
+## Pre-landing (`/`)
+
+Pantalla de fondo oscuro con un input central. Los asistentes escriben su razón para HODL, pasa por moderación y aparece en las filas de texto animadas del fondo en tiempo real.
+
+### Cómo funciona
+
+1. El asistente escribe su razón en el input y presiona HODL → o Enter
+2. El texto se valida y guarda en Supabase con `status = pending`
+3. Desde el panel de admin (`/admin`) se aprueba o rechaza
+4. Las razones aprobadas aparecen en el fondo vía Supabase Realtime
+
+### Anti-spam
+
+- Honeypot oculto para bots
+- Rate limit: máx. 3 envíos por IP cada 10 minutos
+- Validación de charset, longitud (2–60 chars) y PII
+- Blocklist (~50 términos ES/EN/PT con normalización de l33tspeak)
+- Moderación manual antes de aparecer en pantalla
+
+---
+
+## Panel de admin (`/admin`)
+
+Acceso protegido por contraseña. Permite aprobar o rechazar razones pendientes.
+
+- URL: `http://localhost:3000/admin`
+- Contraseña: definida en `.env.local` → `ADMIN_SECRET`
+
+---
+
+## Setup local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.local.example .env.local  # completar con tus claves
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variables de entorno necesarias:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+RATE_LIMIT_SALT=
+ADMIN_SECRET=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 16** (App Router)
+- **Supabase** — base de datos, auth de servicio, Realtime
+- **Framer Motion** — animaciones de carriles
+- **Tailwind CSS v4**
