@@ -70,7 +70,7 @@ export default function Page() {
   const borderColor =
     submitState === "error" || submitState === "ratelimit"
       ? "#E3551C"
-      : "#9ACE6A";
+      : "#FCFCFC";
 
   return (
     <main
@@ -170,7 +170,7 @@ export default function Page() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               maxLength={60}
-              placeholder="escribí tu razón..."
+              placeholder="tipealo acá"
               disabled={submitState === "loading"}
               style={{
                 background: "transparent",
