@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, KeyboardEvent } from "react";
+import Image from "next/image";
 import WatermarkLayer from "@/components/WatermarkLayer";
 
 type SubmitState = "idle" | "loading" | "success" | "error" | "ratelimit";
@@ -66,157 +67,102 @@ export default function Page() {
     ratelimit: errorMsg,
   };
 
+  const borderColor =
+    submitState === "error" || submitState === "ratelimit"
+      ? "#E3551C"
+      : "#9ACE6A";
+
   return (
     <main
-      className="relative h-full overflow-hidden flex flex-col items-center justify-center"
-      style={{
-        background: "#0D0D0B",
-        boxShadow: "inset 0 0 0 2px #4B78D3, inset 0 0 60px rgba(75,120,211,0.12)",
-      }}
+      className="relative h-full overflow-hidden"
+      style={{ background: "#0D0D0B" }}
     >
-      {/* Watermark con Realtime — no recibe userPhrases del padre */}
+      {/* Capa 1: Globo terráqueo — solo la parte superior (glow) visible en el footer */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none select-none overflow-hidden"
+        style={{ zIndex: 0, height: "58vh" }}
+      >
+        <Image
+          src="/assets/diseños/Fondo.png"
+          alt=""
+          fill
+          style={{
+            objectFit: "cover",
+            objectPosition: "top center",
+            opacity: 0.5,
+          }}
+        />
+      </div>
+
+      {/* Capa 2: Watermark con frases en Realtime */}
       <WatermarkLayer />
 
-      {/* Contenido central */}
-      <div className="relative z-10 flex flex-col items-center gap-6 pointer-events-none select-none w-full px-4">
+      {/* Capa 3: HODL hero image — el asset ya incluye el branding LABITCONF */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+        style={{ zIndex: 2 }}
+      >
+        <Image
+          src="/assets/diseños/HODL (4).png"
+          alt="HODL"
+          width={1600}
+          height={800}
+          priority
+          className="w-3/5"
+          style={{
+            objectFit: "contain",
+            maxHeight: "55vh",
+          }}
+        />
+      </div>
 
-        {/* Fila 1 */}
-        <div className="flex items-baseline gap-3 flex-wrap justify-center">
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 800,
-            color: "#FCFCFC",
-            fontSize: "clamp(10px, 1.2vw, 16px)",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-          }}>
-            Costa Salguero – BSAS
-          </span>
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#E3551C",
-            fontSize: "clamp(28px, 3.5vw, 52px)",
-            lineHeight: 1,
-            textTransform: "uppercase",
-          }}>
-            HODL
-          </span>
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#9ACE6A",
-            fontSize: "clamp(13px, 1.4vw, 20px)",
-            textTransform: "uppercase",
-          }}>
-            ¿POR QUÉ HODLEÁS?
-          </span>
-        </div>
+      {/* Capa 4: UI overlay */}
+      <div
+        className="absolute inset-0 flex flex-col"
+        style={{ zIndex: 3 }}
+      >
+        {/* Spacer — el HODL ocupa el centro */}
+        <div className="flex-1" />
 
-        {/* Logo principal */}
-        <div className="flex items-baseline gap-4 flex-wrap justify-center">
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#E3551C",
-            fontSize: "clamp(36px, 5vw, 72px)",
-            lineHeight: 1,
-            textTransform: "uppercase",
-          }}>
-            HODL
-          </span>
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#FCFCFC",
-            fontSize: "clamp(48px, 9vw, 130px)",
-            lineHeight: 0.92,
-            textTransform: "uppercase",
-          }}>
-            LABITCONF
-            <sup style={{ fontSize: "35%", verticalAlign: "super", lineHeight: 0 }}>26</sup>
-          </span>
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#E3551C",
-            fontSize: "clamp(36px, 5vw, 72px)",
-            lineHeight: 1,
-            textTransform: "uppercase",
-          }}>
-            HODL
-          </span>
-        </div>
-
-        {/* Fila 3 */}
-        <div className="flex items-center gap-4 flex-wrap justify-center">
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#9ACE6A",
-            fontSize: "clamp(13px, 1.4vw, 20px)",
-            textTransform: "uppercase",
-          }}>
-            ¿POR QUÉ HODLEÁS?
-          </span>
-          <span style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#E3551C",
-            fontSize: "clamp(28px, 3.5vw, 52px)",
-            lineHeight: 1,
-            textTransform: "uppercase",
-          }}>
-            HODL
-          </span>
-          <div style={{
-            border: "2px solid #9ACE6A",
-            borderRadius: "9999px",
-            padding: "4px 20px",
-            boxShadow: "0 0 12px rgba(154,206,106,0.25)",
-          }}>
-            <span style={{
+        {/* Form — bottom centrado */}
+        <div
+          className="flex flex-col items-center gap-3 px-4 pb-10 pointer-events-auto"
+        >
+          <label
+            style={{
               fontFamily: "var(--font-barlow), sans-serif",
               fontWeight: 900,
               color: "#9ACE6A",
-              fontSize: "clamp(13px, 1.4vw, 20px)",
+              fontSize: "clamp(15px, 1.6vw, 22px)",
               textTransform: "uppercase",
-              whiteSpace: "nowrap",
-            }}>
-              → OCT | 30 – 31
-            </span>
-          </div>
-        </div>
-
-        {/* Input central */}
-        <div
-          className="pointer-events-auto flex flex-col items-center gap-3 mt-2"
-          style={{ width: "100%", maxWidth: "600px" }}
-        >
-          <label style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            fontWeight: 900,
-            color: "#9ACE6A",
-            fontSize: "clamp(16px, 1.8vw, 24px)",
-            textTransform: "uppercase",
-            letterSpacing: "0.04em",
-          }}>
+              letterSpacing: "0.06em",
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+          >
             ¿POR QUÉ HODLEÁS?
           </label>
 
           <div
             className="flex items-center w-full"
             style={{
-              border: `2px solid ${submitState === "success" ? "#9ACE6A" : submitState === "error" || submitState === "ratelimit" ? "#E3551C" : "#9ACE6A"}`,
+              maxWidth: "580px",
+              border: `2px solid ${borderColor}`,
               borderRadius: "9999px",
-              padding: "12px 28px",
-              boxShadow: "0 0 20px rgba(154,206,106,0.2)",
+              padding: "11px 24px",
+              boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
               gap: "8px",
               transition: "border-color 0.3s",
             }}
           >
-            {/* Honeypot oculto — los bots lo completan, los humanos no */}
-            <input type="text" name="website" style={{ display: "none" }} tabIndex={-1} readOnly />
+            {/* Honeypot */}
+            <input
+              type="text"
+              name="website"
+              style={{ display: "none" }}
+              tabIndex={-1}
+              readOnly
+            />
 
             <input
               type="text"
@@ -238,19 +184,21 @@ export default function Page() {
                 opacity: submitState === "loading" ? 0.5 : 1,
               }}
             />
-            <span style={{
-              color: "#9ACE6A",
-              fontFamily: "var(--font-ibm-plex-mono), monospace",
-              fontSize: "clamp(13px, 1.2vw, 16px)",
-              whiteSpace: "nowrap",
-            }}>
+            <span
+              style={{
+                color: "#9ACE6A",
+                fontFamily: "var(--font-ibm-plex-mono), monospace",
+                fontSize: "clamp(13px, 1.2vw, 16px)",
+                whiteSpace: "nowrap",
+              }}
+            >
               _//
             </span>
             <button
               onClick={handleSubmit}
               disabled={submitState === "loading"}
               style={{
-                background: submitState === "success" ? "#9ACE6A" : "#9ACE6A",
+                background: "#9ACE6A",
                 border: "none",
                 borderRadius: "9999px",
                 color: "#0D0D0B",
@@ -266,31 +214,42 @@ export default function Page() {
                 transition: "opacity 0.2s",
               }}
             >
-              {submitState === "loading" ? "..." : submitState === "success" ? "✓" : "HODL →"}
+              {submitState === "loading"
+                ? "..."
+                : submitState === "success"
+                ? "✓"
+                : "HODL →"}
             </button>
           </div>
 
-          <p style={{
-            fontFamily: "var(--font-ibm-plex-mono), monospace",
-            fontSize: "11px",
-            color: statusColor[submitState],
-            letterSpacing: "0.05em",
-            transition: "color 0.3s",
-          }}>
+          <p
+            style={{
+              fontFamily: "var(--font-ibm-plex-mono), monospace",
+              fontSize: "11px",
+              color: statusColor[submitState],
+              letterSpacing: "0.05em",
+              transition: "color 0.3s",
+            }}
+          >
             {statusMsg[submitState]}
           </p>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-        <span style={{
-          fontFamily: "var(--font-ibm-plex-mono), monospace",
-          fontSize: "11px",
-          color: "#A5A8B1",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-        }}>
+      <div
+        className="absolute bottom-4 left-1/2 -translate-x-1/2"
+        style={{ zIndex: 4 }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-ibm-plex-mono), monospace",
+            fontSize: "10px",
+            color: "#A5A8B1",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+          }}
+        >
           LABITCONF.COM
         </span>
       </div>
