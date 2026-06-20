@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { createServiceClient } from "@/lib/supabase/server";
-import { moderateReason, logoutAction } from "@/app/admin/actions";
+import { moderateReason, logoutAction, deleteReason } from "@/app/admin/actions";
 
 type Reason = {
   id: string;
@@ -43,7 +43,7 @@ export default async function AdminPage() {
         minHeight: "100vh",
         background: "#0D0D0B",
         padding: "40px 24px",
-        fontFamily: "var(--font-ibm-plex-mono), monospace",
+        fontFamily: "var(--font-neue-machina), sans-serif",
         boxSizing: "border-box",
       }}
     >
@@ -55,7 +55,7 @@ export default async function AdminPage() {
             <p style={{ color: "#9ACE6A", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 8px" }}>
               LABITCONF 26 — MODERACIÓN
             </p>
-            <h1 style={{ color: "#FCFCFC", fontSize: "28px", fontWeight: 900, margin: 0, fontFamily: "var(--font-barlow), sans-serif", textTransform: "uppercase" }}>
+            <h1 style={{ color: "#FCFCFC", fontSize: "28px", fontWeight: 900, margin: 0, fontFamily: "var(--font-neue-machina), sans-serif", textTransform: "uppercase" }}>
               Panel Admin
             </h1>
           </div>
@@ -68,7 +68,7 @@ export default async function AdminPage() {
                 borderRadius: "9999px",
                 padding: "8px 20px",
                 color: "#A5A8B1",
-                fontFamily: "var(--font-ibm-plex-mono), monospace",
+                fontFamily: "var(--font-neue-machina), sans-serif",
                 fontSize: "12px",
                 cursor: "pointer",
               }}
@@ -95,7 +95,7 @@ export default async function AdminPage() {
                 minWidth: "120px",
               }}
             >
-              <p style={{ color: s.color, fontSize: "28px", fontWeight: 900, margin: "0 0 4px", fontFamily: "var(--font-barlow), sans-serif" }}>
+              <p style={{ color: s.color, fontSize: "28px", fontWeight: 900, margin: "0 0 4px", fontFamily: "var(--font-neue-machina), sans-serif" }}>
                 {s.count}
               </p>
               <p style={{ color: "#A5A8B1", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>
@@ -129,7 +129,7 @@ export default async function AdminPage() {
                   color: reason.flagged ? "#E3551C" : "#FCFCFC",
                   fontSize: "15px",
                   margin: "0 0 6px",
-                  fontFamily: "var(--font-barlow), sans-serif",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 700,
                 }}>
                   {reason.flagged ? "⚠ " : ""}{reason.text}
@@ -144,56 +144,78 @@ export default async function AdminPage() {
                     {STATUS_LABELS[reason.status]}
                   </span>
                   <span style={{ color: "#4A6E2D", fontSize: "11px" }}>
-                    lane {reason.lane_index} · {new Date(reason.created_at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })}
+                    lane {reason.lane_index} · {new Date(reason.created_at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Argentina/Buenos_Aires" })}
                   </span>
                 </div>
               </div>
 
               {/* Acciones */}
-              {reason.status === "pending" && (
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <form action={moderateReason.bind(null, reason.id, "approved")}>
-                    <button
-                      type="submit"
-                      style={{
-                        background: "#9ACE6A",
-                        border: "none",
-                        borderRadius: "9999px",
-                        padding: "8px 18px",
-                        color: "#0D0D0B",
-                        fontFamily: "var(--font-barlow), sans-serif",
-                        fontWeight: 900,
-                        fontSize: "12px",
-                        textTransform: "uppercase",
-                        cursor: "pointer",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
-                      ✓ Aprobar
-                    </button>
-                  </form>
-                  <form action={moderateReason.bind(null, reason.id, "rejected")}>
-                    <button
-                      type="submit"
-                      style={{
-                        background: "transparent",
-                        border: "2px solid #E3551C",
-                        borderRadius: "9999px",
-                        padding: "6px 16px",
-                        color: "#E3551C",
-                        fontFamily: "var(--font-barlow), sans-serif",
-                        fontWeight: 900,
-                        fontSize: "12px",
-                        textTransform: "uppercase",
-                        cursor: "pointer",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
-                      ✕ Rechazar
-                    </button>
-                  </form>
-                </div>
-              )}
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {reason.status === "pending" && (
+                  <>
+                    <form action={moderateReason.bind(null, reason.id, "approved")}>
+                      <button
+                        type="submit"
+                        style={{
+                          background: "#9ACE6A",
+                          border: "none",
+                          borderRadius: "9999px",
+                          padding: "8px 18px",
+                          color: "#0D0D0B",
+                          fontFamily: "var(--font-neue-machina), sans-serif",
+                          fontWeight: 900,
+                          fontSize: "12px",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        ✓ Aprobar
+                      </button>
+                    </form>
+                    <form action={moderateReason.bind(null, reason.id, "rejected")}>
+                      <button
+                        type="submit"
+                        style={{
+                          background: "transparent",
+                          border: "2px solid #E3551C",
+                          borderRadius: "9999px",
+                          padding: "6px 16px",
+                          color: "#E3551C",
+                          fontFamily: "var(--font-neue-machina), sans-serif",
+                          fontWeight: 900,
+                          fontSize: "12px",
+                          textTransform: "uppercase",
+                          cursor: "pointer",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        ✕ Rechazar
+                      </button>
+                    </form>
+                  </>
+                )}
+                <form action={deleteReason.bind(null, reason.id)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #4A6E2D",
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: "#4A6E2D",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    borrar
+                  </button>
+                </form>
+              </div>
             </div>
           ))}
         </div>

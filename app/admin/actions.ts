@@ -39,3 +39,9 @@ export async function moderateReason(id: string, status: "approved" | "rejected"
     .eq("id", id);
   revalidatePath("/admin");
 }
+
+export async function deleteReason(id: string) {
+  const supabase = createServiceClient();
+  await supabase.from("reasons").delete().eq("id", id);
+  revalidatePath("/admin");
+}
