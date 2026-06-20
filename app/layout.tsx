@@ -1,22 +1,36 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, IBM_Plex_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const barlow = Barlow_Condensed({
-  variable: "--font-barlow",
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const neueMachina = localFont({
+  src: [
+    {
+      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainUltrabold.ttf",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainMedium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainRegular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainLight.ttf",
+      weight: "300",
+      style: "normal",
+    },
+  ],
+  variable: "--font-neue-machina",
 });
 
 export const metadata: Metadata = {
@@ -29,10 +43,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="es"
-      className={`${barlow.variable} ${ibmPlexMono.variable} ${inter.variable} h-full`}
-    >
+    <html lang="es" className={`${neueMachina.variable} h-full`}>
       <body className="h-full">{children}</body>
     </html>
   );

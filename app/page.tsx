@@ -128,7 +128,7 @@ export default function Page() {
         >
           <label
             style={{
-              fontFamily: "var(--font-barlow), sans-serif",
+              fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 900,
               color: "#9ACE6A",
               fontSize: "clamp(15px, 1.6vw, 22px)",
@@ -175,7 +175,8 @@ export default function Page() {
                 border: "none",
                 outline: "none",
                 color: "#FCFCFC",
-                fontFamily: "var(--font-ibm-plex-mono), monospace",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
                 fontSize: "clamp(13px, 1.2vw, 16px)",
                 flex: 1,
                 minWidth: 0,
@@ -185,7 +186,7 @@ export default function Page() {
             <span
               style={{
                 color: "#9ACE6A",
-                fontFamily: "var(--font-ibm-plex-mono), monospace",
+                fontFamily: "var(--font-neue-machina), sans-serif",
                 fontSize: "clamp(13px, 1.2vw, 16px)",
                 whiteSpace: "nowrap",
               }}
@@ -200,7 +201,7 @@ export default function Page() {
                 border: "none",
                 borderRadius: "9999px",
                 color: "#0D0D0B",
-                fontFamily: "var(--font-barlow), sans-serif",
+                fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
                 fontSize: "clamp(11px, 1vw, 14px)",
                 textTransform: "uppercase",
@@ -222,7 +223,7 @@ export default function Page() {
 
           <p
             style={{
-              fontFamily: "var(--font-ibm-plex-mono), monospace",
+              fontFamily: "var(--font-neue-machina), sans-serif",
               fontSize: "11px",
               color: statusColor[submitState],
               letterSpacing: "0.05em",
@@ -241,7 +242,7 @@ export default function Page() {
       >
         <span
           style={{
-            fontFamily: "var(--font-ibm-plex-mono), monospace",
+            fontFamily: "var(--font-neue-machina), sans-serif",
             fontSize: "10px",
             color: "#A5A8B1",
             letterSpacing: "0.22em",

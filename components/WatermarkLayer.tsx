@@ -112,7 +112,7 @@ export default function WatermarkLayer() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                     style={{
-                      fontFamily: "var(--font-ibm-plex-mono), monospace",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
                       fontSize: "12px",
                       color: item.isUser ? "#9ACE6A" : "#4A6E2D",
                       whiteSpace: "nowrap",
