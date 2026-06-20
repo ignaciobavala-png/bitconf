@@ -5,27 +5,27 @@ import "./globals.css";
 const neueMachina = localFont({
   src: [
     {
-      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainUltrabold.ttf",
+      path: "../public/assets/tipografias/neue-machina/PPNeueMachina-PlainUltrabold.ttf",
       weight: "900",
       style: "normal",
     },
     {
-      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainBold.ttf",
+      path: "../public/assets/tipografias/neue-machina/PPNeueMachina-PlainBold.ttf",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainMedium.ttf",
+      path: "../public/assets/tipografias/neue-machina/PPNeueMachina-PlainMedium.ttf",
       weight: "500",
       style: "normal",
     },
     {
-      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainRegular.ttf",
+      path: "../public/assets/tipografias/neue-machina/PPNeueMachina-PlainRegular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/assets/tipografias/NEUE MACHINA/PPNeueMachina-PlainLight.ttf",
+      path: "../public/assets/tipografias/neue-machina/PPNeueMachina-PlainLight.ttf",
       weight: "300",
       style: "normal",
     },
