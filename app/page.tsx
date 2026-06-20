@@ -118,15 +118,13 @@ export default function Page() {
 
       {/* Capa 4: UI overlay */}
       <div
-        className="absolute inset-0 flex flex-col"
+        className="absolute bottom-0 left-0 pointer-events-none"
         style={{ zIndex: 3 }}
       >
-        {/* Spacer — el HODL ocupa el centro */}
-        <div className="flex-1" />
-
-        {/* Form — bottom centrado */}
+        {/* Form — esquina inferior izquierda */}
         <div
-          className="flex flex-col items-center gap-3 px-4 pb-10 pointer-events-auto"
+          className="flex flex-col items-start gap-3 px-6 pb-10 pointer-events-auto"
+          style={{ width: "clamp(280px, 34vw, 480px)" }}
         >
           <label
             style={{
@@ -146,7 +144,7 @@ export default function Page() {
           <div
             className="flex items-center w-full"
             style={{
-              maxWidth: "580px",
+              maxWidth: "100%",
               border: `2px solid ${borderColor}`,
               borderRadius: "9999px",
               padding: "11px 24px",
