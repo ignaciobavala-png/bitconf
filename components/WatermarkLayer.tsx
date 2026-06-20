@@ -107,13 +107,7 @@ export default function WatermarkLayer() {
   }, []);
 
   return (
-    <div
-      className="absolute inset-0 overflow-hidden pointer-events-none select-none"
-      style={{
-        maskImage: "radial-gradient(ellipse 45% 38% at 50% 48%, transparent 30%, black 75%)",
-        WebkitMaskImage: "radial-gradient(ellipse 45% 38% at 50% 48%, transparent 30%, black 75%)",
-      }}
-    >
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none watermark-mask">
       {STATIC_LANES.map((lane) => {
         const laneApproved = approved.filter((r) => r.lane_index === STATIC_LANES.indexOf(lane));
         const userPhrases = laneApproved.map((r) => ({ text: `${r.text}_//`, isUser: true, id: r.id }));
