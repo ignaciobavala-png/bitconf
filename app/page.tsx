@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, KeyboardEvent } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import Image from "next/image";
 import WatermarkLayer from "@/components/WatermarkLayer";
 
@@ -10,6 +10,21 @@ export default function Page() {
   const [input, setInput] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    const FULL = "tipealo acá";
+    let i = 0;
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setPlaceholder(FULL.slice(0, i));
+        if (i >= FULL.length) clearInterval(interval);
+      }, 90);
+      return () => clearInterval(interval);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = async () => {
     const trimmed = input.trim();
@@ -178,7 +193,7 @@ export default function Page() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               maxLength={60}
-              placeholder="tipealo acá"
+              placeholder={placeholder}
               disabled={submitState === "loading"}
               style={{
                 background: "transparent",
