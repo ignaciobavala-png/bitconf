@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabaseClient } from "@/lib/supabase/client";
 
 const STATIC_LANES: { id: string; y: number; duration: number; phrases: string[] }[] = [
   {
@@ -43,6 +43,8 @@ export default function WatermarkLayer() {
   const [newIds, setNewIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+
     // Cargar aprobadas existentes al montar
     supabase
       .from("reasons")
@@ -83,7 +85,7 @@ export default function WatermarkLayer() {
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { getSupabaseClient().removeChannel(channel); };
   }, []);
 
   return (
