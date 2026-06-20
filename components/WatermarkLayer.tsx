@@ -4,30 +4,52 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
-const STATIC_LANES: { id: string; y: number; duration: number; phrases: string[] }[] = [
+const STATIC_LANES: {
+  id: string;
+  y: number;
+  duration: number;
+  fontSize: string;
+  phrases: string[];
+}[] = [
   {
-    id: "l1", y: 6, duration: 28,
+    id: "l1", y: 3, duration: 28, fontSize: "12px",
     phrases: ["por mi_//", "por mis amigos_//", "porque Bitcoin es lo mejor del mundo_//", "por mi visión_//", "por la comunidad_//"],
   },
   {
-    id: "l2", y: 16, duration: 36,
+    id: "l2", y: 11, duration: 36, fontSize: "10px",
     phrases: ["por mi familia_//", "por la comunidad_//", "por mi futuro_//", "por la libertad_//", "por mis amigos_//"],
   },
   {
-    id: "l3", y: 27, duration: 22,
+    id: "l3", y: 20, duration: 22, fontSize: "15px",
     phrases: ["por la libertad_//", "por lo imposible_//", "por mis amigos_//", "por mi_//", "Bitcoin es lo mejor del mundo_//"],
   },
   {
-    id: "l4", y: 66, duration: 32,
-    phrases: ["por mi futuro_//", "por la comunidad_//", "por mis_//", "por mi visión_//", "porque Bitcoin_//"],
+    id: "l4", y: 68, duration: 32, fontSize: "11px",
+    phrases: ["por mi futuro_//", "por la comunidad_//", "por mis sats_//", "por mi visión_//", "porque Bitcoin_//"],
   },
   {
-    id: "l5", y: 77, duration: 25,
+    id: "l5", y: 78, duration: 25, fontSize: "13px",
     phrases: ["comunidad_//", "por lo imposible_//", "por mis amigos_//", "por mi visión_//", "por la libertad_//"],
   },
   {
-    id: "l6", y: 88, duration: 38,
+    id: "l6", y: 88, duration: 38, fontSize: "10px",
     phrases: ["por la libertad_//", "porque Bitcoin es lo mejor del mundo_//", "por mi_//", "comunidad_//", "por lo imposible_//"],
+  },
+  {
+    id: "l7", y: 30, duration: 45, fontSize: "17px",
+    phrases: ["por soberanía_//", "por el futuro de mis hijos_//", "por la desentralización_//", "por la verdad_//", "por lo que viene_//"],
+  },
+  {
+    id: "l8", y: 39, duration: 20, fontSize: "10px",
+    phrases: ["por mi_//", "por Bitcoin_//", "por la red_//", "por la comunidad_//", "por mis convicciones_//", "por la libertad financiera_//"],
+  },
+  {
+    id: "l9", y: 49, duration: 34, fontSize: "14px",
+    phrases: ["porque no hay vuelta atrás_//", "por el protocolo_//", "por mis hijos_//", "por la escasez_//", "por la revolución_//"],
+  },
+  {
+    id: "l10", y: 59, duration: 27, fontSize: "11px",
+    phrases: ["por mis valores_//", "por la red de nodos_//", "por la soberanía individual_//", "por mis sats_//", "por la cadena_//"],
   },
 ];
 
@@ -39,13 +61,11 @@ interface DBReason {
 
 export default function WatermarkLayer() {
   const [approved, setApproved] = useState<DBReason[]>([]);
-  // IDs de frases nuevas para animarlas al entrar
   const [newIds, setNewIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const supabase = getSupabaseClient();
 
-    // Cargar aprobadas existentes al montar
     supabase
       .from("reasons")
       .select("id, text, lane_index")
@@ -55,7 +75,6 @@ export default function WatermarkLayer() {
         if (data) setApproved(data);
       });
 
-    // Suscripción Realtime: solo filas que pasan a 'approved'
     const channel = supabase
       .channel("approved-reasons")
       .on(
@@ -73,7 +92,6 @@ export default function WatermarkLayer() {
             return [...prev, row];
           });
           setNewIds((prev) => new Set(prev).add(row.id));
-          // Quitar de "nuevas" después de la animación
           setTimeout(() => {
             setNewIds((prev) => {
               const next = new Set(prev);
@@ -113,7 +131,7 @@ export default function WatermarkLayer() {
                     transition={{ duration: 0.8 }}
                     style={{
                       fontFamily: "var(--font-neue-machina), sans-serif",
-                      fontSize: "12px",
+                      fontSize: lane.fontSize,
                       color: item.isUser ? "#9ACE6A" : "#4A6E2D",
                       whiteSpace: "nowrap",
                       opacity: item.isUser ? 0.9 : 0.75,

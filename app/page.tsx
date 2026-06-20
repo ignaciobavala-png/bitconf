@@ -108,7 +108,7 @@ export default function Page() {
           width={1600}
           height={800}
           priority
-          className="w-3/5"
+          className="w-[90vw] sm:w-4/5 md:w-3/5"
           style={{
             objectFit: "contain",
             maxHeight: "55vh",
@@ -116,15 +116,25 @@ export default function Page() {
         />
       </div>
 
-      {/* Capa 4: UI overlay */}
+      {/* Capa 4: degradé negro inferior */}
       <div
-        className="absolute bottom-0 left-0 pointer-events-none"
-        style={{ zIndex: 3 }}
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          zIndex: 3,
+          height: "35%",
+          background: "linear-gradient(to top, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.5) 50%, transparent 100%)",
+        }}
+      />
+
+      {/* Capa 5: UI overlay */}
+      <div
+        className="absolute bottom-0 left-0 right-0 md:right-auto pointer-events-none"
+        style={{ zIndex: 4 }}
       >
-        {/* Form — esquina inferior izquierda */}
+        {/* Form — centrado en mobile, esquina izquierda en desktop */}
         <div
-          className="flex flex-col items-start gap-3 px-6 pb-10 pointer-events-auto"
-          style={{ width: "clamp(280px, 34vw, 480px)" }}
+          className="flex flex-col items-center md:items-start gap-3 px-6 pb-10 mx-auto md:mx-0 pointer-events-auto"
+          style={{ width: "clamp(280px, 90vw, 480px)", maxWidth: "480px" }}
         >
           <label
             style={{
@@ -238,7 +248,7 @@ export default function Page() {
       {/* Footer */}
       <div
         className="absolute bottom-4 left-1/2 -translate-x-1/2"
-        style={{ zIndex: 4 }}
+        style={{ zIndex: 5 }}
       >
         <span
           style={{
