@@ -11,6 +11,14 @@ export default function Page() {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [placeholder, setPlaceholder] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const FULL = "tipealo acá";
@@ -114,8 +122,13 @@ export default function Page() {
 
       {/* Vignette central: tapa las frases detrás del HODL */}
       <div
-        className="absolute inset-0 pointer-events-none vignette-central"
-        style={{ zIndex: 1 }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          zIndex: 1,
+          background: isMobile
+            ? "radial-gradient(ellipse 88% 34% at 50% 45%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
+            : "radial-gradient(ellipse 48% 40% at 50% 48%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
+        }}
       />
 
       {/* Capa 3: HODL hero image — el asset ya incluye el branding LABITCONF */}
