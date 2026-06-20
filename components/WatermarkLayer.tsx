@@ -107,7 +107,7 @@ export default function WatermarkLayer() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none watermark-mask">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
       {STATIC_LANES.map((lane) => {
         const laneApproved = approved.filter((r) => r.lane_index === STATIC_LANES.indexOf(lane));
         const userPhrases = laneApproved.map((r) => ({ text: `${r.text}_//`, isUser: true, id: r.id }));

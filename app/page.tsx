@@ -112,6 +112,12 @@ export default function Page() {
       {/* Capa 2: Watermark con frases en Realtime */}
       <WatermarkLayer />
 
+      {/* Vignette central: tapa las frases detrás del HODL */}
+      <div
+        className="absolute inset-0 pointer-events-none vignette-central"
+        style={{ zIndex: 1 }}
+      />
+
       {/* Capa 3: HODL hero image — el asset ya incluye el branding LABITCONF */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"

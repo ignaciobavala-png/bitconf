@@ -14,15 +14,13 @@
   --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
-.watermark-mask {
-  mask-image: radial-gradient(ellipse 45% 38% at 50% 48%, transparent 30%, black 75%);
-  -webkit-mask-image: radial-gradient(ellipse 45% 38% at 50% 48%, transparent 30%, black 75%);
+.vignette-central {
+  background: radial-gradient(ellipse 48% 40% at 50% 48%, rgba(13,13,11,0.88) 0%, rgba(13,13,11,0.5) 45%, transparent 72%);
 }
 
 @media (max-width: 768px) {
-  .watermark-mask {
-    mask-image: radial-gradient(ellipse 85% 32% at 50% 45%, transparent 20%, black 70%);
-    -webkit-mask-image: radial-gradient(ellipse 85% 32% at 50% 45%, transparent 20%, black 70%);
+  .vignette-central {
+    background: radial-gradient(ellipse 88% 34% at 50% 45%, rgba(13,13,11,0.88) 0%, rgba(13,13,11,0.5) 45%, transparent 72%);
   }
 }
 
