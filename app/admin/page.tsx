@@ -330,7 +330,7 @@ export default async function AdminPage() {
                 </span>
               </div>
               <div style={{ display: "flex", gap: "8px" }}>
-                <form action={toggleStaticPhrase.bind(null, phrase.id, phrase.status)}>
+                <form action={toggleStaticPhrase.bind(null, phrase.id, phrase.status as "approved" | "rejected")}>
                   <button
                     type="submit"
                     style={{
