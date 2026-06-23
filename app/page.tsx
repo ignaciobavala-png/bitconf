@@ -101,9 +101,11 @@ export default function Page() {
       style={{ background: "#0D0D0B" }}
     >
       {/* Capa 1: Globo terráqueo — solo la parte superior (glow) visible en el footer */}
+      {/* El contenedor se fuerza a ser siempre más ancho que alto para que objectFit:cover
+          escale por ancho en cualquier dispositivo, mostrando solo el horizonte del planeta */}
       <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none select-none overflow-hidden"
-        style={{ zIndex: 0, height: "58vh" }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none overflow-hidden"
+        style={{ zIndex: 0, height: "58vh", width: "max(100vw, calc(58vh * 3))" }}
       >
         <Image
           src="/assets/diseños/Fondo.png"
@@ -162,140 +164,139 @@ export default function Page() {
         }}
       />
 
-      {/* Capa 5: UI overlay */}
+      {/* Capa 5: UI overlay + footer — bloque único anclado al bottom */}
       <div
-        className="absolute bottom-0 left-0 right-0 md:right-auto pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 pointer-events-none flex flex-col"
         style={{ zIndex: 4 }}
       >
         {/* Form — centrado en mobile, esquina izquierda en desktop */}
-        <div
-          className="flex flex-col items-center md:items-start gap-3 px-6 pb-10 mx-auto md:mx-0 pointer-events-auto"
-          style={{ width: "clamp(250px, 80vw, 420px)", maxWidth: "420px" }}
-        >
-          <label
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 900,
-              color: "#9ACE6A",
-              fontSize: "clamp(13px, 1.3vw, 18px)",
-              letterSpacing: "0.06em",
-              pointerEvents: "none",
-              userSelect: "none",
-            }}
-          >
-            Y VOS… ¿POR QUÉ HODLEÁS?
-          </label>
-
+        <div className="flex justify-center md:justify-start px-6">
           <div
-            className="flex items-center w-full"
-            style={{
-              maxWidth: "100%",
-              border: `2px solid ${borderColor}`,
-              borderRadius: "9999px",
-              padding: "9px 20px",
-              boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
-              gap: "8px",
-              transition: "border-color 0.3s",
-            }}
+            className="flex flex-col items-center md:items-start gap-3 pointer-events-auto w-full"
+            style={{ maxWidth: "420px" }}
           >
-            {/* Honeypot */}
-            <input
-              type="text"
-              name="website"
-              style={{ display: "none" }}
-              tabIndex={-1}
-              readOnly
-            />
-
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              maxLength={60}
-              placeholder={placeholder}
-              disabled={submitState === "loading"}
+            <label
               style={{
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: "#FCFCFC",
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                fontSize: "clamp(12px, 1.0vw, 14px)",
-                flex: 1,
-                minWidth: 0,
-                opacity: submitState === "loading" ? 0.5 : 1,
-              }}
-            />
-            <span
-              style={{
-                color: "#9ACE6A",
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontSize: "clamp(12px, 1.0vw, 14px)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              _//
-            </span>
-            <button
-              onClick={handleSubmit}
-              disabled={submitState === "loading"}
-              style={{
-                background: "#9ACE6A",
-                border: "none",
-                borderRadius: "9999px",
-                color: "#0D0D0B",
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
-                fontSize: "clamp(11px, 1vw, 14px)",
-                textTransform: "uppercase",
-                padding: "6px 18px",
-                cursor: submitState === "loading" ? "not-allowed" : "pointer",
-                whiteSpace: "nowrap",
-                letterSpacing: "0.05em",
-                opacity: submitState === "loading" ? 0.6 : 1,
-                transition: "opacity 0.2s",
+                color: "#9ACE6A",
+                fontSize: "clamp(13px, 1.3vw, 18px)",
+                letterSpacing: "0.06em",
+                pointerEvents: "none",
+                userSelect: "none",
               }}
             >
-              {submitState === "loading"
-                ? "..."
-                : submitState === "success"
-                ? "✓"
-                : "HODL →"}
-            </button>
-          </div>
+              Y VOS… ¿POR QUÉ HODLEÁS?
+            </label>
 
-          <p
+            <div
+              className="flex items-center w-full"
+              style={{
+                border: `2px solid ${borderColor}`,
+                borderRadius: "9999px",
+                padding: "9px 20px",
+                boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
+                gap: "8px",
+                transition: "border-color 0.3s",
+              }}
+            >
+              {/* Honeypot */}
+              <input
+                type="text"
+                name="website"
+                style={{ display: "none" }}
+                tabIndex={-1}
+                readOnly
+              />
+
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                maxLength={60}
+                placeholder={placeholder}
+                disabled={submitState === "loading"}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: "#FCFCFC",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(12px, 1.0vw, 14px)",
+                  flex: 1,
+                  minWidth: 0,
+                  opacity: submitState === "loading" ? 0.5 : 1,
+                }}
+              />
+              <span
+                style={{
+                  color: "#9ACE6A",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontSize: "clamp(12px, 1.0vw, 14px)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                _//
+              </span>
+              <button
+                onClick={handleSubmit}
+                disabled={submitState === "loading"}
+                style={{
+                  background: "#9ACE6A",
+                  border: "none",
+                  borderRadius: "9999px",
+                  color: "#0D0D0B",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 900,
+                  fontSize: "clamp(11px, 1vw, 14px)",
+                  textTransform: "uppercase",
+                  padding: "6px 18px",
+                  cursor: submitState === "loading" ? "not-allowed" : "pointer",
+                  whiteSpace: "nowrap",
+                  letterSpacing: "0.05em",
+                  opacity: submitState === "loading" ? 0.6 : 1,
+                  transition: "opacity 0.2s",
+                }}
+              >
+                {submitState === "loading"
+                  ? "..."
+                  : submitState === "success"
+                  ? "✓"
+                  : "HODL →"}
+              </button>
+            </div>
+
+            <p
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontSize: "11px",
+                color: statusColor[submitState],
+                letterSpacing: "0.05em",
+                transition: "color 0.3s",
+              }}
+            >
+              {statusMsg[submitState]}
+            </p>
+          </div>
+        </div>
+
+        {/* Footer — siempre debajo del form, nunca superpuesto */}
+        <div className="flex justify-center py-3 px-4">
+          <span
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
-              fontSize: "11px",
-              color: statusColor[submitState],
-              letterSpacing: "0.05em",
-              transition: "color 0.3s",
+              fontSize: "10px",
+              color: "#A5A8B1",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              textAlign: "center",
             }}
           >
-            {statusMsg[submitState]}
-          </p>
+            Conferencia Latinoamericana de Bitcoin y Blockchain
+          </span>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div
-        className="absolute bottom-4 left-1/2 -translate-x-1/2"
-        style={{ zIndex: 5 }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontSize: "10px",
-            color: "#A5A8B1",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-          }}
-        >
-          Conferencia Latinoamericana de Bitcoin y Blockchain
-        </span>
       </div>
     </main>
   );
