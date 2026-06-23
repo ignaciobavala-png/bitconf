@@ -24,9 +24,9 @@ No agregar secciones, páginas ni features pensando en la landing o el sitio com
 
 - `app/page.tsx` — pantalla principal: input con typewriter en placeholder + WatermarkLayer + vignette central
 - `app/admin/` — panel de moderación protegido por cookie
-- `app/admin/actions.ts` — Server Actions: `moderateReason`, `deleteReason`, `loginAction`, `logoutAction`
+- `app/admin/actions.ts` — Server Actions: `moderateReason`, `deleteReason`, `loginAction`, `logoutAction`, `addStaticPhrase`, `toggleStaticPhrase`
 - `app/api/reasons/` — endpoint POST para recibir razones
-- `components/WatermarkLayer.tsx` — fondo animado con 10 carriles, tamaños variados, Realtime
+- `components/WatermarkLayer.tsx` — fondo animado con 10 carriles, tamaños variados, Realtime. Ya NO tiene frases hardcodeadas — todo viene de Supabase
 - `lib/supabase/client.ts` — cliente anon browser (lazy singleton con `getSupabaseClient()`)
 - `lib/supabase/server.ts` — cliente service_role server (`createServiceClient()`)
 - `lib/db/blocklist.ts` — validación de contenido
@@ -40,19 +40,20 @@ No agregar secciones, páginas ni features pensando en la landing o el sitio com
 
 ## Capas visuales en page.tsx (orden de zIndex)
 
-1. `z=0` — Fondo.png (globo terráqueo, 58vh desde abajo)
+1. `z=0` — Fondo.png (globo terráqueo, 58vh desde abajo). Container con `width: max(100vw, calc(58vh * 3))` centrado — garantiza que en mobile también se vea solo el horizonte, igual que desktop.
 2. `z=auto` — WatermarkLayer (10 carriles scrolling)
 3. `z=1` — Vignette central (radial gradient oscuro que tapa frases detrás del HODL)
 4. `z=2` — HODL hero image
 5. `z=3` — Degradé negro inferior (35% de la pantalla desde abajo)
-6. `z=4` — UI overlay: label + input + botón
-7. `z=5` — Footer (LABITCONF.COM)
+6. `z=4` — UI overlay unificado: flex column con label + input + botón + status message + footer. Footer ya NO es una capa separada — está dentro de este bloque para evitar colisión en mobile.
 
 ## WatermarkLayer
 
-- 10 carriles en `STATIC_LANES` con `y`, `duration`, `fontSize` por carril
-- Cubre toda la pantalla (antes había hueco en el centro)
-- Frases de usuario (DB) se inyectan en el carril según `lane_index`
+- 10 carriles en `STATIC_LANES` con `y`, `duration`, `fontSize` por carril (sin frases hardcodeadas)
+- Todas las frases vienen de Supabase (`reasons` donde `status=approved`)
+- `is_static=true` → verde oscuro `#4A6E2D` (frases editoriales, gestionadas desde admin)
+- `is_static=false` → verde claro `#9ACE6A` (frases de usuarios)
+- Animación fade-in solo para frases de usuario nuevas (no para las estáticas)
 - Realtime via Supabase — solo filas con `status=eq.approved`
 - El cliente Supabase se inicializa lazy (dentro de `useEffect`, no a nivel módulo)
 
@@ -60,15 +61,16 @@ No agregar secciones, páginas ni features pensando en la landing o el sitio com
 
 - Proyecto: `cryexzchtnerqkcchboj`
 - Tablas: `reasons` (status enum: pending/approved/rejected), `rate_limit`
+- `reasons` columnas relevantes: `text`, `ip_hash` (NOT NULL — usar `'static'` para frases base), `status`, `lane_index`, `is_static` (bool, default false), `flagged`
 - Realtime habilitado en `reasons` con REPLICA IDENTITY FULL
 - RLS: lectura pública solo para `status = approved`; escritura solo con service_role
 
 ## Admin panel
 
 - Protegido por cookie `admin_token` (comparada contra `ADMIN_SECRET`)
-- Muestra todas las razones ordenadas por `created_at` desc
+- Sección **Razones de usuarios**: muestra solo `is_static=false`, ordenadas por `created_at` desc. Acciones: Aprobar / Rechazar (solo pendientes) + Borrar
+- Sección **Frases Base**: muestra solo `is_static=true`. Acciones: Activar/Desactivar (toggle approved↔rejected) + Borrar + Formulario para agregar frase nueva con selector de carril (1-10)
 - Horario en timezone `America/Argentina/Buenos_Aires`
-- Acciones: Aprobar / Rechazar (solo pendientes) + Borrar (todas, incluso aprobadas)
 - `export const dynamic = "force-dynamic"` — necesario para evitar prerender en build
 
 ## Cosas a tener en cuenta
