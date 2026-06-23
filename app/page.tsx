@@ -109,6 +109,8 @@ export default function Page() {
           src="/assets/diseños/Fondo.png"
           alt=""
           fill
+          priority
+          loading="eager"
           style={{
             objectFit: "cover",
             objectPosition: "top center",
@@ -134,7 +136,7 @@ export default function Page() {
       {/* Capa 3: HODL hero image — el asset ya incluye el branding LABITCONF */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-        style={{ zIndex: 2 }}
+        style={{ zIndex: 2, paddingBottom: "14vh" }}
       >
         <Image
           src="/assets/diseños/HODL (4).png"
@@ -168,21 +170,20 @@ export default function Page() {
         {/* Form — centrado en mobile, esquina izquierda en desktop */}
         <div
           className="flex flex-col items-center md:items-start gap-3 px-6 pb-10 mx-auto md:mx-0 pointer-events-auto"
-          style={{ width: "clamp(280px, 90vw, 480px)", maxWidth: "480px" }}
+          style={{ width: "clamp(250px, 80vw, 420px)", maxWidth: "420px" }}
         >
           <label
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 900,
               color: "#9ACE6A",
-              fontSize: "clamp(15px, 1.6vw, 22px)",
-              textTransform: "uppercase",
+              fontSize: "clamp(13px, 1.3vw, 18px)",
               letterSpacing: "0.06em",
               pointerEvents: "none",
               userSelect: "none",
             }}
           >
-            ¿POR QUÉ HODLEÁS?
+            Y VOS… ¿POR QUÉ HODLEÁS?
           </label>
 
           <div
@@ -191,7 +192,7 @@ export default function Page() {
               maxWidth: "100%",
               border: `2px solid ${borderColor}`,
               borderRadius: "9999px",
-              padding: "11px 24px",
+              padding: "9px 20px",
               boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
               gap: "8px",
               transition: "border-color 0.3s",
@@ -221,7 +222,7 @@ export default function Page() {
                 color: "#FCFCFC",
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 300,
-                fontSize: "clamp(13px, 1.2vw, 16px)",
+                fontSize: "clamp(12px, 1.0vw, 14px)",
                 flex: 1,
                 minWidth: 0,
                 opacity: submitState === "loading" ? 0.5 : 1,
@@ -231,7 +232,7 @@ export default function Page() {
               style={{
                 color: "#9ACE6A",
                 fontFamily: "var(--font-neue-machina), sans-serif",
-                fontSize: "clamp(13px, 1.2vw, 16px)",
+                fontSize: "clamp(12px, 1.0vw, 14px)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -293,7 +294,7 @@ export default function Page() {
             textTransform: "uppercase",
           }}
         >
-          LABITCONF.COM
+          Conferencia Latinoamericana de Bitcoin y Blockchain
         </span>
       </div>
     </main>

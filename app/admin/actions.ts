@@ -45,3 +45,27 @@ export async function deleteReason(id: string) {
   await supabase.from("reasons").delete().eq("id", id);
   revalidatePath("/admin");
 }
+
+export async function addStaticPhrase(formData: FormData) {
+  const text = (formData.get("text") as string)?.trim();
+  const lane_index = parseInt(formData.get("lane_index") as string, 10);
+  if (!text || isNaN(lane_index)) return;
+
+  const supabase = createServiceClient();
+  await supabase.from("reasons").insert({
+    text,
+    lane_index,
+    is_static: true,
+    status: "approved",
+    ip_hash: "static",
+    flagged: false,
+  });
+  revalidatePath("/admin");
+}
+
+export async function toggleStaticPhrase(id: string, currentStatus: "approved" | "rejected") {
+  const supabase = createServiceClient();
+  const newStatus = currentStatus === "approved" ? "rejected" : "approved";
+  await supabase.from("reasons").update({ status: newStatus }).eq("id", id);
+  revalidatePath("/admin");
+}

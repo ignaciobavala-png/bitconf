@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { createServiceClient } from "@/lib/supabase/server";
-import { moderateReason, logoutAction, deleteReason } from "@/app/admin/actions";
+import { moderateReason, logoutAction, deleteReason, addStaticPhrase, toggleStaticPhrase } from "@/app/admin/actions";
 
 type Reason = {
   id: string;
@@ -9,6 +9,7 @@ type Reason = {
   status: "pending" | "approved" | "rejected";
   flagged: boolean;
   lane_index: number;
+  is_static: boolean;
   created_at: string;
 };
 
@@ -29,13 +30,15 @@ export default async function AdminPage() {
 
   const { data: reasons } = await supabase
     .from("reasons")
-    .select("id, text, status, flagged, lane_index, created_at")
+    .select("id, text, status, flagged, lane_index, is_static, created_at")
     .order("created_at", { ascending: false });
 
   const all = (reasons ?? []) as Reason[];
-  const pending = all.filter((r) => r.status === "pending");
-  const approved = all.filter((r) => r.status === "approved");
-  const rejected = all.filter((r) => r.status === "rejected");
+  const userReasons = all.filter((r) => !r.is_static);
+  const staticPhrases = all.filter((r) => r.is_static);
+  const pending = userReasons.filter((r) => r.status === "pending");
+  const approved = userReasons.filter((r) => r.status === "approved");
+  const rejected = userReasons.filter((r) => r.status === "rejected");
 
   return (
     <main
@@ -105,12 +108,12 @@ export default async function AdminPage() {
           ))}
         </div>
 
-        {/* Lista */}
+        {/* Lista usuarios */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {all.length === 0 && (
+          {userReasons.length === 0 && (
             <p style={{ color: "#A5A8B1", fontSize: "14px" }}>No hay razones todavía.</p>
           )}
-          {all.map((reason) => (
+          {userReasons.map((reason) => (
             <div
               key={reason.id}
               style={{
@@ -219,6 +222,159 @@ export default async function AdminPage() {
             </div>
           ))}
         </div>
+        {/* Frases Base */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+            <div>
+              <p style={{ color: "#4A6E2D", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 4px" }}>
+                Frases base
+              </p>
+              <p style={{ color: "#A5A8B1", fontSize: "12px", margin: 0 }}>
+                {staticPhrases.filter(p => p.status === "approved").length} activas · {staticPhrases.filter(p => p.status === "rejected").length} desactivadas
+              </p>
+            </div>
+          </div>
+
+          {/* Formulario agregar frase base */}
+          <form
+            action={addStaticPhrase}
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              border: "2px dashed #4A6E2D",
+              borderRadius: "12px",
+              padding: "16px 20px",
+            }}
+          >
+            <input
+              name="text"
+              placeholder="nueva frase base..."
+              required
+              style={{
+                flex: 1,
+                minWidth: "160px",
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid #4A6E2D",
+                color: "#FCFCFC",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontSize: "14px",
+                outline: "none",
+                padding: "4px 0",
+              }}
+            />
+            <select
+              name="lane_index"
+              required
+              style={{
+                background: "#0D0D0B",
+                border: "1px solid #4A6E2D",
+                borderRadius: "8px",
+                color: "#A5A8B1",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontSize: "12px",
+                padding: "4px 8px",
+              }}
+            >
+              {Array.from({ length: 10 }, (_, i) => (
+                <option key={i} value={i}>Carril {i + 1}</option>
+              ))}
+            </select>
+            <button
+              type="submit"
+              style={{
+                background: "#4A6E2D",
+                border: "none",
+                borderRadius: "9999px",
+                padding: "8px 18px",
+                color: "#0D0D0B",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 900,
+                fontSize: "12px",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                letterSpacing: "0.05em",
+              }}
+            >
+              + Agregar
+            </button>
+          </form>
+
+          {/* Lista de frases base */}
+          {staticPhrases.map((phrase) => (
+            <div
+              key={phrase.id}
+              style={{
+                border: `2px solid ${phrase.status === "approved" ? "#4A6E2D44" : "#A5A8B122"}`,
+                borderRadius: "12px",
+                padding: "12px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                flexWrap: "wrap",
+                opacity: phrase.status === "approved" ? 1 : 0.5,
+              }}
+            >
+              <div style={{ flex: 1, minWidth: "200px" }}>
+                <p style={{
+                  color: phrase.status === "approved" ? "#FCFCFC" : "#A5A8B1",
+                  fontSize: "14px",
+                  margin: "0 0 4px",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                }}>
+                  {phrase.text}_//
+                </p>
+                <span style={{ color: "#4A6E2D", fontSize: "11px" }}>
+                  carril {phrase.lane_index + 1}
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <form action={toggleStaticPhrase.bind(null, phrase.id, phrase.status)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: `2px solid ${phrase.status === "approved" ? "#A5A8B1" : "#9ACE6A"}`,
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: phrase.status === "approved" ? "#A5A8B1" : "#9ACE6A",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    {phrase.status === "approved" ? "desactivar" : "activar"}
+                  </button>
+                </form>
+                <form action={deleteReason.bind(null, phrase.id)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #E3551C44",
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: "#E3551C",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    borrar
+                  </button>
+                </form>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </main>
   );
