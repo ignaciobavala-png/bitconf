@@ -294,7 +294,7 @@ export default function Page() {
               textAlign: "center",
             }}
           >
-            Conferencia Latinoamericana de Bitcoin y Blockchain
+            Latin American Bitconf and Blockchain Conference
           </span>
         </div>
       </div>
