@@ -292,9 +292,10 @@ export default function Page() {
               letterSpacing: "0.1em",
               textTransform: "uppercase",
               textAlign: "center",
+              whiteSpace: "nowrap",
             }}
           >
-            Latin American Bitconf and Blockchain Conference
+            Latin American Bitcoin & Blockchain Conference
           </span>
         </div>
       </div>
