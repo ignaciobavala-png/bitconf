@@ -5,8 +5,54 @@ import Image from "next/image";
 import WatermarkLayer from "@/components/WatermarkLayer";
 
 type SubmitState = "idle" | "loading" | "success" | "error" | "ratelimit";
+type Lang = "es" | "en";
+
+const T = {
+  es: {
+    label: "Y VOS… ¿POR QUÉ HODLEÁS?",
+    placeholder: "tipealo acá",
+    idle: "Enter o presioná HODL →",
+    loading: "Enviando...",
+    success: "¡Tu razón fue recibida! Aparecerá pronto.",
+    ratelimit: "Demasiados envíos. Esperá unos minutos.",
+    error: "Error al enviar. Intentá de nuevo.",
+    connError: "Error de conexión. Intentá de nuevo.",
+    speakerPre: "Postulate como ",
+    sponsorBase: "Sé Sponsor",
+    sponsorSuffix: " de LABITCONF 2026",
+    footer: "Latin American Bitcoin & Blockchain Conference",
+  },
+  en: {
+    label: "AND YOU… WHY DO YOU HODL?",
+    placeholder: "type it here",
+    idle: "Press Enter or HODL →",
+    loading: "Sending...",
+    success: "Your reason was received! It'll appear soon.",
+    ratelimit: "Too many submissions. Wait a few minutes.",
+    error: "Error sending. Try again.",
+    connError: "Connection error. Try again.",
+    speakerPre: "Apply as ",
+    sponsorBase: "Be a Sponsor",
+    sponsorSuffix: " of LABITCONF 2026",
+    footer: "Latin American Bitcoin & Blockchain Conference",
+  },
+} as const;
+
+const pillStyle: React.CSSProperties = {
+  fontFamily: "var(--font-neue-machina), sans-serif",
+  fontWeight: 900,
+  fontSize: "clamp(9px, 0.75vw, 11px)",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  textDecoration: "none",
+  padding: "6px 14px",
+  whiteSpace: "nowrap",
+  background: "rgba(13,13,11,0.72)",
+  backdropFilter: "blur(6px)",
+};
 
 export default function Page() {
+  const [lang, setLang] = useState<Lang>("es");
   const [input, setInput] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -21,7 +67,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    const FULL = "tipealo acá";
+    const FULL = T[lang].placeholder;
+    setPlaceholder("");
     let i = 0;
     const timer = setTimeout(() => {
       const interval = setInterval(() => {
@@ -30,9 +77,9 @@ export default function Page() {
         if (i >= FULL.length) clearInterval(interval);
       }, 90);
       return () => clearInterval(interval);
-    }, 600);
+    }, 300);
     return () => clearTimeout(timer);
-  }, []);
+  }, [lang]);
 
   const handleSubmit = async () => {
     const trimmed = input.trim();
@@ -50,14 +97,14 @@ export default function Page() {
 
       if (res.status === 429) {
         setSubmitState("ratelimit");
-        setErrorMsg("Demasiados envíos. Esperá unos minutos.");
+        setErrorMsg(T[lang].ratelimit);
         return;
       }
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setSubmitState("error");
-        setErrorMsg(data.error ?? "Error al enviar. Intentá de nuevo.");
+        setErrorMsg(data.error ?? T[lang].error);
         return;
       }
 
@@ -66,7 +113,7 @@ export default function Page() {
       setTimeout(() => setSubmitState("idle"), 3000);
     } catch {
       setSubmitState("error");
-      setErrorMsg("Error de conexión. Intentá de nuevo.");
+      setErrorMsg(T[lang].connError);
     }
   };
 
@@ -83,11 +130,11 @@ export default function Page() {
   };
 
   const statusMsg: Record<SubmitState, string> = {
-    idle: "Enter o presioná HODL →",
-    loading: "Enviando...",
-    success: "¡Tu razón fue recibida! Aparecerá pronto.",
-    error: errorMsg || "Error al enviar.",
-    ratelimit: errorMsg,
+    idle: T[lang].idle,
+    loading: T[lang].loading,
+    success: T[lang].success,
+    error: errorMsg || T[lang].error,
+    ratelimit: errorMsg || T[lang].ratelimit,
   };
 
   const borderColor =
@@ -100,9 +147,7 @@ export default function Page() {
       className="relative h-full overflow-hidden"
       style={{ background: "#0D0D0B" }}
     >
-      {/* Capa 1: Globo terráqueo — solo la parte superior (glow) visible en el footer */}
-      {/* El contenedor se fuerza a ser siempre más ancho que alto para que objectFit:cover
-          escale por ancho en cualquier dispositivo, mostrando solo el horizonte del planeta */}
+      {/* Capa 1: Globo terráqueo */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none overflow-hidden"
         style={{ zIndex: 0, height: "58vh", width: "max(100vw, calc(58vh * 3))" }}
@@ -121,6 +166,45 @@ export default function Page() {
         />
       </div>
 
+      {/* Toggle idioma — top-left */}
+      <div
+        className="absolute top-0 left-0 p-4"
+        style={{ zIndex: 5 }}
+      >
+        <button
+          onClick={() => setLang(lang === "es" ? "en" : "es")}
+          className="flex items-center border rounded-full cursor-pointer transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+          style={pillStyle}
+        >
+          <span style={{ color: lang === "es" ? "#FCFCFC" : "#4A6E2D" }}>ES</span>
+          <span style={{ color: "#4A6E2D", margin: "0 4px" }}>/</span>
+          <span style={{ color: lang === "en" ? "#FCFCFC" : "#4A6E2D" }}>EN</span>
+        </button>
+      </div>
+
+      {/* CTAs: Speaker y Sponsor — top-right */}
+      <div
+        className="absolute top-0 right-0 flex flex-col items-end gap-2 p-4"
+        style={{ zIndex: 5 }}
+      >
+        <a
+          href="https://app-labitconf.github.io/LABITCONF-speakers/form/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center border rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+          style={pillStyle}
+        >
+          <span className="hidden sm:inline">{T[lang].speakerPre}</span>Speaker ↗
+        </a>
+        <a
+          href="mailto:sponsors@labitconf.com"
+          className="flex items-center border rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+          style={pillStyle}
+        >
+          {T[lang].sponsorBase}<span className="hidden sm:inline">{T[lang].sponsorSuffix}</span> ↗
+        </a>
+      </div>
+
       {/* Capa 2: Watermark con frases en Realtime */}
       <WatermarkLayer />
 
@@ -135,7 +219,7 @@ export default function Page() {
         }}
       />
 
-      {/* Capa 3: HODL hero image — el asset ya incluye el branding LABITCONF */}
+      {/* Capa 3: HODL hero image */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{ zIndex: 2, paddingBottom: "14vh" }}
@@ -164,7 +248,7 @@ export default function Page() {
         }}
       />
 
-      {/* Capa 5: UI overlay + footer — bloque único anclado al bottom */}
+      {/* Capa 5: UI overlay + footer */}
       <div
         className="absolute bottom-0 left-0 right-0 pointer-events-none flex flex-col"
         style={{ zIndex: 4 }}
@@ -186,7 +270,7 @@ export default function Page() {
                 userSelect: "none",
               }}
             >
-              Y VOS… ¿POR QUÉ HODLEÁS?
+              {T[lang].label}
             </label>
 
             <div
@@ -282,7 +366,7 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Footer — siempre debajo del form, nunca superpuesto */}
+        {/* Footer */}
         <div className="flex justify-center py-3 px-4">
           <span
             style={{
@@ -295,7 +379,7 @@ export default function Page() {
               whiteSpace: "nowrap",
             }}
           >
-            Latin American Bitcoin & Blockchain Conference
+            {T[lang].footer}
           </span>
         </div>
       </div>
