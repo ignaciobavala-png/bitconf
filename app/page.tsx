@@ -62,7 +62,7 @@ export default function Page() {
   const [errorMsg, setErrorMsg] = useState("");
   const [placeholder, setPlaceholder] = useState("");
   const [isMobile, setIsMobile] = useState(false);
-  const [sponsorCopied, setSponsorCopied] = useState(false);
+  const [sponsorState, setSponsorState] = useState<"idle" | "copied" | "show">("idle");
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -125,10 +125,11 @@ export default function Page() {
   const handleSponsorClick = async () => {
     try {
       await navigator.clipboard.writeText(SPONSOR_EMAIL);
-      setSponsorCopied(true);
-      setTimeout(() => setSponsorCopied(false), 2500);
+      setSponsorState("copied");
+      setTimeout(() => setSponsorState("idle"), 2500);
     } catch {
-      window.location.href = `mailto:${SPONSOR_EMAIL}`;
+      setSponsorState("show");
+      setTimeout(() => setSponsorState("idle"), 3000);
     }
   };
 
@@ -209,36 +210,25 @@ export default function Page() {
           className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
-          <span className="hidden sm:inline">{T[lang].speakerPre}</span>Speaker &#x2197;
+          <span className="hidden sm:inline">{T[lang].speakerPre}</span>&nbsp;Speaker &#x2197;
         </a>
 
-        <div className="flex flex-col items-end gap-1">
           <button
             onClick={handleSponsorClick}
             className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
             style={{
               ...pillStyle,
-              color: sponsorCopied ? "#9ACE6A" : "#A5A8B1",
+              color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
               transition: "color 0.2s, border-color 0.2s",
             }}
           >
-            {sponsorCopied
+            {sponsorState === "copied"
               ? `${T[lang].sponsorCopied} ✓`
-              : <>{T[lang].sponsorBase}<span className="hidden sm:inline">{T[lang].sponsorSuffix}</span> &#x2197;</>
+              : sponsorState === "show"
+              ? SPONSOR_EMAIL
+              : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
             }
           </button>
-          <span
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontSize: "9px",
-              color: "#4A6E2D",
-              letterSpacing: "0.05em",
-              userSelect: "all",
-            }}
-          >
-            {SPONSOR_EMAIL}
-          </span>
-        </div>
       </div>
 
       {/* Capa 2: Watermark con frases en Realtime */}

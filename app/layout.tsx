@@ -37,6 +37,13 @@ export const metadata: Metadata = {
   title: "LABITCONF 26 — ¿Por qué hodleás?",
   description:
     "La conferencia de Bitcoin más grande de Latinoamérica. 30 y 31 de Octubre, Costa Salguero, Buenos Aires.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+  },
 };
 
 export default function RootLayout({
