@@ -7,6 +7,8 @@ import WatermarkLayer from "@/components/WatermarkLayer";
 type SubmitState = "idle" | "loading" | "success" | "error" | "ratelimit";
 type Lang = "es" | "en";
 
+const SPONSOR_EMAIL = "sponsors@labitconf.com";
+
 const T = {
   es: {
     label: "Y VOS… ¿POR QUÉ HODLEÁS?",
@@ -17,9 +19,10 @@ const T = {
     ratelimit: "Demasiados envíos. Esperá unos minutos.",
     error: "Error al enviar. Intentá de nuevo.",
     connError: "Error de conexión. Intentá de nuevo.",
-    speakerPre: "Postulate como ",
+    speakerPre: "Postulate como ",
     sponsorBase: "Sé Sponsor",
-    sponsorSuffix: " de LABITCONF 2026",
+    sponsorSuffix: " de LABITCONF 2026",
+    sponsorCopied: "¡Copiado!",
     footer: "Latin American Bitcoin & Blockchain Conference",
   },
   en: {
@@ -31,9 +34,10 @@ const T = {
     ratelimit: "Too many submissions. Wait a few minutes.",
     error: "Error sending. Try again.",
     connError: "Connection error. Try again.",
-    speakerPre: "Apply as ",
+    speakerPre: "Apply as ",
     sponsorBase: "Be a Sponsor",
-    sponsorSuffix: " of LABITCONF 2026",
+    sponsorSuffix: " of LABITCONF 2026",
+    sponsorCopied: "Copied!",
     footer: "Latin American Bitcoin & Blockchain Conference",
   },
 } as const;
@@ -58,6 +62,7 @@ export default function Page() {
   const [errorMsg, setErrorMsg] = useState("");
   const [placeholder, setPlaceholder] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [sponsorCopied, setSponsorCopied] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -114,6 +119,16 @@ export default function Page() {
     } catch {
       setSubmitState("error");
       setErrorMsg(T[lang].connError);
+    }
+  };
+
+  const handleSponsorClick = async () => {
+    try {
+      await navigator.clipboard.writeText(SPONSOR_EMAIL);
+      setSponsorCopied(true);
+      setTimeout(() => setSponsorCopied(false), 2500);
+    } catch {
+      window.location.href = `mailto:${SPONSOR_EMAIL}`;
     }
   };
 
@@ -194,15 +209,36 @@ export default function Page() {
           className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
-          <span className="hidden sm:inline">{T[lang].speakerPre}</span>Speaker ↗
+          <span className="hidden sm:inline">{T[lang].speakerPre}</span>Speaker &#x2197;
         </a>
-        <a
-          href="mailto:sponsors@labitconf.com"
-          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
-          style={pillStyle}
-        >
-          {T[lang].sponsorBase}<span className="hidden sm:inline">{T[lang].sponsorSuffix}</span> ↗
-        </a>
+
+        <div className="flex flex-col items-end gap-1">
+          <button
+            onClick={handleSponsorClick}
+            className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+            style={{
+              ...pillStyle,
+              color: sponsorCopied ? "#9ACE6A" : "#A5A8B1",
+              transition: "color 0.2s, border-color 0.2s",
+            }}
+          >
+            {sponsorCopied
+              ? `${T[lang].sponsorCopied} ✓`
+              : <>{T[lang].sponsorBase}<span className="hidden sm:inline">{T[lang].sponsorSuffix}</span> &#x2197;</>
+            }
+          </button>
+          <span
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontSize: "9px",
+              color: "#4A6E2D",
+              letterSpacing: "0.05em",
+              userSelect: "all",
+            }}
+          >
+            {SPONSOR_EMAIL}
+          </span>
+        </div>
       </div>
 
       {/* Capa 2: Watermark con frases en Realtime */}
