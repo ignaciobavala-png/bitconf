@@ -168,7 +168,7 @@ export default function Page() {
 
       {/* Toggle idioma — top-left */}
       <div
-        className="absolute top-0 left-0 p-4"
+        className="absolute top-0 left-0 p-6"
         style={{ zIndex: 5 }}
       >
         <button
@@ -184,7 +184,7 @@ export default function Page() {
 
       {/* CTAs: Speaker y Sponsor — top-right */}
       <div
-        className="absolute top-0 right-0 flex flex-col items-end gap-2 p-4"
+        className="absolute top-0 right-0 flex flex-col items-end gap-2 p-6"
         style={{ zIndex: 5 }}
       >
         <a
