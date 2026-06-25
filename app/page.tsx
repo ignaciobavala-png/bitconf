@@ -41,11 +41,11 @@ const T = {
 const pillStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
   fontWeight: 900,
-  fontSize: "clamp(9px, 0.75vw, 11px)",
+  fontSize: "clamp(10px, 0.8vw, 12px)",
   letterSpacing: "0.06em",
   textTransform: "uppercase",
   textDecoration: "none",
-  padding: "6px 14px",
+  padding: "8px 17px",
   whiteSpace: "nowrap",
   background: "rgba(13,13,11,0.72)",
   backdropFilter: "blur(6px)",
@@ -173,7 +173,7 @@ export default function Page() {
       >
         <button
           onClick={() => setLang(lang === "es" ? "en" : "es")}
-          className="flex items-center border rounded-full cursor-pointer transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+          className="flex items-center border-2 rounded-full cursor-pointer transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
           style={pillStyle}
         >
           <span style={{ color: lang === "es" ? "#FCFCFC" : "#4A6E2D" }}>ES</span>
@@ -191,14 +191,14 @@ export default function Page() {
           href="https://app-labitconf.github.io/LABITCONF-speakers/form/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center border rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
           <span className="hidden sm:inline">{T[lang].speakerPre}</span>Speaker ↗
         </a>
         <a
           href="mailto:sponsors@labitconf.com"
-          className="flex items-center border rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
           {T[lang].sponsorBase}<span className="hidden sm:inline">{T[lang].sponsorSuffix}</span> ↗
