@@ -209,11 +209,9 @@ export default function Page() {
         style={{ zIndex: 5 }}
       >
         <a
-          {...(LINKS_ENABLED && {
-            href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
-            target: "_blank",
-            rel: "noopener noreferrer",
-          })}
+          href={LINKS_ENABLED ? "https://app-labitconf.github.io/LABITCONF-speakers/form/" : undefined}
+          target={LINKS_ENABLED ? "_blank" : undefined}
+          rel={LINKS_ENABLED ? "noopener noreferrer" : undefined}
           className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
