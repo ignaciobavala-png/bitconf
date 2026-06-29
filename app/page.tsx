@@ -9,6 +9,11 @@ type Lang = "es" | "en";
 
 const SPONSOR_EMAIL = "sponsors@labitconf.com";
 
+// Para re-activar los botones CTA: cambiar a `true`
+// Speaker URL: https://app-labitconf.github.io/LABITCONF-speakers/form/
+// Sponsor: copia SPONSOR_EMAIL al portapapeles
+const LINKS_ENABLED = false;
+
 const T = {
   es: {
     label: "Y VOS… ¿POR QUÉ HODLEÁS?",
@@ -204,9 +209,11 @@ export default function Page() {
         style={{ zIndex: 5 }}
       >
         <a
-          href="https://app-labitconf.github.io/LABITCONF-speakers/form/"
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(LINKS_ENABLED && {
+            href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
+            target: "_blank",
+            rel: "noopener noreferrer",
+          })}
           className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
           style={pillStyle}
         >
@@ -214,7 +221,7 @@ export default function Page() {
         </a>
 
           <button
-            onClick={handleSponsorClick}
+            onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
             className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
             style={{
               ...pillStyle,
