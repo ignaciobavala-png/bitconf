@@ -60,6 +60,13 @@ const pillStyle: React.CSSProperties = {
   backdropFilter: "blur(6px)",
 };
 
+// CTAs de Speaker/Sponsor: mismo pill, 25% más grande
+const pillStyleLarge: React.CSSProperties = {
+  ...pillStyle,
+  fontSize: "clamp(12.5px, 1vw, 15px)",
+  padding: "10px 21px",
+};
+
 export default function Page() {
   const [lang, setLang] = useState<Lang>("es");
   const [input, setInput] = useState("");
@@ -203,7 +210,7 @@ export default function Page() {
         </button>
       </div>
 
-      {/* CTAs: Speaker y Sponsor — top-right */}
+      {/* CTAs: Speaker y Sponsor — top-right, 25% más grandes */}
       <div
         className="absolute top-0 right-0 flex flex-col items-end gap-2 p-6"
         style={{ zIndex: 5 }}
@@ -213,27 +220,27 @@ export default function Page() {
           target={LINKS_ENABLED ? "_blank" : undefined}
           rel={LINKS_ENABLED ? "noopener noreferrer" : undefined}
           className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
-          style={pillStyle}
+          style={pillStyleLarge}
         >
           <span className="hidden sm:inline">{T[lang].speakerPre}</span>&nbsp;Speaker &#x2197;
         </a>
 
-          <button
-            onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
-            className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
-            style={{
-              ...pillStyle,
-              color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
-              transition: "color 0.2s, border-color 0.2s",
-            }}
-          >
-            {sponsorState === "copied"
-              ? `${T[lang].sponsorCopied} ✓`
-              : sponsorState === "show"
-              ? SPONSOR_EMAIL
-              : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
-            }
-          </button>
+        <button
+          onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
+          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+          style={{
+            ...pillStyleLarge,
+            color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
+            transition: "color 0.2s, border-color 0.2s",
+          }}
+        >
+          {sponsorState === "copied"
+            ? `${T[lang].sponsorCopied} ✓`
+            : sponsorState === "show"
+            ? SPONSOR_EMAIL
+            : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
+          }
+        </button>
       </div>
 
       {/* Capa 2: Watermark con frases en Realtime */}
@@ -284,10 +291,10 @@ export default function Page() {
         className="absolute bottom-0 left-0 right-0 pointer-events-none flex flex-col"
         style={{ zIndex: 4 }}
       >
-        {/* Form — centrado en mobile, esquina izquierda en desktop */}
-        <div className="flex justify-center md:justify-start px-6">
+        {/* Form — centrado */}
+        <div className="flex justify-center px-6">
           <div
-            className="flex flex-col items-center md:items-start gap-3 pointer-events-auto w-full"
+            className="flex flex-col items-center gap-3 pointer-events-auto w-full"
             style={{ maxWidth: "420px" }}
           >
             <label
@@ -313,6 +320,8 @@ export default function Page() {
                 boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
                 gap: "8px",
                 transition: "border-color 0.3s",
+                background: "rgba(13,13,11,0.72)",
+                backdropFilter: "blur(6px)",
               }}
             >
               {/* Honeypot */}

@@ -52,6 +52,7 @@ Lenguaje:     TypeScript strict
 - Sin testing, sin Docker
 - Sin CSS-in-JS más allá de Tailwind
 - `@/*` como path alias (apunta a `./*` o `./src/*`)
+- **No subir binarios a git/GitHub** (fonts, imágenes pesadas, videos, PDFs): no se comprimen, no se pueden diffear, inflan el clone para siempre aunque se borren después, y hay límites duros de tamaño en GitHub. Para assets de proyecto usar Supabase Storage o Vercel Blob y referenciar por URL. Excepción: binarios chicos e imprescindibles para el build (ej. un logo o una fuente puntual) pueden ir directo al repo.
 
 ## ESLint
 
