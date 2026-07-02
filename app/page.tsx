@@ -210,39 +210,6 @@ export default function Page() {
         </button>
       </div>
 
-      {/* CTAs: Speaker y Sponsor — top-right, 25% más grandes */}
-      <div
-        className="absolute top-0 right-0 flex flex-col items-end gap-2 p-6"
-        style={{ zIndex: 5 }}
-      >
-        <a
-          href={LINKS_ENABLED ? "https://app-labitconf.github.io/LABITCONF-speakers/form/" : undefined}
-          target={LINKS_ENABLED ? "_blank" : undefined}
-          rel={LINKS_ENABLED ? "noopener noreferrer" : undefined}
-          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
-          style={pillStyleLarge}
-        >
-          <span className="hidden sm:inline">{T[lang].speakerPre}</span>&nbsp;Speaker &#x2197;
-        </a>
-
-        <button
-          onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
-          className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
-          style={{
-            ...pillStyleLarge,
-            color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
-            transition: "color 0.2s, border-color 0.2s",
-          }}
-        >
-          {sponsorState === "copied"
-            ? `${T[lang].sponsorCopied} ✓`
-            : sponsorState === "show"
-            ? SPONSOR_EMAIL
-            : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
-          }
-        </button>
-      </div>
-
       {/* Capa 2: Watermark con frases en Realtime */}
       <WatermarkLayer />
 
@@ -253,14 +220,14 @@ export default function Page() {
           zIndex: 1,
           background: isMobile
             ? "radial-gradient(ellipse 88% 26% at 50% 26%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
-            : "radial-gradient(ellipse 60% 40% at 50% 42%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
+            : "radial-gradient(ellipse 36% 28% at 50% 33%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
         }}
       />
 
-      {/* Capa 3: HODL hero image — ancho completo, anclado arriba (badge OCT 30-31 incluido en el asset) */}
+      {/* Capa 3: HODL hero image — tamaño original, anclado arriba (badge OCT 30-31 incluido en el asset) */}
       <div
         className="absolute left-0 right-0 flex justify-center pointer-events-none select-none"
-        style={{ zIndex: 2, top: isMobile ? "16vh" : "12vh" }}
+        style={{ zIndex: 2, top: isMobile ? "16vh" : "18vh" }}
       >
         <Image
           src="/assets/diseños/HODL (11).png"
@@ -268,9 +235,10 @@ export default function Page() {
           width={1416}
           height={576}
           priority
+          className="w-[90vw] sm:w-[60vw] md:w-[40vw]"
           style={{
             objectFit: "contain",
-            width: "min(96vw, calc(60vh * 2.458))",
+            maxHeight: "55vh",
           }}
         />
       </div>
@@ -403,6 +371,36 @@ export default function Page() {
               {statusMsg[submitState]}
             </p>
           </div>
+        </div>
+
+        {/* CTAs: Speaker y Sponsor — fila centrada entre el form y el footer */}
+        <div className="flex justify-center flex-wrap gap-2 sm:gap-4 px-6 pt-2 pointer-events-auto">
+          <a
+            href={LINKS_ENABLED ? "https://app-labitconf.github.io/LABITCONF-speakers/form/" : undefined}
+            target={LINKS_ENABLED ? "_blank" : undefined}
+            rel={LINKS_ENABLED ? "noopener noreferrer" : undefined}
+            className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+            style={pillStyleLarge}
+          >
+            <span className="hidden sm:inline">{T[lang].speakerPre}</span>&nbsp;Speaker &#x2197;
+          </a>
+
+          <button
+            onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
+            className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+            style={{
+              ...pillStyleLarge,
+              color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
+              transition: "color 0.2s, border-color 0.2s",
+            }}
+          >
+            {sponsorState === "copied"
+              ? `${T[lang].sponsorCopied} ✓`
+              : sponsorState === "show"
+              ? SPONSOR_EMAIL
+              : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
+            }
+          </button>
         </div>
 
         {/* Footer */}
