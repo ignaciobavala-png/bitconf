@@ -219,7 +219,7 @@ export default function Page() {
         style={{
           zIndex: 1,
           background: isMobile
-            ? "radial-gradient(ellipse 88% 26% at 50% 26%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
+            ? "radial-gradient(ellipse 88% 26% at 50% 35%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
             : "radial-gradient(ellipse 36% 28% at 50% 33%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
         }}
       />
@@ -227,7 +227,7 @@ export default function Page() {
       {/* Capa 3: HODL hero image — tamaño original, anclado arriba (badge OCT 30-31 incluido en el asset) */}
       <div
         className="absolute left-0 right-0 flex justify-center pointer-events-none select-none"
-        style={{ zIndex: 2, top: isMobile ? "16vh" : "18vh" }}
+        style={{ zIndex: 2, top: isMobile ? "27vh" : "18vh" }}
       >
         <Image
           src="/assets/diseños/HODL (11).png"
