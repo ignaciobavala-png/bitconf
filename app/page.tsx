@@ -252,26 +252,25 @@ export default function Page() {
         style={{
           zIndex: 1,
           background: isMobile
-            ? "radial-gradient(ellipse 88% 34% at 50% 45%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
-            : "radial-gradient(ellipse 48% 40% at 50% 48%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
+            ? "radial-gradient(ellipse 88% 26% at 50% 26%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
+            : "radial-gradient(ellipse 60% 40% at 50% 42%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
         }}
       />
 
-      {/* Capa 3: HODL hero image */}
+      {/* Capa 3: HODL hero image — ancho completo, anclado arriba (badge OCT 30-31 incluido en el asset) */}
       <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-        style={{ zIndex: 2, paddingBottom: "14vh" }}
+        className="absolute left-0 right-0 flex justify-center pointer-events-none select-none"
+        style={{ zIndex: 2, top: isMobile ? "16vh" : "12vh" }}
       >
         <Image
-          src="/assets/diseños/HODL (4).png"
+          src="/assets/diseños/HODL (11).png"
           alt="HODL"
-          width={1600}
-          height={800}
+          width={1416}
+          height={576}
           priority
-          className="w-[90vw] sm:w-4/5 md:w-3/5"
           style={{
             objectFit: "contain",
-            maxHeight: "55vh",
+            width: "min(96vw, calc(60vh * 2.458))",
           }}
         />
       </div>
