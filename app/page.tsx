@@ -12,7 +12,7 @@ const SPONSOR_EMAIL = "sponsors@labitconf.com";
 // Para re-activar los botones CTA: cambiar a `true`
 // Speaker URL: https://app-labitconf.github.io/LABITCONF-speakers/form/
 // Sponsor: copia SPONSOR_EMAIL al portapapeles
-const LINKS_ENABLED = false;
+const LINKS_ENABLED = true;
 
 const T = {
   es: {
