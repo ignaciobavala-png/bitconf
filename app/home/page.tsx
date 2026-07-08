@@ -52,8 +52,12 @@ export default function HomePage() {
 
       {/* Navbar */}
       <header
-        className="relative flex items-center justify-between px-6 sm:px-10 py-6"
-        style={{ zIndex: 4 }}
+        className="fixed top-0 left-0 right-0 flex items-center justify-between px-6 sm:px-10 py-6"
+        style={{
+          zIndex: 50,
+          background:
+            "linear-gradient(to bottom, rgba(13,13,11,0.85) 0%, rgba(13,13,11,0) 100%)",
+        }}
       >
         <div className="flex items-center gap-8">
           <span
@@ -141,6 +145,103 @@ export default function HomePage() {
         >
           ↓ scroll para descubrir más
         </span>
+      </section>
+
+      {/* Presentación */}
+      <section
+        id="presentacion"
+        className="relative px-6 sm:px-10"
+        style={{ zIndex: 3, paddingTop: "8rem", paddingBottom: "8rem" }}
+      >
+        <div className="relative w-full max-w-6xl">
+          {/* Textura pixel detrás del título */}
+          <div
+            className="absolute pointer-events-none select-none"
+            style={{
+              top: "-4rem",
+              left: "-2rem",
+              right: "-2rem",
+              height: "16rem",
+              zIndex: 0,
+            }}
+          >
+            <Image
+              src="/assets/home/labitconf-pixel.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.5 }}
+            />
+          </div>
+
+          {/* Píldora BTC */}
+          <div
+            className="absolute pointer-events-none select-none hidden sm:block"
+            style={{ top: "-1rem", right: "0", width: "min(22vw, 220px)", height: "min(22vw, 220px)", zIndex: 1 }}
+          >
+            <Image
+              src="/assets/home/pildora.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+
+          <h2
+            className="relative"
+            style={{
+              ...labelStyle,
+              color: "#FCFCFC",
+              fontSize: "clamp(48px, 9vw, 104px)",
+              lineHeight: 1,
+              zIndex: 2,
+            }}
+          >
+            LABITCONF
+          </h2>
+
+          <p
+            className="relative mt-6"
+            style={{
+              ...labelStyle,
+              color: "#FCFCFC",
+              fontSize: "clamp(20px, 3.2vw, 34px)",
+              zIndex: 2,
+            }}
+          >
+            Latin American <span style={{ color: "#F7931A" }}>Bitcoin</span> &{" "}
+            <span style={{ color: "#F7931A" }}>Blockchain</span> Conference
+          </p>
+
+          <p
+            className="relative mt-6 max-w-2xl"
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#A5A8B1",
+              fontSize: "clamp(14px, 1.4vw, 17px)",
+              lineHeight: 1.6,
+              zIndex: 2,
+            }}
+          >
+            LABITCONF vuelve a Buenos Aires para su edición número 13,
+            conectando a los líderes, constructores y comunidades que están
+            dando forma al futuro de América Latina.
+          </p>
+
+          <p
+            className="relative mt-4 max-w-2xl"
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#A5A8B1",
+              fontSize: "clamp(14px, 1.4vw, 17px)",
+              lineHeight: 1.6,
+              zIndex: 2,
+            }}
+          >
+            Porque las mejores historias son las que siguen construyéndose.
+          </p>
+        </div>
       </section>
 
       {/* Botón flotante Q&A */}
