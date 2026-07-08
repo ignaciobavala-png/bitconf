@@ -43,6 +43,11 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 
 - Sección `#tickets` debajo de presentación: título "Tickets" en verde, fondo con textura de "lluvia" de dígitos (`public/assets/home/lluvia.png`, de `ASSETS 2D/LABITCONF_LLUVIA_1.png`), honeybadger 3D abajo a la izquierda (`public/assets/home/honeybadger.png`, de `ASSETS 3D/HONEYBADGER_FINAL.png`).
 - Las 3 tarjetas de ticket (General/Business/Experience) **no tienen asset dedicado** en `assets-bitconf/` — se construyeron con markup + gradientes CSS (gris metálico / blanco líquido / holográfico multicolor) replicando la estructura visual del mockup (badge de tier, "HODL" wordmark, nivel 01/02/03, tipo de pase, footer "LABITCONF 2026 — Hodl the future"), no como imagen.
+- El grid de cards va en un contenedor propio `mx-auto max-w-4xl` **separado** del título "Tickets" (que sigue en `max-w-6xl` sin centrar, alineado al navbar): si el grid comparte el contenedor del título, en pantallas anchas queda pegado a la izquierda en vez de centrado en toda la sección.
+
+### Full-bleed por pantalla
+
+Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-center` — cada sección ocupa la pantalla completa (patrón "1:1 screen") para dar más presencia, en vez de alturas ajustadas al contenido.
 
 ## Deploy
 

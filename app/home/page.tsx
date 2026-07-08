@@ -135,7 +135,7 @@ export default function HomePage() {
       {/* Hero central */}
       <section
         className="relative flex flex-col items-center justify-center px-6"
-        style={{ zIndex: 3, minHeight: "78vh" }}
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         <div className="w-full flex justify-center">
           <Image
@@ -181,8 +181,8 @@ export default function HomePage() {
       {/* Presentación */}
       <section
         id="presentacion"
-        className="relative px-6 sm:px-10"
-        style={{ zIndex: 3, paddingTop: "8rem", paddingBottom: "8rem" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10"
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         <div className="relative w-full max-w-6xl">
           {/* Textura pixel detrás del título */}
@@ -278,8 +278,8 @@ export default function HomePage() {
       {/* Tickets */}
       <section
         id="tickets"
-        className="relative px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, paddingTop: "8rem", paddingBottom: "10rem" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: lluvia de dígitos */}
         <div
@@ -303,23 +303,25 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#9ACE6A",
-              fontSize: "clamp(48px, 9vw, 104px)",
-              lineHeight: 1,
-            }}
-          >
-            Tickets
-          </h2>
+        <div className="relative w-full" style={{ zIndex: 2 }}>
+          <div className="w-full max-w-6xl">
+            <h2
+              style={{
+                ...labelStyle,
+                color: "#9ACE6A",
+                fontSize: "clamp(48px, 9vw, 104px)",
+                lineHeight: 1,
+              }}
+            >
+              Tickets
+            </h2>
+          </div>
 
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
+          <div className="mt-16 mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-10 justify-items-center">
             {TICKETS.map((ticket) => (
               <div
                 key={ticket.tier}
-                className="relative rounded-2xl mx-auto sm:mx-0 w-full max-w-[260px]"
+                className="relative rounded-2xl w-full max-w-[260px]"
                 style={{
                   aspectRatio: "5 / 8",
                   background: ticket.background,
