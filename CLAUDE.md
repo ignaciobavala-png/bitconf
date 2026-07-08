@@ -12,6 +12,27 @@ Este repo está en su **primera de tres fases**. No asumir que lo que existe es 
 
 No agregar secciones, páginas ni features pensando en la landing o el sitio completo. Cada fase se define cuando llega.
 
+## Rama `homepage` — landing definitiva (en desarrollo, aislada)
+
+Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de esta etapa:
+
+- **No mergear a `main` hasta que la landing esté terminada**. Se trabaja aislada; `main`/producción sigue sirviendo la pre-landing (`app/page.tsx` en `/`) sin tocarse.
+- **Routing separado**: la landing nueva vive en `app/home/page.tsx` → ruta `/home`. Así conviven ambas en el mismo deploy de preview sin pisar `/`. Cuando la landing esté lista, se decide si `/home` reemplaza a `/` o cómo se resuelve el corte.
+- **Sin Server Components para este maquetado**: `app/home/page.tsx` es un Client Component estático (sin fetch a Supabase ni lógica server) — por ahora es solo maquetado visual sección por sección, arrancando por el hero.
+- **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (mockup de la pantalla 1 — hero con navbar, HODL 3D, CTA, scroll indicator, botón Q&A flotante).
+
+### Carpeta `assets-bitconf/`
+
+- Vive en la raíz del repo pero está en `.gitignore` — **no se trackea** (son ~58MB de material de diseño: `ASSETS 2D/`, `ASSETS 3D/`, `demos-ui/`).
+- Sirve como banco de referencia: siempre que haya similitud lógica entre un elemento del mockup y un asset de esa carpeta, se reutiliza (ej. el hero usa `ASSETS 3D/HODL_3D_2.png`, el fondo usa `ASSETS 3D/BALLENA_FINAL.png`).
+- Los assets que sí se usan en la página se copian — **comprimidos con `convert` (ImageMagick)**, nunca el original de 5-9MB — a `public/assets/home/` (esta sí trackeada en git, siguiendo la convención ya usada en `public/assets/diseños/`).
+
+### Hero (pantalla 1) — decisiones tomadas
+
+- Logo `LABITCONF.` + nav links (`¿Por qué hodleás?` / `Comunidad` / `Sé parte`) agrupados a la **izquierda**; botón `Tickets` a la derecha.
+- Ballena de fondo (`public/assets/home/ballena.png`) con filtro `grayscale(1) brightness(3)` y opacity ~0.45 para que se vea blanca y visible, no un watermark apagado.
+- HODL 3D (`public/assets/home/hodl-3d.png`) ya trae el badge de fecha/lugar/logo horneado en el render, mismo patrón que la pre-landing en producción.
+
 ## Deploy
 
 - **Repo**: `ignaciobavala-png/bitconf` (GitHub de Ignacio)
