@@ -19,7 +19,7 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - **No mergear a `main` hasta que la landing esté terminada**. Se trabaja aislada; `main`/producción sigue sirviendo la pre-landing (`app/page.tsx` en `/`) sin tocarse.
 - **Routing separado**: la landing nueva vive en `app/home/page.tsx` → ruta `/home`. Así conviven ambas en el mismo deploy de preview sin pisar `/`. Cuando la landing esté lista, se decide si `/home` reemplaza a `/` o cómo se resuelve el corte.
 - **Sin Server Components para este maquetado**: `app/home/page.tsx` es un Client Component estático (sin fetch a Supabase ni lógica server) — por ahora es solo maquetado visual sección por sección, arrancando por el hero.
-- **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero) y `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación).
+- **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero), `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación) y `assets-bitconf/demos-ui/tickets.png` (pantalla 3, sección de tickets).
 
 ### Carpeta `assets-bitconf/`
 
@@ -38,6 +38,11 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 
 - Sección `#presentacion` debajo del hero: título "LABITCONF" grande con textura pixel de fondo (`public/assets/home/labitconf-pixel.png`, de `ASSETS 2D/LABITCONF_pixel.png`), píldora BTC arriba a la derecha (`public/assets/home/pildora.png`, de `ASSETS 3D/PILDORA_BTC_FINAL.png`), subtítulo con "Bitcoin"/"Blockchain" en naranja `#F7931A` (naranja estándar de Bitcoin — no había un naranja definido aún en la paleta del proyecto) y dos párrafos de copy.
 - El contenedor de esta sección usa `w-full max-w-6xl` **sin** `mx-auto`: centrarlo dejaba un margen vacío a la izquierda distinto al padding del navbar (que sí ocupa todo el ancho) — así el título arranca al mismo borde izquierdo que el logo `LABITCONF.`.
+
+### Tickets (pantalla 3) — decisiones tomadas
+
+- Sección `#tickets` debajo de presentación: título "Tickets" en verde, fondo con textura de "lluvia" de dígitos (`public/assets/home/lluvia.png`, de `ASSETS 2D/LABITCONF_LLUVIA_1.png`), honeybadger 3D abajo a la izquierda (`public/assets/home/honeybadger.png`, de `ASSETS 3D/HONEYBADGER_FINAL.png`).
+- Las 3 tarjetas de ticket (General/Business/Experience) **no tienen asset dedicado** en `assets-bitconf/` — se construyeron con markup + gradientes CSS (gris metálico / blanco líquido / holográfico multicolor) replicando la estructura visual del mockup (badge de tier, "HODL" wordmark, nivel 01/02/03, tipo de pase, footer "LABITCONF 2026 — Hodl the future"), no como imagen.
 
 ## Deploy
 
