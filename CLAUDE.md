@@ -19,7 +19,7 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - **No mergear a `main` hasta que la landing esté terminada**. Se trabaja aislada; `main`/producción sigue sirviendo la pre-landing (`app/page.tsx` en `/`) sin tocarse.
 - **Routing separado**: la landing nueva vive en `app/home/page.tsx` → ruta `/home`. Así conviven ambas en el mismo deploy de preview sin pisar `/`. Cuando la landing esté lista, se decide si `/home` reemplaza a `/` o cómo se resuelve el corte.
 - **Sin Server Components para este maquetado**: `app/home/page.tsx` es un Client Component estático (sin fetch a Supabase ni lógica server) — por ahora es solo maquetado visual sección por sección, arrancando por el hero.
-- **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero), `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación) y `assets-bitconf/demos-ui/tickets.png` (pantalla 3, sección de tickets).
+- **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero), `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación), `assets-bitconf/demos-ui/tickets.png` (pantalla 3, sección de tickets) y `assets-bitconf/demos-ui/speackers.png` (pantalla 4, carruseles de speakers/stats).
 
 ### Carpeta `assets-bitconf/`
 
@@ -44,6 +44,13 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - Sección `#tickets` debajo de presentación: título "Tickets" en verde, fondo con textura de "lluvia" de dígitos (`public/assets/home/lluvia.png`, de `ASSETS 2D/LABITCONF_LLUVIA_1.png`), honeybadger 3D abajo a la izquierda (`public/assets/home/honeybadger.png`, de `ASSETS 3D/HONEYBADGER_FINAL.png`).
 - Las 3 tarjetas de ticket (General/Business/Experience) **no tienen asset dedicado** en `assets-bitconf/` — se construyeron con markup + gradientes CSS (gris metálico / blanco líquido / holográfico multicolor) replicando la estructura visual del mockup (badge de tier, "HODL" wordmark, nivel 01/02/03, tipo de pase, footer "LABITCONF 2026 — Hodl the future"), no como imagen.
 - El grid de cards va en un contenedor propio `mx-auto max-w-4xl` **separado** del título "Tickets" (que sigue en `max-w-6xl` sin centrar, alineado al navbar): si el grid comparte el contenedor del título, en pantallas anchas queda pegado a la izquierda en vez de centrado en toda la sección.
+
+### Speakers (pantalla 4) — decisiones tomadas
+
+- Sección `#speakers`: 4 carriles horizontales en loop infinito (`framer-motion`, mismo patrón que `components/WatermarkLayer.tsx` de la pre-landing: array duplicado + `animate={{x: ["0%","-50%"]}}` con `repeat: Infinity`), alternando dirección fila por fila (izq/der/izq/der).
+- Cada carril mezcla 3 tipos de card, todas pill/cápsula: `photo` (placeholder con gradiente en la paleta del proyecto — **no hay fotos reales de speakers/escenario/público en `assets-bitconf/`**, se reemplazan cuando haya material), `stat` (número grande + label, ej. `+256 Talks`) y `label` (texto de dos líneas, ej. "Attendees" / "LABITCONF '24").
+- Fondo: `public/assets/home/pixel-grid.png` (de `ASSETS 2D/PIXEL 1.png`) con `filter: invert(1)` y opacity baja — el asset original es una grilla de puntos gris sobre blanco, se invierte para que quede sutil sobre fondo oscuro.
+- Duraciones de carril entre 42-55s para que no se sincronicen visualmente entre sí.
 
 ### Full-bleed por pantalla
 

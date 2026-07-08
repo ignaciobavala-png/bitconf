@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const NAV_LINKS = [
   { label: "¿Por qué hodleás?", href: "#hodleas" },
@@ -45,6 +46,136 @@ const TICKETS = [
       "linear-gradient(155deg, #3a1d6e 0%, #b02ee0 25%, #F7931A 50%, #2ee0c8 75%, #1c1c3a 100%)",
   },
 ] as const;
+
+type SpeakerCard =
+  | { kind: "photo" }
+  | { kind: "stat"; value: string; label: string }
+  | { kind: "label"; title: string; subtitle: string };
+
+const PHOTO_GRADIENTS = [
+  "linear-gradient(135deg, #4A6E2D 0%, #9ACE6A 100%)",
+  "linear-gradient(135deg, #1c1c1c 0%, #F7931A 100%)",
+  "linear-gradient(135deg, #2e2e2e 0%, #A5A8B1 100%)",
+  "linear-gradient(135deg, #0D0D0B 0%, #4A6E2D 60%, #9ACE6A 100%)",
+  "linear-gradient(135deg, #3a1d6e 0%, #F7931A 100%)",
+];
+
+const SPEAKER_LANES: {
+  id: string;
+  direction: "left" | "right";
+  duration: number;
+  cards: SpeakerCard[];
+}[] = [
+  {
+    id: "s1",
+    direction: "left",
+    duration: 42,
+    cards: [
+      { kind: "label", title: "Attendees", subtitle: "LABITCONF '24" },
+      { kind: "photo" },
+      { kind: "photo" },
+      { kind: "photo" },
+    ],
+  },
+  {
+    id: "s2",
+    direction: "right",
+    duration: 50,
+    cards: [
+      { kind: "photo" },
+      { kind: "photo" },
+      { kind: "stat", value: "+256", label: "Talks" },
+      { kind: "stat", value: "+16", label: "Countries that attend" },
+      { kind: "photo" },
+    ],
+  },
+  {
+    id: "s3",
+    direction: "left",
+    duration: 46,
+    cards: [
+      { kind: "photo" },
+      { kind: "stat", value: "+27", label: "Media Partners" },
+      { kind: "photo" },
+      { kind: "stat", value: "7", label: "Stages" },
+      { kind: "stat", value: "+58", label: "Sponsors" },
+    ],
+  },
+  {
+    id: "s4",
+    direction: "right",
+    duration: 55,
+    cards: [
+      { kind: "photo" },
+      { kind: "photo" },
+      { kind: "stat", value: "5", label: "Partners & Collaborators" },
+      { kind: "stat", value: "+420", label: "International Speakers" },
+    ],
+  },
+];
+
+function SpeakerCardView({ card, gradientIndex }: { card: SpeakerCard; gradientIndex: number }) {
+  if (card.kind === "photo") {
+    return (
+      <div
+        className="rounded-full shrink-0"
+        style={{
+          width: "220px",
+          height: "140px",
+          background: PHOTO_GRADIENTS[gradientIndex % PHOTO_GRADIENTS.length],
+          border: "1px solid rgba(255,255,255,0.1)",
+        }}
+      />
+    );
+  }
+
+  if (card.kind === "stat") {
+    return (
+      <div
+        className="rounded-full shrink-0 flex items-center gap-4 px-9"
+        style={{ height: "140px", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+      >
+        <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#FCFCFC" }}>
+          {card.value}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-neue-machina), sans-serif",
+            fontWeight: 300,
+            fontSize: "13px",
+            color: "#A5A8B1",
+            maxWidth: "100px",
+            lineHeight: 1.3,
+            whiteSpace: "normal",
+          }}
+        >
+          {card.label}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="rounded-full shrink-0 flex flex-col items-start justify-center px-9"
+      style={{ height: "140px", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-neue-machina), sans-serif",
+          fontWeight: 300,
+          fontSize: "12px",
+          color: "#A5A8B1",
+        }}
+      >
+        {card.title}
+      </span>
+      <span style={{ ...labelStyle, fontSize: "14px", color: "#FCFCFC", marginTop: "4px" }}>
+        {card.subtitle}
+      </span>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -500,6 +631,69 @@ export default function HomePage() {
             ↓ scroll para descubrir más
           </span>
         </div>
+      </section>
+
+      {/* Speakers */}
+      <section
+        id="speakers"
+        className="relative flex flex-col justify-center overflow-hidden"
+        style={{ zIndex: 3, minHeight: "100vh" }}
+      >
+        {/* Fondo: grilla de puntos */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.12, filter: "invert(1)" }}
+        >
+          <Image
+            src="/assets/home/pixel-grid.png"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #0D0D0B 100%)",
+          }}
+        />
+
+        <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
+          {SPEAKER_LANES.map((lane) => {
+            const doubled = [...lane.cards, ...lane.cards];
+            return (
+              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "140px" }}>
+                <motion.div
+                  className="flex items-center absolute top-0 left-0"
+                  style={{ gap: "24px", width: "max-content" }}
+                  animate={{ x: lane.direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
+                  transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
+                >
+                  {doubled.map((card, i) => (
+                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i} />
+                  ))}
+                </motion.div>
+              </div>
+            );
+          })}
+        </div>
+
+        <span
+          className="relative mt-16 block text-center px-6"
+          style={{
+            fontFamily: "var(--font-neue-machina), sans-serif",
+            fontWeight: 300,
+            color: "#A5A8B1",
+            fontSize: "clamp(11px, 0.9vw, 13px)",
+            letterSpacing: "0.04em",
+            zIndex: 2,
+          }}
+        >
+          ↓ scroll para descubrir más
+        </span>
       </section>
 
       {/* Botón flotante Q&A */}
