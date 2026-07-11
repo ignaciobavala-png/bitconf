@@ -27,7 +27,7 @@ const T = {
     speakerPre: "Postulate como ",
     sponsorBase: "Sé Sponsor",
     sponsorSuffix: " de LABITCONF 2026",
-    sponsorCopied: "¡Copiado!",
+    sponsorCopied: "Mail copiado, ¡escribinos!",
     footer: "Latin American Bitcoin & Blockchain Conference",
   },
   en: {
@@ -42,7 +42,7 @@ const T = {
     speakerPre: "Apply as ",
     sponsorBase: "Be a Sponsor",
     sponsorSuffix: " of LABITCONF 2026",
-    sponsorCopied: "Copied!",
+    sponsorCopied: "Email copied, write us!",
     footer: "Latin American Bitcoin & Blockchain Conference",
   },
 } as const;
@@ -395,7 +395,7 @@ export default function Page() {
             }}
           >
             {sponsorState === "copied"
-              ? `${T[lang].sponsorCopied} ✓`
+              ? `${T[lang].sponsorCopied} ${SPONSOR_EMAIL} ✓`
               : sponsorState === "show"
               ? SPONSOR_EMAIL
               : <>{T[lang].sponsorBase}<span className="hidden sm:inline">&nbsp;{T[lang].sponsorSuffix.trimStart()}</span> &#x2197;</>
