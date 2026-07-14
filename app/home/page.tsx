@@ -2,12 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-
-const NAV_LINKS = [
-  { label: "¿Por qué hodleás?", href: "#hodleas" },
-  { label: "Comunidad", href: "#comunidad" },
-  { label: "Sé parte", href: "#se-parte" },
-];
+import Navbar from "@/components/home/Navbar";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -240,55 +235,7 @@ export default function HomePage() {
       />
 
       {/* Navbar */}
-      <header
-        className="fixed top-0 left-0 right-0 flex items-center justify-between px-6 sm:px-10 py-6"
-        style={{
-          zIndex: 50,
-          background:
-            "linear-gradient(to bottom, rgba(13,13,11,0.85) 0%, rgba(13,13,11,0) 100%)",
-        }}
-      >
-        <div className="flex items-center gap-8">
-          <span
-            style={{
-              ...labelStyle,
-              color: "#FCFCFC",
-              fontSize: "clamp(14px, 1.4vw, 18px)",
-            }}
-          >
-            LABITCONF.
-          </span>
-
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="transition-colors duration-200 hover:opacity-70"
-                style={{
-                  ...labelStyle,
-                  color: "#9ACE6A",
-                  fontSize: "clamp(11px, 0.9vw, 13px)",
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-
-        <a
-          href="#tickets"
-          className="transition-colors duration-200 hover:opacity-70"
-          style={{
-            ...labelStyle,
-            color: "#9ACE6A",
-            fontSize: "clamp(12px, 1vw, 14px)",
-          }}
-        >
-          Tickets
-        </a>
-      </header>
+      <Navbar />
 
       {/* Hero central */}
       <section

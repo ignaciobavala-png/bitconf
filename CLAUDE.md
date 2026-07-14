@@ -52,6 +52,15 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - Fondo: `public/assets/home/pixel-grid.png` (de `ASSETS 2D/PIXEL 1.png`) con `filter: invert(1)` y opacity baja — el asset original es una grilla de puntos gris sobre blanco, se invierte para que quede sutil sobre fondo oscuro.
 - Duraciones de carril entre 42-55s para que no se sincronicen visualmente entre sí.
 
+### Comunidad (página `/home/comunidad`) — decisiones tomadas
+
+- Ruta **anidada bajo `/home`** (`app/home/comunidad/page.tsx`): toda la fase 2 vive bajo ese prefijo y se mueve junta cuando llegue el corte final (`/home` → `/`). Se accede desde el link "Comunidad" del navbar.
+- **Navbar extraído** a `components/home/Navbar.tsx` (compartido entre `/home` y `/home/comunidad`, links con prefijo `/home#...` para que funcionen desde ambas rutas). El **footer de comunidad es propio** de esa página (compacto, con astronauta + franja de iconos wireframe arriba) — no se comparte con el de `/home`.
+- 9 pantallas según mockups (hoy en `~/Descargas/1-9.png`): hero, 3 verticales (Embajadores/Student Hub/Comunidades), grid de embajadores, CTA embajador, Student Hub + universidades, CTA hub, Comunidades + logos, CTA comunidad, cierre + footer.
+- Assets nuevos en `public/assets/home/`: `pildora-dots.png`, `ballena-dots.png`, `honeybadger-dots.png` (figuras punteadas, de `LABITCONF_media (15/16/7)`), `lluvia-naranja.png` (de `LABITCONF_LLUVIA_3.png`), `iconos-wireframe.png` (de `LABITCONF_media (18) 1.png`, recortado con `convert -trim` porque el original trae mucho lienzo negro).
+- Las figuras punteadas son grises: se tiñen al naranja `#F7931A` con la cadena CSS `brightness(0) saturate(100%) invert(...) sepia(...) hue-rotate(...)` (forzar a negro y recolorear) — un `sepia+hue-rotate` directo da oliva, no naranja.
+- **Pendientes del cliente**: destino de los 3 botones "Inscribite acá" y del Q&A flotante (hoy `#`), copys reales de Student Hub/Comunidades, fotos de embajadores (solo card placeholder "Axel Becker"), logos de universidades y comunidades (marquee con texto "logo" placeholder).
+
 ### Full-bleed por pantalla
 
 Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-center` — cada sección ocupa la pantalla completa (patrón "1:1 screen") para dar más presencia, en vez de alturas ajustadas al contenido.
@@ -123,3 +132,4 @@ Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-c
 - El cliente Supabase browser NO debe instanciarse a nivel de módulo — usar siempre `getSupabaseClient()` dentro de funciones/efectos.
 - `ADMIN_SECRET` en `.env.local`. En producción está en las variables de Vercel.
 - El token de Vercel del cliente fue compartido en conversación — recomendado rotarlo.
+- El optimizador de imágenes de Next cachea por URL: si se **regenera** un asset de `public/` con el mismo nombre, el dev server/navegador puede seguir sirviendo la versión vieja (ni `rm -rf .next/cache/images` alcanza por el caché del browser). Lo práctico es renombrar el archivo.
