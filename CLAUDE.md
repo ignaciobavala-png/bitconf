@@ -17,6 +17,7 @@ No agregar secciones, páginas ni features pensando en la landing o el sitio com
 Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de esta etapa:
 
 - **No mergear a `main` hasta que la landing esté terminada**. Se trabaja aislada; `main`/producción sigue sirviendo la pre-landing (`app/page.tsx` en `/`) sin tocarse.
+- **No hacer push de esta rama, nunca** — la rama es 100% local. Cualquier push al repo dispara un deploy de preview en Vercel (aunque no pase a producción), y no queremos deploys del trabajo en curso en la cuenta del cliente.
 - **Routing separado**: la landing nueva vive en `app/home/page.tsx` → ruta `/home`. Así conviven ambas en el mismo deploy de preview sin pisar `/`. Cuando la landing esté lista, se decide si `/home` reemplaza a `/` o cómo se resuelve el corte.
 - **Sin Server Components para este maquetado**: `app/home/page.tsx` es un Client Component estático (sin fetch a Supabase ni lógica server) — por ahora es solo maquetado visual sección por sección, arrancando por el hero.
 - **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero), `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación), `assets-bitconf/demos-ui/tickets.png` (pantalla 3, sección de tickets) y `assets-bitconf/demos-ui/speackers.png` (pantalla 4, carruseles de speakers/stats).
