@@ -51,23 +51,6 @@ const EMBAJADORES: { name: [string, string]; gradient: string }[] = [
 
 const LOGO_PLACEHOLDERS = Array.from({ length: 10 }, (_, i) => `logo-${i}`);
 
-function ScrollHint() {
-  return (
-    <span
-      className="relative mt-14 block text-center"
-      style={{
-        ...lightStyle,
-        color: "#A5A8B1",
-        fontSize: "clamp(11px, 0.9vw, 13px)",
-        letterSpacing: "0.04em",
-        zIndex: 2,
-      }}
-    >
-      ↓ scroll para descubrir
-    </span>
-  );
-}
-
 function CtaButton({ label }: { label: string }) {
   return (
     <a
@@ -128,7 +111,7 @@ export default function ComunidadPage() {
       {/* 1 — Hero Comunidad */}
       <section
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -217,14 +200,12 @@ export default function ComunidadPage() {
             </div>
           </div>
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 2 — Las tres verticales */}
       <section
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -317,15 +298,13 @@ export default function ComunidadPage() {
             </div>
           ))}
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 3 — Embajadores */}
       <section
         id="embajadores"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -411,14 +390,12 @@ export default function ComunidadPage() {
             })}
           </div>
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 4 — CTA embajador */}
       <section
         className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -476,15 +453,13 @@ export default function ComunidadPage() {
           </h2>
           <CtaButton label="Inscribite acá" />
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 5 — Student Hub */}
       <section
         id="student-hub"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -549,14 +524,12 @@ export default function ComunidadPage() {
         <div className="relative mt-10 w-full" style={{ zIndex: 2 }}>
           <LogoMarquee id="unis" direction="left" />
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 6 — CTA hub */}
       <section
         className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         {/* Honeybadger punteado */}
         <div
@@ -595,15 +568,13 @@ export default function ComunidadPage() {
           </h2>
           <CtaButton label="Inscribite acá" />
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 7 — Comunidades */}
       <section
         id="comunidades"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -680,14 +651,12 @@ export default function ComunidadPage() {
         <div className="relative mt-14 w-full" style={{ zIndex: 2 }}>
           <LogoMarquee id="comus" direction="right" />
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 8 — CTA comunidad */}
       <section
         className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div
           className="absolute inset-0 pointer-events-none select-none"
@@ -726,8 +695,6 @@ export default function ComunidadPage() {
           </h2>
           <CtaButton label="Inscribite acá" />
         </div>
-
-        <ScrollHint />
       </section>
 
       {/* 9 — Cierre: astronauta sobre iconos + footer propio */}

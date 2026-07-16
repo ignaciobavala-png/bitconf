@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
+import HodlReasonsSection from "@/components/HodlReasonsSection";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -10,6 +11,29 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: "0.04em",
   textTransform: "uppercase",
 };
+
+const SOCIALS = [
+  {
+    label: "Instagram",
+    href: "#",
+    path: "M12 2.2c2.7 0 3 .01 4.1.06 1 .05 1.6.2 1.9.34.5.2.8.4 1.2.8.4.4.6.7.8 1.2.14.4.3 1 .34 1.9.05 1.1.06 1.4.06 4.1s-.01 3-.06 4.1c-.05 1-.2 1.6-.34 1.9-.2.5-.4.8-.8 1.2-.4.4-.7.6-1.2.8-.4.14-1 .3-1.9.34-1.1.05-1.4.06-4.1.06s-3-.01-4.1-.06c-1-.05-1.6-.2-1.9-.34-.5-.2-.8-.4-1.2-.8-.4-.4-.6-.7-.8-1.2-.14-.4-.3-1-.34-1.9C2.21 15 2.2 14.7 2.2 12s.01-3 .06-4.1c.05-1 .2-1.6.34-1.9.2-.5.4-.8.8-1.2.4-.4.7-.6 1.2-.8.4-.14 1-.3 1.9-.34C7.5 2.21 7.8 2.2 12 2.2zM12 0C9.28 0 8.94.01 7.87.06c-1.07.05-1.8.22-2.44.47-.66.26-1.22.6-1.78 1.16C3.09 2.25 2.75 2.8 2.5 3.46c-.25.64-.42 1.37-.47 2.44C1.98 6.94 1.97 7.28 1.97 10v4c0 2.72.01 3.06.06 4.13.05 1.07.22 1.8.47 2.44.26.66.6 1.22 1.16 1.78.56.56 1.12.9 1.78 1.16.64.25 1.37.42 2.44.47C8.94 23.99 9.28 24 12 24s3.06-.01 4.13-.06c1.07-.05 1.8-.22 2.44-.47.66-.26 1.22-.6 1.78-1.16.56-.56.9-1.12 1.16-1.78.25-.64.42-1.37.47-2.44.05-1.07.06-1.41.06-4.13v-4c0-2.72-.01-3.06-.06-4.13-.05-1.07-.22-1.8-.47-2.44-.26-.66-.6-1.22-1.16-1.78C21.75 1.09 21.2.75 20.54.5c-.64-.25-1.37-.42-2.44-.47C17.06.01 16.72 0 14 0z M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 12 8a4 4 0 0 1 0 8zM19.85 4.15a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z",
+  },
+  {
+    label: "X",
+    href: "#",
+    path: "M18.9 1.9h3.7l-8 9.2 9.4 12.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.9h7.6l5.2 7 6.1-7zm-1.3 19.3h2L6.5 4.1H4.4l13.2 17.1z",
+  },
+  {
+    label: "LinkedIn",
+    href: "#",
+    path: "M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.24 8.24h4.48V24H.24V8.24zM8.4 8.24h4.3v2.15h.06c.6-1.13 2.05-2.32 4.22-2.32 4.52 0 5.35 2.97 5.35 6.84V24h-4.48v-7.29c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V24H8.4V8.24z",
+  },
+  {
+    label: "Email",
+    href: "#",
+    path: "M1.5 4.5h21a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5zm.7 1.9 9.3 6.7a1 1 0 0 0 1 0l9.3-6.7H2.2zM2 8.4V17h20V8.4l-9.2 6.6a2.5 2.5 0 0 1-2.6 0L2 8.4z",
+  },
+] as const;
 
 const TICKETS = [
   {
@@ -59,12 +83,6 @@ const SE_PARTE_CARDS = [
     title: "Speakers",
     description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
     cta: "Aplicá",
-    href: "#",
-  },
-  {
-    title: "Side Event",
-    description: "¿Vas a organizar un evento durante la semana de LABITCONF? Completá el formulario y ayudanos a difundirlo entre quienes asisten a la conferencia.",
-    cta: "Agendá",
     href: "#",
   },
 ] as const;
@@ -240,14 +258,14 @@ export default function HomePage() {
       {/* Hero central */}
       <section
         className="relative flex flex-col items-center justify-center px-6"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh", paddingTop: "6rem" }}
       >
         <div className="w-full flex justify-center">
           <Image
-            src="/assets/home/hodl-3d.png"
+            src="/assets/home/hodl-main.png"
             alt="LABITCONF 26 — HODL, Costa Salguero, BsAs, OCT 30-31"
-            width={1600}
-            height={528}
+            width={1800}
+            height={684}
             priority
             className="w-[92vw] sm:w-[70vw] md:w-[52vw]"
             style={{ objectFit: "contain", height: "auto" }}
@@ -256,7 +274,7 @@ export default function HomePage() {
 
         <a
           href="#tickets"
-          className="mt-8 rounded-full transition-colors duration-200 border-2"
+          className="mt-14 rounded-full transition-colors duration-200 border-2"
           style={{
             ...labelStyle,
             color: "#0D0D0B",
@@ -268,26 +286,13 @@ export default function HomePage() {
         >
           Comprar Ticket
         </a>
-
-        <span
-          className="mt-10 animate-bounce"
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            color: "#A5A8B1",
-            fontSize: "clamp(11px, 0.9vw, 13px)",
-            letterSpacing: "0.04em",
-          }}
-        >
-          ↓ scroll para descubrir más
-        </span>
       </section>
 
       {/* Presentación */}
       <section
         id="presentacion"
         className="relative flex flex-col justify-center px-6 sm:px-10"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div className="relative w-full max-w-6xl">
           {/* Textura pixel detrás del título */}
@@ -380,11 +385,59 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Speakers */}
+      <section
+        id="speakers"
+        className="relative flex flex-col justify-center overflow-hidden"
+        style={{ zIndex: 3, height: "100vh" }}
+      >
+        {/* Fondo: grilla de puntos */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.12, filter: "invert(1)" }}
+        >
+          <Image
+            src="/assets/home/pixel-grid.png"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #0D0D0B 100%)",
+          }}
+        />
+
+        <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
+          {SPEAKER_LANES.map((lane) => {
+            const doubled = [...lane.cards, ...lane.cards];
+            return (
+              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "140px" }}>
+                <motion.div
+                  className="flex items-center absolute top-0 left-0"
+                  style={{ gap: "24px", width: "max-content" }}
+                  animate={{ x: lane.direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
+                  transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
+                >
+                  {doubled.map((card, i) => (
+                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i} />
+                  ))}
+                </motion.div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
       {/* Tickets */}
       <section
         id="tickets"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         {/* Fondo: lluvia de dígitos */}
         <div
@@ -422,11 +475,11 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-16 mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-10 justify-items-center">
+          <div className="mt-10 sm:mt-16 mx-auto max-w-4xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-10 justify-items-center overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto">
             {TICKETS.map((ticket) => (
               <div
                 key={ticket.tier}
-                className="relative rounded-2xl w-full max-w-[260px]"
+                className="relative rounded-2xl w-[180px] sm:w-full sm:max-w-[260px] shrink-0 snap-center"
                 style={{
                   aspectRatio: "5 / 8",
                   background: ticket.background,
@@ -591,90 +644,14 @@ export default function HomePage() {
               style={{ objectFit: "contain" }}
             />
           </div>
-
-          <span
-            className="relative mt-16 sm:mt-24 block text-center"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(11px, 0.9vw, 13px)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            ↓ scroll para descubrir más
-          </span>
         </div>
-      </section>
-
-      {/* Speakers */}
-      <section
-        id="speakers"
-        className="relative flex flex-col justify-center overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
-      >
-        {/* Fondo: grilla de puntos */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.12, filter: "invert(1)" }}
-        >
-          <Image
-            src="/assets/home/pixel-grid.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
-
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #0D0D0B 100%)",
-          }}
-        />
-
-        <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
-          {SPEAKER_LANES.map((lane) => {
-            const doubled = [...lane.cards, ...lane.cards];
-            return (
-              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "140px" }}>
-                <motion.div
-                  className="flex items-center absolute top-0 left-0"
-                  style={{ gap: "24px", width: "max-content" }}
-                  animate={{ x: lane.direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
-                  transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
-                >
-                  {doubled.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i} />
-                  ))}
-                </motion.div>
-              </div>
-            );
-          })}
-        </div>
-
-        <span
-          className="relative mt-16 block text-center px-6"
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            color: "#A5A8B1",
-            fontSize: "clamp(11px, 0.9vw, 13px)",
-            letterSpacing: "0.04em",
-            zIndex: 2,
-          }}
-        >
-          ↓ scroll para descubrir más
-        </span>
       </section>
 
       {/* Sé parte */}
       <section
         id="se-parte"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         {/* Fondo: grilla pixel con iconos */}
         <div
@@ -703,28 +680,28 @@ export default function HomePage() {
             style={{
               ...labelStyle,
               color: "#F7931A",
-              fontSize: "clamp(48px, 9vw, 104px)",
+              fontSize: "clamp(40px, 7vw, 84px)",
               lineHeight: 1,
             }}
           >
             Sé parte
           </h2>
 
-          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
+          <div className="mt-10 mx-auto grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-8 max-w-4xl">
             {SE_PARTE_CARDS.map((card) => (
               <div
                 key={card.title}
                 className="rounded-2xl flex flex-col"
                 style={{
                   background: "#F7931A",
-                  padding: "24px",
+                  padding: "22px 22px",
                 }}
               >
                 <h3
                   style={{
                     ...labelStyle,
                     color: "#0D0D0B",
-                    fontSize: "clamp(16px, 1.8vw, 22px)",
+                    fontSize: "clamp(16px, 2vw, 24px)",
                   }}
                 >
                   {card.title}
@@ -735,20 +712,20 @@ export default function HomePage() {
                     fontFamily: "var(--font-neue-machina), sans-serif",
                     fontWeight: 300,
                     color: "rgba(13,13,11,0.75)",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                    lineHeight: 1.5,
+                    fontSize: "clamp(11px, 1.15vw, 15px)",
+                    lineHeight: 1.45,
                   }}
                 >
                   {card.description}
                 </p>
                 <a
                   href={card.href}
-                  className="mt-6 rounded-full text-center transition-opacity duration-200 hover:opacity-80"
+                  className="mt-5 rounded-full text-center transition-opacity duration-200 hover:opacity-80"
                   style={{
                     ...labelStyle,
                     color: "#F7931A",
                     background: "#0D0D0B",
-                    fontSize: "clamp(11px, 1vw, 13px)",
+                    fontSize: "clamp(12px, 1.1vw, 14px)",
                     padding: "10px 0",
                   }}
                 >
@@ -777,34 +754,20 @@ export default function HomePage() {
             style={{ objectFit: "contain" }}
           />
         </div>
-
-        <span
-          className="relative mt-16 block text-center"
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            color: "#A5A8B1",
-            fontSize: "clamp(11px, 0.9vw, 13px)",
-            letterSpacing: "0.04em",
-            zIndex: 2,
-          }}
-        >
-          ↓ scroll para descubrir más
-        </span>
       </section>
 
       {/* Ubicación */}
       <section
         id="ubicacion"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, height: "100vh" }}
       >
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <h2
             style={{
               ...labelStyle,
               color: "#F7931A",
-              fontSize: "clamp(40px, 7vw, 84px)",
+              fontSize: "clamp(32px, 5.5vw, 64px)",
               lineHeight: 1,
             }}
           >
@@ -812,13 +775,13 @@ export default function HomePage() {
           </h2>
 
           <p
-            className="mt-6 max-w-2xl"
+            className="mt-3 max-w-2xl"
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 300,
               color: "#A5A8B1",
-              fontSize: "clamp(14px, 1.4vw, 17px)",
-              lineHeight: 1.6,
+              fontSize: "clamp(12px, 1.2vw, 15px)",
+              lineHeight: 1.5,
             }}
           >
             Centro Costa Salguero es uno de los espacios más reconocidos para
@@ -826,13 +789,13 @@ export default function HomePage() {
           </p>
 
           <p
-            className="mt-4 max-w-2xl"
+            className="mt-2 max-w-2xl"
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 300,
               color: "#A5A8B1",
-              fontSize: "clamp(14px, 1.4vw, 17px)",
-              lineHeight: 1.6,
+              fontSize: "clamp(12px, 1.2vw, 15px)",
+              lineHeight: 1.5,
             }}
           >
             Cada año recibe conferencias, ferias y exposiciones de gran
@@ -845,30 +808,30 @@ export default function HomePage() {
             href="https://www.google.com/maps/search/?api=1&query=Costa+Salguero+Buenos+Aires+Argentina"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#F7931A] hover:text-[#0D0D0B]"
+            className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#F7931A] hover:text-[#0D0D0B]"
             style={{
               ...labelStyle,
               color: "#F7931A",
               borderColor: "#F7931A",
-              fontSize: "clamp(12px, 1.1vw, 14px)",
-              padding: "12px 32px",
+              fontSize: "clamp(11px, 1vw, 13px)",
+              padding: "10px 28px",
             }}
           >
             Abrir en Google Maps
           </a>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
             <div
               className="rounded-2xl"
               style={{
-                aspectRatio: "4 / 3",
+                aspectRatio: "16 / 9",
                 background: PHOTO_GRADIENTS[1],
                 border: "1px solid rgba(255,255,255,0.1)",
               }}
             />
             <div
               className="rounded-2xl overflow-hidden"
-              style={{ aspectRatio: "4 / 3", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ aspectRatio: "16 / 9", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <iframe
                 src="https://www.google.com/maps?q=Costa+Salguero,+Buenos+Aires,+Argentina&output=embed"
@@ -902,93 +865,23 @@ export default function HomePage() {
             style={{ objectFit: "contain" }}
           />
         </div>
-
-        <span
-          className="relative mt-16 block text-center"
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            color: "#A5A8B1",
-            fontSize: "clamp(11px, 0.9vw, 13px)",
-            letterSpacing: "0.04em",
-            zIndex: 2,
-          }}
-        >
-          ↓ scroll para descubrir más
-        </span>
       </section>
 
-      {/* Footer */}
-      <footer
-        id="contacto"
-        className="relative overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{
-            zIndex: 0,
-            opacity: 0.35,
-            filter: "sepia(1) saturate(4) hue-rotate(-20deg) brightness(0.8)",
-          }}
-        >
-          <Image
-            src="/assets/home/lluvia.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+      {/* Footer: fondo de frases a todo el ancho, cápsula "¿por qué hodleás?" al centro, contactos a los costados */}
+      <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
+        {/* Fila principal: watermark full-bleed + cápsula centrada + contactos superpuestos a los costados (desktop) */}
+        <div className="relative" style={{ height: "400px" }}>
+          <HodlReasonsSection variant="compact" showLangToggle={false} />
 
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.3) 20%, rgba(13,13,11,0.3) 70%, #0D0D0B 100%)",
-          }}
-        />
-
-        <div
-          className="relative flex items-center justify-center"
-          style={{ zIndex: 2, minHeight: "56vh" }}
-        >
-          <div style={{ position: "relative", width: "min(60vw, 560px)", aspectRatio: "1 / 1" }}>
-            <Image
-              src="/assets/home/ballena-naranja.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain" }}
-            />
-            <span
-              className="absolute left-1/2 top-1/2"
-              style={{
-                ...labelStyle,
-                transform: "translate(-50%, -50%)",
-                color: "rgba(252,252,252,0.85)",
-                fontSize: "clamp(20px, 2.4vw, 30px)",
-                textAlign: "center",
-                whiteSpace: "nowrap",
-              }}
-            >
-              LABITCONF.
-            </span>
-          </div>
-        </div>
-
-        <div
-          className="relative px-6 sm:px-10 pb-10"
-          style={{ zIndex: 2 }}
-        >
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-10 max-w-6xl">
-            <div>
+          <div className="hidden lg:flex absolute inset-0 z-10 items-center justify-between gap-6 px-6 sm:px-10 pointer-events-none">
+            <div className="pointer-events-auto max-w-xs shrink-0">
               <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
                 LABITCONF.
               </div>
               <div
                 style={{
                   ...labelStyle,
-                  fontSize: "clamp(40px, 6vw, 64px)",
+                  fontSize: "clamp(32px, 4.5vw, 48px)",
                   lineHeight: 1,
                   marginTop: "6px",
                   background:
@@ -1001,12 +894,12 @@ export default function HomePage() {
                 HODL
               </div>
               <p
-                className="mt-4 max-w-xs"
+                className="mt-3 max-w-xs"
                 style={{
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
                   color: "#A5A8B1",
-                  fontSize: "clamp(12px, 1.1vw, 14px)",
+                  fontSize: "clamp(11px, 1vw, 13px)",
                   lineHeight: 1.5,
                 }}
               >
@@ -1015,37 +908,16 @@ export default function HomePage() {
                 Latina.
               </p>
 
-              <div className="flex items-center gap-3 mt-6">
-                {[
-                  {
-                    label: "Instagram",
-                    href: "#",
-                    path: "M12 2.2c2.7 0 3 .01 4.1.06 1 .05 1.6.2 1.9.34.5.2.8.4 1.2.8.4.4.6.7.8 1.2.14.4.3 1 .34 1.9.05 1.1.06 1.4.06 4.1s-.01 3-.06 4.1c-.05 1-.2 1.6-.34 1.9-.2.5-.4.8-.8 1.2-.4.4-.7.6-1.2.8-.4.14-1 .3-1.9.34-1.1.05-1.4.06-4.1.06s-3-.01-4.1-.06c-1-.05-1.6-.2-1.9-.34-.5-.2-.8-.4-1.2-.8-.4-.4-.6-.7-.8-1.2-.14-.4-.3-1-.34-1.9C2.21 15 2.2 14.7 2.2 12s.01-3 .06-4.1c.05-1 .2-1.6.34-1.9.2-.5.4-.8.8-1.2.4-.4.7-.6 1.2-.8.4-.14 1-.3 1.9-.34C7.5 2.21 7.8 2.2 12 2.2zM12 0C9.28 0 8.94.01 7.87.06c-1.07.05-1.8.22-2.44.47-.66.26-1.22.6-1.78 1.16C3.09 2.25 2.75 2.8 2.5 3.46c-.25.64-.42 1.37-.47 2.44C1.98 6.94 1.97 7.28 1.97 10v4c0 2.72.01 3.06.06 4.13.05 1.07.22 1.8.47 2.44.26.66.6 1.22 1.16 1.78.56.56 1.12.9 1.78 1.16.64.25 1.37.42 2.44.47C8.94 23.99 9.28 24 12 24s3.06-.01 4.13-.06c1.07-.05 1.8-.22 2.44-.47.66-.26 1.22-.6 1.78-1.16.56-.56.9-1.12 1.16-1.78.25-.64.42-1.37.47-2.44.05-1.07.06-1.41.06-4.13v-4c0-2.72-.01-3.06-.06-4.13-.05-1.07-.22-1.8-.47-2.44-.26-.66-.6-1.22-1.16-1.78C21.75 1.09 21.2.75 20.54.5c-.64-.25-1.37-.42-2.44-.47C17.06.01 16.72 0 14 0z M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 12 8a4 4 0 0 1 0 8zM19.85 4.15a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z",
-                  },
-                  {
-                    label: "X",
-                    href: "#",
-                    path: "M18.9 1.9h3.7l-8 9.2 9.4 12.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.9h7.6l5.2 7 6.1-7zm-1.3 19.3h2L6.5 4.1H4.4l13.2 17.1z",
-                  },
-                  {
-                    label: "LinkedIn",
-                    href: "#",
-                    path: "M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.24 8.24h4.48V24H.24V8.24zM8.4 8.24h4.3v2.15h.06c.6-1.13 2.05-2.32 4.22-2.32 4.52 0 5.35 2.97 5.35 6.84V24h-4.48v-7.29c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V24H8.4V8.24z",
-                  },
-                  {
-                    label: "Email",
-                    href: "#",
-                    path: "M1.5 4.5h21a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5zm.7 1.9 9.3 6.7a1 1 0 0 0 1 0l9.3-6.7H2.2zM2 8.4V17h20V8.4l-9.2 6.6a2.5 2.5 0 0 1-2.6 0L2 8.4z",
-                  },
-                ].map((social) => (
+              <div className="flex items-center gap-3 mt-5">
+                {SOCIALS.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
                     className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                    style={{ width: "38px", height: "38px", background: "#F7931A" }}
+                    style={{ width: "34px", height: "34px", background: "#F7931A" }}
                   >
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#0D0D0B">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#0D0D0B">
                       <path d={social.path} />
                     </svg>
                   </a>
@@ -1053,7 +925,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex gap-16">
+            <div className="pointer-events-auto flex gap-16 shrink-0">
               <div>
                 <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
                   Eventos 2026
@@ -1095,9 +967,104 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
 
+        {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse) */}
+        <div className="lg:hidden px-6 pt-8 pb-2">
+          <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
+            LABITCONF.
+          </div>
           <div
-            className="mt-12 pt-6 max-w-6xl flex flex-col sm:flex-row justify-between gap-2"
+            style={{
+              ...labelStyle,
+              fontSize: "clamp(32px, 8vw, 48px)",
+              lineHeight: 1,
+              marginTop: "6px",
+              background:
+                "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            HODL
+          </div>
+          <p
+            className="mt-3 max-w-xs"
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#A5A8B1",
+              fontSize: "clamp(12px, 1.1vw, 14px)",
+              lineHeight: 1.5,
+            }}
+          >
+            Desde 2013 la conferencia de Bitcoin más antigua del mundo y el
+            evento número uno de la industria blockchain en América Latina.
+          </p>
+
+          <div className="flex items-center gap-3 mt-5">
+            {SOCIALS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                aria-label={social.label}
+                className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
+                style={{ width: "38px", height: "38px", background: "#F7931A" }}
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#0D0D0B">
+                  <path d={social.path} />
+                </svg>
+              </a>
+            ))}
+          </div>
+
+          <div className="flex gap-16 mt-8">
+            <div>
+              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
+                Eventos 2026
+              </div>
+              <div
+                className="mt-3"
+                style={{
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 300,
+                  color: "#A5A8B1",
+                  fontSize: "clamp(12px, 1.1vw, 14px)",
+                  lineHeight: 2,
+                }}
+              >
+                Buenos Aires, Argentina
+              </div>
+            </div>
+
+            <div>
+              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
+                Enlaces Rápidos
+              </div>
+              <div
+                className="mt-3 flex flex-col gap-2"
+                style={{
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 300,
+                  color: "#A5A8B1",
+                  fontSize: "clamp(12px, 1.1vw, 14px)",
+                }}
+              >
+                <a href="#presentacion" className="hover:opacity-70 transition-opacity">
+                  Sobre LABITCONF
+                </a>
+                <a href="#tickets" className="hover:opacity-70 transition-opacity">
+                  Tickets
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative px-6 sm:px-10 pb-10">
+          <div
+            className="mt-8 pt-6 max-w-6xl mx-auto flex flex-col sm:flex-row justify-between gap-2"
             style={{
               borderTop: "1px solid rgba(255,255,255,0.1)",
               fontFamily: "var(--font-neue-machina), sans-serif",
