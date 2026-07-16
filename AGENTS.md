@@ -10,7 +10,7 @@
 | Nombre | LABITCONF 26 |
 | Tipo | Landing |
 | Cliente | LABITCONF |
-| Stack | Next.js 16.2.9 + React 19.2.4 + Supabase + Tailwind v4 + Framer Motion |
+| Stack | Next.js 16.2.9 + React 19.2.4 + Supabase + Tailwind v4 + Framer Motion + Zustand |
 | Estado | activo |
 | Último commit | 2026-07-09 |
 

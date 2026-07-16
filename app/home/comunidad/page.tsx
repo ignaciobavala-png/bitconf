@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
+import QaChatWidget from "@/components/home/QaChatWidget";
+import Footer from "@/components/home/Footer";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -44,16 +46,8 @@ const T = {
     ctaButtonLabel: "Inscribite acá",
     studentHubCopy:
       "El Student Hub es el espacio de LABITCONF para estudiantes: charlas, workshops y networking para la próxima generación de constructores.",
-    partnerUnis: "Universidades aliadas",
     comunidadesCopy:
       "Estas son las comunidades que hacen que LABITCONF sea posible: grupos locales de toda América Latina que construyen, educan y difunden Bitcoin todo el año.",
-    footerBlurb:
-      "Desde 2013 la conferencia de Bitcoin más antigua del mundo y el evento número uno de la industria blockchain en América Latina.",
-    eventos2026: "Eventos 2026",
-    location: "Buenos Aires, Argentina",
-    quickLinks: "Enlaces Rápidos",
-    aboutLink: "Sobre LABITCONF",
-    legal: "Política de Privacidad · Términos y Condiciones",
   },
   en: {
     presentacionP1:
@@ -69,16 +63,8 @@ const T = {
     ctaButtonLabel: "Sign up here",
     studentHubCopy:
       "Student Hub is LABITCONF's space for students: talks, workshops and networking for the next generation of builders.",
-    partnerUnis: "Partner universities",
     comunidadesCopy:
       "These are the communities that make LABITCONF possible: local groups across Latin America that build, educate and spread Bitcoin all year round.",
-    footerBlurb:
-      "Since 2013, the world's oldest Bitcoin conference and the number one blockchain industry event in Latin America.",
-    eventos2026: "2026 Events",
-    location: "Buenos Aires, Argentina",
-    quickLinks: "Quick Links",
-    aboutLink: "About LABITCONF",
-    legal: "Privacy Policy · Terms & Conditions",
   },
 } as const;
 
@@ -563,22 +549,6 @@ export default function ComunidadPage() {
               {t.studentHubCopy}
             </p>
           </div>
-
-          <h3
-            className="mt-16"
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              fontSize: "clamp(30px, 4.6vw, 56px)",
-              lineHeight: 1,
-            }}
-          >
-            {t.partnerUnis}
-          </h3>
-        </div>
-
-        <div className="relative mt-10 w-full" style={{ zIndex: 2 }}>
-          <LogoMarquee id="unis" direction="left" />
         </div>
       </section>
 
@@ -750,220 +720,10 @@ export default function ComunidadPage() {
         </div>
       </section>
 
-      {/* 9 — Cierre: astronauta sobre iconos + footer propio */}
-      <section className="relative overflow-hidden" style={{ zIndex: 3 }}>
-        <div
-          className="relative flex items-end justify-center"
-          style={{ minHeight: "62vh" }}
-        >
-          {/* Franja de iconos con wireframe */}
-          <div
-            className="absolute pointer-events-none select-none"
-            style={{
-              left: "50%",
-              top: "42%",
-              transform: "translate(-50%, -50%)",
-              width: "min(92vw, 1400px)",
-              aspectRatio: "1920 / 274",
-              zIndex: 0,
-              opacity: 0.9,
-              mixBlendMode: "screen",
-            }}
-          >
-            <Image
-              src="/assets/home/iconos-wireframe.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain", objectPosition: "center" }}
-            />
-          </div>
+      {/* 9 — Footer compartido con /home */}
+      <Footer lang={lang} />
 
-          {/* Astronauta */}
-          <div
-            className="relative pointer-events-none select-none"
-            style={{
-              width: "min(50vw, 420px)",
-              height: "min(52vw, 440px)",
-              zIndex: 1,
-            }}
-          >
-            <Image
-              src="/assets/home/astronauta.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain", objectPosition: "center bottom" }}
-            />
-          </div>
-        </div>
-
-        {/* Footer especial de comunidad */}
-        <footer
-          className="relative px-6 sm:px-10 pt-14 pb-8"
-          style={{ zIndex: 2, background: "#0D0D0B" }}
-        >
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-10 max-w-6xl mx-auto">
-            <div className="max-w-xs">
-              <div
-                style={{
-                  ...labelStyle,
-                  color: "#FCFCFC",
-                  fontSize: "clamp(13px, 1.2vw, 16px)",
-                }}
-              >
-                LABITCONF.
-              </div>
-              <div
-                style={{
-                  ...labelStyle,
-                  fontSize: "clamp(36px, 5vw, 56px)",
-                  lineHeight: 1,
-                  marginTop: "6px",
-                  background:
-                    "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                HODL
-              </div>
-              <p
-                className="mt-4"
-                style={{
-                  ...lightStyle,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(11px, 1vw, 13px)",
-                  lineHeight: 1.5,
-                }}
-              >
-                {t.footerBlurb}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-4 md:self-center">
-              {[
-                {
-                  label: "Instagram",
-                  href: "#",
-                  path: "M12 2.2c2.7 0 3 .01 4.1.06 1 .05 1.6.2 1.9.34.5.2.8.4 1.2.8.4.4.6.7.8 1.2.14.4.3 1 .34 1.9.05 1.1.06 1.4.06 4.1s-.01 3-.06 4.1c-.05 1-.2 1.6-.34 1.9-.2.5-.4.8-.8 1.2-.4.4-.7.6-1.2.8-.4.14-1 .3-1.9.34-1.1.05-1.4.06-4.1.06s-3-.01-4.1-.06c-1-.05-1.6-.2-1.9-.34-.5-.2-.8-.4-1.2-.8-.4-.4-.6-.7-.8-1.2-.14-.4-.3-1-.34-1.9C2.21 15 2.2 14.7 2.2 12s.01-3 .06-4.1c.05-1 .2-1.6.34-1.9.2-.5.4-.8.8-1.2.4-.4.7-.6 1.2-.8.4-.14 1-.3 1.9-.34C7.5 2.21 7.8 2.2 12 2.2zM12 0C9.28 0 8.94.01 7.87.06c-1.07.05-1.8.22-2.44.47-.66.26-1.22.6-1.78 1.16C3.09 2.25 2.75 2.8 2.5 3.46c-.25.64-.42 1.37-.47 2.44C1.98 6.94 1.97 7.28 1.97 10v4c0 2.72.01 3.06.06 4.13.05 1.07.22 1.8.47 2.44.26.66.6 1.22 1.16 1.78.56.56 1.12.9 1.78 1.16.64.25 1.37.42 2.44.47C8.94 23.99 9.28 24 12 24s3.06-.01 4.13-.06c1.07-.05 1.8-.22 2.44-.47.66-.26 1.22-.6 1.78-1.16.56-.56.9-1.12 1.16-1.78.25-.64.42-1.37.47-2.44.05-1.07.06-1.41.06-4.13v-4c0-2.72-.01-3.06-.06-4.13-.05-1.07-.22-1.8-.47-2.44-.26-.66-.6-1.22-1.16-1.78C21.75 1.09 21.2.75 20.54.5c-.64-.25-1.37-.42-2.44-.47C17.06.01 16.72 0 14 0z M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 12 8a4 4 0 0 1 0 8zM19.85 4.15a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z",
-                },
-                {
-                  label: "X",
-                  href: "#",
-                  path: "M18.9 1.9h3.7l-8 9.2 9.4 12.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.9h7.6l5.2 7 6.1-7zm-1.3 19.3h2L6.5 4.1H4.4l13.2 17.1z",
-                },
-                {
-                  label: "LinkedIn",
-                  href: "#",
-                  path: "M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.24 8.24h4.48V24H.24V8.24zM8.4 8.24h4.3v2.15h.06c.6-1.13 2.05-2.32 4.22-2.32 4.52 0 5.35 2.97 5.35 6.84V24h-4.48v-7.29c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V24H8.4V8.24z",
-                },
-                {
-                  label: "Email",
-                  href: "#",
-                  path: "M1.5 4.5h21a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5zm.7 1.9 9.3 6.7a1 1 0 0 0 1 0l9.3-6.7H2.2zM2 8.4V17h20V8.4l-9.2 6.6a2.5 2.5 0 0 1-2.6 0L2 8.4z",
-                },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                  style={{ width: "38px", height: "38px", background: "#F7931A" }}
-                >
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#0D0D0B">
-                    <path d={social.path} />
-                  </svg>
-                </a>
-              ))}
-            </div>
-
-            <div className="flex gap-16">
-              <div>
-                <div
-                  style={{
-                    ...labelStyle,
-                    color: "#FCFCFC",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  {t.eventos2026}
-                </div>
-                <div
-                  className="mt-3"
-                  style={{
-                    ...lightStyle,
-                    color: "#A5A8B1",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                    lineHeight: 2,
-                  }}
-                >
-                  {t.location}
-                </div>
-              </div>
-
-              <div>
-                <div
-                  style={{
-                    ...labelStyle,
-                    color: "#FCFCFC",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  {t.quickLinks}
-                </div>
-                <div
-                  className="mt-3 flex flex-col gap-2"
-                  style={{
-                    ...lightStyle,
-                    color: "#A5A8B1",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  <a href="/home#presentacion" className="hover:opacity-70 transition-opacity">
-                    {t.aboutLink}
-                  </a>
-                  <a href="/home#tickets" className="hover:opacity-70 transition-opacity">
-                    Tickets
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="mt-12 pt-6 max-w-6xl mx-auto flex flex-col sm:flex-row justify-between gap-2"
-            style={{
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              ...lightStyle,
-              color: "#6b6e73",
-              fontSize: "11px",
-            }}
-          >
-            <span>© 2026 LABITCONF — Latin America Bitcoin & Blockchain Conference</span>
-            <span>{t.legal}</span>
-          </div>
-        </footer>
-      </section>
-
-      {/* Botón flotante Q&A */}
-      <a
-        href="#qa"
-        className="fixed flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-105"
-        style={{
-          zIndex: 5,
-          bottom: "28px",
-          right: "28px",
-          width: "56px",
-          height: "56px",
-          background: "#9ACE6A",
-          color: "#0D0D0B",
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 900,
-          fontSize: "12px",
-        }}
-      >
-        Q&A
-      </a>
+      <QaChatWidget />
     </main>
   );
 }

@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
-import HodlReasonsSection from "@/components/HodlReasonsSection";
+import QaChatWidget from "@/components/home/QaChatWidget";
+import Footer from "@/components/home/Footer";
 import { useLangStore } from "@/lib/store/lang";
 
 const TITLE_IMAGES = {
@@ -25,12 +26,6 @@ const T = {
       "Cada año recibe conferencias, ferias y exposiciones de gran escala, consolidándose como un punto clave en el mapa cultural y tecnológico de la ciudad. Será la sede oficial de LABITCONF 2026 los días 30 y 31 de octubre.",
     ubicacionBtn: "Abrir en Google Maps",
     mapTitle: "Ubicación Costa Salguero",
-    footerBlurb:
-      "Desde 2013 la conferencia de Bitcoin más antigua del mundo y el evento número uno de la industria blockchain en América Latina.",
-    eventos2026: "Eventos 2026",
-    location: "Buenos Aires, Argentina",
-    quickLinks: "Enlaces Rápidos",
-    aboutLink: "Sobre LABITCONF",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -43,12 +38,6 @@ const T = {
       "Every year it hosts large-scale conferences, fairs and exhibitions, cementing itself as a key point on the city's cultural and technological map. It will be the official venue of LABITCONF 2026 on October 30 and 31.",
     ubicacionBtn: "Open in Google Maps",
     mapTitle: "Costa Salguero Location",
-    footerBlurb:
-      "Since 2013, the world's oldest Bitcoin conference and the number one blockchain industry event in Latin America.",
-    eventos2026: "2026 Events",
-    location: "Buenos Aires, Argentina",
-    quickLinks: "Quick Links",
-    aboutLink: "About LABITCONF",
   },
 } as const;
 
@@ -59,28 +48,6 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase",
 };
 
-const SOCIALS = [
-  {
-    label: "Instagram",
-    href: "#",
-    path: "M12 2.2c2.7 0 3 .01 4.1.06 1 .05 1.6.2 1.9.34.5.2.8.4 1.2.8.4.4.6.7.8 1.2.14.4.3 1 .34 1.9.05 1.1.06 1.4.06 4.1s-.01 3-.06 4.1c-.05 1-.2 1.6-.34 1.9-.2.5-.4.8-.8 1.2-.4.4-.7.6-1.2.8-.4.14-1 .3-1.9.34-1.1.05-1.4.06-4.1.06s-3-.01-4.1-.06c-1-.05-1.6-.2-1.9-.34-.5-.2-.8-.4-1.2-.8-.4-.4-.6-.7-.8-1.2-.14-.4-.3-1-.34-1.9C2.21 15 2.2 14.7 2.2 12s.01-3 .06-4.1c.05-1 .2-1.6.34-1.9.2-.5.4-.8.8-1.2.4-.4.7-.6 1.2-.8.4-.14 1-.3 1.9-.34C7.5 2.21 7.8 2.2 12 2.2zM12 0C9.28 0 8.94.01 7.87.06c-1.07.05-1.8.22-2.44.47-.66.26-1.22.6-1.78 1.16C3.09 2.25 2.75 2.8 2.5 3.46c-.25.64-.42 1.37-.47 2.44C1.98 6.94 1.97 7.28 1.97 10v4c0 2.72.01 3.06.06 4.13.05 1.07.22 1.8.47 2.44.26.66.6 1.22 1.16 1.78.56.56 1.12.9 1.78 1.16.64.25 1.37.42 2.44.47C8.94 23.99 9.28 24 12 24s3.06-.01 4.13-.06c1.07-.05 1.8-.22 2.44-.47.66-.26 1.22-.6 1.78-1.16.56-.56.9-1.12 1.16-1.78.25-.64.42-1.37.47-2.44.05-1.07.06-1.41.06-4.13v-4c0-2.72-.01-3.06-.06-4.13-.05-1.07-.22-1.8-.47-2.44-.26-.66-.6-1.22-1.16-1.78C21.75 1.09 21.2.75 20.54.5c-.64-.25-1.37-.42-2.44-.47C17.06.01 16.72 0 14 0z M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 12 8a4 4 0 0 1 0 8zM19.85 4.15a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z",
-  },
-  {
-    label: "X",
-    href: "#",
-    path: "M18.9 1.9h3.7l-8 9.2 9.4 12.4h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.9h7.6l5.2 7 6.1-7zm-1.3 19.3h2L6.5 4.1H4.4l13.2 17.1z",
-  },
-  {
-    label: "LinkedIn",
-    href: "#",
-    path: "M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.24 8.24h4.48V24H.24V8.24zM8.4 8.24h4.3v2.15h.06c.6-1.13 2.05-2.32 4.22-2.32 4.52 0 5.35 2.97 5.35 6.84V24h-4.48v-7.29c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V24H8.4V8.24z",
-  },
-  {
-    label: "Email",
-    href: "#",
-    path: "M1.5 4.5h21a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 18V6a1.5 1.5 0 0 1 1.5-1.5zm.7 1.9 9.3 6.7a1 1 0 0 0 1 0l9.3-6.7H2.2zM2 8.4V17h20V8.4l-9.2 6.6a2.5 2.5 0 0 1-2.6 0L2 8.4z",
-  },
-] as const;
 
 const TICKETS = [
   {
@@ -483,17 +450,21 @@ export default function HomePage() {
 
         <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
           {SPEAKER_LANES.map((lane) => {
-            const doubled = [...lane.cards, ...lane.cards];
+            // Un solo set de cards (4-5, ~900-1500px) es más angosto que el viewport,
+            // así que duplicar una vez no alcanza para tapar la pantalla: hay que
+            // repetir el set varias veces para que el loop -50% quede sin huecos.
+            const REPEATS = 6;
+            const repeated = Array.from({ length: REPEATS }, () => lane.cards).flat();
             return (
               <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "140px" }}>
                 <motion.div
                   className="flex items-center absolute top-0 left-0"
                   style={{ gap: "24px", width: "max-content" }}
-                  animate={{ x: lane.direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
+                  animate={{ x: lane.direction === "left" ? ["0%", `-${100 / REPEATS}%`] : [`-${100 / REPEATS}%`, "0%"] }}
                   transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
                 >
-                  {doubled.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i} />
+                  {repeated.map((card, i) => (
+                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i % lane.cards.length} />
                   ))}
                 </motion.div>
               </div>
@@ -926,218 +897,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer: fondo de frases a todo el ancho, cápsula "¿por qué hodleás?" al centro, contactos a los costados */}
-      <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
-        {/* Fila principal: watermark full-bleed + cápsula centrada + contactos superpuestos a los costados (desktop) */}
-        <div className="relative" style={{ height: "400px" }}>
-          <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} />
+      {/* Footer compartido con /home/comunidad */}
+      <Footer lang={lang} />
 
-          <div className="hidden lg:flex absolute inset-0 z-10 items-center justify-between gap-6 px-6 sm:px-10 pointer-events-none">
-            <div className="pointer-events-auto max-w-xs shrink-0">
-              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
-                LABITCONF.
-              </div>
-              <div
-                style={{
-                  ...labelStyle,
-                  fontSize: "clamp(32px, 4.5vw, 48px)",
-                  lineHeight: 1,
-                  marginTop: "6px",
-                  background:
-                    "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                HODL
-              </div>
-              <p
-                className="mt-3 max-w-xs"
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(11px, 1vw, 13px)",
-                  lineHeight: 1.5,
-                }}
-              >
-                {t.footerBlurb}
-              </p>
-
-              <div className="flex items-center gap-3 mt-5">
-                {SOCIALS.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                    style={{ width: "34px", height: "34px", background: "#F7931A" }}
-                  >
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#0D0D0B">
-                      <path d={social.path} />
-                    </svg>
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <div className="pointer-events-auto flex gap-16 shrink-0">
-              <div>
-                <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                  {t.eventos2026}
-                </div>
-                <div
-                  className="mt-3"
-                  style={{
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 300,
-                    color: "#A5A8B1",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                    lineHeight: 2,
-                  }}
-                >
-                  {t.location}
-                </div>
-              </div>
-
-              <div>
-                <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                  {t.quickLinks}
-                </div>
-                <div
-                  className="mt-3 flex flex-col gap-2"
-                  style={{
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 300,
-                    color: "#A5A8B1",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  <a href="#presentacion" className="hover:opacity-70 transition-opacity">
-                    {t.aboutLink}
-                  </a>
-                  <a href="#tickets" className="hover:opacity-70 transition-opacity">
-                    Tickets
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse) */}
-        <div className="lg:hidden px-6 pt-8 pb-12">
-          <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
-            LABITCONF.
-          </div>
-          <div
-            style={{
-              ...labelStyle,
-              fontSize: "clamp(32px, 8vw, 48px)",
-              lineHeight: 1,
-              marginTop: "6px",
-              background:
-                "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            HODL
-          </div>
-          <p
-            className="mt-3 max-w-xs"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(12px, 1.1vw, 14px)",
-              lineHeight: 1.5,
-            }}
-          >
-            {t.footerBlurb}
-          </p>
-
-          <div className="flex items-center gap-3 mt-5">
-            {SOCIALS.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                aria-label={social.label}
-                className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                style={{ width: "38px", height: "38px", background: "#F7931A" }}
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="#0D0D0B">
-                  <path d={social.path} />
-                </svg>
-              </a>
-            ))}
-          </div>
-
-          <div className="flex gap-16 mt-8">
-            <div>
-              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                {t.eventos2026}
-              </div>
-              <div
-                className="mt-3"
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(12px, 1.1vw, 14px)",
-                  lineHeight: 2,
-                }}
-              >
-                {t.location}
-              </div>
-            </div>
-
-            <div>
-              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                {t.quickLinks}
-              </div>
-              <div
-                className="mt-3 flex flex-col gap-2"
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(12px, 1.1vw, 14px)",
-                }}
-              >
-                <a href="#presentacion" className="hover:opacity-70 transition-opacity">
-                  {t.aboutLink}
-                </a>
-                <a href="#tickets" className="hover:opacity-70 transition-opacity">
-                  Tickets
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* Botón flotante Q&A */}
-      <a
-        href="#qa"
-        className="fixed flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-105"
-        style={{
-          zIndex: 5,
-          bottom: "28px",
-          right: "28px",
-          width: "56px",
-          height: "56px",
-          background: "#9ACE6A",
-          color: "#0D0D0B",
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 900,
-          fontSize: "12px",
-        }}
-      >
-        Q&A
-      </a>
+      <QaChatWidget />
     </main>
   );
 }
