@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
+import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
 
 const TITLE_IMAGES = {
@@ -300,7 +301,7 @@ export default function HomePage() {
         className="relative flex flex-col items-center justify-center px-6"
         style={{ zIndex: 3, height: "100vh", paddingTop: "6rem" }}
       >
-        <div className="w-full flex justify-center">
+        <Reveal className="w-full flex justify-center">
           <Image
             src="/assets/home/hodl-main.png"
             alt="LABITCONF 26 — HODL, Costa Salguero, BsAs, OCT 30-31"
@@ -310,22 +311,24 @@ export default function HomePage() {
             className="w-[92vw] sm:w-[70vw] md:w-[52vw]"
             style={{ objectFit: "contain", height: "auto" }}
           />
-        </div>
+        </Reveal>
 
-        <a
-          href="#tickets"
-          className="mt-14 rounded-full transition-colors duration-200 border-2"
-          style={{
-            ...labelStyle,
-            color: "#0D0D0B",
-            background: "#9ACE6A",
-            borderColor: "#9ACE6A",
-            fontSize: "clamp(12px, 1.1vw, 15px)",
-            padding: "12px 32px",
-          }}
-        >
-          {t.heroButton}
-        </a>
+        <Reveal delay={0.15}>
+          <a
+            href="#tickets"
+            className="mt-14 inline-block rounded-full transition-colors duration-200 border-2"
+            style={{
+              ...labelStyle,
+              color: "#0D0D0B",
+              background: "#9ACE6A",
+              borderColor: "#9ACE6A",
+              fontSize: "clamp(12px, 1.1vw, 15px)",
+              padding: "12px 32px",
+            }}
+          >
+            {t.heroButton}
+          </a>
+        </Reveal>
       </section>
 
       {/* Presentación */}
@@ -367,7 +370,7 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="relative" style={{ zIndex: 2, width: "min(90vw, 640px)" }}>
+          <Reveal className="relative" style={{ zIndex: 2, width: "min(90vw, 640px)" }}>
             <Image
               src={TITLE_IMAGES.labitconf}
               alt="LABITCONF"
@@ -375,48 +378,54 @@ export default function HomePage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
-          <p
-            className="relative mt-6"
-            style={{
-              ...labelStyle,
-              color: "#FCFCFC",
-              fontSize: "clamp(20px, 3.2vw, 34px)",
-              zIndex: 2,
-            }}
-          >
-            Latin American <span style={{ color: "#F7931A" }}>Bitcoin</span> &{" "}
-            <span style={{ color: "#F7931A" }}>Blockchain</span> Conference
-          </p>
+          <Reveal delay={0.1}>
+            <p
+              className="relative mt-6"
+              style={{
+                ...labelStyle,
+                color: "#FCFCFC",
+                fontSize: "clamp(20px, 3.2vw, 34px)",
+                zIndex: 2,
+              }}
+            >
+              Latin American <span style={{ color: "#F7931A" }}>Bitcoin</span> &{" "}
+              <span style={{ color: "#F7931A" }}>Blockchain</span> Conference
+            </p>
+          </Reveal>
 
-          <p
-            className="relative mt-6 max-w-2xl"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(14px, 1.4vw, 17px)",
-              lineHeight: 1.6,
-              zIndex: 2,
-            }}
-          >
-            {t.presentacionP1}
-          </p>
+          <Reveal delay={0.2}>
+            <p
+              className="relative mt-6 max-w-2xl"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: "clamp(14px, 1.4vw, 17px)",
+                lineHeight: 1.6,
+                zIndex: 2,
+              }}
+            >
+              {t.presentacionP1}
+            </p>
+          </Reveal>
 
-          <p
-            className="relative mt-4 max-w-2xl"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(14px, 1.4vw, 17px)",
-              lineHeight: 1.6,
-              zIndex: 2,
-            }}
-          >
-            {t.presentacionP2}
-          </p>
+          <Reveal delay={0.3}>
+            <p
+              className="relative mt-4 max-w-2xl"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: "clamp(14px, 1.4vw, 17px)",
+                lineHeight: 1.6,
+                zIndex: 2,
+              }}
+            >
+              {t.presentacionP2}
+            </p>
+          </Reveal>
         </div>
       </section>
 
@@ -501,7 +510,7 @@ export default function HomePage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <div className="w-full max-w-6xl" style={{ maxWidth: "min(90vw, 520px)" }}>
+          <Reveal className="w-full max-w-6xl" style={{ maxWidth: "min(90vw, 520px)" }}>
             <Image
               src={TITLE_IMAGES.tickets}
               alt="Tickets"
@@ -509,9 +518,12 @@ export default function HomePage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
-          <div className="mt-10 sm:mt-16 mx-auto max-w-4xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-10 justify-items-center overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto">
+          <Reveal
+            delay={0.15}
+            className="mt-10 sm:mt-16 mx-auto max-w-4xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-10 justify-items-center overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto"
+          >
             {TICKETS.map((ticket) => (
               <div
                 key={ticket.tier}
@@ -660,7 +672,7 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
 
           {/* Honeybadger */}
           <div
@@ -712,7 +724,7 @@ export default function HomePage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <div style={{ width: "min(80vw, 440px)" }}>
+          <Reveal style={{ width: "min(80vw, 440px)" }}>
             <Image
               src={TITLE_IMAGES.seParte[lang]}
               alt={lang === "es" ? "Sé parte" : "Be part"}
@@ -720,12 +732,13 @@ export default function HomePage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
           <div className="mt-10 mx-auto grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-8 max-w-4xl">
-            {seParteCards.map((card) => (
-              <div
+            {seParteCards.map((card, i) => (
+              <Reveal
                 key={card.title}
+                delay={0.1 + i * 0.12}
                 className="rounded-2xl flex flex-col"
                 style={{
                   background: "#F7931A",
@@ -766,7 +779,7 @@ export default function HomePage() {
                 >
                   {card.cta}
                 </a>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -798,7 +811,7 @@ export default function HomePage() {
         style={{ zIndex: 3, height: "100vh" }}
       >
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <div style={{ width: "min(70vw, 380px)" }}>
+          <Reveal style={{ width: "min(70vw, 380px)" }}>
             <Image
               src={TITLE_IMAGES.costaSalguero}
               alt="Costa Salguero"
@@ -806,51 +819,55 @@ export default function HomePage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
-          <p
-            className="mt-3 max-w-2xl"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(12px, 1.2vw, 15px)",
-              lineHeight: 1.5,
-            }}
-          >
-            {t.ubicacionP1}
-          </p>
+          <Reveal delay={0.1}>
+            <p
+              className="mt-3 max-w-2xl"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: "clamp(12px, 1.2vw, 15px)",
+                lineHeight: 1.5,
+              }}
+            >
+              {t.ubicacionP1}
+            </p>
 
-          <p
-            className="mt-2 max-w-2xl"
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#A5A8B1",
-              fontSize: "clamp(12px, 1.2vw, 15px)",
-              lineHeight: 1.5,
-            }}
-          >
-            {t.ubicacionP2}
-          </p>
+            <p
+              className="mt-2 max-w-2xl"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: "clamp(12px, 1.2vw, 15px)",
+                lineHeight: 1.5,
+              }}
+            >
+              {t.ubicacionP2}
+            </p>
+          </Reveal>
 
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Costa+Salguero+Buenos+Aires+Argentina"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#F7931A] hover:text-[#0D0D0B]"
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              borderColor: "#F7931A",
-              fontSize: "clamp(11px, 1vw, 13px)",
-              padding: "10px 28px",
-            }}
-          >
-            {t.ubicacionBtn}
-          </a>
+          <Reveal delay={0.2}>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Costa+Salguero+Buenos+Aires+Argentina"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#F7931A] hover:text-[#0D0D0B]"
+              style={{
+                ...labelStyle,
+                color: "#F7931A",
+                borderColor: "#F7931A",
+                fontSize: "clamp(11px, 1vw, 13px)",
+                padding: "10px 28px",
+              }}
+            >
+              {t.ubicacionBtn}
+            </a>
+          </Reveal>
 
-          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+          <Reveal delay={0.25} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
             <div
               className="rounded-2xl"
               style={{
@@ -872,7 +889,7 @@ export default function HomePage() {
                 title={t.mapTitle}
               />
             </div>
-          </div>
+          </Reveal>
         </div>
 
         {/* Ballena naranja */}

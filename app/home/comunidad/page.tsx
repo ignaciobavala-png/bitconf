@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
+import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -186,7 +187,7 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <div style={{ width: "min(85vw, 460px)" }}>
+          <Reveal style={{ width: "min(85vw, 460px)" }}>
             <Image
               src={TITLE_IMAGES.comunidad[lang]}
               alt={lang === "es" ? "Comunidad" : "Community"}
@@ -195,9 +196,9 @@ export default function ComunidadPage() {
               priority
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
-          <div className="relative mt-12 sm:ml-10 max-w-3xl">
+          <Reveal delay={0.15} className="relative mt-12 sm:ml-10 max-w-3xl">
             <div
               className="rounded-3xl"
               style={{
@@ -246,7 +247,7 @@ export default function ComunidadPage() {
                 style={{ objectFit: "contain", transform: "rotate(-25deg)" }}
               />
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -280,8 +281,8 @@ export default function ComunidadPage() {
           className="relative mx-auto w-full max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 items-center"
           style={{ zIndex: 2 }}
         >
-          {VERTICALES.map((vertical) => (
-            <div key={vertical.key} className="flex flex-col items-center gap-5">
+          {VERTICALES.map((vertical, i) => (
+            <Reveal key={vertical.key} delay={i * 0.12} className="flex flex-col items-center gap-5">
               {vertical.labelPosition === "top" && (
                 <a
                   href={vertical.href}
@@ -343,7 +344,7 @@ export default function ComunidadPage() {
                   {t.inscribirme}
                 </a>
               )}
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -376,7 +377,7 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <div className="w-full max-w-6xl" style={{ maxWidth: "min(85vw, 480px)" }}>
+          <Reveal className="w-full max-w-6xl" style={{ maxWidth: "min(85vw, 480px)" }}>
             <Image
               src={TITLE_IMAGES.embajadores[lang]}
               alt={t.verticalEmbajadores}
@@ -384,14 +385,15 @@ export default function ComunidadPage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
           <div className="mt-14 mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-8 justify-items-center">
             {Array.from({ length: 3 }, (_, i) => {
               const embajador = EMBAJADORES[i];
               return (
-                <div
+                <Reveal
                   key={i}
+                  delay={0.1 + i * 0.12}
                   className="relative rounded-3xl overflow-hidden w-full max-w-[260px]"
                   style={{
                     aspectRatio: "3 / 4",
@@ -430,7 +432,7 @@ export default function ComunidadPage() {
                       </div>
                     </>
                   )}
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -482,7 +484,7 @@ export default function ComunidadPage() {
           />
         </div>
 
-        <div
+        <Reveal
           className="relative flex flex-col items-center gap-10 text-center"
           style={{ zIndex: 2 }}
         >
@@ -497,7 +499,7 @@ export default function ComunidadPage() {
             {t.ctaEmbajadorTitle}
           </h2>
           <CtaButton label={t.ctaButtonLabel} />
-        </div>
+        </Reveal>
       </section>
 
       {/* 5 — Student Hub */}
@@ -519,7 +521,7 @@ export default function ComunidadPage() {
         </div>
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <div style={{ width: "min(85vw, 480px)" }}>
+          <Reveal style={{ width: "min(85vw, 480px)" }}>
             <Image
               src={TITLE_IMAGES.studentHub[lang]}
               alt={t.verticalStudentHub}
@@ -527,9 +529,10 @@ export default function ComunidadPage() {
               height={500}
               style={{ width: "100%", height: "auto", objectFit: "contain" }}
             />
-          </div>
+          </Reveal>
 
-          <div
+          <Reveal
+            delay={0.15}
             className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
             style={{
               border: "1px solid #9ACE6A",
@@ -548,7 +551,7 @@ export default function ComunidadPage() {
               {/* Copy placeholder — pendiente del cliente */}
               {t.studentHubCopy}
             </p>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -578,7 +581,7 @@ export default function ComunidadPage() {
           />
         </div>
 
-        <div
+        <Reveal
           className="relative flex flex-col items-center gap-10 text-center"
           style={{ zIndex: 2 }}
         >
@@ -593,7 +596,7 @@ export default function ComunidadPage() {
             {t.ctaHubTitle}
           </h2>
           <CtaButton label={t.ctaButtonLabel} />
-        </div>
+        </Reveal>
       </section>
 
       {/* 7 — Comunidades */}
@@ -619,7 +622,7 @@ export default function ComunidadPage() {
         </div>
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <div className="relative max-w-3xl">
+          <Reveal className="relative max-w-3xl">
             <div style={{ width: "min(85vw, 480px)" }}>
               <Image
                 src={TITLE_IMAGES.comunidades[lang]}
@@ -647,9 +650,10 @@ export default function ComunidadPage() {
                 style={{ objectFit: "contain", transform: "rotate(20deg)" }}
               />
             </div>
-          </div>
+          </Reveal>
 
-          <div
+          <Reveal
+            delay={0.15}
             className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
             style={{
               border: "1px solid #9ACE6A",
@@ -668,12 +672,12 @@ export default function ComunidadPage() {
               {/* Copy placeholder — pendiente del cliente */}
               {t.comunidadesCopy}
             </p>
-          </div>
+          </Reveal>
         </div>
 
-        <div className="relative mt-14 w-full" style={{ zIndex: 2 }}>
+        <Reveal delay={0.25} className="relative mt-14 w-full" style={{ zIndex: 2 }}>
           <LogoMarquee id="comus" direction="right" />
-        </div>
+        </Reveal>
       </section>
 
       {/* 8 — CTA comunidad */}
@@ -702,7 +706,7 @@ export default function ComunidadPage() {
           }}
         />
 
-        <div
+        <Reveal
           className="relative flex flex-col items-center gap-10 text-center max-w-4xl"
           style={{ zIndex: 2 }}
         >
@@ -717,7 +721,7 @@ export default function ComunidadPage() {
             {t.ctaComunidadTitle}
           </h2>
           <CtaButton label={t.ctaButtonLabel} />
-        </div>
+        </Reveal>
       </section>
 
       {/* 9 — Footer compartido con /home */}
