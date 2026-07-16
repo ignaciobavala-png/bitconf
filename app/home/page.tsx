@@ -6,14 +6,21 @@ import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
+import Floating from "@/components/home/Floating";
 import { useLangStore } from "@/lib/store/lang";
 
+// Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
+// con alturas de texto muy dispares, lo que hacía que cada título se viera de
+// un tamaño distinto. Recortados + altura fija = misma altura de letra en todos.
 const TITLE_IMAGES = {
-  labitconf: "/assets/home/titulos/labitconf.png",
-  tickets: "/assets/home/titulos/tickets.png",
-  seParte: { es: "/assets/home/titulos/se-parte-es.png", en: "/assets/home/titulos/se-parte-en.png" },
-  costaSalguero: "/assets/home/titulos/costa-salguero.png",
+  labitconf: "/assets/home/titulos/labitconf-trim.png",
+  tickets: "/assets/home/titulos/tickets-trim.png",
+  seParte: { es: "/assets/home/titulos/se-parte-es-trim.png", en: "/assets/home/titulos/se-parte-en-trim.png" },
+  costaSalguero: "/assets/home/titulos/costa-salguero-trim.png",
 } as const;
+
+// Altura uniforme de los títulos de sección
+const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
 const T = {
   es: {
@@ -370,13 +377,12 @@ export default function HomePage() {
             />
           </div>
 
-          <Reveal className="relative" style={{ zIndex: 2, width: "min(90vw, 640px)" }}>
+          <Reveal className="relative w-full" style={{ zIndex: 2, height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.labitconf}
               alt="LABITCONF"
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -510,13 +516,12 @@ export default function HomePage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <Reveal className="w-full max-w-6xl" style={{ maxWidth: "min(90vw, 520px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.tickets}
               alt="Tickets"
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -674,24 +679,27 @@ export default function HomePage() {
             ))}
           </Reveal>
 
-          {/* Honeybadger */}
-          <div
-            className="absolute pointer-events-none select-none hidden sm:block"
-            style={{
-              bottom: "-2rem",
-              left: "-1rem",
-              width: "min(16vw, 170px)",
-              height: "min(16vw, 170px)",
-              zIndex: 3,
-            }}
-          >
+        </div>
+
+        {/* Honeybadger — anclado al borde de la sección para que no lo recorte el overflow */}
+        <div
+          className="absolute pointer-events-none select-none hidden sm:block"
+          style={{
+            bottom: "1.5rem",
+            left: "2rem",
+            width: "min(16vw, 170px)",
+            height: "min(16vw, 170px)",
+            zIndex: 3,
+          }}
+        >
+          <Floating duration={5} y={7} rotate={3}>
             <Image
               src="/assets/home/honeybadger.png"
               alt=""
               fill
               style={{ objectFit: "contain" }}
             />
-          </div>
+          </Floating>
         </div>
       </section>
 
@@ -724,13 +732,12 @@ export default function HomePage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal style={{ width: "min(80vw, 440px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.seParte[lang]}
               alt={lang === "es" ? "Sé parte" : "Be part"}
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -784,23 +791,25 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Astronauta */}
+        {/* Astronauta — anclado dentro de la sección para que no lo recorte el overflow */}
         <div
           className="absolute pointer-events-none select-none hidden sm:block"
           style={{
-            bottom: "-2rem",
-            right: "-1rem",
+            bottom: "2rem",
+            right: "2rem",
             width: "min(22vw, 260px)",
             height: "min(22vw, 260px)",
             zIndex: 3,
           }}
         >
-          <Image
-            src="/assets/home/astronauta.png"
-            alt=""
-            fill
-            style={{ objectFit: "contain" }}
-          />
+          <Floating duration={7} y={14} rotate={6}>
+            <Image
+              src="/assets/home/astronauta.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </Floating>
         </div>
       </section>
 
@@ -811,13 +820,12 @@ export default function HomePage() {
         style={{ zIndex: 3, height: "100vh" }}
       >
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal style={{ width: "min(70vw, 380px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.costaSalguero}
               alt="Costa Salguero"
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -892,12 +900,12 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        {/* Ballena naranja */}
+        {/* Ballena naranja — completa en pantalla (right negativo la dejaba por la mitad) */}
         <div
           className="absolute pointer-events-none select-none hidden sm:block"
           style={{
             top: "50%",
-            right: "-4rem",
+            right: "2rem",
             transform: "translateY(-50%)",
             width: "min(24vw, 320px)",
             height: "min(24vw, 320px)",
@@ -905,12 +913,14 @@ export default function HomePage() {
             opacity: 0.9,
           }}
         >
-          <Image
-            src="/assets/home/ballena-naranja.png"
-            alt=""
-            fill
-            style={{ objectFit: "contain" }}
-          />
+          <Floating duration={6} y={10} rotate={2}>
+            <Image
+              src="/assets/home/ballena-naranja.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </Floating>
         </div>
       </section>
 

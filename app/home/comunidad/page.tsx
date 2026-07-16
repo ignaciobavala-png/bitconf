@@ -25,12 +25,16 @@ const lightStyle: React.CSSProperties = {
 const orangeTint =
   "brightness(0) saturate(100%) invert(60%) sepia(51%) saturate(1521%) hue-rotate(347deg) brightness(99%) contrast(97%)";
 
+// Versiones -trim (recortadas al texto) + altura fija TITLE_H para que todos
+// los títulos de sección tengan la misma altura de letra (ver app/home/page.tsx)
 const TITLE_IMAGES = {
-  comunidad: { es: "/assets/home/titulos/comunidad-es.png", en: "/assets/home/titulos/comunidad-en.png" },
-  comunidades: { es: "/assets/home/titulos/comunidades-es.png", en: "/assets/home/titulos/comunidades-en.png" },
-  embajadores: { es: "/assets/home/titulos/embajadores-es.png", en: "/assets/home/titulos/embajadores-en.png" },
-  studentHub: { es: "/assets/home/titulos/student-hub-es.png", en: "/assets/home/titulos/student-hub-en.png" },
+  comunidad: { es: "/assets/home/titulos/comunidad-es-trim.png", en: "/assets/home/titulos/comunidad-en-trim.png" },
+  comunidades: { es: "/assets/home/titulos/comunidades-es-trim.png", en: "/assets/home/titulos/comunidades-en-trim.png" },
+  embajadores: { es: "/assets/home/titulos/embajadores-es-trim.png", en: "/assets/home/titulos/embajadores-en-trim.png" },
+  studentHub: { es: "/assets/home/titulos/student-hub-es-trim.png", en: "/assets/home/titulos/student-hub-en-trim.png" },
 } as const;
+
+const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
 const T = {
   es: {
@@ -187,14 +191,13 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal style={{ width: "min(85vw, 460px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.comunidad[lang]}
               alt={lang === "es" ? "Comunidad" : "Community"}
-              width={1000}
-              height={500}
+              fill
               priority
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -377,13 +380,12 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <Reveal className="w-full max-w-6xl" style={{ maxWidth: "min(85vw, 480px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.embajadores[lang]}
               alt={t.verticalEmbajadores}
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -521,13 +523,12 @@ export default function ComunidadPage() {
         </div>
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal style={{ width: "min(85vw, 480px)" }}>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.studentHub[lang]}
               alt={t.verticalStudentHub}
-              width={1000}
-              height={500}
-              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
             />
           </Reveal>
 
@@ -623,13 +624,12 @@ export default function ComunidadPage() {
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative max-w-3xl">
-            <div style={{ width: "min(85vw, 480px)" }}>
+            <div className="relative w-full" style={{ height: TITLE_H }}>
               <Image
                 src={TITLE_IMAGES.comunidades[lang]}
                 alt={t.verticalComunidades}
-                width={1000}
-                height={500}
-                style={{ width: "100%", height: "auto", objectFit: "contain" }}
+                fill
+                style={{ objectFit: "contain", objectPosition: "left center" }}
               />
             </div>
 
