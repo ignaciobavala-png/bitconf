@@ -6,6 +6,7 @@ import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
+import Floating from "@/components/home/Floating";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -243,12 +244,14 @@ export default function ComunidadPage() {
                 height: "min(12vw, 110px)",
               }}
             >
-              <Image
-                src="/assets/home/pildora.png"
-                alt=""
-                fill
-                style={{ objectFit: "contain", transform: "rotate(-25deg)" }}
-              />
+              <Floating duration={5.5} y={8} rotate={4}>
+                <Image
+                  src="/assets/home/pildora.png"
+                  alt=""
+                  fill
+                  style={{ objectFit: "contain", transform: "rotate(-25deg)" }}
+                />
+              </Floating>
             </div>
           </Reveal>
         </div>
@@ -478,12 +481,14 @@ export default function ComunidadPage() {
             zIndex: 2,
           }}
         >
-          <Image
-            src="/assets/home/pildora.png"
-            alt=""
-            fill
-            style={{ objectFit: "contain", transform: "rotate(-30deg)" }}
-          />
+          <Floating duration={6.5} y={12} rotate={5}>
+            <Image
+              src="/assets/home/pildora.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain", transform: "rotate(-30deg)" }}
+            />
+          </Floating>
         </div>
 
         <Reveal
@@ -643,12 +648,14 @@ export default function ComunidadPage() {
                 height: "min(10vw, 100px)",
               }}
             >
-              <Image
-                src="/assets/home/pildora.png"
-                alt=""
-                fill
-                style={{ objectFit: "contain", transform: "rotate(20deg)" }}
-              />
+              <Floating duration={5} y={7} rotate={4}>
+                <Image
+                  src="/assets/home/pildora.png"
+                  alt=""
+                  fill
+                  style={{ objectFit: "contain", transform: "rotate(20deg)" }}
+                />
+              </Floating>
             </div>
           </Reveal>
 

@@ -369,12 +369,14 @@ export default function HomePage() {
             className="absolute pointer-events-none select-none hidden sm:block"
             style={{ top: "-1rem", right: "0", width: "min(22vw, 220px)", height: "min(22vw, 220px)", zIndex: 1 }}
           >
-            <Image
-              src="/assets/home/pildora.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain" }}
-            />
+            <Floating duration={6} y={10} rotate={4}>
+              <Image
+                src="/assets/home/pildora.png"
+                alt=""
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </Floating>
           </div>
 
           <Reveal className="relative w-full" style={{ zIndex: 2, height: TITLE_H }}>
