@@ -4,6 +4,53 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import HodlReasonsSection from "@/components/HodlReasonsSection";
+import { useLangStore } from "@/lib/store/lang";
+
+const TITLE_IMAGES = {
+  labitconf: "/assets/home/titulos/labitconf.png",
+  tickets: "/assets/home/titulos/tickets.png",
+  seParte: { es: "/assets/home/titulos/se-parte-es.png", en: "/assets/home/titulos/se-parte-en.png" },
+  costaSalguero: "/assets/home/titulos/costa-salguero.png",
+} as const;
+
+const T = {
+  es: {
+    heroButton: "Comprar Ticket",
+    presentacionP1:
+      "LABITCONF vuelve a Buenos Aires para su edición número 13, conectando a los líderes, constructores y comunidades que están dando forma al futuro de América Latina.",
+    presentacionP2: "Porque las mejores historias son las que siguen construyéndose.",
+    ubicacionP1:
+      "Centro Costa Salguero es uno de los espacios más reconocidos para eventos en la Ciudad de Buenos Aires.",
+    ubicacionP2:
+      "Cada año recibe conferencias, ferias y exposiciones de gran escala, consolidándose como un punto clave en el mapa cultural y tecnológico de la ciudad. Será la sede oficial de LABITCONF 2026 los días 30 y 31 de octubre.",
+    ubicacionBtn: "Abrir en Google Maps",
+    mapTitle: "Ubicación Costa Salguero",
+    footerBlurb:
+      "Desde 2013 la conferencia de Bitcoin más antigua del mundo y el evento número uno de la industria blockchain en América Latina.",
+    eventos2026: "Eventos 2026",
+    location: "Buenos Aires, Argentina",
+    quickLinks: "Enlaces Rápidos",
+    aboutLink: "Sobre LABITCONF",
+  },
+  en: {
+    heroButton: "Buy Ticket",
+    presentacionP1:
+      "LABITCONF returns to Buenos Aires for its 13th edition, connecting the leaders, builders and communities shaping the future of Latin America.",
+    presentacionP2: "Because the best stories are the ones still being written.",
+    ubicacionP1:
+      "Centro Costa Salguero is one of the most recognized event spaces in the City of Buenos Aires.",
+    ubicacionP2:
+      "Every year it hosts large-scale conferences, fairs and exhibitions, cementing itself as a key point on the city's cultural and technological map. It will be the official venue of LABITCONF 2026 on October 30 and 31.",
+    ubicacionBtn: "Open in Google Maps",
+    mapTitle: "Costa Salguero Location",
+    footerBlurb:
+      "Since 2013, the world's oldest Bitcoin conference and the number one blockchain industry event in Latin America.",
+    eventos2026: "2026 Events",
+    location: "Buenos Aires, Argentina",
+    quickLinks: "Quick Links",
+    aboutLink: "About LABITCONF",
+  },
+} as const;
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -66,26 +113,48 @@ const TICKETS = [
   },
 ] as const;
 
-const SE_PARTE_CARDS = [
-  {
-    title: "Sponsor Deck",
-    description: "Conocé las propuestas para sponsors y sé parte del evento más relevante de Bitcoin y Blockchain en LATAM.",
-    cta: "Descargá",
-    href: "#",
-  },
-  {
-    title: "Prensa",
-    description: "Acreditate como periodista y accedé a las zonas exclusivas de cobertura. Completá el formulario en el link de abajo.",
-    cta: "Acreditate",
-    href: "#",
-  },
-  {
-    title: "Speakers",
-    description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
-    cta: "Aplicá",
-    href: "#",
-  },
-] as const;
+const SE_PARTE_CARDS = {
+  es: [
+    {
+      title: "Sponsor Deck",
+      description: "Conocé las propuestas para sponsors y sé parte del evento más relevante de Bitcoin y Blockchain en LATAM.",
+      cta: "Descargá",
+      href: "#",
+    },
+    {
+      title: "Prensa",
+      description: "Acreditate como periodista y accedé a las zonas exclusivas de cobertura. Completá el formulario en el link de abajo.",
+      cta: "Acreditate",
+      href: "#",
+    },
+    {
+      title: "Speakers",
+      description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
+      cta: "Aplicá",
+      href: "#",
+    },
+  ],
+  en: [
+    {
+      title: "Sponsor Deck",
+      description: "Check out the sponsor proposals and be part of the most relevant Bitcoin and Blockchain event in LATAM.",
+      cta: "Download",
+      href: "#",
+    },
+    {
+      title: "Press",
+      description: "Get accredited as a journalist and access exclusive coverage areas. Fill out the form below.",
+      cta: "Get Accredited",
+      href: "#",
+    },
+    {
+      title: "Speakers",
+      description: "Fill out the form and apply to speak at the 2026 edition. Apply now and share your take on the future of Bitcoin and decentralization in LATAM.",
+      cta: "Apply",
+      href: "#",
+    },
+  ],
+} as const;
 
 type SpeakerCard =
   | { kind: "photo" }
@@ -218,6 +287,10 @@ function SpeakerCardView({ card, gradientIndex }: { card: SpeakerCard; gradientI
 }
 
 export default function HomePage() {
+  const lang = useLangStore((s) => s.lang);
+  const t = T[lang];
+  const seParteCards = SE_PARTE_CARDS[lang];
+
   return (
     <main
       className="relative min-h-screen overflow-hidden"
@@ -284,7 +357,7 @@ export default function HomePage() {
             padding: "12px 32px",
           }}
         >
-          Comprar Ticket
+          {t.heroButton}
         </a>
       </section>
 
@@ -327,18 +400,15 @@ export default function HomePage() {
             />
           </div>
 
-          <h2
-            className="relative"
-            style={{
-              ...labelStyle,
-              color: "#FCFCFC",
-              fontSize: "clamp(48px, 9vw, 104px)",
-              lineHeight: 1,
-              zIndex: 2,
-            }}
-          >
-            LABITCONF
-          </h2>
+          <div className="relative" style={{ zIndex: 2, width: "min(90vw, 640px)" }}>
+            <Image
+              src={TITLE_IMAGES.labitconf}
+              alt="LABITCONF"
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
+          </div>
 
           <p
             className="relative mt-6"
@@ -364,9 +434,7 @@ export default function HomePage() {
               zIndex: 2,
             }}
           >
-            LABITCONF vuelve a Buenos Aires para su edición número 13,
-            conectando a los líderes, constructores y comunidades que están
-            dando forma al futuro de América Latina.
+            {t.presentacionP1}
           </p>
 
           <p
@@ -380,7 +448,7 @@ export default function HomePage() {
               zIndex: 2,
             }}
           >
-            Porque las mejores historias son las que siguen construyéndose.
+            {t.presentacionP2}
           </p>
         </div>
       </section>
@@ -462,17 +530,14 @@ export default function HomePage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <div className="w-full max-w-6xl">
-            <h2
-              style={{
-                ...labelStyle,
-                color: "#9ACE6A",
-                fontSize: "clamp(48px, 9vw, 104px)",
-                lineHeight: 1,
-              }}
-            >
-              Tickets
-            </h2>
+          <div className="w-full max-w-6xl" style={{ maxWidth: "min(90vw, 520px)" }}>
+            <Image
+              src={TITLE_IMAGES.tickets}
+              alt="Tickets"
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
           </div>
 
           <div className="mt-10 sm:mt-16 mx-auto max-w-4xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-10 justify-items-center overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto">
@@ -676,19 +741,18 @@ export default function HomePage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              fontSize: "clamp(40px, 7vw, 84px)",
-              lineHeight: 1,
-            }}
-          >
-            Sé parte
-          </h2>
+          <div style={{ width: "min(80vw, 440px)" }}>
+            <Image
+              src={TITLE_IMAGES.seParte[lang]}
+              alt={lang === "es" ? "Sé parte" : "Be part"}
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
+          </div>
 
           <div className="mt-10 mx-auto grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-8 max-w-4xl">
-            {SE_PARTE_CARDS.map((card) => (
+            {seParteCards.map((card) => (
               <div
                 key={card.title}
                 className="rounded-2xl flex flex-col"
@@ -763,16 +827,15 @@ export default function HomePage() {
         style={{ zIndex: 3, height: "100vh" }}
       >
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              fontSize: "clamp(32px, 5.5vw, 64px)",
-              lineHeight: 1,
-            }}
-          >
-            Costa Salguero
-          </h2>
+          <div style={{ width: "min(70vw, 380px)" }}>
+            <Image
+              src={TITLE_IMAGES.costaSalguero}
+              alt="Costa Salguero"
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
+          </div>
 
           <p
             className="mt-3 max-w-2xl"
@@ -784,8 +847,7 @@ export default function HomePage() {
               lineHeight: 1.5,
             }}
           >
-            Centro Costa Salguero es uno de los espacios más reconocidos para
-            eventos en la Ciudad de Buenos Aires.
+            {t.ubicacionP1}
           </p>
 
           <p
@@ -798,10 +860,7 @@ export default function HomePage() {
               lineHeight: 1.5,
             }}
           >
-            Cada año recibe conferencias, ferias y exposiciones de gran
-            escala, consolidándose como un punto clave en el mapa cultural y
-            tecnológico de la ciudad. Será la sede oficial de LABITCONF 2026
-            los días 30 y 31 de octubre.
+            {t.ubicacionP2}
           </p>
 
           <a
@@ -817,7 +876,7 @@ export default function HomePage() {
               padding: "10px 28px",
             }}
           >
-            Abrir en Google Maps
+            {t.ubicacionBtn}
           </a>
 
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
@@ -839,7 +898,7 @@ export default function HomePage() {
                 height="100%"
                 style={{ border: 0, filter: "grayscale(0.3) contrast(1.1)" }}
                 loading="lazy"
-                title="Ubicación Costa Salguero"
+                title={t.mapTitle}
               />
             </div>
           </div>
@@ -871,7 +930,7 @@ export default function HomePage() {
       <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
         {/* Fila principal: watermark full-bleed + cápsula centrada + contactos superpuestos a los costados (desktop) */}
         <div className="relative" style={{ height: "400px" }}>
-          <HodlReasonsSection variant="compact" showLangToggle={false} />
+          <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} />
 
           <div className="hidden lg:flex absolute inset-0 z-10 items-center justify-between gap-6 px-6 sm:px-10 pointer-events-none">
             <div className="pointer-events-auto max-w-xs shrink-0">
@@ -903,9 +962,7 @@ export default function HomePage() {
                   lineHeight: 1.5,
                 }}
               >
-                Desde 2013 la conferencia de Bitcoin más antigua del mundo y
-                el evento número uno de la industria blockchain en América
-                Latina.
+                {t.footerBlurb}
               </p>
 
               <div className="flex items-center gap-3 mt-5">
@@ -928,7 +985,7 @@ export default function HomePage() {
             <div className="pointer-events-auto flex gap-16 shrink-0">
               <div>
                 <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                  Eventos 2026
+                  {t.eventos2026}
                 </div>
                 <div
                   className="mt-3"
@@ -940,13 +997,13 @@ export default function HomePage() {
                     lineHeight: 2,
                   }}
                 >
-                  Buenos Aires, Argentina
+                  {t.location}
                 </div>
               </div>
 
               <div>
                 <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                  Enlaces Rápidos
+                  {t.quickLinks}
                 </div>
                 <div
                   className="mt-3 flex flex-col gap-2"
@@ -958,7 +1015,7 @@ export default function HomePage() {
                   }}
                 >
                   <a href="#presentacion" className="hover:opacity-70 transition-opacity">
-                    Sobre LABITCONF
+                    {t.aboutLink}
                   </a>
                   <a href="#tickets" className="hover:opacity-70 transition-opacity">
                     Tickets
@@ -970,7 +1027,7 @@ export default function HomePage() {
         </div>
 
         {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse) */}
-        <div className="lg:hidden px-6 pt-8 pb-2">
+        <div className="lg:hidden px-6 pt-8 pb-12">
           <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
             LABITCONF.
           </div>
@@ -999,8 +1056,7 @@ export default function HomePage() {
               lineHeight: 1.5,
             }}
           >
-            Desde 2013 la conferencia de Bitcoin más antigua del mundo y el
-            evento número uno de la industria blockchain en América Latina.
+            {t.footerBlurb}
           </p>
 
           <div className="flex items-center gap-3 mt-5">
@@ -1022,7 +1078,7 @@ export default function HomePage() {
           <div className="flex gap-16 mt-8">
             <div>
               <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                Eventos 2026
+                {t.eventos2026}
               </div>
               <div
                 className="mt-3"
@@ -1034,13 +1090,13 @@ export default function HomePage() {
                   lineHeight: 2,
                 }}
               >
-                Buenos Aires, Argentina
+                {t.location}
               </div>
             </div>
 
             <div>
               <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                Enlaces Rápidos
+                {t.quickLinks}
               </div>
               <div
                 className="mt-3 flex flex-col gap-2"
@@ -1052,29 +1108,13 @@ export default function HomePage() {
                 }}
               >
                 <a href="#presentacion" className="hover:opacity-70 transition-opacity">
-                  Sobre LABITCONF
+                  {t.aboutLink}
                 </a>
                 <a href="#tickets" className="hover:opacity-70 transition-opacity">
                   Tickets
                 </a>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div className="relative px-6 sm:px-10 pb-10">
-          <div
-            className="mt-8 pt-6 max-w-6xl mx-auto flex flex-col sm:flex-row justify-between gap-2"
-            style={{
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 300,
-              color: "#6b6e73",
-              fontSize: "11px",
-            }}
-          >
-            <span>© 2026 LABITCONF — Latin America Bitcoin & Blockchain Conference</span>
-            <span>Buenos Aires, Argentina</span>
           </div>
         </div>
       </footer>

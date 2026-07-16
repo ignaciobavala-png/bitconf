@@ -3,9 +3,10 @@
 import { useState, useEffect, KeyboardEvent } from "react";
 import Image from "next/image";
 import WatermarkLayer from "@/components/WatermarkLayer";
+import LangToggle from "@/components/LangToggle";
+import type { Lang } from "@/lib/store/lang";
 
 type SubmitState = "idle" | "loading" | "success" | "error" | "ratelimit";
-type Lang = "es" | "en";
 
 const SPONSOR_EMAIL = "sponsors@labitconf.com";
 
@@ -77,14 +78,21 @@ interface HodlReasonsSectionProps {
    * (usado como footer embebido de la landing).
    */
   variant?: "full" | "compact";
+  /** Idioma controlado por el padre (ej. store global de /home). Si no se pasa, usa estado local. */
+  lang?: Lang;
+  onToggleLang?: () => void;
 }
 
 export default function HodlReasonsSection({
   showLangToggle = true,
   id,
   variant = "full",
+  lang: langProp,
+  onToggleLang,
 }: HodlReasonsSectionProps) {
-  const [lang, setLang] = useState<Lang>("es");
+  const [localLang, setLocalLang] = useState<Lang>("es");
+  const lang = langProp ?? localLang;
+  const toggleLang = onToggleLang ?? (() => setLocalLang((l) => (l === "es" ? "en" : "es")));
   const [input, setInput] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -216,15 +224,7 @@ export default function HodlReasonsSection({
       {/* Toggle idioma — top-left */}
       {showLangToggle && (
         <div className="absolute top-0 left-0 p-6" style={{ zIndex: 5 }}>
-          <button
-            onClick={() => setLang(lang === "es" ? "en" : "es")}
-            className="flex items-center border-2 rounded-full cursor-pointer transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
-            style={pillStyle}
-          >
-            <span style={{ color: lang === "es" ? "#FCFCFC" : "#4A6E2D" }}>ES</span>
-            <span style={{ color: "#4A6E2D", margin: "0 4px" }}>/</span>
-            <span style={{ color: lang === "en" ? "#FCFCFC" : "#4A6E2D" }}>EN</span>
-          </button>
+          <LangToggle lang={lang} onToggle={toggleLang} />
         </div>
       )}
 

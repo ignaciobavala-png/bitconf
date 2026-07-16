@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
+import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -21,21 +22,81 @@ const lightStyle: React.CSSProperties = {
 const orangeTint =
   "brightness(0) saturate(100%) invert(60%) sepia(51%) saturate(1521%) hue-rotate(347deg) brightness(99%) contrast(97%)";
 
+const TITLE_IMAGES = {
+  comunidad: { es: "/assets/home/titulos/comunidad-es.png", en: "/assets/home/titulos/comunidad-en.png" },
+  comunidades: { es: "/assets/home/titulos/comunidades-es.png", en: "/assets/home/titulos/comunidades-en.png" },
+  embajadores: { es: "/assets/home/titulos/embajadores-es.png", en: "/assets/home/titulos/embajadores-en.png" },
+  studentHub: { es: "/assets/home/titulos/student-hub-es.png", en: "/assets/home/titulos/student-hub-en.png" },
+} as const;
+
+const T = {
+  es: {
+    presentacionP1:
+      "LABITCONF vuelve a Buenos Aires para su edición número 13, conectando a los líderes, constructores y comunidades que están dando forma al futuro de América Latina.",
+    presentacionP2: "Porque las mejores historias son las que siguen construyéndose.",
+    inscribirme: "Inscribirme",
+    verticalEmbajadores: "Embajadores",
+    verticalStudentHub: "Student Hub",
+    verticalComunidades: "Comunidades",
+    ctaEmbajadorTitle: "¿Querés ser embajador?",
+    ctaHubTitle: "¿Querés unirte al hub?",
+    ctaComunidadTitle: "¿Querés unir tu comunidad?",
+    ctaButtonLabel: "Inscribite acá",
+    studentHubCopy:
+      "El Student Hub es el espacio de LABITCONF para estudiantes: charlas, workshops y networking para la próxima generación de constructores.",
+    partnerUnis: "Universidades aliadas",
+    comunidadesCopy:
+      "Estas son las comunidades que hacen que LABITCONF sea posible: grupos locales de toda América Latina que construyen, educan y difunden Bitcoin todo el año.",
+    footerBlurb:
+      "Desde 2013 la conferencia de Bitcoin más antigua del mundo y el evento número uno de la industria blockchain en América Latina.",
+    eventos2026: "Eventos 2026",
+    location: "Buenos Aires, Argentina",
+    quickLinks: "Enlaces Rápidos",
+    aboutLink: "Sobre LABITCONF",
+    legal: "Política de Privacidad · Términos y Condiciones",
+  },
+  en: {
+    presentacionP1:
+      "LABITCONF returns to Buenos Aires for its 13th edition, connecting the leaders, builders and communities shaping the future of Latin America.",
+    presentacionP2: "Because the best stories are the ones still being written.",
+    inscribirme: "Sign up",
+    verticalEmbajadores: "Ambassadors",
+    verticalStudentHub: "Student Hub",
+    verticalComunidades: "Communities",
+    ctaEmbajadorTitle: "Want to become an ambassador?",
+    ctaHubTitle: "Want to join the hub?",
+    ctaComunidadTitle: "Want to connect your community?",
+    ctaButtonLabel: "Sign up here",
+    studentHubCopy:
+      "Student Hub is LABITCONF's space for students: talks, workshops and networking for the next generation of builders.",
+    partnerUnis: "Partner universities",
+    comunidadesCopy:
+      "These are the communities that make LABITCONF possible: local groups across Latin America that build, educate and spread Bitcoin all year round.",
+    footerBlurb:
+      "Since 2013, the world's oldest Bitcoin conference and the number one blockchain industry event in Latin America.",
+    eventos2026: "2026 Events",
+    location: "Buenos Aires, Argentina",
+    quickLinks: "Quick Links",
+    aboutLink: "About LABITCONF",
+    legal: "Privacy Policy · Terms & Conditions",
+  },
+} as const;
+
 const VERTICALES = [
   {
-    title: "Embajadores",
+    key: "verticalEmbajadores",
     href: "#embajadores",
     image: "/assets/home/honeybadger-dots.png",
     labelPosition: "bottom",
   },
   {
-    title: "Student Hub",
+    key: "verticalStudentHub",
     href: "#student-hub",
     image: "/assets/home/ballena-dots.png",
     labelPosition: "top",
   },
   {
-    title: "Comunidades",
+    key: "verticalComunidades",
     href: "#comunidades",
     image: "/assets/home/pildora-dots.png",
     labelPosition: "bottom",
@@ -101,6 +162,9 @@ function LogoMarquee({ id, direction }: { id: string; direction: "left" | "right
 }
 
 export default function ComunidadPage() {
+  const lang = useLangStore((s) => s.lang);
+  const t = T[lang];
+
   return (
     <main
       className="relative min-h-screen overflow-hidden"
@@ -136,16 +200,16 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <h1
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              fontSize: "clamp(48px, 9vw, 104px)",
-              lineHeight: 1,
-            }}
-          >
-            Comunidad
-          </h1>
+          <div style={{ width: "min(85vw, 460px)" }}>
+            <Image
+              src={TITLE_IMAGES.comunidad[lang]}
+              alt={lang === "es" ? "Comunidad" : "Community"}
+              width={1000}
+              height={500}
+              priority
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
+          </div>
 
           <div className="relative mt-12 sm:ml-10 max-w-3xl">
             <div
@@ -164,9 +228,7 @@ export default function ComunidadPage() {
                   lineHeight: 1.6,
                 }}
               >
-                LABITCONF vuelve a Buenos Aires para su edición número 13,
-                conectando a los líderes, constructores y comunidades que están
-                dando forma al futuro de América Latina.
+                {t.presentacionP1}
               </p>
               <p
                 className="mt-4"
@@ -177,7 +239,7 @@ export default function ComunidadPage() {
                   lineHeight: 1.6,
                 }}
               >
-                Porque las mejores historias son las que siguen construyéndose.
+                {t.presentacionP2}
               </p>
             </div>
 
@@ -233,7 +295,7 @@ export default function ComunidadPage() {
           style={{ zIndex: 2 }}
         >
           {VERTICALES.map((vertical) => (
-            <div key={vertical.title} className="flex flex-col items-center gap-5">
+            <div key={vertical.key} className="flex flex-col items-center gap-5">
               {vertical.labelPosition === "top" && (
                 <a
                   href={vertical.href}
@@ -244,7 +306,7 @@ export default function ComunidadPage() {
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
-                  Inscribirme
+                  {t.inscribirme}
                 </a>
               )}
 
@@ -278,7 +340,7 @@ export default function ComunidadPage() {
                     textShadow: "0 2px 20px rgba(0,0,0,0.8)",
                   }}
                 >
-                  {vertical.title}
+                  {t[vertical.key]}
                 </span>
               </a>
 
@@ -292,7 +354,7 @@ export default function ComunidadPage() {
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
-                  Inscribirme
+                  {t.inscribirme}
                 </a>
               )}
             </div>
@@ -328,17 +390,14 @@ export default function ComunidadPage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <div className="w-full max-w-6xl">
-            <h2
-              style={{
-                ...labelStyle,
-                color: "#F7931A",
-                fontSize: "clamp(44px, 7vw, 84px)",
-                lineHeight: 1,
-              }}
-            >
-              Embajadores
-            </h2>
+          <div className="w-full max-w-6xl" style={{ maxWidth: "min(85vw, 480px)" }}>
+            <Image
+              src={TITLE_IMAGES.embajadores[lang]}
+              alt={t.verticalEmbajadores}
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
           </div>
 
           <div className="mt-14 mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-8 justify-items-center">
@@ -449,9 +508,9 @@ export default function ComunidadPage() {
               lineHeight: 1.1,
             }}
           >
-            ¿Querés ser embajador?
+            {t.ctaEmbajadorTitle}
           </h2>
-          <CtaButton label="Inscribite acá" />
+          <CtaButton label={t.ctaButtonLabel} />
         </div>
       </section>
 
@@ -474,16 +533,15 @@ export default function ComunidadPage() {
         </div>
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#F7931A",
-              fontSize: "clamp(44px, 7vw, 84px)",
-              lineHeight: 1,
-            }}
-          >
-            Student Hub
-          </h2>
+          <div style={{ width: "min(85vw, 480px)" }}>
+            <Image
+              src={TITLE_IMAGES.studentHub[lang]}
+              alt={t.verticalStudentHub}
+              width={1000}
+              height={500}
+              style={{ width: "100%", height: "auto", objectFit: "contain" }}
+            />
+          </div>
 
           <div
             className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
@@ -502,9 +560,7 @@ export default function ComunidadPage() {
               }}
             >
               {/* Copy placeholder — pendiente del cliente */}
-              El Student Hub es el espacio de LABITCONF para estudiantes:
-              charlas, workshops y networking para la próxima generación de
-              constructores.
+              {t.studentHubCopy}
             </p>
           </div>
 
@@ -517,7 +573,7 @@ export default function ComunidadPage() {
               lineHeight: 1,
             }}
           >
-            Universidades aliadas
+            {t.partnerUnis}
           </h3>
         </div>
 
@@ -564,9 +620,9 @@ export default function ComunidadPage() {
               lineHeight: 1.1,
             }}
           >
-            ¿Querés unirte al hub?
+            {t.ctaHubTitle}
           </h2>
-          <CtaButton label="Inscribite acá" />
+          <CtaButton label={t.ctaButtonLabel} />
         </div>
       </section>
 
@@ -594,16 +650,15 @@ export default function ComunidadPage() {
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <div className="relative max-w-3xl">
-            <h2
-              style={{
-                ...labelStyle,
-                color: "#F7931A",
-                fontSize: "clamp(44px, 7vw, 84px)",
-                lineHeight: 1,
-              }}
-            >
-              Comunidades
-            </h2>
+            <div style={{ width: "min(85vw, 480px)" }}>
+              <Image
+                src={TITLE_IMAGES.comunidades[lang]}
+                alt={t.verticalComunidades}
+                width={1000}
+                height={500}
+                style={{ width: "100%", height: "auto", objectFit: "contain" }}
+              />
+            </div>
 
             {/* Píldora acento */}
             <div
@@ -641,9 +696,7 @@ export default function ComunidadPage() {
               }}
             >
               {/* Copy placeholder — pendiente del cliente */}
-              Estas son las comunidades que hacen que LABITCONF sea posible:
-              grupos locales de toda América Latina que construyen, educan y
-              difunden Bitcoin todo el año.
+              {t.comunidadesCopy}
             </p>
           </div>
         </div>
@@ -691,9 +744,9 @@ export default function ComunidadPage() {
               lineHeight: 1.15,
             }}
           >
-            ¿Querés unir tu comunidad?
+            {t.ctaComunidadTitle}
           </h2>
-          <CtaButton label="Inscribite acá" />
+          <CtaButton label={t.ctaButtonLabel} />
         </div>
       </section>
 
@@ -783,8 +836,7 @@ export default function ComunidadPage() {
                   lineHeight: 1.5,
                 }}
               >
-                Desde 2013 la conferencia de Bitcoin más antigua del mundo y el
-                evento número uno de la industria blockchain en América Latina.
+                {t.footerBlurb}
               </p>
             </div>
 
@@ -834,7 +886,7 @@ export default function ComunidadPage() {
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
-                  Eventos 2026
+                  {t.eventos2026}
                 </div>
                 <div
                   className="mt-3"
@@ -845,7 +897,7 @@ export default function ComunidadPage() {
                     lineHeight: 2,
                   }}
                 >
-                  Buenos Aires, Argentina
+                  {t.location}
                 </div>
               </div>
 
@@ -857,7 +909,7 @@ export default function ComunidadPage() {
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
-                  Enlaces Rápidos
+                  {t.quickLinks}
                 </div>
                 <div
                   className="mt-3 flex flex-col gap-2"
@@ -868,7 +920,7 @@ export default function ComunidadPage() {
                   }}
                 >
                   <a href="/home#presentacion" className="hover:opacity-70 transition-opacity">
-                    Sobre LABITCONF
+                    {t.aboutLink}
                   </a>
                   <a href="/home#tickets" className="hover:opacity-70 transition-opacity">
                     Tickets
@@ -888,7 +940,7 @@ export default function ComunidadPage() {
             }}
           >
             <span>© 2026 LABITCONF — Latin America Bitcoin & Blockchain Conference</span>
-            <span>Política de Privacidad · Términos y Condiciones</span>
+            <span>{t.legal}</span>
           </div>
         </footer>
       </section>
