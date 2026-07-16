@@ -37,18 +37,20 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 
 ### Presentación (pantalla 2) — decisiones tomadas
 
-- Sección `#presentacion` debajo del hero: título "LABITCONF" grande con textura pixel de fondo (`public/assets/home/labitconf-pixel.png`, de `ASSETS 2D/LABITCONF_pixel.png`), píldora BTC arriba a la derecha (`public/assets/home/pildora.png`, de `ASSETS 3D/PILDORA_BTC_FINAL.png`), subtítulo con "Bitcoin"/"Blockchain" en naranja `#F7931A` (naranja estándar de Bitcoin — no había un naranja definido aún en la paleta del proyecto) y dos párrafos de copy.
+- Sección `#presentacion` debajo del hero: título "LABITCONF" grande, píldora BTC 3D (`public/assets/home/pildora.png`, de `ASSETS 3D/PILDORA_BTC_FINAL.png`) anclada al **borde derecho de la sección** (fuera del bloque `max-w-6xl`, centrada verticalmente — antes estaba dentro del bloque de texto y pisaba el subtítulo), subtítulo con "Bitcoin"/"Blockchain" en naranja `#F7931A` (naranja estándar de Bitcoin — no había un naranja definido aún en la paleta del proyecto) y dos párrafos de copy.
+- Fondo full-bleed: `public/assets/home/hashes.jpg` (de `SISTEMA DE FONDOS/ESTATICOS/HORIZONTALES/HASHES_NEGRO.png`) a opacity 0.3 + degradé vertical. La textura pixel que había detrás del título (`labitconf-pixel.png`) **se eliminó de esta sección** (quedaba como un recuadro); el asset sigue en uso en el hero de `/home/comunidad`.
 - El contenedor de esta sección usa `w-full max-w-6xl` **sin** `mx-auto`: centrarlo dejaba un margen vacío a la izquierda distinto al padding del navbar (que sí ocupa todo el ancho) — así el título arranca al mismo borde izquierdo que el logo `LABITCONF.`.
 
 ### Tickets (pantalla 3) — decisiones tomadas
 
-- Sección `#tickets` debajo de presentación: título "Tickets" en verde, fondo con textura de "lluvia" de dígitos (`public/assets/home/lluvia.png`, de `ASSETS 2D/LABITCONF_LLUVIA_1.png`), honeybadger 3D abajo a la izquierda (`public/assets/home/honeybadger.png`, de `ASSETS 3D/HONEYBADGER_FINAL.png`).
+- Sección `#tickets` debajo de presentación: título "Tickets" en verde, fondo con textura de "lluvia" de dígitos (`public/assets/home/lluvia.png`, de `ASSETS 2D/LABITCONF_LLUVIA_1.png`), honeybadger 3D abajo a la izquierda (`public/assets/home/honeybadger.png`, de `ASSETS 3D/HONEYBADGER_FINAL.png`), anclado dentro de la sección (`bottom: 1.5rem` — con bottom negativo el `overflow-hidden` le cortaba las piernas).
 - Las 3 tarjetas de ticket (General/Business/Experience) **no tienen asset dedicado** en `assets-bitconf/` — se construyeron con markup + gradientes CSS (gris metálico / blanco líquido / holográfico multicolor) replicando la estructura visual del mockup (badge de tier, "HODL" wordmark, nivel 01/02/03, tipo de pase, footer "LABITCONF 2026 — Hodl the future"), no como imagen.
 - El grid de cards va en un contenedor propio `mx-auto max-w-4xl` **separado** del título "Tickets" (que sigue en `max-w-6xl` sin centrar, alineado al navbar): si el grid comparte el contenedor del título, en pantallas anchas queda pegado a la izquierda en vez de centrado en toda la sección.
 
 ### Speakers (pantalla 4) — decisiones tomadas
 
-- Sección `#speakers`: 4 carriles horizontales en loop infinito (`framer-motion`, mismo patrón que `components/WatermarkLayer.tsx` de la pre-landing: array duplicado + `animate={{x: ["0%","-50%"]}}` con `repeat: Infinity`), alternando dirección fila por fila (izq/der/izq/der).
+- Sección `#speakers`: 4 carriles horizontales en loop infinito (`framer-motion`, patrón derivado de `components/WatermarkLayer.tsx` de la pre-landing), alternando dirección fila por fila (izq/der/izq/der).
+- **Loop sin saltos**: el set de cards se repite **x6** (`REPEATS = 6`) y la animación va de `0%` a `-100/REPEATS%`. Duplicar solo x2 (el patrón original) producía un "salto" visible al reiniciar el ciclo porque un set solo (4-5 cards, ~900-1500px) es más angosto que el viewport y quedaban huecos. El `gradientIndex` de cada card usa `i % lane.cards.length` para que todas las copias del set se vean iguales.
 - Cada carril mezcla 3 tipos de card, todas pill/cápsula: `photo` (placeholder con gradiente en la paleta del proyecto — **no hay fotos reales de speakers/escenario/público en `assets-bitconf/`**, se reemplazan cuando haya material), `stat` (número grande + label, ej. `+256 Talks`) y `label` (texto de dos líneas, ej. "Attendees" / "LABITCONF '24").
 - Fondo: `public/assets/home/pixel-grid.png` (de `ASSETS 2D/PIXEL 1.png`) con `filter: invert(1)` y opacity baja — el asset original es una grilla de puntos gris sobre blanco, se invierte para que quede sutil sobre fondo oscuro.
 - Duraciones de carril entre 42-55s para que no se sincronicen visualmente entre sí.
@@ -56,8 +58,8 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 ### Comunidad (página `/home/comunidad`) — decisiones tomadas
 
 - Ruta **anidada bajo `/home`** (`app/home/comunidad/page.tsx`): toda la fase 2 vive bajo ese prefijo y se mueve junta cuando llegue el corte final (`/home` → `/`). Se accede desde el link "Comunidad" del navbar.
-- **Navbar extraído** a `components/home/Navbar.tsx` (compartido entre `/home` y `/home/comunidad`, links con prefijo `/home#...` para que funcionen desde ambas rutas). El **footer de comunidad es propio** de esa página (compacto, con astronauta + franja de iconos wireframe arriba) — no se comparte con el de `/home`.
-- 9 pantallas según mockups (hoy en `~/Descargas/1-9.png`): hero, 3 verticales (Embajadores/Student Hub/Comunidades), grid de embajadores, CTA embajador, Student Hub + universidades, CTA hub, Comunidades + logos, CTA comunidad, cierre + footer.
+- **Navbar extraído** a `components/home/Navbar.tsx` (compartido entre `/home` y `/home/comunidad`, links con prefijo `/home#...` para que funcionen desde ambas rutas). El **footer también está extraído y compartido**: `components/home/Footer.tsx` (wordmark HODL con gradiente, blurb, redes, Eventos 2026 y quick links, con `HodlReasonsSection variant="compact"` de fondo) — el footer propio de comunidad con astronauta + iconos wireframe **se eliminó** a pedido del cliente, igual que la sección "Partner universities" del Student Hub (el `LogoMarquee` de la sección Comunidades sí quedó).
+- 8 pantallas según mockups (hoy en `~/Descargas/1-9.png`): hero, 3 verticales (Embajadores/Student Hub/Comunidades), grid de embajadores, CTA embajador, Student Hub, CTA hub, Comunidades + logos, CTA comunidad + footer compartido.
 - Assets nuevos en `public/assets/home/`: `pildora-dots.png`, `ballena-dots.png`, `honeybadger-dots.png` (figuras punteadas, de `LABITCONF_media (15/16/7)`), `lluvia-naranja.png` (de `LABITCONF_LLUVIA_3.png`), `iconos-wireframe.png` (de `LABITCONF_media (18) 1.png`, recortado con `convert -trim` porque el original trae mucho lienzo negro).
 - Las figuras punteadas son grises: se tiñen al naranja `#F7931A` con la cadena CSS `brightness(0) saturate(100%) invert(...) sepia(...) hue-rotate(...)` (forzar a negro y recolorear) — un `sepia+hue-rotate` directo da oliva, no naranja.
 - **Pendientes del cliente**: destino de los 3 botones "Inscribite acá" y del Q&A flotante (hoy `#`), copys reales de Student Hub/Comunidades, fotos de embajadores (solo card placeholder "Axel Becker"), logos de universidades y comunidades (marquee con texto "logo" placeholder).
@@ -65,6 +67,33 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 ### Full-bleed por pantalla
 
 Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-center` — cada sección ocupa la pantalla completa (patrón "1:1 screen") para dar más presencia, en vez de alturas ajustadas al contenido.
+
+### Ubicación (Costa Salguero) — decisiones tomadas
+
+- Sección `#ubicacion`: título, dos párrafos, botón "Abrir en Google Maps" y grid de 2 (placeholder de foto con gradiente + iframe de Google Maps embebido con filtro grayscale).
+- Fondo: `public/assets/home/hexmap.jpg` (de `SISTEMA DE FONDOS/ESTATICOS/HORIZONTALES/HEXMAP_NEGRO.png` — puntos tipo mapa, elegido por afinidad temática con "ubicación") a opacity 0.55 + degradé de legibilidad.
+- Ballena naranja 3D a la derecha, tamaño `min(48vw, 640px)` (se duplicó del original a pedido), centrada verticalmente a `2rem` del borde.
+
+### Sistema de animaciones (componentes compartidos)
+
+- `components/home/Reveal.tsx` — entrada al scrollear: fade + y 28px→0, **una sola vez** (`viewport.once`), 0.7s ease-out, prop `delay` para stagger (cards escalonadas con `i * 0.12`). Acepta `className`/`style` para **sustituir** contenedores existentes (items de grid/flex) sin alterar el layout. Aplicado a todo el contenido de `/home` y `/home/comunidad` (títulos, párrafos, cards, CTAs) — no a fondos ni decoraciones.
+- `components/home/Floating.tsx` — flotación idle infinita para decoraciones 3D: `y` + rotación leve en loop `mirror` easeInOut. Aplicado a honeybadger (5s), astronauta (7s), ballena naranja (6s), píldora de presentación (6s) y las 3 píldoras de comunidad (5-6.5s) — duraciones distintas a propósito para que no se sincronicen. La rotación fija de cada píldora va en el `transform` de la `<Image>` interna; el wrapper solo oscila.
+- **Cuidado con `overflow-hidden` + decoraciones con `bottom` negativo**: cortaba las piernas del honeybadger y el astronauta. Las decoraciones 3D van como hijas directas de la `<section>` ancladas con offsets positivos (`bottom: 1.5-2rem`), no colgando fuera del contenedor de contenido.
+
+### Títulos de sección — tamaño uniforme
+
+- Los títulos son PNG (texto con estilo horneado) en `public/assets/home/titulos/`, versiones `-trim` **recortadas al texto** con `convert -trim +repage`. Los originales (lienzo 1000x500 con alturas de texto dispares: TICKETS 155px vs STUDENT HUB 67px) se **borraron del repo** — cada título se veía de un tamaño distinto.
+- Se renderizan con altura fija `TITLE_H = clamp(40px, 5.5vw, 68px)` (const definida en cada página) vía `<Image fill>` + `objectFit: contain` + `objectPosition: left center`, dentro de un wrapper `relative w-full` — así todos tienen la misma altura de letra y los largos se achican solos en viewports angostos.
+- Si se regeneran los recortes, **usar nombre de archivo nuevo** (caché de imágenes de Next, ver "Cosas a tener en cuenta").
+
+### Q&A flotante (widget compartido)
+
+- `components/home/QaChatWidget.tsx` — burbuja "Q&A" fija abajo a la derecha en `/home` y `/home/comunidad`, abre un chat de preguntas frecuentes.
+- Backend en `app/api/qa-chat/route.ts` con AI SDK (`@ai-sdk/react` + `useChat` + `DefaultChatTransport`) y Groq (`@ai-sdk/groq`) como provider.
+
+### Fondos disponibles (fuera del repo)
+
+Además de `assets-bitconf/` (2D/3D), hay un banco de fondos en `~/Escritorio/assets bitconf/SISTEMA DE FONDOS/` (ESTATICOS/HORIZONTALES y VERTICALES): variantes negro/naranja de ballena, astronauta, honeybadger, píldora, hashes, hexmap, lluvia bit, iconos. Ya usados: `HEXMAP_NEGRO` (ubicación) y `HASHES_NEGRO` (presentación). Se copian comprimidos a JPG (`convert -quality 82`, son fondos opacos sin alfa) en `public/assets/home/`.
 
 ## Deploy
 
