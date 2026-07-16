@@ -341,44 +341,54 @@ export default function HomePage() {
       {/* Presentación */}
       <section
         id="presentacion"
-        className="relative flex flex-col justify-center px-6 sm:px-10"
+        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
         style={{ zIndex: 3, height: "100vh" }}
       >
-        <div className="relative w-full max-w-6xl">
-          {/* Textura pixel detrás del título */}
-          <div
-            className="absolute pointer-events-none select-none"
-            style={{
-              top: "-4rem",
-              left: "-2rem",
-              right: "-2rem",
-              height: "16rem",
-              zIndex: 0,
-            }}
-          >
+        {/* Fondo: hashes cripto (complementa la textura pixel del título) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.3 }}
+        >
+          <Image
+            src="/assets/home/hashes.jpg"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #0D0D0B 100%)",
+          }}
+        />
+
+        {/* Píldora BTC — contra el borde derecho de la sección, fuera del bloque de texto */}
+        <div
+          className="absolute pointer-events-none select-none hidden sm:block"
+          style={{
+            top: "50%",
+            right: "2rem",
+            transform: "translateY(-50%)",
+            width: "min(22vw, 220px)",
+            height: "min(22vw, 220px)",
+            zIndex: 1,
+          }}
+        >
+          <Floating duration={6} y={10} rotate={4}>
             <Image
-              src="/assets/home/labitconf-pixel.png"
+              src="/assets/home/pildora.png"
               alt=""
               fill
-              style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.5 }}
+              style={{ objectFit: "contain" }}
             />
-          </div>
+          </Floating>
+        </div>
 
-          {/* Píldora BTC */}
-          <div
-            className="absolute pointer-events-none select-none hidden sm:block"
-            style={{ top: "-1rem", right: "0", width: "min(22vw, 220px)", height: "min(22vw, 220px)", zIndex: 1 }}
-          >
-            <Floating duration={6} y={10} rotate={4}>
-              <Image
-                src="/assets/home/pildora.png"
-                alt=""
-                fill
-                style={{ objectFit: "contain" }}
-              />
-            </Floating>
-          </div>
-
+        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ zIndex: 2, height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.labitconf}
@@ -821,6 +831,28 @@ export default function HomePage() {
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
         style={{ zIndex: 3, height: "100vh" }}
       >
+        {/* Fondo: hexmap (puntos tipo mapa) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.55 }}
+        >
+          <Image
+            src="/assets/home/hexmap.jpg"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #0D0D0B 100%)",
+          }}
+        />
+
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
@@ -909,8 +941,8 @@ export default function HomePage() {
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(24vw, 320px)",
-            height: "min(24vw, 320px)",
+            width: "min(48vw, 640px)",
+            height: "min(48vw, 640px)",
             zIndex: 1,
             opacity: 0.9,
           }}
