@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
+import HeroVideo from "@/components/home/HeroVideo";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
@@ -21,6 +22,10 @@ const TITLE_IMAGES = {
 
 // Altura uniforme de los títulos de sección
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
+
+// Banner del hero: video servido desde el bucket público de Supabase (no en git).
+const HERO_VIDEO_URL =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero.mp4";
 
 const T = {
   es: {
@@ -303,27 +308,23 @@ export default function HomePage() {
       {/* Navbar */}
       <Navbar />
 
-      {/* Hero central */}
+      {/* Hero — video banner full-bleed (1:1 screen) sobre negro puro */}
       <section
-        className="relative flex flex-col items-center justify-center px-6"
-        style={{ zIndex: 3, height: "100vh", paddingTop: "6rem" }}
+        className="relative flex flex-col items-center justify-end overflow-hidden px-6"
+        style={{ zIndex: 4, height: "100vh", background: "#000", paddingBottom: "10vh" }}
       >
-        <Reveal className="w-full flex justify-center">
-          <Image
-            src="/assets/home/hodl-main.png"
-            alt="LABITCONF 26 — HODL, Costa Salguero, BsAs, OCT 30-31"
-            width={1800}
-            height={684}
-            priority
-            className="w-[92vw] sm:w-[70vw] md:w-[52vw]"
-            style={{ objectFit: "contain", height: "auto" }}
+        {/* Video full-bleed: llena el hero, letterbox fundido con el negro */}
+        <div className="absolute inset-0" style={{ zIndex: 0 }}>
+          <HeroVideo
+            src={HERO_VIDEO_URL}
+            poster="/assets/home/hero-poster.jpg"
           />
-        </Reveal>
+        </div>
 
-        <Reveal delay={0.15}>
+        <Reveal delay={0.15} className="relative" style={{ zIndex: 1 }}>
           <a
             href="#tickets"
-            className="mt-14 inline-block rounded-full transition-colors duration-200 border-2"
+            className="inline-block rounded-full transition-colors duration-200 border-2"
             style={{
               ...labelStyle,
               color: "#0D0D0B",
