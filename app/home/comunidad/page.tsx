@@ -21,7 +21,7 @@ const lightStyle: React.CSSProperties = {
   fontWeight: 300,
 };
 
-// Tinte naranja #F7931A para las figuras punteadas: fuerza el asset gris a
+// Tinte naranja #FF4E01 para las figuras punteadas: fuerza el asset gris a
 // negro y lo recolorea (invert/sepia/saturate calculados para ese hex)
 const orangeTint =
   "brightness(0) saturate(100%) invert(60%) sepia(51%) saturate(1521%) hue-rotate(347deg) brightness(99%) contrast(97%)";
@@ -98,7 +98,7 @@ const VERTICALES = [
 const EMBAJADORES: { name: [string, string]; gradient: string }[] = [
   {
     name: ["Axel", "Becker"],
-    gradient: "linear-gradient(135deg, #1c1c1c 0%, #F7931A 100%)",
+    gradient: "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
   },
 ];
 
@@ -108,11 +108,11 @@ function CtaButton({ label }: { label: string }) {
   return (
     <a
       href="#"
-      className="rounded-full transition-colors duration-200 border-2 hover:bg-[#9ACE6A] hover:text-[#0D0D0B]"
+      className="rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
       style={{
         ...labelStyle,
-        color: "#FCFCFC",
-        borderColor: "#9ACE6A",
+        color: "#E6EEF2",
+        borderColor: "#ABF760",
         background: "rgba(13,13,11,0.6)",
         fontSize: "clamp(13px, 1.2vw, 16px)",
         padding: "14px 40px",
@@ -139,7 +139,7 @@ function LogoMarquee({ id, direction }: { id: string; direction: "left" | "right
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 900,
-              color: "#FCFCFC",
+              color: "#E6EEF2",
               fontSize: "clamp(32px, 4vw, 48px)",
               lineHeight: 1,
               textTransform: "lowercase",
@@ -160,7 +160,7 @@ export default function ComunidadPage() {
   return (
     <main
       className="relative min-h-screen overflow-hidden"
-      style={{ background: "#0D0D0B" }}
+      style={{ background: "#171616" }}
     >
       <Navbar />
 
@@ -187,7 +187,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.45) 20%, rgba(13,13,11,0.45) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.45) 20%, rgba(13,13,11,0.45) 80%, #171616 100%)",
           }}
         />
 
@@ -206,7 +206,7 @@ export default function ComunidadPage() {
             <div
               className="rounded-3xl"
               style={{
-                border: "1px solid #9ACE6A",
+                border: "1px solid #ABF760",
                 background: "rgba(13,13,11,0.55)",
                 padding: "clamp(24px, 4vw, 48px)",
               }}
@@ -214,7 +214,7 @@ export default function ComunidadPage() {
               <p
                 style={{
                   ...lightStyle,
-                  color: "#FCFCFC",
+                  color: "#E6EEF2",
                   fontSize: "clamp(14px, 1.4vw, 17px)",
                   lineHeight: 1.6,
                 }}
@@ -225,7 +225,7 @@ export default function ComunidadPage() {
                 className="mt-4"
                 style={{
                   ...lightStyle,
-                  color: "#FCFCFC",
+                  color: "#E6EEF2",
                   fontSize: "clamp(14px, 1.4vw, 17px)",
                   lineHeight: 1.6,
                 }}
@@ -279,7 +279,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #171616 100%)",
           }}
         />
 
@@ -295,7 +295,7 @@ export default function ComunidadPage() {
                   className="transition-opacity duration-200 hover:opacity-70"
                   style={{
                     ...lightStyle,
-                    color: "#FCFCFC",
+                    color: "#E6EEF2",
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
@@ -308,7 +308,7 @@ export default function ComunidadPage() {
                 className="relative block w-full rounded-3xl overflow-hidden transition-transform duration-200 hover:scale-[1.02]"
                 style={{
                   aspectRatio: "1 / 1.15",
-                  border: "1px solid #9ACE6A",
+                  border: "1px solid #ABF760",
                   background: "rgba(13,13,11,0.4)",
                 }}
               >
@@ -327,7 +327,7 @@ export default function ComunidadPage() {
                   className="absolute inset-0 flex items-center justify-center text-center px-4"
                   style={{
                     ...labelStyle,
-                    color: "#FCFCFC",
+                    color: "#E6EEF2",
                     fontSize: "clamp(24px, 2.6vw, 34px)",
                     lineHeight: 1.15,
                     textShadow: "0 2px 20px rgba(0,0,0,0.8)",
@@ -343,7 +343,7 @@ export default function ComunidadPage() {
                   className="transition-opacity duration-200 hover:opacity-70"
                   style={{
                     ...lightStyle,
-                    color: "#FCFCFC",
+                    color: "#E6EEF2",
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                   }}
                 >
@@ -378,7 +378,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
           }}
         />
 
@@ -392,17 +392,17 @@ export default function ComunidadPage() {
             />
           </Reveal>
 
-          <div className="mt-14 mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-8 justify-items-center">
-            {Array.from({ length: 3 }, (_, i) => {
+          <div className="mt-14 mx-auto max-w-6xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 justify-items-center">
+            {Array.from({ length: 6 }, (_, i) => {
               const embajador = EMBAJADORES[i];
               return (
                 <Reveal
                   key={i}
                   delay={0.1 + i * 0.12}
-                  className="relative rounded-3xl overflow-hidden w-full max-w-[260px]"
+                  className="relative rounded-2xl overflow-hidden w-full max-w-[170px]"
                   style={{
                     aspectRatio: "3 / 4",
-                    border: "1px solid #9ACE6A",
+                    border: "1px solid #ABF760",
                     background: "rgba(13,13,11,0.4)",
                   }}
                 >
@@ -413,12 +413,12 @@ export default function ComunidadPage() {
                         className="absolute inset-0"
                         style={{ background: embajador.gradient, opacity: 0.85 }}
                       />
-                      <div className="absolute bottom-6 left-5">
+                      <div className="absolute bottom-4 left-4">
                         <div
                           style={{
                             ...labelStyle,
-                            color: "#FCFCFC",
-                            fontSize: "clamp(20px, 2.2vw, 28px)",
+                            color: "#E6EEF2",
+                            fontSize: "clamp(15px, 1.4vw, 19px)",
                             lineHeight: 1.1,
                           }}
                         >
@@ -427,8 +427,8 @@ export default function ComunidadPage() {
                         <div
                           style={{
                             ...labelStyle,
-                            color: "#F7931A",
-                            fontSize: "clamp(20px, 2.2vw, 28px)",
+                            color: "#FF4E01",
+                            fontSize: "clamp(15px, 1.4vw, 19px)",
                             lineHeight: 1.1,
                           }}
                         >
@@ -466,7 +466,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.35) 25%, rgba(13,13,11,0.35) 75%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 25%, rgba(13,13,11,0.35) 75%, #171616 100%)",
           }}
         />
 
@@ -498,7 +498,7 @@ export default function ComunidadPage() {
           <h2
             style={{
               ...labelStyle,
-              color: "#F7931A",
+              color: "#FF4E01",
               fontSize: "clamp(36px, 6vw, 72px)",
               lineHeight: 1.1,
             }}
@@ -541,7 +541,7 @@ export default function ComunidadPage() {
             delay={0.15}
             className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
             style={{
-              border: "1px solid #9ACE6A",
+              border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
@@ -549,7 +549,7 @@ export default function ComunidadPage() {
             <p
               style={{
                 ...lightStyle,
-                color: "#FCFCFC",
+                color: "#E6EEF2",
                 fontSize: "clamp(14px, 1.4vw, 17px)",
                 lineHeight: 1.6,
               }}
@@ -594,7 +594,7 @@ export default function ComunidadPage() {
           <h2
             style={{
               ...labelStyle,
-              color: "#F7931A",
+              color: "#FF4E01",
               fontSize: "clamp(36px, 6vw, 72px)",
               lineHeight: 1.1,
             }}
@@ -663,7 +663,7 @@ export default function ComunidadPage() {
             delay={0.15}
             className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
             style={{
-              border: "1px solid #9ACE6A",
+              border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
@@ -671,7 +671,7 @@ export default function ComunidadPage() {
             <p
               style={{
                 ...lightStyle,
-                color: "#FCFCFC",
+                color: "#E6EEF2",
                 fontSize: "clamp(14px, 1.4vw, 17px)",
                 lineHeight: 1.6,
               }}
@@ -709,7 +709,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #171616 100%)",
           }}
         />
 
@@ -720,7 +720,7 @@ export default function ComunidadPage() {
           <h2
             style={{
               ...labelStyle,
-              color: "#F7931A",
+              color: "#FF4E01",
               fontSize: "clamp(36px, 6vw, 72px)",
               lineHeight: 1.15,
             }}

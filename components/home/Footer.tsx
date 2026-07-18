@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import HodlReasonsSection from "@/components/HodlReasonsSection";
 
 const labelStyle: React.CSSProperties = {
@@ -60,25 +61,20 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
       <div className="relative" style={{ height: "400px" }}>
         <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} />
 
-        <div className="hidden lg:flex absolute inset-0 z-10 items-center justify-between gap-6 px-6 sm:px-10 pointer-events-none">
+        <div className="hidden lg:flex absolute inset-0 z-10 items-end justify-between gap-6 px-6 sm:px-10 lg:pr-28 pb-8 pointer-events-none">
           <div className="pointer-events-auto max-w-xs shrink-0">
-            <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
+            <div style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
               LABITCONF.
             </div>
-            <div
-              style={{
-                ...labelStyle,
-                fontSize: "clamp(32px, 4.5vw, 48px)",
-                lineHeight: 1,
-                marginTop: "6px",
-                background:
-                  "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              HODL
+            {/* Logo HODL (marca 2D) — reemplaza el wordmark de texto (asset del cliente) */}
+            <div className="relative" style={{ marginTop: "6px", height: "clamp(30px, 4.2vw, 44px)", width: "clamp(111px, 15.5vw, 163px)" }}>
+              <Image
+                src="/assets/home/hodl-marca.png"
+                alt="HODL"
+                fill
+                sizes="163px"
+                style={{ objectFit: "contain", objectPosition: "left center" }}
+              />
             </div>
             <p
               className="mt-3 max-w-xs"
@@ -100,9 +96,9 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
                   href={social.href}
                   aria-label={social.label}
                   className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                  style={{ width: "34px", height: "34px", background: "#F7931A" }}
+                  style={{ width: "34px", height: "34px", background: "#FF4E01" }}
                 >
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="#0D0D0B">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="#171616">
                     <path d={social.path} />
                   </svg>
                 </a>
@@ -110,69 +106,23 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
             </div>
           </div>
 
-          <div className="pointer-events-auto flex gap-16 shrink-0">
-            <div>
-              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                {t.eventos2026}
-              </div>
-              <div
-                className="mt-3"
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(12px, 1.1vw, 14px)",
-                  lineHeight: 2,
-                }}
-              >
-                {t.location}
-              </div>
-            </div>
-
-            <div>
-              <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                {t.quickLinks}
-              </div>
-              <div
-                className="mt-3 flex flex-col gap-2"
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: "clamp(12px, 1.1vw, 14px)",
-                }}
-              >
-                <a href="/home#presentacion" className="hover:opacity-70 transition-opacity">
-                  {t.aboutLink}
-                </a>
-                <a href="/home#tickets" className="hover:opacity-70 transition-opacity">
-                  Tickets
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse) */}
       <div className="lg:hidden px-6 pt-8 pb-12">
-        <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
+        <div style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
           LABITCONF.
         </div>
-        <div
-          style={{
-            ...labelStyle,
-            fontSize: "clamp(32px, 8vw, 48px)",
-            lineHeight: 1,
-            marginTop: "6px",
-            background:
-              "linear-gradient(90deg, #F7931A 0%, #F2A17A 40%, #E07AA0 70%, #B06BE0 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          HODL
+        {/* Logo HODL (marca 2D) — reemplaza el wordmark de texto (asset del cliente) */}
+        <div className="relative" style={{ marginTop: "6px", height: "clamp(30px, 8vw, 44px)", width: "clamp(111px, 29.6vw, 163px)" }}>
+          <Image
+            src="/assets/home/hodl-marca.png"
+            alt="HODL"
+            fill
+            sizes="163px"
+            style={{ objectFit: "contain", objectPosition: "left center" }}
+          />
         </div>
         <p
           className="mt-3 max-w-xs"
@@ -194,55 +144,13 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
               href={social.href}
               aria-label={social.label}
               className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-              style={{ width: "38px", height: "38px", background: "#F7931A" }}
+              style={{ width: "38px", height: "38px", background: "#FF4E01" }}
             >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="#0D0D0B">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="#171616">
                 <path d={social.path} />
               </svg>
             </a>
           ))}
-        </div>
-
-        <div className="flex gap-16 mt-8">
-          <div>
-            <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-              {t.eventos2026}
-            </div>
-            <div
-              className="mt-3"
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                color: "#A5A8B1",
-                fontSize: "clamp(12px, 1.1vw, 14px)",
-                lineHeight: 2,
-              }}
-            >
-              {t.location}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ ...labelStyle, color: "#FCFCFC", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-              {t.quickLinks}
-            </div>
-            <div
-              className="mt-3 flex flex-col gap-2"
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                color: "#A5A8B1",
-                fontSize: "clamp(12px, 1.1vw, 14px)",
-              }}
-            >
-              <a href="/home#presentacion" className="hover:opacity-70 transition-opacity">
-                {t.aboutLink}
-              </a>
-              <a href="/home#tickets" className="hover:opacity-70 transition-opacity">
-                Tickets
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </footer>

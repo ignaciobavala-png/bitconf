@@ -68,7 +68,7 @@ export default function QaChatWidget() {
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
                 fontSize: "13px",
-                color: "#9ACE6A",
+                color: "#ABF760",
                 textTransform: "uppercase",
               }}
             >
@@ -104,8 +104,8 @@ export default function QaChatWidget() {
                 style={{
                   alignSelf: m.role === "user" ? "flex-end" : "flex-start",
                   maxWidth: "85%",
-                  background: m.role === "user" ? "#9ACE6A" : "rgba(255,255,255,0.06)",
-                  color: m.role === "user" ? "#0D0D0B" : "#E5E5E0",
+                  background: m.role === "user" ? "#ABF760" : "rgba(255,255,255,0.06)",
+                  color: m.role === "user" ? "#171616" : "#E5E5E0",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
                   fontSize: "13px",
@@ -139,8 +139,8 @@ export default function QaChatWidget() {
               disabled={isStreaming || !input.trim()}
               className="rounded-lg px-3 py-2 disabled:opacity-40 hover:opacity-90 transition-opacity"
               style={{
-                background: "#9ACE6A",
-                color: "#0D0D0B",
+                background: "#ABF760",
+                color: "#171616",
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
                 fontSize: "11px",
@@ -161,8 +161,8 @@ export default function QaChatWidget() {
           right: "28px",
           width: "56px",
           height: "56px",
-          background: "#9ACE6A",
-          color: "#0D0D0B",
+          background: "#ABF760",
+          color: "#171616",
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 900,
           fontSize: "12px",

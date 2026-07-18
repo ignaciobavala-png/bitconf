@@ -39,6 +39,8 @@ const T = {
       "Cada año recibe conferencias, ferias y exposiciones de gran escala, consolidándose como un punto clave en el mapa cultural y tecnológico de la ciudad. Será la sede oficial de LABITCONF 2026 los días 30 y 31 de octubre.",
     ubicacionBtn: "Abrir en Google Maps",
     mapTitle: "Ubicación Costa Salguero",
+    ticketsIncludes: "Incluye",
+    ticketsBuy: "Comprar",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -51,6 +53,8 @@ const T = {
       "Every year it hosts large-scale conferences, fairs and exhibitions, cementing itself as a key point on the city's cultural and technological map. It will be the official venue of LABITCONF 2026 on October 30 and 31.",
     ubicacionBtn: "Open in Google Maps",
     mapTitle: "Costa Salguero Location",
+    ticketsIncludes: "Includes",
+    ticketsBuy: "Buy",
   },
 } as const;
 
@@ -62,34 +66,96 @@ const labelStyle: React.CSSProperties = {
 };
 
 
+// Beneficios por tier (info del cliente, 16/7). Lista COMPLETA por card
+// (acumulativa: Business incluye lo de General, Experience lo de ambos).
+const TICKET_FEATURES = {
+  es: {
+    general: [
+      "Acceso 1 o 2 días",
+      "Escenarios",
+      "Chill Area",
+      "Dinner Points",
+      "Hodleween Party (solo pase 2 días)",
+    ],
+    businessExtra: [
+      "Área VIP",
+      "Espacio preferencial Main Stage",
+      "All inclusive",
+      "Open bar",
+      "Coffee Bar",
+      "Merch bag",
+      "Trezor Model T",
+    ],
+    experienceExtra: [
+      "Open Executive · 29 oct",
+      "Closing Day · 1 nov",
+      "Trezor Model One",
+    ],
+  },
+  en: {
+    general: [
+      "1 or 2-day access",
+      "Stages",
+      "Chill Area",
+      "Dinner Points",
+      "Hodleween Party (2-day pass only)",
+    ],
+    businessExtra: [
+      "VIP Area",
+      "Preferred Main Stage space",
+      "All inclusive",
+      "Open bar",
+      "Coffee Bar",
+      "Merch bag",
+      "Trezor Model T",
+    ],
+    experienceExtra: [
+      "Open Executive · Oct 29",
+      "Closing Day · Nov 1",
+      "Trezor Model One",
+    ],
+  },
+} as const;
+
+function ticketFeatures(tier: string, lang: "es" | "en"): readonly string[] {
+  const f = TICKET_FEATURES[lang];
+  if (tier === "General") return f.general;
+  if (tier === "Business") return [...f.general, ...f.businessExtra];
+  return [...f.general, ...f.businessExtra, ...f.experienceExtra];
+}
+
+// Paleta por tier según el manual (16/7): General naranja · Business plateado ·
+// Experience grafito ("Batmóvil"). General va en pesos (AR$); los otros en USD.
 const TICKETS = [
   {
     tier: "General",
-    code: "GEN",
-    level: "01",
-    pass: "General Pass",
-    accent: "#A5A8B1",
+    tagline: "HODL the Community",
+    accent: "#171616", // sobre naranja, acento oscuro (identidad Bitcoin)
+    dark: true,
     background:
-      "linear-gradient(155deg, #3a3a3a 0%, #1c1c1c 45%, #2e2e2e 70%, #111 100%)",
+      "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
+    prices: [
+      { es: "1 día", en: "1 day", value: "AR$ 30.000" },
+      { es: "2 días", en: "2 days", value: "AR$ 55.000" },
+    ],
   },
   {
     tier: "Business",
-    code: "BIZ",
-    level: "02",
-    pass: "Business Pass",
-    accent: "#F7931A",
+    tagline: "HODL the Network",
+    accent: "#FF4E01",
+    dark: false,
     background:
       "linear-gradient(155deg, #f2f2f2 0%, #cfcfcf 30%, #8a8a8a 55%, #d8d8d8 75%, #a0a0a0 100%)",
-    dark: false,
+    prices: [{ es: "", en: "", value: "US$ 250" }],
   },
   {
     tier: "Experience",
-    code: "EXP",
-    level: "03",
-    pass: "Experience Pass",
-    accent: "#F7931A",
+    tagline: "HODL Full LABITCONF",
+    accent: "#C7CBD1", // acero sobre grafito
+    dark: true,
     background:
-      "linear-gradient(155deg, #3a1d6e 0%, #b02ee0 25%, #F7931A 50%, #2ee0c8 75%, #1c1c3a 100%)",
+      "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
+    prices: [{ es: "", en: "", value: "US$ 650" }],
   },
 ] as const;
 
@@ -142,11 +208,11 @@ type SpeakerCard =
   | { kind: "label"; title: string; subtitle: string };
 
 const PHOTO_GRADIENTS = [
-  "linear-gradient(135deg, #4A6E2D 0%, #9ACE6A 100%)",
-  "linear-gradient(135deg, #1c1c1c 0%, #F7931A 100%)",
+  "linear-gradient(135deg, #4A6E2D 0%, #ABF760 100%)",
+  "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
   "linear-gradient(135deg, #2e2e2e 0%, #A5A8B1 100%)",
-  "linear-gradient(135deg, #0D0D0B 0%, #4A6E2D 60%, #9ACE6A 100%)",
-  "linear-gradient(135deg, #3a1d6e 0%, #F7931A 100%)",
+  "linear-gradient(135deg, #171616 0%, #4A6E2D 60%, #ABF760 100%)",
+  "linear-gradient(135deg, #3a1d6e 0%, #FF4E01 100%)",
 ];
 
 const SPEAKER_LANES: {
@@ -224,7 +290,7 @@ function SpeakerCardView({ card, gradientIndex }: { card: SpeakerCard; gradientI
         className="rounded-full shrink-0 flex items-center gap-4 px-9"
         style={{ height: "140px", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
       >
-        <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#FCFCFC" }}>
+        <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#E6EEF2" }}>
           {card.value}
         </span>
         <span
@@ -259,7 +325,7 @@ function SpeakerCardView({ card, gradientIndex }: { card: SpeakerCard; gradientI
       >
         {card.title}
       </span>
-      <span style={{ ...labelStyle, fontSize: "14px", color: "#FCFCFC", marginTop: "4px" }}>
+      <span style={{ ...labelStyle, fontSize: "14px", color: "#E6EEF2", marginTop: "4px" }}>
         {card.subtitle}
       </span>
     </div>
@@ -274,7 +340,7 @@ export default function HomePage() {
   return (
     <main
       className="relative min-h-screen overflow-hidden"
-      style={{ background: "#0D0D0B" }}
+      style={{ background: "#171616" }}
     >
       {/* Fondo: ballena estilizada */}
       <div
@@ -322,20 +388,25 @@ export default function HomePage() {
         </div>
 
         <Reveal delay={0.15} className="relative" style={{ zIndex: 1 }}>
-          <a
+          {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
+          <motion.a
             href="#tickets"
-            className="inline-block rounded-full transition-colors duration-200 border-2"
+            className="inline-block rounded-full border-2"
             style={{
               ...labelStyle,
-              color: "#0D0D0B",
-              background: "#9ACE6A",
-              borderColor: "#9ACE6A",
-              fontSize: "clamp(12px, 1.1vw, 15px)",
-              padding: "12px 32px",
+              color: "#171616",
+              background: "#ABF760",
+              borderColor: "#ABF760",
+              fontSize: "clamp(13px, 1.2vw, 17px)",
+              padding: "13px 35px",
             }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.97 }}
           >
             {t.heroButton}
-          </a>
+          </motion.a>
         </Reveal>
       </section>
 
@@ -362,8 +433,10 @@ export default function HomePage() {
           className="absolute inset-0 pointer-events-none"
           style={{
             zIndex: 1,
+            // Arranca en #000 (mismo negro del hero) y estira la transición
+            // negro→gris al 30% para que la unión con el banner no sea brusca.
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(13,13,11,0.35) 30%, rgba(13,13,11,0.35) 80%, #171616 100%)",
           }}
         />
 
@@ -404,13 +477,13 @@ export default function HomePage() {
               className="relative mt-6"
               style={{
                 ...labelStyle,
-                color: "#FCFCFC",
+                color: "#E6EEF2",
                 fontSize: "clamp(20px, 3.2vw, 34px)",
                 zIndex: 2,
               }}
             >
-              Latin American <span style={{ color: "#F7931A" }}>Bitcoin</span> &{" "}
-              <span style={{ color: "#F7931A" }}>Blockchain</span> Conference
+              Latin American <span style={{ color: "#FF4E01" }}>Bitcoin</span> &{" "}
+              <span style={{ color: "#FF4E01" }}>Blockchain</span> Conference
             </p>
           </Reveal>
 
@@ -472,7 +545,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #171616 100%)",
           }}
         />
 
@@ -503,8 +576,8 @@ export default function HomePage() {
       {/* Tickets */}
       <section
         id="tickets"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-28 sm:py-32 overflow-hidden"
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: lluvia de dígitos */}
         <div
@@ -524,7 +597,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
           }}
         />
 
@@ -540,156 +613,144 @@ export default function HomePage() {
 
           <Reveal
             delay={0.15}
-            className="mt-10 sm:mt-16 mx-auto max-w-4xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-10 justify-items-center overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto"
+            className="mt-10 sm:mt-16 mx-auto max-w-5xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-8 items-stretch overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto"
           >
-            {TICKETS.map((ticket) => (
-              <div
-                key={ticket.tier}
-                className="relative rounded-2xl w-[180px] sm:w-full sm:max-w-[260px] shrink-0 snap-center"
-                style={{
-                  aspectRatio: "5 / 8",
-                  background: ticket.background,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-                  padding: "20px",
-                }}
-              >
+            {TICKETS.map((ticket) => {
+              const light = ticket.dark === false; // Business: fondo claro → texto oscuro
+              const cText = light ? "#171616" : "#E6EEF2";
+              const cMuted = light ? "rgba(23,22,22,0.6)" : "#A5A8B1";
+              const cDivider = light ? "rgba(23,22,22,0.15)" : "rgba(255,255,255,0.15)";
+              const features = ticketFeatures(ticket.tier, lang);
+              return (
                 <div
+                  key={ticket.tier}
+                  className="relative rounded-2xl w-[260px] sm:w-full shrink-0 snap-center flex flex-col"
                   style={{
-                    ...labelStyle,
-                    color: ticket.tier === "Business" ? "#0D0D0B" : ticket.accent,
-                    fontSize: "clamp(16px, 1.6vw, 20px)",
+                    background: ticket.background,
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+                    padding: "24px",
                   }}
                 >
-                  {ticket.tier}
-                </div>
-                <div
-                  style={{
-                    height: "2px",
-                    width: "40%",
-                    background:
-                      ticket.tier === "Business"
-                        ? "rgba(13,13,11,0.4)"
-                        : "rgba(255,255,255,0.25)",
-                    margin: "10px 0 16px",
-                  }}
-                />
-
-                <div
-                  style={{
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 300,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    fontSize: "9px",
-                    color: ticket.tier === "Business" ? "rgba(13,13,11,0.6)" : "#A5A8B1",
-                  }}
-                >
-                  Access Level
-                </div>
-                <div
-                  style={{
-                    ...labelStyle,
-                    color: ticket.tier === "Business" ? "#0D0D0B" : "#FCFCFC",
-                    fontSize: "clamp(22px, 3vw, 30px)",
-                    marginTop: "2px",
-                  }}
-                >
-                  HODL
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 300,
-                    fontSize: "9px",
-                    color: ticket.tier === "Business" ? "rgba(13,13,11,0.6)" : "#A5A8B1",
-                    marginTop: "2px",
-                  }}
-                >
-                  LABITCONF 2026
-                </div>
-
-                <div
-                  style={{
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 300,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    fontSize: "9px",
-                    color: ticket.tier === "Business" ? "rgba(13,13,11,0.6)" : "#A5A8B1",
-                    marginTop: "20px",
-                  }}
-                >
-                  Access Type
-                </div>
-                <div
-                  style={{
-                    ...labelStyle,
-                    color: ticket.tier === "Business" ? "#0D0D0B" : ticket.accent,
-                    fontSize: "clamp(11px, 1.2vw, 13px)",
-                    marginTop: "2px",
-                  }}
-                >
-                  {ticket.pass}
-                </div>
-
-                <div
-                  className="absolute"
-                  style={{
-                    bottom: "76px",
-                    left: "20px",
-                    ...labelStyle,
-                    color: ticket.tier === "Business" ? "#0D0D0B" : "#F7931A",
-                    fontSize: "clamp(30px, 4vw, 40px)",
-                  }}
-                >
-                  {ticket.level}
-                </div>
-
-                <div
-                  className="absolute rounded-full flex items-center justify-center"
-                  style={{
-                    bottom: "76px",
-                    right: "20px",
-                    width: "34px",
-                    height: "34px",
-                    border: `1px solid ${
-                      ticket.tier === "Business" ? "rgba(13,13,11,0.4)" : "rgba(255,255,255,0.3)"
-                    }`,
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 900,
-                    fontSize: "8px",
-                    color: ticket.tier === "Business" ? "#0D0D0B" : "#FCFCFC",
-                  }}
-                >
-                  {ticket.code}
-                </div>
-
-                <div
-                  className="absolute"
-                  style={{
-                    bottom: "20px",
-                    left: "20px",
-                    fontFamily: "var(--font-neue-machina), sans-serif",
-                    fontWeight: 900,
-                    fontSize: "10px",
-                    color: ticket.tier === "Business" ? "#0D0D0B" : "#FCFCFC",
-                  }}
-                >
-                  LABITCONF 2026
+                  {/* Tier + tagline */}
                   <div
                     style={{
-                      fontWeight: 300,
-                      fontSize: "8px",
-                      color: ticket.tier === "Business" ? "rgba(13,13,11,0.6)" : "#A5A8B1",
-                      marginTop: "2px",
+                      ...labelStyle,
+                      color: cText,
+                      fontSize: "clamp(18px, 1.8vw, 22px)",
                     }}
                   >
-                    Hodl the future
+                    {ticket.tier}
                   </div>
+                  <div
+                    style={{
+                      ...labelStyle,
+                      color: ticket.accent,
+                      fontSize: "clamp(10px, 1vw, 12px)",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {ticket.tagline}
+                  </div>
+
+                  {/* Precio(s) */}
+                  <div style={{ marginTop: "18px" }}>
+                    {ticket.prices.map((p, pi) => (
+                      <div
+                        key={pi}
+                        className="flex items-baseline gap-2"
+                        style={{ marginTop: pi === 0 ? 0 : "6px" }}
+                      >
+                        {p[lang] && (
+                          <span
+                            style={{
+                              fontFamily: "var(--font-neue-machina), sans-serif",
+                              fontWeight: 300,
+                              fontSize: "11px",
+                              color: cMuted,
+                              minWidth: "48px",
+                            }}
+                          >
+                            {p[lang]}
+                          </span>
+                        )}
+                        <span
+                          style={{
+                            ...labelStyle,
+                            color: cText,
+                            fontSize: ticket.prices.length > 1 ? "clamp(18px, 2vw, 24px)" : "clamp(26px, 3.2vw, 36px)",
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {p.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ height: "1px", background: cDivider, margin: "20px 0 16px" }} />
+
+                  {/* Beneficios (lista completa) */}
+                  <div
+                    style={{
+                      ...labelStyle,
+                      color: cMuted,
+                      fontSize: "9px",
+                      letterSpacing: "0.1em",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    {t.ticketsIncludes}
+                  </div>
+                  <ul className="flex flex-col gap-2.5">
+                    {features.map((feat, fi) => (
+                      <li key={fi} className="flex items-start gap-2.5">
+                        <span
+                          className="shrink-0"
+                          style={{
+                            width: "5px",
+                            height: "5px",
+                            borderRadius: "9999px",
+                            background: ticket.accent,
+                            marginTop: "6px",
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontFamily: "var(--font-neue-machina), sans-serif",
+                            fontWeight: 300,
+                            fontSize: "12px",
+                            lineHeight: 1.35,
+                            color: cText,
+                          }}
+                        >
+                          {feat}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA — link de compra pendiente (apunta a #) */}
+                  <a
+                    href="#"
+                    className="mt-auto pt-6 block"
+                  >
+                    <span
+                      className="block w-full text-center rounded-full transition-opacity duration-200 hover:opacity-80"
+                      style={{
+                        ...labelStyle,
+                        fontSize: "clamp(12px, 1.1vw, 14px)",
+                        padding: "12px 20px",
+                        background: light ? "#171616" : "#ABF760",
+                        color: light ? "#E6EEF2" : "#171616",
+                      }}
+                    >
+                      {t.ticketsBuy}
+                    </span>
+                  </a>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </Reveal>
 
         </div>
@@ -740,7 +801,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
           }}
         />
 
@@ -761,14 +822,14 @@ export default function HomePage() {
                 delay={0.1 + i * 0.12}
                 className="rounded-2xl flex flex-col"
                 style={{
-                  background: "#F7931A",
+                  background: "#FF4E01",
                   padding: "22px 22px",
                 }}
               >
                 <h3
                   style={{
                     ...labelStyle,
-                    color: "#0D0D0B",
+                    color: "#171616",
                     fontSize: "clamp(16px, 2vw, 24px)",
                   }}
                 >
@@ -791,8 +852,8 @@ export default function HomePage() {
                   className="mt-5 rounded-full text-center transition-opacity duration-200 hover:opacity-80"
                   style={{
                     ...labelStyle,
-                    color: "#F7931A",
-                    background: "#0D0D0B",
+                    color: "#FF4E01",
+                    background: "#171616",
                     fontSize: "clamp(12px, 1.1vw, 14px)",
                     padding: "10px 0",
                   }}
@@ -850,7 +911,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #0D0D0B 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #0D0D0B 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #171616 100%)",
           }}
         />
 
@@ -897,11 +958,11 @@ export default function HomePage() {
               href="https://www.google.com/maps/search/?api=1&query=Costa+Salguero+Buenos+Aires+Argentina"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#F7931A] hover:text-[#0D0D0B]"
+              className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
               style={{
                 ...labelStyle,
-                color: "#F7931A",
-                borderColor: "#F7931A",
+                color: "#ABF760",
+                borderColor: "#ABF760",
                 fontSize: "clamp(11px, 1vw, 13px)",
                 padding: "10px 28px",
               }}

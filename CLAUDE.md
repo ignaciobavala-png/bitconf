@@ -22,6 +22,23 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - **Sin Server Components para este maquetado**: `app/home/page.tsx` es un Client Component estático (sin fetch a Supabase ni lógica server) — por ahora es solo maquetado visual sección por sección, arrancando por el hero.
 - **Referencia de diseño**: `assets-bitconf/demos-ui/pagina-home.png` (pantalla 1, hero), `assets-bitconf/demos-ui/presentacion.png` (pantalla 2, sección de presentación), `assets-bitconf/demos-ui/tickets.png` (pantalla 3, sección de tickets) y `assets-bitconf/demos-ui/speackers.png` (pantalla 4, carruseles de speakers/stats).
 
+### Paleta oficial (fuente de verdad de color)
+
+Definida por el cliente (`~/Descargas/paleta.jpeg`). Estos son los hex **exactos** — al colorear cualquier elemento de la landing usar siempre uno de estos, no aproximaciones:
+
+| Nombre | HEX | Rol | Uso en la landing |
+|---|---|---|---|
+| Orange 021 C | `#FF4E01` | Principal — Energía \| Fuerza \| BTC \| Carácter | Naranja de marca: acentos, tinte de figuras punteadas, "Bitcoin"/"Blockchain", badges |
+| Alamo del Ser | `#171616` | Principal — Misterio \| Tecnología | Fondo base de todas las secciones |
+| Brote | `#ABF760` | Acento — Naturaleza \| Futuro | Verde de CTAs, bordes de botones/cards, hover |
+| Lactica | `#E6EEF2` | Acompañamiento — Alma \| Transparencia | Texto claro / blanco de marca |
+| Almico | `#FFAB0B` | Acento — Energía \| Calidez \| Hogar | Ámbar secundario — **aún sin uso** en la landing |
+| Electric Ekko | `#1311FC` | Acento — Seguridad \| Dinamismo | Azul — **aún sin uso** en la landing |
+
+- La paleta vieja se reemplazó por la exacta (commit de esta rama): `#F7931A → #FF4E01`, `#0D0D0B → #171616`, `#9ACE6A → #ABF760`, `#FCFCFC → #E6EEF2`.
+- **No agregar colores fuera de esta tabla.** Almico y Electric Ekko están definidos pero no se usan todavía; introducirlos solo si un elemento nuevo del diseño los pide.
+- Excepciones que **no** son colores de paleta y quedan como están: `#A5A8B1` (gris de texto secundario, da jerarquía sobre Lactica) y `#4A6E2D` (verde oscuro de frases estáticas del watermark, variante funcional para diferenciarlas de las de usuario). Los gradientes decorativos de las tarjetas de tickets y placeholders de speakers tampoco son colores de paleta.
+
 ### Carpeta `assets-bitconf/`
 
 - Vive en la raíz del repo pero está en `.gitignore` — **no se trackea** (son ~58MB de material de diseño: `ASSETS 2D/`, `ASSETS 3D/`, `demos-ui/`).
@@ -37,7 +54,7 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 
 ### Presentación (pantalla 2) — decisiones tomadas
 
-- Sección `#presentacion` debajo del hero: título "LABITCONF" grande, píldora BTC 3D (`public/assets/home/pildora.png`, de `ASSETS 3D/PILDORA_BTC_FINAL.png`) anclada al **borde derecho de la sección** (fuera del bloque `max-w-6xl`, centrada verticalmente — antes estaba dentro del bloque de texto y pisaba el subtítulo), subtítulo con "Bitcoin"/"Blockchain" en naranja `#F7931A` (naranja estándar de Bitcoin — no había un naranja definido aún en la paleta del proyecto) y dos párrafos de copy.
+- Sección `#presentacion` debajo del hero: título "LABITCONF" grande, píldora BTC 3D (`public/assets/home/pildora.png`, de `ASSETS 3D/PILDORA_BTC_FINAL.png`) anclada al **borde derecho de la sección** (fuera del bloque `max-w-6xl`, centrada verticalmente — antes estaba dentro del bloque de texto y pisaba el subtítulo), subtítulo con "Bitcoin"/"Blockchain" en naranja `#FF4E01` (Orange 021 C, ver Paleta oficial) y dos párrafos de copy.
 - Fondo full-bleed: `public/assets/home/hashes.jpg` (de `SISTEMA DE FONDOS/ESTATICOS/HORIZONTALES/HASHES_NEGRO.png`) a opacity 0.3 + degradé vertical. La textura pixel que había detrás del título (`labitconf-pixel.png`) **se eliminó de esta sección** (quedaba como un recuadro); el asset sigue en uso en el hero de `/home/comunidad`.
 - El contenedor de esta sección usa `w-full max-w-6xl` **sin** `mx-auto`: centrarlo dejaba un margen vacío a la izquierda distinto al padding del navbar (que sí ocupa todo el ancho) — así el título arranca al mismo borde izquierdo que el logo `LABITCONF.`.
 
@@ -61,7 +78,7 @@ Desarrollo de la **fase 2 (Landing)** arrancó en la rama `homepage`. Reglas de 
 - **Navbar extraído** a `components/home/Navbar.tsx` (compartido entre `/home` y `/home/comunidad`, links con prefijo `/home#...` para que funcionen desde ambas rutas). El **footer también está extraído y compartido**: `components/home/Footer.tsx` (wordmark HODL con gradiente, blurb, redes, Eventos 2026 y quick links, con `HodlReasonsSection variant="compact"` de fondo) — el footer propio de comunidad con astronauta + iconos wireframe **se eliminó** a pedido del cliente, igual que la sección "Partner universities" del Student Hub (el `LogoMarquee` de la sección Comunidades sí quedó).
 - 8 pantallas según mockups (hoy en `~/Descargas/1-9.png`): hero, 3 verticales (Embajadores/Student Hub/Comunidades), grid de embajadores, CTA embajador, Student Hub, CTA hub, Comunidades + logos, CTA comunidad + footer compartido.
 - Assets nuevos en `public/assets/home/`: `pildora-dots.png`, `ballena-dots.png`, `honeybadger-dots.png` (figuras punteadas, de `LABITCONF_media (15/16/7)`), `lluvia-naranja.png` (de `LABITCONF_LLUVIA_3.png`), `iconos-wireframe.png` (de `LABITCONF_media (18) 1.png`, recortado con `convert -trim` porque el original trae mucho lienzo negro).
-- Las figuras punteadas son grises: se tiñen al naranja `#F7931A` con la cadena CSS `brightness(0) saturate(100%) invert(...) sepia(...) hue-rotate(...)` (forzar a negro y recolorear) — un `sepia+hue-rotate` directo da oliva, no naranja.
+- Las figuras punteadas son grises: se tiñen al naranja `#FF4E01` con la cadena CSS `brightness(0) saturate(100%) invert(...) sepia(...) hue-rotate(...)` (forzar a negro y recolorear) — un `sepia+hue-rotate` directo da oliva, no naranja.
 - **Pendientes del cliente**: destino de los 3 botones "Inscribite acá" y del Q&A flotante (hoy `#`), copys reales de Student Hub/Comunidades, fotos de embajadores (solo card placeholder "Axel Becker"), logos de universidades y comunidades (marquee con texto "logo" placeholder).
 
 ### Full-bleed por pantalla
@@ -135,7 +152,7 @@ Además de `assets-bitconf/` (2D/3D), hay un banco de fondos en `~/Escritorio/as
 - 10 carriles en `STATIC_LANES` con `y`, `duration`, `fontSize` por carril (sin frases hardcodeadas)
 - Todas las frases vienen de Supabase (`reasons` donde `status=approved`)
 - `is_static=true` → verde oscuro `#4A6E2D` (frases editoriales, gestionadas desde admin)
-- `is_static=false` → verde claro `#9ACE6A` (frases de usuarios)
+- `is_static=false` → verde claro `#9ACE6A` (frases de usuarios) — nota: la pre-landing (`WatermarkLayer.tsx`, producción) mantiene la paleta previa; la unificación a Brote `#ABF760` es solo en la landing de la rama `homepage`
 - Animación fade-in solo para frases de usuario nuevas (no para las estáticas)
 - Realtime via Supabase — solo filas con `status=eq.approved`
 - El cliente Supabase se inicializa lazy (dentro de `useEffect`, no a nivel módulo)

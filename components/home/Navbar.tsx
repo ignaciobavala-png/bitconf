@@ -10,20 +10,23 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase",
 };
 
-const NAV_LINKS = {
+// Orden acordado (reunión 16/7): izquierda Tickets → Comunidad; derecha
+// "¿Por qué hodleás?" (lleva al final de la página) + selector de idioma.
+const LEFT_LINKS = {
   es: [
-    { label: "¿Por qué hodleás?", href: "/home#hodleas" },
+    { label: "Tickets", href: "/home#tickets" },
     { label: "Comunidad", href: "/home/comunidad" },
-    { label: "Sé parte", href: "/home#se-parte" },
   ],
   en: [
-    { label: "Why do you hodl?", href: "/home#hodleas" },
+    { label: "Tickets", href: "/home#tickets" },
     { label: "Community", href: "/home/comunidad" },
-    { label: "Be part", href: "/home#se-parte" },
   ],
 } as const;
 
-const TICKETS_LABEL = { es: "Tickets", en: "Tickets" } as const;
+const HODLEAS_LINK = {
+  es: { label: "¿Por qué hodleás?", href: "/home#hodleas" },
+  en: { label: "Why do you hodl?", href: "/home#hodleas" },
+} as const;
 
 export default function Navbar() {
   const lang = useLangStore((s) => s.lang);
@@ -43,7 +46,7 @@ export default function Navbar() {
           href="/home"
           style={{
             ...labelStyle,
-            color: "#FCFCFC",
+            color: "#E6EEF2",
             fontSize: "clamp(14px, 1.4vw, 18px)",
           }}
         >
@@ -51,14 +54,14 @@ export default function Navbar() {
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS[lang].map((link) => (
+          {LEFT_LINKS[lang].map((link) => (
             <a
               key={link.href}
               href={link.href}
               className="transition-colors duration-200 hover:opacity-70"
               style={{
                 ...labelStyle,
-                color: "#9ACE6A",
+                color: "#ABF760",
                 fontSize: "clamp(11px, 0.9vw, 13px)",
               }}
             >
@@ -68,20 +71,20 @@ export default function Navbar() {
         </nav>
       </div>
 
-      <div className="flex items-center gap-4">
-        <LangToggle lang={lang} onToggle={toggleLang} />
-
+      <div className="flex items-center gap-6">
         <a
-          href="/home#tickets"
-          className="transition-colors duration-200 hover:opacity-70"
+          href={HODLEAS_LINK[lang].href}
+          className="hidden md:inline-block transition-colors duration-200 hover:opacity-70"
           style={{
             ...labelStyle,
-            color: "#9ACE6A",
-            fontSize: "clamp(12px, 1vw, 14px)",
+            color: "#ABF760",
+            fontSize: "clamp(11px, 0.9vw, 13px)",
           }}
         >
-          {TICKETS_LABEL[lang]}
+          {HODLEAS_LINK[lang].label}
         </a>
+
+        <LangToggle lang={lang} onToggle={toggleLang} />
       </div>
     </header>
   );

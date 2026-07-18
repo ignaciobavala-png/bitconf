@@ -176,7 +176,7 @@ export default function HodlReasonsSection({
   const statusColor: Record<SubmitState, string> = {
     idle: "#4A6E2D",
     loading: "#A5A8B1",
-    success: "#9ACE6A",
+    success: "#ABF760",
     error: "#E3551C",
     ratelimit: "#E3551C",
   };
@@ -192,13 +192,13 @@ export default function HodlReasonsSection({
   const borderColor =
     submitState === "error" || submitState === "ratelimit"
       ? "#E3551C"
-      : "#FCFCFC";
+      : "#E6EEF2";
 
   return (
     <div
       id={id}
       className="relative w-full h-full overflow-hidden"
-      style={{ background: "#0D0D0B" }}
+      style={{ background: "#171616" }}
     >
       {/* Capa 1: Globo terráqueo */}
       {variant === "full" && (
@@ -297,7 +297,7 @@ export default function HodlReasonsSection({
               style={{
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
-                color: "#9ACE6A",
+                color: "#ABF760",
                 fontSize: "clamp(13px, 1.3vw, 18px)",
                 letterSpacing: "0.06em",
                 pointerEvents: "none",
@@ -341,7 +341,7 @@ export default function HodlReasonsSection({
                   background: "transparent",
                   border: "none",
                   outline: "none",
-                  color: "#FCFCFC",
+                  color: "#E6EEF2",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
                   fontSize: "clamp(12px, 1.0vw, 14px)",
@@ -352,7 +352,7 @@ export default function HodlReasonsSection({
               />
               <span
                 style={{
-                  color: "#9ACE6A",
+                  color: "#ABF760",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontSize: "clamp(12px, 1.0vw, 14px)",
                   whiteSpace: "nowrap",
@@ -364,10 +364,10 @@ export default function HodlReasonsSection({
                 onClick={handleSubmit}
                 disabled={submitState === "loading"}
                 style={{
-                  background: "#9ACE6A",
+                  background: "#ABF760",
                   border: "none",
                   borderRadius: "9999px",
-                  color: "#0D0D0B",
+                  color: "#171616",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 900,
                   fontSize: "clamp(11px, 1vw, 14px)",
@@ -410,7 +410,7 @@ export default function HodlReasonsSection({
                 href={LINKS_ENABLED ? "https://app-labitconf.github.io/LABITCONF-speakers/form/" : undefined}
                 target={LINKS_ENABLED ? "_blank" : undefined}
                 rel={LINKS_ENABLED ? "noopener noreferrer" : undefined}
-                className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#9ACE6A] hover:text-[#9ACE6A]"
+                className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] text-[#A5A8B1] hover:border-[#ABF760] hover:text-[#ABF760]"
                 style={pillStyleLarge}
               >
                 <span className="hidden sm:inline">{T[lang].speakerPre}</span>&nbsp;Speaker &#x2197;
@@ -418,10 +418,10 @@ export default function HodlReasonsSection({
 
               <button
                 onClick={LINKS_ENABLED ? handleSponsorClick : undefined}
-                className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#9ACE6A]"
+                className="flex items-center border-2 rounded-full transition-colors duration-200 border-[#4A6E2D] hover:border-[#ABF760]"
                 style={{
                   ...pillStyleLarge,
-                  color: sponsorState !== "idle" ? "#9ACE6A" : "#A5A8B1",
+                  color: sponsorState !== "idle" ? "#ABF760" : "#A5A8B1",
                   transition: "color 0.2s, border-color 0.2s",
                 }}
               >
