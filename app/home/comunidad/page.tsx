@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
@@ -102,8 +101,6 @@ const EMBAJADORES: { name: [string, string]; gradient: string }[] = [
   },
 ];
 
-const LOGO_PLACEHOLDERS = Array.from({ length: 10 }, (_, i) => `logo-${i}`);
-
 function CtaButton({ label }: { label: string }) {
   return (
     <a
@@ -123,33 +120,33 @@ function CtaButton({ label }: { label: string }) {
   );
 }
 
-function LogoMarquee({ id, direction }: { id: string; direction: "left" | "right" }) {
-  const doubled = [...LOGO_PLACEHOLDERS, ...LOGO_PLACEHOLDERS];
+// CTA integrado: pregunta + botón en una misma barra, para cerrar cada sección
+// dentro de su propia pantalla en vez de una pantalla-CTA separada.
+function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string; delay?: number }) {
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: "90px" }}>
-      <motion.div
-        className="flex items-center absolute top-0 left-0 h-full"
-        style={{ gap: "72px", width: "max-content" }}
-        animate={{ x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
-        transition={{ duration: 48, repeat: Infinity, ease: "linear" }}
+    <Reveal
+      delay={delay}
+      className="mt-10 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 rounded-3xl"
+      style={{
+        border: "1px solid #ABF760",
+        background: "rgba(13,13,11,0.55)",
+        padding: "clamp(22px, 3vw, 36px) clamp(24px, 4vw, 48px)",
+      }}
+    >
+      <h3
+        style={{
+          ...labelStyle,
+          color: "#FF4E01",
+          fontSize: "clamp(22px, 3.2vw, 40px)",
+          lineHeight: 1.1,
+        }}
       >
-        {doubled.map((logo, i) => (
-          <span
-            key={`${id}-${logo}-${i}`}
-            style={{
-              fontFamily: "var(--font-neue-machina), sans-serif",
-              fontWeight: 900,
-              color: "#E6EEF2",
-              fontSize: "clamp(32px, 4vw, 48px)",
-              lineHeight: 1,
-              textTransform: "lowercase",
-            }}
-          >
-            logo
-          </span>
-        ))}
-      </motion.div>
-    </div>
+        {title}
+      </h3>
+      <div className="shrink-0">
+        <CtaButton label={label} />
+      </div>
+    </Reveal>
   );
 }
 
@@ -355,7 +352,7 @@ export default function ComunidadPage() {
         </div>
       </section>
 
-      {/* 3 — Embajadores */}
+      {/* 3 — Embajadores: título + 6 tarjetas + CTA integrado (1 pantalla) */}
       <section
         id="embajadores"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
@@ -382,7 +379,7 @@ export default function ComunidadPage() {
           }}
         />
 
-        <div className="relative w-full" style={{ zIndex: 2 }}>
+        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.embajadores[lang]}
@@ -392,13 +389,13 @@ export default function ComunidadPage() {
             />
           </Reveal>
 
-          <div className="mt-14 mx-auto max-w-6xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 justify-items-center">
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 justify-items-center">
             {Array.from({ length: 6 }, (_, i) => {
               const embajador = EMBAJADORES[i];
               return (
                 <Reveal
                   key={i}
-                  delay={0.1 + i * 0.12}
+                  delay={0.1 + i * 0.1}
                   className="relative rounded-2xl overflow-hidden w-full max-w-[170px]"
                   style={{
                     aspectRatio: "3 / 4",
@@ -441,75 +438,12 @@ export default function ComunidadPage() {
               );
             })}
           </div>
+
+          <InlineCta title={t.ctaEmbajadorTitle} label={t.ctaButtonLabel} delay={0.3} />
         </div>
       </section>
 
-      {/* 4 — CTA embajador */}
-      <section
-        className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.55 }}
-        >
-          <Image
-            src="/assets/home/lluvia-naranja.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
-
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 25%, rgba(13,13,11,0.35) 75%, #171616 100%)",
-          }}
-        />
-
-        {/* Píldora */}
-        <div
-          className="absolute pointer-events-none select-none hidden sm:block"
-          style={{
-            bottom: "12%",
-            left: "6%",
-            width: "min(18vw, 200px)",
-            height: "min(18vw, 200px)",
-            zIndex: 2,
-          }}
-        >
-          <Floating duration={6.5} y={12} rotate={5}>
-            <Image
-              src="/assets/home/pildora.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain", transform: "rotate(-30deg)" }}
-            />
-          </Floating>
-        </div>
-
-        <Reveal
-          className="relative flex flex-col items-center gap-10 text-center"
-          style={{ zIndex: 2 }}
-        >
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#FF4E01",
-              fontSize: "clamp(36px, 6vw, 72px)",
-              lineHeight: 1.1,
-            }}
-          >
-            {t.ctaEmbajadorTitle}
-          </h2>
-          <CtaButton label={t.ctaButtonLabel} />
-        </Reveal>
-      </section>
-
-      {/* 5 — Student Hub */}
+      {/* 4 — Student Hub: título + copy + CTA integrado (1 pantalla) */}
       <section
         id="student-hub"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
@@ -527,6 +461,29 @@ export default function ComunidadPage() {
           />
         </div>
 
+        {/* Honeybadger punteado */}
+        <div
+          className="absolute pointer-events-none select-none hidden lg:block"
+          style={{
+            top: "50%",
+            right: "4%",
+            transform: "translateY(-50%)",
+            width: "min(24vw, 300px)",
+            height: "min(34vw, 420px)",
+            zIndex: 1,
+            opacity: 0.7,
+          }}
+        >
+          <Floating duration={7} y={10} rotate={3}>
+            <Image
+              src="/assets/home/honeybadger-dots.png"
+              alt=""
+              fill
+              style={{ objectFit: "contain", filter: "brightness(2)" }}
+            />
+          </Floating>
+        </div>
+
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ height: TITLE_H }}>
             <Image
@@ -539,7 +496,7 @@ export default function ComunidadPage() {
 
           <Reveal
             delay={0.15}
-            className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
+            className="mt-8 rounded-3xl max-w-3xl"
             style={{
               border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",
@@ -558,54 +515,12 @@ export default function ComunidadPage() {
               {t.studentHubCopy}
             </p>
           </Reveal>
+
+          <InlineCta title={t.ctaHubTitle} label={t.ctaButtonLabel} delay={0.25} />
         </div>
       </section>
 
-      {/* 6 — CTA hub */}
-      <section
-        className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
-      >
-        {/* Honeybadger punteado */}
-        <div
-          className="absolute pointer-events-none select-none hidden sm:block"
-          style={{
-            top: "50%",
-            left: "8%",
-            transform: "translateY(-50%)",
-            width: "min(28vw, 340px)",
-            height: "min(38vw, 460px)",
-            zIndex: 1,
-            opacity: 0.85,
-          }}
-        >
-          <Image
-            src="/assets/home/honeybadger-dots.png"
-            alt=""
-            fill
-            style={{ objectFit: "contain", filter: "brightness(2)" }}
-          />
-        </div>
-
-        <Reveal
-          className="relative flex flex-col items-center gap-10 text-center"
-          style={{ zIndex: 2 }}
-        >
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#FF4E01",
-              fontSize: "clamp(36px, 6vw, 72px)",
-              lineHeight: 1.1,
-            }}
-          >
-            {t.ctaHubTitle}
-          </h2>
-          <CtaButton label={t.ctaButtonLabel} />
-        </Reveal>
-      </section>
-
-      {/* 7 — Comunidades */}
+      {/* 5 — Comunidades: título + copy + CTA integrado (1 pantalla, sin logos) */}
       <section
         id="comunidades"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
@@ -661,7 +576,7 @@ export default function ComunidadPage() {
 
           <Reveal
             delay={0.15}
-            className="mt-10 rounded-3xl max-w-3xl sm:ml-10"
+            className="mt-8 rounded-3xl max-w-3xl"
             style={{
               border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",
@@ -680,55 +595,9 @@ export default function ComunidadPage() {
               {t.comunidadesCopy}
             </p>
           </Reveal>
+
+          <InlineCta title={t.ctaComunidadTitle} label={t.ctaButtonLabel} delay={0.25} />
         </div>
-
-        <Reveal delay={0.25} className="relative mt-14 w-full" style={{ zIndex: 2 }}>
-          <LogoMarquee id="comus" direction="right" />
-        </Reveal>
-      </section>
-
-      {/* 8 — CTA comunidad */}
-      <section
-        className="relative flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.15, filter: "invert(1)" }}
-        >
-          <Image
-            src="/assets/home/pixel-grid-2.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
-
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #171616 100%)",
-          }}
-        />
-
-        <Reveal
-          className="relative flex flex-col items-center gap-10 text-center max-w-4xl"
-          style={{ zIndex: 2 }}
-        >
-          <h2
-            style={{
-              ...labelStyle,
-              color: "#FF4E01",
-              fontSize: "clamp(36px, 6vw, 72px)",
-              lineHeight: 1.15,
-            }}
-          >
-            {t.ctaComunidadTitle}
-          </h2>
-          <CtaButton label={t.ctaButtonLabel} />
-        </Reveal>
       </section>
 
       {/* 9 — Footer compartido con /home */}
