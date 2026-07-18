@@ -634,12 +634,13 @@ export default function HomePage() {
               return (
                 <div
                   key={ticket.tier}
-                  className="relative rounded-2xl w-[260px] sm:w-full shrink-0 snap-center flex flex-col"
+                  className="relative rounded-2xl w-[260px] sm:w-full shrink-0 snap-center flex flex-col transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.035] hover:z-10"
                   style={{
                     background: ticket.background,
                     border: "1px solid rgba(255,255,255,0.15)",
                     boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
                     padding: "24px",
+                    willChange: "transform",
                   }}
                 >
                   {/* Tier + tagline */}
@@ -675,10 +676,11 @@ export default function HomePage() {
                           <span
                             style={{
                               fontFamily: "var(--font-neue-machina), sans-serif",
-                              fontWeight: 300,
-                              fontSize: "11px",
-                              color: cMuted,
-                              minWidth: "48px",
+                              fontWeight: 500,
+                              fontSize: "13px",
+                              color: cText,
+                              opacity: 0.85,
+                              minWidth: "52px",
                             }}
                           >
                             {p[lang]}
@@ -712,25 +714,25 @@ export default function HomePage() {
                   >
                     {t.ticketsIncludes}
                   </div>
-                  <ul className="flex flex-col gap-2.5">
+                  <ul className="flex flex-col gap-3">
                     {features.map((feat, fi) => (
                       <li key={fi} className="flex items-start gap-2.5">
                         <span
                           className="shrink-0"
                           style={{
-                            width: "5px",
-                            height: "5px",
+                            width: "6px",
+                            height: "6px",
                             borderRadius: "9999px",
                             background: ticket.accent,
-                            marginTop: "6px",
+                            marginTop: "7px",
                           }}
                         />
                         <span
                           style={{
                             fontFamily: "var(--font-neue-machina), sans-serif",
-                            fontWeight: 300,
-                            fontSize: "12px",
-                            lineHeight: 1.35,
+                            fontWeight: 500,
+                            fontSize: "clamp(13px, 1.05vw, 15px)",
+                            lineHeight: 1.4,
                             color: cText,
                           }}
                         >
