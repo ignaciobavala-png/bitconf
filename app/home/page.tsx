@@ -203,17 +203,19 @@ const SE_PARTE_CARDS = {
 } as const;
 
 type SpeakerCard =
-  | { kind: "photo" }
+  | { kind: "photo"; src: string }
   | { kind: "stat"; value: string; label: string }
   | { kind: "label"; title: string; subtitle: string };
 
-const PHOTO_GRADIENTS = [
-  "linear-gradient(135deg, #4A6E2D 0%, #ABF760 100%)",
-  "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
-  "linear-gradient(135deg, #2e2e2e 0%, #A5A8B1 100%)",
-  "linear-gradient(135deg, #171616 0%, #4A6E2D 60%, #ABF760 100%)",
-  "linear-gradient(135deg, #3a1d6e 0%, #FF4E01 100%)",
-];
+// Fotos de galería servidas desde el bucket público de Supabase (no en git),
+// mismo patrón que el video del hero. Sube el equipo por bucket hasta que
+// exista el dashboard de carga.
+const GALLERY_BASE =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/gallery";
+const galleryPhoto = (n: number): { kind: "photo"; src: string } => ({
+  kind: "photo",
+  src: `${GALLERY_BASE}/gallery-${String(n).padStart(2, "0")}.jpg`,
+});
 
 const SPEAKER_LANES: {
   id: string;
@@ -227,9 +229,9 @@ const SPEAKER_LANES: {
     duration: 42,
     cards: [
       { kind: "label", title: "Attendees", subtitle: "LABITCONF '24" },
-      { kind: "photo" },
-      { kind: "photo" },
-      { kind: "photo" },
+      galleryPhoto(1),
+      galleryPhoto(2),
+      galleryPhoto(3),
     ],
   },
   {
@@ -237,11 +239,11 @@ const SPEAKER_LANES: {
     direction: "right",
     duration: 50,
     cards: [
-      { kind: "photo" },
-      { kind: "photo" },
+      galleryPhoto(4),
+      galleryPhoto(5),
       { kind: "stat", value: "+256", label: "Talks" },
       { kind: "stat", value: "+16", label: "Countries that attend" },
-      { kind: "photo" },
+      galleryPhoto(6),
     ],
   },
   {
@@ -249,9 +251,9 @@ const SPEAKER_LANES: {
     direction: "left",
     duration: 46,
     cards: [
-      { kind: "photo" },
+      galleryPhoto(7),
       { kind: "stat", value: "+27", label: "Media Partners" },
-      { kind: "photo" },
+      galleryPhoto(8),
       { kind: "stat", value: "7", label: "Stages" },
       { kind: "stat", value: "+58", label: "Sponsors" },
     ],
@@ -261,26 +263,34 @@ const SPEAKER_LANES: {
     direction: "right",
     duration: 55,
     cards: [
-      { kind: "photo" },
-      { kind: "photo" },
+      galleryPhoto(9),
+      galleryPhoto(10),
+      galleryPhoto(11),
       { kind: "stat", value: "5", label: "Partners & Collaborators" },
       { kind: "stat", value: "+420", label: "International Speakers" },
     ],
   },
 ];
 
-function SpeakerCardView({ card, gradientIndex }: { card: SpeakerCard; gradientIndex: number }) {
+function SpeakerCardView({ card }: { card: SpeakerCard }) {
   if (card.kind === "photo") {
     return (
       <div
-        className="rounded-full shrink-0"
+        className="relative rounded-full shrink-0 overflow-hidden"
         style={{
           width: "220px",
           height: "140px",
-          background: PHOTO_GRADIENTS[gradientIndex % PHOTO_GRADIENTS.length],
           border: "1px solid rgba(255,255,255,0.1)",
         }}
-      />
+      >
+        <Image
+          src={card.src}
+          alt=""
+          fill
+          sizes="220px"
+          style={{ objectFit: "cover" }}
+        />
+      </div>
     );
   }
 
@@ -565,7 +575,7 @@ export default function HomePage() {
                   transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
                 >
                   {repeated.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} gradientIndex={i % lane.cards.length} />
+                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} />
                   ))}
                 </motion.div>
               </div>
@@ -976,7 +986,7 @@ export default function HomePage() {
               className="rounded-2xl"
               style={{
                 aspectRatio: "16 / 9",
-                background: PHOTO_GRADIENTS[1],
+                background: "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
                 border: "1px solid rgba(255,255,255,0.1)",
               }}
             />
