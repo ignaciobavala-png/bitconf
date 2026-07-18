@@ -278,8 +278,8 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
       <div
         className="relative rounded-full shrink-0 overflow-hidden"
         style={{
-          width: "220px",
-          height: "140px",
+          height: "clamp(100px, 24vw, 140px)",
+          aspectRatio: "11 / 7",
           border: "1px solid rgba(255,255,255,0.1)",
         }}
       >
@@ -287,7 +287,7 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
           src={card.src}
           alt=""
           fill
-          sizes="220px"
+          sizes="(max-width: 640px) 160px, 220px"
           style={{ objectFit: "cover" }}
         />
       </div>
@@ -297,8 +297,8 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
   if (card.kind === "stat") {
     return (
       <div
-        className="rounded-full shrink-0 flex items-center gap-4 px-9"
-        style={{ height: "140px", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+        className="rounded-full shrink-0 flex items-center gap-4 px-6 sm:px-9"
+        style={{ height: "clamp(100px, 24vw, 140px)", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
       >
         <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#E6EEF2" }}>
           {card.value}
@@ -322,8 +322,8 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
 
   return (
     <div
-      className="rounded-full shrink-0 flex flex-col items-start justify-center px-9"
-      style={{ height: "140px", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+      className="rounded-full shrink-0 flex flex-col items-start justify-center px-6 sm:px-9"
+      style={{ height: "clamp(100px, 24vw, 140px)", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
     >
       <span
         style={{
@@ -386,11 +386,15 @@ export default function HomePage() {
 
       {/* Hero — video banner full-bleed (1:1 screen) sobre negro puro */}
       <section
-        className="relative flex flex-col items-center justify-end overflow-hidden px-6"
-        style={{ zIndex: 4, height: "100vh", background: "#000", paddingBottom: "10vh" }}
+        className="relative flex flex-col items-center justify-center sm:justify-end overflow-hidden px-6 gap-10 sm:gap-0 pt-28 pb-14 sm:pt-0 sm:pb-[10vh] sm:h-screen"
+        style={{ zIndex: 4, background: "#000" }}
       >
-        {/* Video full-bleed: llena el hero, letterbox fundido con el negro */}
-        <div className="absolute inset-0" style={{ zIndex: 0 }}>
+        {/* Video: en mobile bloque 16:9 al ancho (sin negro sobrante); en
+            desktop full-bleed que llena el hero, letterbox fundido con el negro */}
+        <div
+          className="relative w-full aspect-video sm:absolute sm:inset-0 sm:aspect-auto"
+          style={{ zIndex: 0 }}
+        >
           <HeroVideo
             src={HERO_VIDEO_URL}
             poster="/assets/home/hero-poster.jpg"
@@ -424,7 +428,7 @@ export default function HomePage() {
       <section
         id="presentacion"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: hashes cripto (complementa la textura pixel del título) */}
         <div
@@ -535,7 +539,7 @@ export default function HomePage() {
       <section
         id="speakers"
         className="relative flex flex-col justify-center overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: grilla de puntos */}
         <div
@@ -567,7 +571,7 @@ export default function HomePage() {
             const REPEATS = 6;
             const repeated = Array.from({ length: REPEATS }, () => lane.cards).flat();
             return (
-              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "140px" }}>
+              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "clamp(100px, 24vw, 140px)" }}>
                 <motion.div
                   className="flex items-center absolute top-0 left-0"
                   style={{ gap: "24px", width: "max-content" }}
@@ -623,7 +627,7 @@ export default function HomePage() {
 
           <Reveal
             delay={0.15}
-            className="mt-10 sm:mt-16 mx-auto max-w-5xl flex sm:grid sm:grid-cols-3 gap-6 sm:gap-8 items-stretch overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-6 sm:px-0 -mx-6 sm:mx-auto"
+            className="mt-10 sm:mt-16 mx-auto max-w-sm sm:max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"
           >
             {TICKETS.map((ticket) => {
               const light = ticket.dark === false; // Business: fondo claro → texto oscuro
@@ -634,7 +638,7 @@ export default function HomePage() {
               return (
                 <div
                   key={ticket.tier}
-                  className="relative rounded-2xl w-[260px] sm:w-full shrink-0 snap-center flex flex-col transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.035] hover:z-10"
+                  className="relative rounded-2xl w-full flex flex-col transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.035] hover:z-10"
                   style={{
                     background: ticket.background,
                     border: "1px solid rgba(255,255,255,0.15)",
@@ -793,7 +797,7 @@ export default function HomePage() {
       <section
         id="se-parte"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: grilla pixel con iconos */}
         <div
@@ -827,7 +831,7 @@ export default function HomePage() {
             />
           </Reveal>
 
-          <div className="mt-10 mx-auto grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-8 max-w-4xl">
+          <div className="mt-10 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 max-w-sm sm:max-w-4xl">
             {seParteCards.map((card, i) => (
               <Reveal
                 key={card.title}
@@ -903,7 +907,7 @@ export default function HomePage() {
       <section
         id="ubicacion"
         className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: hexmap (puntos tipo mapa) */}
         <div

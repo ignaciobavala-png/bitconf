@@ -6,6 +6,7 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
+import ParallaxBg from "@/components/home/ParallaxBg";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -94,12 +95,15 @@ const VERTICALES = [
   },
 ] as const;
 
-const EMBAJADORES: { name: [string, string]; gradient: string }[] = [
-  {
-    name: ["Axel", "Becker"],
-    gradient: "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
-  },
-];
+// Íconos placeholder (transparentes) para las 6 cards hasta tener fotos reales
+const AMBASSADOR_ICONS = [
+  "/assets/home/iconos/candado.png",
+  "/assets/home/iconos/casa.png",
+  "/assets/home/iconos/diamante.png",
+  "/assets/home/iconos/llave.png",
+  "/assets/home/iconos/ojo.png",
+  "/assets/home/iconos/rayo.png",
+] as const;
 
 function CtaButton({ label }: { label: string }) {
   return (
@@ -163,21 +167,10 @@ export default function ComunidadPage() {
 
       {/* 1 — Hero Comunidad */}
       <section
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.45 }}
-        >
-          <Image
-            src="/assets/home/labitconf-pixel.png"
-            alt=""
-            fill
-            priority
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+        <ParallaxBg src="/assets/home/labitconf-pixel.png" opacity={0.45} priority drift={8} />
 
         <div
           className="absolute inset-0 pointer-events-none"
@@ -256,20 +249,10 @@ export default function ComunidadPage() {
 
       {/* 2 — Las tres verticales */}
       <section
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.3 }}
-        >
-          <Image
-            src="/assets/home/lluvia.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+        <ParallaxBg src="/assets/home/lluvia.png" opacity={0.3} drift={12} />
 
         <div
           className="absolute inset-0 pointer-events-none"
@@ -286,20 +269,6 @@ export default function ComunidadPage() {
         >
           {VERTICALES.map((vertical, i) => (
             <Reveal key={vertical.key} delay={i * 0.12} className="flex flex-col items-center gap-5">
-              {vertical.labelPosition === "top" && (
-                <a
-                  href={vertical.href}
-                  className="transition-opacity duration-200 hover:opacity-70"
-                  style={{
-                    ...lightStyle,
-                    color: "#E6EEF2",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  {t.inscribirme}
-                </a>
-              )}
-
               <a
                 href={vertical.href}
                 className="relative block w-full rounded-3xl overflow-hidden transition-transform duration-200 hover:scale-[1.02]"
@@ -313,12 +282,14 @@ export default function ComunidadPage() {
                   className="absolute pointer-events-none select-none"
                   style={{ inset: "10%", filter: orangeTint, opacity: 0.9 }}
                 >
-                  <Image
-                    src={vertical.image}
-                    alt=""
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
+                  <Floating duration={5 + i * 0.6} y={9} rotate={3}>
+                    <Image
+                      src={vertical.image}
+                      alt=""
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </Floating>
                 </div>
                 <span
                   className="absolute inset-0 flex items-center justify-center text-center px-4"
@@ -333,20 +304,6 @@ export default function ComunidadPage() {
                   {t[vertical.key]}
                 </span>
               </a>
-
-              {vertical.labelPosition === "bottom" && (
-                <a
-                  href={vertical.href}
-                  className="transition-opacity duration-200 hover:opacity-70"
-                  style={{
-                    ...lightStyle,
-                    color: "#E6EEF2",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                  }}
-                >
-                  {t.inscribirme}
-                </a>
-              )}
             </Reveal>
           ))}
         </div>
@@ -355,20 +312,10 @@ export default function ComunidadPage() {
       {/* 3 — Embajadores: título + 6 tarjetas + CTA integrado (1 pantalla) */}
       <section
         id="embajadores"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.15, filter: "invert(1)" }}
-        >
-          <Image
-            src="/assets/home/pixel-grid-2.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} />
 
         <div
           className="absolute inset-0 pointer-events-none"
@@ -391,7 +338,6 @@ export default function ComunidadPage() {
 
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 justify-items-center">
             {Array.from({ length: 6 }, (_, i) => {
-              const embajador = EMBAJADORES[i];
               return (
                 <Reveal
                   key={i}
@@ -403,37 +349,19 @@ export default function ComunidadPage() {
                     background: "rgba(13,13,11,0.4)",
                   }}
                 >
-                  {embajador && (
-                    <>
-                      {/* Placeholder de foto hasta tener material real */}
-                      <div
-                        className="absolute inset-0"
-                        style={{ background: embajador.gradient, opacity: 0.85 }}
-                      />
-                      <div className="absolute bottom-4 left-4">
-                        <div
-                          style={{
-                            ...labelStyle,
-                            color: "#E6EEF2",
-                            fontSize: "clamp(15px, 1.4vw, 19px)",
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {embajador.name[0]}
-                        </div>
-                        <div
-                          style={{
-                            ...labelStyle,
-                            color: "#FF4E01",
-                            fontSize: "clamp(15px, 1.4vw, 19px)",
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {embajador.name[1]}
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  {/* Ícono placeholder (transparente) — se reemplaza por foto real */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+                    <div className="relative" style={{ width: "46%", height: "46%", opacity: 0.9 }}>
+                      <Floating duration={4 + i * 0.4} y={6} rotate={2}>
+                        <Image
+                          src={AMBASSADOR_ICONS[i]}
+                          alt=""
+                          fill
+                          style={{ objectFit: "contain" }}
+                        />
+                      </Floating>
+                    </div>
+                  </div>
                 </Reveal>
               );
             })}
@@ -446,20 +374,10 @@ export default function ComunidadPage() {
       {/* 4 — Student Hub: título + copy + CTA integrado (1 pantalla) */}
       <section
         id="student-hub"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.18 }}
-        >
-          <Image
-            src="/assets/home/ballena-dots.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center", filter: "brightness(2)" }}
-          />
-        </div>
+        <ParallaxBg src="/assets/home/fondo-iconos.jpg" opacity={0.22} drift={12} />
 
         {/* Honeybadger punteado */}
         <div
@@ -523,24 +441,10 @@ export default function ComunidadPage() {
       {/* 5 — Comunidades: título + copy + CTA integrado (1 pantalla, sin logos) */}
       <section
         id="comunidades"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, height: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.18 }}
-        >
-          <Image
-            src="/assets/home/ballena-dots.png"
-            alt=""
-            fill
-            style={{
-              objectFit: "cover",
-              objectPosition: "center bottom",
-              filter: "brightness(2)",
-            }}
-          />
-        </div>
+        <ParallaxBg src="/assets/home/fondo-hexmap.jpg" opacity={0.22} objectPosition="center bottom" drift={12} />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative max-w-3xl">

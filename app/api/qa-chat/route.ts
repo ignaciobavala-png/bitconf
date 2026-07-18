@@ -11,7 +11,7 @@ const FAQ = `
 - General: acceso por 1 o 2 días, 8 escenarios, Chill Area, Dinner Points y Closing Party (solo día 2).
 - Business: todo lo anterior más Área VIP, espacio preferencial en el Main Stage, all inclusive, open bar, coffee bar y Merch Bag.
 - Experience: todo lo anterior más Open Fest exclusivo (29 oct) y Closing Day (1 nov).
-¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a ayuda@labitconf.com para gestionar su entrada.
+¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
 ¿Los menores de 16 pueden entrar solos? No, deben estar acompañados por un mayor de edad en todo momento dentro del predio.
 ¿Se pueden transferir o revender tickets? No, los tickets son personales e intransferibles. LABITCONF no se responsabiliza por compras fuera de la plataforma oficial.
 ¿Puedo comprar el ticket el día del evento? Depende de la disponibilidad; se recomienda comprar con anticipación porque los tickets pueden agotarse, especialmente las tandas más baratas.
@@ -37,7 +37,7 @@ const FAQ = `
 ¿Qué es el Programa de Embajadores HODL? La primera convocatoria de embajadores en la historia de LABITCONF; se seleccionan 6 personas relevantes del ecosistema. Postulación vía formulario (aún no publicado).
 
 5. Soporte y contacto
-¿A dónde escribo si tengo un problema con mi ticket? A ayuda@labitconf.com, incluyendo nombre, número de orden y descripción del problema. El equipo responde en días hábiles.
+¿A dónde escribo si tengo un problema con mi ticket? A contacto@labitconf.com, incluyendo nombre, número de orden y descripción del problema. El equipo responde en días hábiles.
 ¿Hay atención presencial el día del evento? Sí, punto de atención e información dentro del predio para consultas, acreditación y gestión de inconvenientes.
 ¿Dónde puedo seguir las novedades del evento? Instagram @labitconf, X @labitconf, web labitconf.com, agenda agenda.labitconf.com.
 `.trim();
@@ -51,7 +51,7 @@ Tu única fuente de verdad es el siguiente FAQ oficial. No inventes datos, preci
 ${FAQ}
 
 Reglas:
-- Si la pregunta no está cubierta por el FAQ, decilo con honestidad y derivá a ayuda@labitconf.com (o a labitconf.com si es algo comercial/tickets).
+- Si la pregunta no está cubierta por el FAQ, decilo con honestidad y derivá a contacto@labitconf.com (o a labitconf.com si es algo comercial/tickets).
 - Sé conciso: respuestas breves y directas, sin relleno.
 - No des consejos financieros ni opines sobre precios de criptomonedas.
 - No repitas todo el FAQ de una: contestá solo lo que se pregunta.`;

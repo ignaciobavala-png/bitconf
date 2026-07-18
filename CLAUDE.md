@@ -115,10 +115,30 @@ Además de `assets-bitconf/` (2D/3D), hay un banco de fondos en `~/Escritorio/as
 ## Deploy
 
 - **Repo**: `ignaciobavala-png/bitconf` (GitHub de Ignacio)
-- **Vercel**: cuenta del cliente (`weblabitconf26-1256s-projects`), proyecto `labitconf`
-- **URL producción**: `https://labitconf-weblabitconf26-1256s-projects.vercel.app`
-- **CI/CD**: GitHub Action en `.github/workflows/deploy.yml` — cada push a `main` despliega automáticamente usando `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_ORG_ID` como secrets de GitHub
-- **Variables de entorno**: cargadas en el proyecto de Vercel (Production + Preview)
+- **Producción (pre-landing en vivo)**: cuenta Vercel **del CLIENTE** (`weblabitconf26-1256s-projects`, orgId `team_q3CGqNe8muKoaz9ZAGzG5kYu`), proyecto `labitconf`, dominio `www.labitconf.com` (registrador **externo**, DNS controlable).
+- **CI/CD**: GitHub Action en `.github/workflows/deploy.yml` — cada push a `main` despliega a la **cuenta del cliente** usando `VERCEL_TOKEN`/`VERCEL_PROJECT_ID`/`VERCEL_ORG_ID` como secrets de GitHub.
+- **Variables de entorno**: cargadas en cada proyecto de Vercel (Production + Preview).
+
+### ⚠️ CRISIS DE CUENTA (2026-07-18) — LEER ANTES DE CUALQUIER DEPLOY
+
+Google **suspendió** el Gmail `weblabitconf26@gmail.com`, que era el **único login** de la cuenta Vercel del cliente. **Nadie puede volver a entrar al dashboard del cliente.** Sigue vivo solo el **access token** (en `~/Escritorio/account/bitconf`, junto a la key de Groq) que sirve para deployar/API, no para configurar. La cuenta del cliente es **personal/gratuita** (no Team) → no se pueden invitar miembros.
+
+**Solución adoptada:** la landing se publica en la cuenta Vercel **PERSONAL del dev** (team `ethoslogs-projects`/Petra-Labs, orgId `team_MUWAdp9NATyRthkhGYAPzp6H`), proyecto `labitconf` → preview en **https://labitconf.vercel.app**. A futuro se migra el dominio por DNS.
+
+**Reglas de deploy mientras dure esta etapa:**
+1. **Se deploya por CLI desde la rama `homepage` (working tree) a la cuenta PERSONAL**, NO por push:
+   `vercel deploy --prod --scope=ethoslogs-projects` (estando el repo enlazado a `ethoslogs-projects/labitconf`).
+2. **NUNCA `git push` a `main` en esta etapa.** Un push dispara el GitHub Action → deploya a la **cuenta del cliente** (el token sigue funcionando) y **pisaría la pre-landing en vivo** de `www.labitconf.com` con la landing. El Action está **dormido** solo porque no pusheamos.
+3. **Verificar el orgId de `.vercel/project.json` antes de `vercel deploy`.** Debe ser `team_MUWAdp9...` (personal). Si es `team_q3CGqNe8...` (cliente), NO deployar: re-enlazar con `vercel link --yes --project labitconf --scope=ethoslogs-projects`.
+
+**Secretos (fuente de verdad = `.env.local`, NO el Vercel del cliente):** Vercel marca las env vars como **sensibles/write-only** → `vercel env pull` las devuelve **vacías** (solo `NEXT_PUBLIC_SUPABASE_URL` se lee). Los 6 valores completos están en `.env.local` local. Al cargar por CLI, **`vercel env pull` escribe los valores entre comillas**; si se re-cargan sin strippear las comillas, el valor queda corrupto (ej. `Invalid supabaseUrl` → la página tira "This page couldn't load" del lado cliente). Siempre quitar comillas de los extremos antes de `vercel env add`.
+
+**Corte final (cuando el equipo apruebe la landing):**
+1. Migrar `www.labitconf.com` + `labitconf.com` al proyecto personal (agregar dominio → cargar TXT `_vercel` en el DNS externo → cambiar A/CNAME). La cuenta suspendida no se toca.
+2. Merge `homepage` → `main` (main pasa a ser el sitio real).
+3. **Repuntar el GitHub Action a la cuenta personal**: cambiar los 3 secrets de GitHub (`VERCEL_TOKEN`/`VERCEL_ORG_ID`/`VERCEL_PROJECT_ID`) por los del proyecto personal. Así main auto-deploya a la cuenta del dev y la cuenta del cliente queda fuera del circuito.
+
+Ver memoria `vercel-account-crisis-migracion.md` y `~/Escritorio/labitconf-como-sigue-el-proyecto.txt`.
 
 ## Arquitectura actual
 
