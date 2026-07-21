@@ -23,7 +23,7 @@ const lightStyle: React.CSSProperties = {
 };
 
 // Versiones -trim (recortadas al texto) + altura fija TITLE_H para que todos
-// los títulos de sección tengan la misma altura de letra (ver app/home/page.tsx)
+// los títulos de sección tengan la misma altura de letra (ver app/page.tsx)
 const TITLE_IMAGES = {
   comunidad: { es: "/assets/home/titulos/comunidad-es-trim.png", en: "/assets/home/titulos/comunidad-en-trim.png" },
   comunidades: { es: "/assets/home/titulos/comunidades-es-trim.png", en: "/assets/home/titulos/comunidades-en-trim.png" },
@@ -589,7 +589,7 @@ export default function ComunidadPage() {
         </div>
       </section>
 
-      {/* 9 — Footer compartido con /home */}
+      {/* 9 — Footer compartido con / */}
       <Footer lang={lang} />
 
       <QaChatWidget />

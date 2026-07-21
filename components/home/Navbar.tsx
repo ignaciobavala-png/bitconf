@@ -15,18 +15,18 @@ const labelStyle: React.CSSProperties = {
 // "¿Por qué hodleás?" (lleva al final de la página) + selector de idioma.
 const LEFT_LINKS = {
   es: [
-    { label: "Tickets", href: "/home#tickets" },
-    { label: "Comunidad", href: "/home/comunidad" },
+    { label: "Tickets", href: "/#tickets" },
+    { label: "Comunidad", href: "/comunidad" },
   ],
   en: [
-    { label: "Tickets", href: "/home#tickets" },
-    { label: "Community", href: "/home/comunidad" },
+    { label: "Tickets", href: "/#tickets" },
+    { label: "Community", href: "/comunidad" },
   ],
 } as const;
 
 const HODLEAS_LINK = {
-  es: { label: "¿Por qué hodleás?", href: "/home#contacto" },
-  en: { label: "Why do you hodl?", href: "/home#contacto" },
+  es: { label: "¿Por qué hodleás?", href: "/#contacto" },
+  en: { label: "Why do you hodl?", href: "/#contacto" },
 } as const;
 
 export default function Navbar() {
@@ -61,7 +61,7 @@ export default function Navbar() {
     >
       <div className="flex items-center gap-8">
         <a
-          href="/home"
+          href="/"
           onClick={() => setMenuOpen(false)}
           style={{
             ...labelStyle,
