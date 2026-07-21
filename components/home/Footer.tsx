@@ -84,7 +84,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
             {/* Logo HODL (marca 2D) — reemplaza el wordmark de texto (asset del cliente) */}
             <div className="relative" style={{ marginTop: "6px", height: "clamp(30px, 4.2vw, 44px)", width: "clamp(111px, 15.5vw, 163px)" }}>
               <Image
-                src="/assets/home/hodl-marca.png"
+                src="/assets/home/hodl-marca-v2.png"
                 alt="HODL"
                 fill
                 sizes="163px"
@@ -144,7 +144,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         {/* Logo HODL (marca 2D) — reemplaza el wordmark de texto (asset del cliente) */}
         <div className="relative" style={{ marginTop: "6px", height: "clamp(30px, 8vw, 44px)", width: "clamp(111px, 29.6vw, 163px)" }}>
           <Image
-            src="/assets/home/hodl-marca.png"
+            src="/assets/home/hodl-marca-v2.png"
             alt="HODL"
             fill
             sizes="163px"

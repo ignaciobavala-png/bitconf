@@ -137,11 +137,17 @@ const TICKET_FEATURES = {
   },
 } as const;
 
-function ticketFeatures(tier: string, lang: "es" | "en"): readonly string[] {
+function ticketFeatures(
+  tier: string,
+  lang: "es" | "en"
+): readonly { text: string; extra: boolean }[] {
   const f = TICKET_FEATURES[lang];
-  if (tier === "General") return f.general;
-  if (tier === "Business") return [...f.general, ...f.businessExtra];
-  return [...f.general, ...f.businessExtra, ...f.experienceExtra];
+  const base = f.general.map((text) => ({ text, extra: false }));
+  const businessExtra = f.businessExtra.map((text) => ({ text, extra: true }));
+  const experienceExtra = f.experienceExtra.map((text) => ({ text, extra: true }));
+  if (tier === "General") return base;
+  if (tier === "Business") return [...base, ...businessExtra];
+  return [...base, ...businessExtra, ...experienceExtra];
 }
 
 // Paleta por tier según el manual (16/7): General naranja · Business plateado ·
@@ -658,7 +664,7 @@ export default function HomePage() {
                       <div
                         key={pi}
                         className="flex items-baseline gap-2"
-                        style={{ marginTop: pi === 0 ? 0 : "6px" }}
+                        style={{ marginTop: pi === 0 ? 0 : "6px", whiteSpace: "nowrap" }}
                       >
                         {p[lang] && (
                           <span
@@ -678,7 +684,7 @@ export default function HomePage() {
                           style={{
                             ...labelStyle,
                             color: cText,
-                            fontSize: ticket.prices.length > 1 ? "clamp(18px, 2vw, 24px)" : "clamp(26px, 3.2vw, 36px)",
+                            fontSize: ticket.prices.length > 1 ? "clamp(16px, 1.7vw, 20px)" : "clamp(20px, 2.4vw, 28px)",
                             letterSpacing: "0.02em",
                           }}
                         >
@@ -705,16 +711,31 @@ export default function HomePage() {
                   <ul className="flex flex-col gap-3">
                     {features.map((feat, fi) => (
                       <li key={fi} className="flex items-start gap-2.5">
-                        <span
-                          className="shrink-0"
-                          style={{
-                            width: "6px",
-                            height: "6px",
-                            borderRadius: "9999px",
-                            background: ticket.accent,
-                            marginTop: "7px",
-                          }}
-                        />
+                        {feat.extra ? (
+                          <span
+                            className="shrink-0"
+                            style={{
+                              fontFamily: "var(--font-neue-machina), sans-serif",
+                              fontWeight: 700,
+                              fontSize: "12px",
+                              lineHeight: 1,
+                              color: ticket.accent,
+                            }}
+                          >
+                            +
+                          </span>
+                        ) : (
+                          <span
+                            className="shrink-0"
+                            style={{
+                              width: "6px",
+                              height: "6px",
+                              borderRadius: "9999px",
+                              background: ticket.accent,
+                              marginTop: "7px",
+                            }}
+                          />
+                        )}
                         <span
                           style={{
                             fontFamily: "var(--font-neue-machina), sans-serif",
@@ -724,7 +745,7 @@ export default function HomePage() {
                             color: cText,
                           }}
                         >
-                          {feat}
+                          {feat.text}
                         </span>
                       </li>
                     ))}
@@ -757,7 +778,10 @@ export default function HomePage() {
 
         </div>
 
-        {/* Honeybadger — anclado al borde de la sección para que no lo recorte el overflow */}
+        {/* Honeybadger — anclado al borde de la sección para que no lo recorte el overflow.
+            zIndex 1 (por debajo del contenido en zIndex 2): si el ancho de viewport achica
+            el gutter y la card de tickets llega a superponerse, la card pinta encima y el
+            honeybadger nunca tapa el botón de compra. */}
         <div
           className="absolute pointer-events-none select-none hidden sm:block"
           style={{
@@ -765,7 +789,7 @@ export default function HomePage() {
             left: "2rem",
             width: "min(16vw, 170px)",
             height: "min(16vw, 170px)",
-            zIndex: 3,
+            zIndex: 1,
           }}
         >
           <Floating duration={5} y={7} rotate={3}>
@@ -876,7 +900,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Astronauta — anclado dentro de la sección para que no lo recorte el overflow */}
+        {/* Astronauta — anclado dentro de la sección para que no lo recorte el overflow.
+            zIndex 1 (por debajo del contenido en zIndex 2): mismo criterio que el honeybadger
+            de Tickets, así nunca tapa el CTA de la card cuando el viewport achica el gutter. */}
         <div
           className="absolute pointer-events-none select-none hidden sm:block"
           style={{
@@ -884,7 +910,7 @@ export default function HomePage() {
             right: "2rem",
             width: "min(22vw, 260px)",
             height: "min(22vw, 260px)",
-            zIndex: 3,
+            zIndex: 1,
           }}
         >
           <Floating duration={7} y={14} rotate={6}>

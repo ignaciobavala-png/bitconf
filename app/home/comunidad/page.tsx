@@ -126,10 +126,12 @@ const AMBASSADOR_ICONS = [
   "/assets/home/iconos/rayo.png",
 ] as const;
 
-function CtaButton({ label }: { label: string }) {
+function CtaButton({ label, href = "#" }: { label: string; href?: string }) {
   return (
     <a
-      href="#"
+      href={href}
+      target={href !== "#" ? "_blank" : undefined}
+      rel={href !== "#" ? "noopener noreferrer" : undefined}
       className="rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
       style={{
         ...labelStyle,
@@ -147,7 +149,17 @@ function CtaButton({ label }: { label: string }) {
 
 // CTA integrado: pregunta + botón en una misma barra, para cerrar cada sección
 // dentro de su propia pantalla en vez de una pantalla-CTA separada.
-function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string; delay?: number }) {
+function InlineCta({
+  title,
+  label,
+  delay = 0.2,
+  href,
+}: {
+  title: string;
+  label: string;
+  delay?: number;
+  href?: string;
+}) {
   return (
     <Reveal
       delay={delay}
@@ -170,7 +182,7 @@ function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string
         {title}
       </h3>
       <div className="shrink-0">
-        <CtaButton label={label} />
+        <CtaButton label={label} href={href} />
       </div>
     </Reveal>
   );
@@ -432,7 +444,12 @@ export default function ComunidadPage() {
             })}
           </div>
 
-          <InlineCta title={t.ctaEmbajadorTitle} label={t.ctaButtonLabel} delay={0.3} />
+          <InlineCta
+            title={t.ctaEmbajadorTitle}
+            label={t.ctaButtonLabel}
+            delay={0.3}
+            href="https://forms.gle/x7KFRbUTVSahpgqCA"
+          />
         </div>
       </section>
 
@@ -563,7 +580,12 @@ export default function ComunidadPage() {
             </p>
           </Reveal>
 
-          <InlineCta title={t.ctaComunidadTitle} label={t.ctaButtonLabel} delay={0.25} />
+          <InlineCta
+            title={t.ctaComunidadTitle}
+            label={t.ctaButtonLabel}
+            delay={0.25}
+            href="https://forms.gle/wUCHHJEgr8ZeWGK49"
+          />
         </div>
       </section>
 
