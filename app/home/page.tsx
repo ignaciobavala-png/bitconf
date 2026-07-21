@@ -44,7 +44,6 @@ const T = {
     heroButton: "Comprar Ticket",
     heroTagline: "Latin American Bitcoin & Blockchain Conference",
     presentacionParagraphs: [
-      "LABITCONF vuelve a Buenos Aires para celebrar su 14ª edición.",
       "El evento #1 de América Latina que reúne a las personas, ideas y proyectos que están redefiniendo el dinero, la tecnología y la economía a través de Bitcoin, Blockchain e Inteligencia Artificial.",
       "Más de 300 referentes internacionales, 200 charlas, experiencias inmersivas y dos días de networking con quienes están construyendo la próxima década.",
       "HODL no es esperar. Es tener la convicción de construir el futuro.",
@@ -62,7 +61,6 @@ const T = {
     heroButton: "Buy Ticket",
     heroTagline: "Latin American Bitcoin & Blockchain Conference",
     presentacionParagraphs: [
-      "LABITCONF returns to Buenos Aires to celebrate its 14th edition.",
       "Latin America's #1 event, bringing together the people, ideas and projects redefining money, technology and the economy through Bitcoin, Blockchain and Artificial Intelligence.",
       "300+ international speakers, 200 talks, immersive experiences and two days of networking with the people building the next decade.",
       "HODL isn't waiting. It's having the conviction to build the future.",
@@ -86,8 +84,9 @@ const labelStyle: React.CSSProperties = {
 };
 
 
-// Beneficios por tier (info del cliente, 21/7). Lista COMPLETA por card
-// (acumulativa: Business incluye lo de General, Experience lo de ambos).
+// Beneficios por tier (info del cliente, 21/7). Business/Experience NO repiten
+// la lista completa: muestran una línea-resumen ("Todo lo de Ticket General")
+// más solo lo que suman, para no comprimir la card con ítems duplicados.
 const TICKET_FEATURES = {
   es: {
     general: [
@@ -98,6 +97,7 @@ const TICKET_FEATURES = {
       "Shows durante el evento",
       "Fiesta de Disfraces HODLWEEN (31 de Octubre)",
     ],
+    businessSummary: "Todo lo de Ticket General",
     businessExtra: [
       "Un Hardware Wallet de Regalo",
       "Escenario Exclusivo B2B",
@@ -105,6 +105,7 @@ const TICKET_FEATURES = {
       "Coffee Station",
       "Almuerzo Incluido",
     ],
+    experienceSummary: "Todo lo del Ticket Business",
     experienceExtra: [
       "Evento B2B Networking (29 de Octubre)",
       "Show Apertura (29 de Octubre)",
@@ -121,6 +122,7 @@ const TICKET_FEATURES = {
       "Shows during the event",
       "HODLWEEN Costume Party (October 31)",
     ],
+    businessSummary: "Everything in the General Ticket",
     businessExtra: [
       "Free Hardware Wallet",
       "Exclusive B2B Stage",
@@ -128,6 +130,7 @@ const TICKET_FEATURES = {
       "Coffee Station",
       "Lunch Included",
     ],
+    experienceSummary: "Everything in the Business Ticket",
     experienceExtra: [
       "B2B Networking Event (October 29)",
       "Opening Show (October 29)",
@@ -140,14 +143,16 @@ const TICKET_FEATURES = {
 function ticketFeatures(
   tier: string,
   lang: "es" | "en"
-): readonly { text: string; extra: boolean }[] {
+): readonly { text: string; extra: boolean; summary?: boolean }[] {
   const f = TICKET_FEATURES[lang];
   const base = f.general.map((text) => ({ text, extra: false }));
-  const businessExtra = f.businessExtra.map((text) => ({ text, extra: true }));
-  const experienceExtra = f.experienceExtra.map((text) => ({ text, extra: true }));
   if (tier === "General") return base;
-  if (tier === "Business") return [...base, ...businessExtra];
-  return [...base, ...businessExtra, ...experienceExtra];
+  const businessExtra = f.businessExtra.map((text) => ({ text, extra: true }));
+  if (tier === "Business") {
+    return [{ text: f.businessSummary, extra: false, summary: true }, ...businessExtra];
+  }
+  const experienceExtra = f.experienceExtra.map((text) => ({ text, extra: true }));
+  return [{ text: f.experienceSummary, extra: false, summary: true }, ...experienceExtra];
 }
 
 // Paleta por tier según el manual (16/7): General naranja · Business plateado ·
@@ -428,7 +433,9 @@ export default function HomePage() {
         <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
           {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
           <motion.a
-            href="#tickets"
+            href="https://www.mundoticket.com/show/c073f703-02d5-405e-90a4-802fdbc22094"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block rounded-full border-2"
             style={{
               ...labelStyle,
@@ -529,8 +536,8 @@ export default function HomePage() {
                 style={{
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
-                  color: "#A5A8B1",
-                  fontSize: BODY_FS,
+                  color: "#E6EEF2",
+                  fontSize: "clamp(21px, 2.02vw, 27px)",
                   lineHeight: 1.6,
                   zIndex: 2,
                   maxWidth: headlineWidth,
@@ -739,10 +746,11 @@ export default function HomePage() {
                         <span
                           style={{
                             fontFamily: "var(--font-neue-machina), sans-serif",
-                            fontWeight: 500,
+                            fontWeight: feat.summary ? 700 : 500,
                             fontSize: "clamp(13px, 1.05vw, 15px)",
                             lineHeight: 1.4,
-                            color: cText,
+                            fontStyle: feat.summary ? "italic" : "normal",
+                            color: feat.summary ? ticket.accent : cText,
                           }}
                         >
                           {feat.text}
