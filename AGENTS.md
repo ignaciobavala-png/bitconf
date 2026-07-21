@@ -33,11 +33,15 @@ Framework:    Next.js 16 (App Router)
 UI:           React 19 + Tailwind CSS v4 + Framer Motion v12
 Estado:       Zustand v5
 DB:           Supabase (PostgreSQL + Auth + Storage + RLS)
-Deploy:       Vercel
+Deploy:       Vercel (cuenta Pro — sin límite de frecuencia de crons)
 Package:      pnpm
 Linting:      ESLint 9 (flat config)
 Lenguaje:     TypeScript strict
 ```
+
+**Páginas livianas → Cloudflare** (Workers + Static Assets, D1/SQLite opcional, wrangler v4),
+en vez de Next.js+Supabase+Vercel. Para arrancar cualquiera de los dos: scaffold
+[[scaffold-nextjs-supabase]] (`kickstart`, targets `vercel` y `cloudflare`).
 
 ## Convenciones
 
@@ -94,12 +98,20 @@ Leer el archivo completo solo si la tarea actual lo requiere — esta lista es s
   Al conectar envío de emails transaccionales o campañas de mailing en un proyecto Next.js + Supabase. Aplica tanto a la primera integración como a mantenimiento de templates existentes.
 - **Jeeliz FaceFilter + Three.js — Web AR try-on** (`/home/nch/Escritorio/brain-data/skills/jeeliz-web-ar-tryon/SKILL.md`)
   ## Cuando usarla Al integrar el face tracker Jeeliz FaceFilter con Three.js en una app React (Vite) para probadores virtuales de anteojos. La API de Jeeliz es singleton global y opera sobre WebGL crudo; Three.js debe com…
+- **Navegación con shell persistente (route group + framer-motion)** (`/home/nch/Escritorio/brain-data/skills/nextjs-persistent-shell-nav/SKILL.md`)
+  Cuando querés que la navegación entre páginas se sienta como **un mismo espacio que muta** (sensación "redes sociales / cinta transportadora": nunca entrás ni salís del todo), o cuando necesitás elementos de UI que **sob…
 - **Vercel + React — performance y patrones críticos** (`/home/nch/Escritorio/brain-data/skills/vercel-react-best-practices/SKILL.md`)
   Al optimizar una página lenta, reducir el bundle, revisar re-renders, o hacer deploy en Vercel.
+- **Scaffold Next.js 16 + Supabase (kickstart)** (`/home/nch/Escritorio/brain-data/skills/scaffold-nextjs-supabase/SKILL.md`)
+  Al arrancar cualquier proyecto nuevo. En vez de re-hacer el setup a mano y re-debuggear los mismos bugs silenciosos en cada cliente, generar el proyecto ya con todo baked-in. Dos targets según el peso del proyecto: **`ve…
+- **Chatbot FAQ grounded con AI SDK v5 + Groq (widget Q&A)** (`/home/nch/Escritorio/brain-data/skills/ai-sdk-chatbot-grounded/SKILL.md`)
+  Al agregar un widget de preguntas frecuentes / asistente virtual a un sitio, cuando la respuesta debe estar **anclada a un FAQ oficial** (sin inventar datos) y el objetivo es un chat simple con streaming, no un agente co…
 - **Comprimir imágenes client-side antes de subir al storage** (`/home/nch/Escritorio/brain-data/skills/client-side-image-compress/SKILL.md`)
   Siempre que se implemente un uploader de imágenes (flyers, avatares, fondos, productos, etc.). Sin compresión, los usuarios pueden subir archivos de 10–25 MB que se sirven a cada visitante, generando egress masivo en Sup…
 - **Supabase — Max Rows silencioso trunca queries sin paginar** (`/home/nch/Escritorio/brain-data/skills/supabase-max-rows-limit/SKILL.md`)
   Al escribir o revisar cualquier `select()` de Supabase que traiga una tabla que puede crecer sin límite (emails, suscriptores, registros de eventos, logs, mensajes). También si un conteo o listado "deja de sumar" o parec…
+- **Recurrencia de eventos anclada a día de semana real (no a created_at)** (`/home/nch/Escritorio/brain-data/skills/recurrencia-eventos-dia-semana/SKILL.md`)
+  Al generar ocurrencias de un evento/taller recurrente (semanal, quincenal, mensual, etc.) a partir de una fila en la DB, especialmente cuando la fecha de alta (`created_at`) es distinta al día en que el evento realmente…
 - **Contenido dual público/comunidad con columna visibilidad** (`/home/nch/Escritorio/brain-data/skills/contenido-dual-visibilidad/SKILL.md`)
   Cuando un sitio tiene usuarios con diferentes niveles de acceso (público, registrado, miembro) y querés extender las páginas existentes con contenido exclusivo **sin crear rutas nuevas**. El sitio es el mismo en esencia…
 - **Bug silencioso — función en policy RLS necesita GRANT EXECUTE al rol que consulta** (`/home/nch/Escritorio/brain-data/skills/supabase-rls-funcion-policy-grant-execute/SKILL.md`)
@@ -112,6 +124,8 @@ Leer el archivo completo solo si la tarea actual lo requiere — esta lista es s
   Siempre que un formulario React/Next.js tenga campos numéricos con decimales (dimensiones, peso, precios, porcentajes) para usuarios argentinos. Síntoma típico reportado por el usuario: **"el input no toma decimales"** —…
 - **Bug silencioso — login colgado en "Cargando..." con @supabase/ssr + embed ambiguo** (`/home/nch/Escritorio/brain-data/skills/supabase-ssr-login-deadlock/SKILL.md`)
   Dos bugs de admin Next.js + Supabase que aparecieron juntos en Pampa Estudio: 1. El botón de login queda en "Cargando…" para siempre (la sesión igual se crea). 2. Listados del admin muestran 0 filas / KPIs en 0 sin error…
+- **Bug silencioso de datetime-local con timestamps UTC** (`/home/nch/Escritorio/brain-data/skills/datetime-local-utc-bug/SKILL.md`)
+  Siempre que un form tenga `<input type="datetime-local">` cuyo valor se carga desde un timestamp guardado en UTC (Supabase `timestamptz`, ISO strings) y se vuelve a guardar.
 - **ON CONFLICT en Postgres debe matchear una constraint real, o falla siempre** (`/home/nch/Escritorio/brain-data/skills/postgres-on-conflict-debe-matchear-constraint-real/SKILL.md`)
   Al escribir o revisar funciones `plpgsql`/RPCs de Supabase que hacen `INSERT ... ON CONFLICT (cols) DO UPDATE`, especialmente si la tabla tiene varias columnas candidatas a "clave lógica" (ej. `vacaciones_id, mes` vs. la…
 - **Flex item con overflow-hidden se aplasta a 0px en contenedores con scroll** (`/home/nch/Escritorio/brain-data/skills/flexbox-overflow-hidden-colapso/SKILL.md`)

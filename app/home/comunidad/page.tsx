@@ -7,6 +7,7 @@ import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import ParallaxBg from "@/components/home/ParallaxBg";
+import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -21,11 +22,6 @@ const lightStyle: React.CSSProperties = {
   fontWeight: 300,
 };
 
-// Tinte naranja #FF4E01 para las figuras punteadas: fuerza el asset gris a
-// negro y lo recolorea (invert/sepia/saturate calculados para ese hex)
-const orangeTint =
-  "brightness(0) saturate(100%) invert(60%) sepia(51%) saturate(1521%) hue-rotate(347deg) brightness(99%) contrast(97%)";
-
 // Versiones -trim (recortadas al texto) + altura fija TITLE_H para que todos
 // los títulos de sección tengan la misma altura de letra (ver app/home/page.tsx)
 const TITLE_IMAGES = {
@@ -37,6 +33,13 @@ const TITLE_IMAGES = {
 
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
+// Dimensiones intrínsecas del título "Embajadores" -trim (identify), para
+// renderizarlo sin `fill` y poder ponerle al lado el badge "Próximamente".
+const EMBAJADORES_TITLE_DIMS = {
+  es: { w: 973, h: 92 },
+  en: { w: 976, h: 86 },
+} as const;
+
 const T = {
   es: {
     presentacionP1:
@@ -46,14 +49,23 @@ const T = {
     verticalEmbajadores: "Embajadores",
     verticalStudentHub: "Student Hub",
     verticalComunidades: "Comunidades",
-    ctaEmbajadorTitle: "¿Querés ser embajador?",
+    ctaEmbajadorTitle: "¿Por qué HODLeás? Contanos tu historia y postulate.",
     ctaHubTitle: "¿Querés unirte al hub?",
     ctaComunidadTitle: "¿Querés unir tu comunidad?",
     ctaButtonLabel: "Inscribite acá",
-    studentHubCopy:
-      "El Student Hub es el espacio de LABITCONF para estudiantes: charlas, workshops y networking para la próxima generación de constructores.",
+    proximamente: "Próximamente",
+    embajadoresCopy: [
+      "Hay personas que apostaron por sus ideas cuando nadie más creía en ellas. Que siguieron adelante cuando todo parecía indicar que debían abandonar. Personas que eligieron resistir, construir y mantenerse fieles a su visión.",
+      "Este año, por primera vez en la historia de LABITCONF, queremos reconocerlas y darles un lugar oficial dentro de la conferencia.",
+    ],
+    studentHubCopy: [
+      "El espacio de LABITCONF donde se forma la próxima generación del ecosistema.",
+      "Creemos que el futuro no se espera: se comprende, se cuestiona y se construye. Por eso, acercamos a los estudiantes las herramientas y los principios de la descentralización, para que puedan ampliar su mirada y convertirse en protagonistas del cambio que blockchain ya está impulsando.",
+      "Los estudiantes de universidades aliadas acceden gratuitamente al evento, cuentan con un espacio propio dentro del predio y reciben un certificado digital de participación.",
+      "Porque descentralizar el conocimiento es el primer paso para descentralizar el futuro.",
+    ],
     comunidadesCopy:
-      "Estas son las comunidades que hacen que LABITCONF sea posible: grupos locales de toda América Latina que construyen, educan y difunden Bitcoin todo el año.",
+      "Las comunidades son el corazón del ecosistema. El programa de Comunidades Asociadas está abierto a comunidades crypto, tech, universitarias y de nicho que quieran ser parte de la edición 2026. Las comunidades adheridas acceden a beneficios exclusivos para sus miembros y tienen la posibilidad de tener presencia dentro del evento. Si tu comunidad forma parte del ecosistema, tiene un lugar acá. Completá el formulario y sumala a LABITCONF.",
   },
   en: {
     presentacionP1:
@@ -63,14 +75,23 @@ const T = {
     verticalEmbajadores: "Ambassadors",
     verticalStudentHub: "Student Hub",
     verticalComunidades: "Communities",
-    ctaEmbajadorTitle: "Want to become an ambassador?",
+    ctaEmbajadorTitle: "Why do you HODL? Tell us your story and apply.",
     ctaHubTitle: "Want to join the hub?",
     ctaComunidadTitle: "Want to connect your community?",
     ctaButtonLabel: "Sign up here",
-    studentHubCopy:
-      "Student Hub is LABITCONF's space for students: talks, workshops and networking for the next generation of builders.",
+    proximamente: "Coming soon",
+    embajadoresCopy: [
+      "There are people who bet on their ideas when no one else believed in them. Who kept going when everything seemed to say they should give up. People who chose to resist, build, and stay true to their vision.",
+      "This year, for the first time in LABITCONF's history, we want to recognize them and give them an official place within the conference.",
+    ],
+    studentHubCopy: [
+      "LABITCONF's space where the next generation of the ecosystem is shaped.",
+      "We believe the future isn't waited for: it's understood, questioned and built. That's why we bring students the tools and principles of decentralization, so they can broaden their perspective and become protagonists of the change blockchain is already driving.",
+      "Students from partner universities get free access to the event, have their own space on site, and receive a digital certificate of participation.",
+      "Because decentralizing knowledge is the first step to decentralizing the future.",
+    ],
     comunidadesCopy:
-      "These are the communities that make LABITCONF possible: local groups across Latin America that build, educate and spread Bitcoin all year round.",
+      "Communities are the heart of the ecosystem. The Associated Communities program is open to crypto, tech, university and niche communities that want to be part of the 2026 edition. Partner communities get exclusive benefits for their members and the chance to have a presence at the event. If your community is part of the ecosystem, it has a place here. Fill out the form and add it to LABITCONF.",
   },
 } as const;
 
@@ -78,19 +99,19 @@ const VERTICALES = [
   {
     key: "verticalEmbajadores",
     href: "#embajadores",
-    image: "/assets/home/honeybadger-dots.png",
+    image: "/assets/home/honeybadger-final.png",
     labelPosition: "bottom",
   },
   {
     key: "verticalStudentHub",
     href: "#student-hub",
-    image: "/assets/home/ballena-dots.png",
+    image: "/assets/home/ballena-final.png",
     labelPosition: "top",
   },
   {
     key: "verticalComunidades",
     href: "#comunidades",
-    image: "/assets/home/pildora-dots.png",
+    image: "/assets/home/pildora-final.png",
     labelPosition: "bottom",
   },
 ] as const;
@@ -130,7 +151,7 @@ function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string
   return (
     <Reveal
       delay={delay}
-      className="mt-10 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 rounded-3xl"
+      className="mt-10 w-full flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-6 rounded-3xl"
       style={{
         border: "1px solid #ABF760",
         background: "rgba(13,13,11,0.55)",
@@ -138,10 +159,11 @@ function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string
       }}
     >
       <h3
+        className="sm:whitespace-nowrap"
         style={{
           ...labelStyle,
           color: "#FF4E01",
-          fontSize: "clamp(22px, 3.2vw, 40px)",
+          fontSize: "clamp(16px, 2vw, 26px)",
           lineHeight: 1.1,
         }}
       >
@@ -157,12 +179,14 @@ function InlineCta({ title, label, delay = 0.2 }: { title: string; label: string
 export default function ComunidadPage() {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
+  const { probe: headlineProbe } = useHeadlineWidth();
 
   return (
     <main
       className="relative min-h-screen overflow-hidden"
       style={{ background: "#171616" }}
     >
+      {headlineProbe}
       <Navbar />
 
       {/* 1 — Hero Comunidad */}
@@ -177,7 +201,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.45) 20%, rgba(13,13,11,0.45) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.45) 32%, rgba(13,13,11,0.45) 68%, #171616 100%)",
           }}
         />
 
@@ -192,7 +216,7 @@ export default function ComunidadPage() {
             />
           </Reveal>
 
-          <Reveal delay={0.15} className="relative mt-12 sm:ml-10 max-w-3xl">
+          <Reveal delay={0.15} className="relative mt-12 w-full">
             <div
               className="rounded-3xl"
               style={{
@@ -207,6 +231,7 @@ export default function ComunidadPage() {
                   color: "#E6EEF2",
                   fontSize: "clamp(14px, 1.4vw, 17px)",
                   lineHeight: 1.6,
+                  textAlign: "justify",
                 }}
               >
                 {t.presentacionP1}
@@ -218,6 +243,7 @@ export default function ComunidadPage() {
                   color: "#E6EEF2",
                   fontSize: "clamp(14px, 1.4vw, 17px)",
                   lineHeight: 1.6,
+                  textAlign: "justify",
                 }}
               >
                 {t.presentacionP2}
@@ -229,14 +255,14 @@ export default function ComunidadPage() {
               className="absolute pointer-events-none select-none hidden sm:block"
               style={{
                 bottom: "-3rem",
-                left: "-4rem",
+                left: "-1.5rem",
                 width: "min(12vw, 110px)",
                 height: "min(12vw, 110px)",
               }}
             >
               <Floating duration={5.5} y={8} rotate={4}>
                 <Image
-                  src="/assets/home/pildora.png"
+                  src="/assets/home/pildora-final.png"
                   alt=""
                   fill
                   style={{ objectFit: "contain", transform: "rotate(-25deg)" }}
@@ -259,7 +285,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 20%, rgba(13,13,11,0.4) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, #171616 100%)",
           }}
         />
 
@@ -280,7 +306,7 @@ export default function ComunidadPage() {
               >
                 <div
                   className="absolute pointer-events-none select-none"
-                  style={{ inset: "10%", filter: orangeTint, opacity: 0.9 }}
+                  style={{ inset: "10%", opacity: 0.9 }}
                 >
                   <Floating duration={5 + i * 0.6} y={9} rotate={3}>
                     <Image
@@ -296,7 +322,7 @@ export default function ComunidadPage() {
                   style={{
                     ...labelStyle,
                     color: "#E6EEF2",
-                    fontSize: "clamp(24px, 2.6vw, 34px)",
+                    fontSize: "clamp(14px, 1.8vw, 19px)",
                     lineHeight: 1.15,
                     textShadow: "0 2px 20px rgba(0,0,0,0.8)",
                   }}
@@ -312,7 +338,7 @@ export default function ComunidadPage() {
       {/* 3 — Embajadores: título + 6 tarjetas + CTA integrado (1 pantalla) */}
       <section
         id="embajadores"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        className="relative flex flex-col justify-center sm:justify-start px-6 sm:px-10 py-24 sm:py-0 sm:pt-36 sm:min-h-screen overflow-hidden"
         style={{ zIndex: 3 }}
       >
         <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} />
@@ -322,27 +348,66 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, #171616 100%)",
           }}
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
-            <Image
-              src={TITLE_IMAGES.embajadores[lang]}
-              alt={t.verticalEmbajadores}
-              fill
-              style={{ objectFit: "contain", objectPosition: "left center" }}
-            />
+          <div className="flex items-end gap-4 flex-wrap">
+            <Reveal style={{ height: TITLE_H }}>
+              <Image
+                src={TITLE_IMAGES.embajadores[lang]}
+                alt={t.verticalEmbajadores}
+                width={EMBAJADORES_TITLE_DIMS[lang].w}
+                height={EMBAJADORES_TITLE_DIMS[lang].h}
+                style={{ height: TITLE_H, width: "auto" }}
+              />
+            </Reveal>
+            <Reveal delay={0.05}>
+              <span
+                style={{
+                  ...labelStyle,
+                  color: "#FF4E01",
+                  fontSize: "clamp(13px, 1.2vw, 16px)",
+                }}
+              >
+                {t.proximamente}
+              </span>
+            </Reveal>
+          </div>
+
+          <Reveal
+            delay={0.1}
+            className="mt-8 rounded-3xl w-full"
+            style={{
+              border: "1px solid #ABF760",
+              background: "rgba(13,13,11,0.55)",
+              padding: "clamp(24px, 4vw, 40px)",
+            }}
+          >
+            {t.embajadoresCopy.map((paragraph, i) => (
+              <p
+                key={i}
+                className={i === 0 ? undefined : "mt-3"}
+                style={{
+                  ...lightStyle,
+                  color: "#E6EEF2",
+                  fontSize: "clamp(14px, 1.4vw, 17px)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {paragraph}
+              </p>
+            ))}
           </Reveal>
 
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 justify-items-center">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
             {Array.from({ length: 6 }, (_, i) => {
               return (
                 <Reveal
                   key={i}
                   delay={0.1 + i * 0.1}
-                  className="relative rounded-2xl overflow-hidden w-full max-w-[170px]"
+                  className="relative rounded-2xl overflow-hidden w-full"
                   style={{
                     aspectRatio: "3 / 4",
                     border: "1px solid #ABF760",
@@ -374,33 +439,19 @@ export default function ComunidadPage() {
       {/* 4 — Student Hub: título + copy + CTA integrado (1 pantalla) */}
       <section
         id="student-hub"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        className="relative flex flex-col justify-center sm:justify-start px-6 sm:px-10 py-24 sm:py-0 sm:pt-36 sm:min-h-screen overflow-hidden"
         style={{ zIndex: 3 }}
       >
         <ParallaxBg src="/assets/home/fondo-iconos.jpg" opacity={0.22} drift={12} />
 
-        {/* Honeybadger punteado */}
         <div
-          className="absolute pointer-events-none select-none hidden lg:block"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            top: "50%",
-            right: "4%",
-            transform: "translateY(-50%)",
-            width: "min(24vw, 300px)",
-            height: "min(34vw, 420px)",
             zIndex: 1,
-            opacity: 0.7,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
           }}
-        >
-          <Floating duration={7} y={10} rotate={3}>
-            <Image
-              src="/assets/home/honeybadger-dots.png"
-              alt=""
-              fill
-              style={{ objectFit: "contain", filter: "brightness(2)" }}
-            />
-          </Floating>
-        </div>
+        />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ height: TITLE_H }}>
@@ -414,24 +465,27 @@ export default function ComunidadPage() {
 
           <Reveal
             delay={0.15}
-            className="mt-8 rounded-3xl max-w-3xl"
+            className="mt-8 rounded-3xl w-full"
             style={{
               border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
           >
-            <p
-              style={{
-                ...lightStyle,
-                color: "#E6EEF2",
-                fontSize: "clamp(14px, 1.4vw, 17px)",
-                lineHeight: 1.6,
-              }}
-            >
-              {/* Copy placeholder — pendiente del cliente */}
-              {t.studentHubCopy}
-            </p>
+            {t.studentHubCopy.map((paragraph, i) => (
+              <p
+                key={i}
+                className={i === 0 ? undefined : "mt-3"}
+                style={{
+                  ...lightStyle,
+                  color: "#E6EEF2",
+                  fontSize: "clamp(14px, 1.4vw, 17px)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {paragraph}
+              </p>
+            ))}
           </Reveal>
 
           <InlineCta title={t.ctaHubTitle} label={t.ctaButtonLabel} delay={0.25} />
@@ -441,10 +495,19 @@ export default function ComunidadPage() {
       {/* 5 — Comunidades: título + copy + CTA integrado (1 pantalla, sin logos) */}
       <section
         id="comunidades"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-24 sm:py-0 sm:min-h-screen overflow-hidden"
+        className="relative flex flex-col justify-center sm:justify-start px-6 sm:px-10 py-24 sm:py-0 sm:pt-36 sm:min-h-screen overflow-hidden"
         style={{ zIndex: 3 }}
       >
         <ParallaxBg src="/assets/home/fondo-hexmap.jpg" opacity={0.22} objectPosition="center bottom" drift={12} />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+          }}
+        />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative max-w-3xl">
@@ -469,7 +532,7 @@ export default function ComunidadPage() {
             >
               <Floating duration={5} y={7} rotate={4}>
                 <Image
-                  src="/assets/home/pildora.png"
+                  src="/assets/home/pildora-final.png"
                   alt=""
                   fill
                   style={{ objectFit: "contain", transform: "rotate(20deg)" }}
@@ -480,7 +543,7 @@ export default function ComunidadPage() {
 
           <Reveal
             delay={0.15}
-            className="mt-8 rounded-3xl max-w-3xl"
+            className="mt-8 rounded-3xl w-full"
             style={{
               border: "1px solid #ABF760",
               background: "rgba(13,13,11,0.55)",

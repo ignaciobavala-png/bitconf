@@ -25,8 +25,8 @@ const LEFT_LINKS = {
 } as const;
 
 const HODLEAS_LINK = {
-  es: { label: "¿Por qué hodleás?", href: "/home#hodleas" },
-  en: { label: "Why do you hodl?", href: "/home#hodleas" },
+  es: { label: "¿Por qué hodleás?", href: "/home#contacto" },
+  en: { label: "Why do you hodl?", href: "/home#contacto" },
 } as const;
 
 export default function Navbar() {

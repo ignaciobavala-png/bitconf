@@ -78,6 +78,11 @@ interface HodlReasonsSectionProps {
    * (usado como footer embebido de la landing).
    */
   variant?: "full" | "compact";
+  /**
+   * Alineación vertical del form en variant="compact". "top" deja lugar
+   * debajo para contenido extra (ej. logo/rrss del footer embebido).
+   */
+  compactAlign?: "center" | "top";
   /** Idioma controlado por el padre (ej. store global de /home). Si no se pasa, usa estado local. */
   lang?: Lang;
   onToggleLang?: () => void;
@@ -87,6 +92,7 @@ export default function HodlReasonsSection({
   showLangToggle = true,
   id,
   variant = "full",
+  compactAlign = "center",
   lang: langProp,
   onToggleLang,
 }: HodlReasonsSectionProps) {
@@ -282,7 +288,9 @@ export default function HodlReasonsSection({
       <div
         className={
           variant === "compact"
-            ? "absolute inset-0 pointer-events-none flex flex-col items-center justify-center"
+            ? `absolute inset-0 pointer-events-none flex flex-col items-center ${
+                compactAlign === "top" ? "justify-start pt-28 sm:pt-32" : "justify-center"
+              }`
             : "absolute bottom-0 left-0 right-0 pointer-events-none flex flex-col"
         }
         style={{ zIndex: 4 }}

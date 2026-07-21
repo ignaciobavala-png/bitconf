@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
@@ -8,6 +9,7 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
+import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
@@ -22,17 +24,31 @@ const TITLE_IMAGES = {
 
 // Altura uniforme de los títulos de sección
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
+// Distancia uniforme entre el título de sección y el contenido que sigue
+const TITLE_GAP = "mt-10 sm:mt-14";
+// Tamaño uniforme de cuerpo de texto (párrafos) entre secciones
+const BODY_FS = "clamp(13px, 1.2vw, 16px)";
+// Tamaño uniforme de los CTA secundarios (tickets, sé parte, ubicación —
+// el botón hero es el único CTA primario y mantiene su tamaño mayor a propósito)
+const BUTTON_FS = "clamp(12px, 1.1vw, 14px)";
 
 // Banner del hero: video servido desde el bucket público de Supabase (no en git).
 const HERO_VIDEO_URL =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero.mp4";
+// Foto de Costa Salguero (sección Ubicación): mismo patrón, bucket público de Supabase.
+const COSTA_SALGUERO_PHOTO_URL =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/costa-salguero.jpg";
 
 const T = {
   es: {
     heroButton: "Comprar Ticket",
-    presentacionP1:
-      "LABITCONF vuelve a Buenos Aires para su edición número 13, conectando a los líderes, constructores y comunidades que están dando forma al futuro de América Latina.",
-    presentacionP2: "Porque las mejores historias son las que siguen construyéndose.",
+    heroTagline: "Latin American Bitcoin & Blockchain Conference",
+    presentacionParagraphs: [
+      "LABITCONF vuelve a Buenos Aires para celebrar su 14ª edición.",
+      "El evento #1 de América Latina que reúne a las personas, ideas y proyectos que están redefiniendo el dinero, la tecnología y la economía a través de Bitcoin, Blockchain e Inteligencia Artificial.",
+      "Más de 300 referentes internacionales, 200 charlas, experiencias inmersivas y dos días de networking con quienes están construyendo la próxima década.",
+      "HODL no es esperar. Es tener la convicción de construir el futuro.",
+    ],
     ubicacionP1:
       "Centro Costa Salguero es uno de los espacios más reconocidos para eventos en la Ciudad de Buenos Aires.",
     ubicacionP2:
@@ -44,9 +60,13 @@ const T = {
   },
   en: {
     heroButton: "Buy Ticket",
-    presentacionP1:
-      "LABITCONF returns to Buenos Aires for its 13th edition, connecting the leaders, builders and communities shaping the future of Latin America.",
-    presentacionP2: "Because the best stories are the ones still being written.",
+    heroTagline: "Latin American Bitcoin & Blockchain Conference",
+    presentacionParagraphs: [
+      "LABITCONF returns to Buenos Aires to celebrate its 14th edition.",
+      "Latin America's #1 event, bringing together the people, ideas and projects redefining money, technology and the economy through Bitcoin, Blockchain and Artificial Intelligence.",
+      "300+ international speakers, 200 talks, immersive experiences and two days of networking with the people building the next decade.",
+      "HODL isn't waiting. It's having the conviction to build the future.",
+    ],
     ubicacionP1:
       "Centro Costa Salguero is one of the most recognized event spaces in the City of Buenos Aires.",
     ubicacionP2:
@@ -66,53 +86,53 @@ const labelStyle: React.CSSProperties = {
 };
 
 
-// Beneficios por tier (info del cliente, 16/7). Lista COMPLETA por card
+// Beneficios por tier (info del cliente, 21/7). Lista COMPLETA por card
 // (acumulativa: Business incluye lo de General, Experience lo de ambos).
 const TICKET_FEATURES = {
   es: {
     general: [
-      "Acceso 1 o 2 días",
-      "Escenarios",
-      "Chill Area",
-      "Dinner Points",
-      "Hodleween Party (solo pase 2 días)",
+      "6 escenarios",
+      "Sector Expositores",
+      "Área de Descanso",
+      "Área de Comidas",
+      "Shows durante el evento",
+      "Fiesta de Disfraces HODLWEEN (31 de Octubre)",
     ],
     businessExtra: [
-      "Área VIP",
-      "Espacio preferencial Main Stage",
-      "All inclusive",
-      "Open bar",
-      "Coffee Bar",
-      "Merch bag",
-      "Trezor Model T",
+      "Un Hardware Wallet de Regalo",
+      "Escenario Exclusivo B2B",
+      "Área Networking VIP",
+      "Coffee Station",
+      "Almuerzo Incluido",
     ],
     experienceExtra: [
-      "Open Executive · 29 oct",
-      "Closing Day · 1 nov",
-      "Trezor Model One",
+      "Evento B2B Networking (29 de Octubre)",
+      "Show Apertura (29 de Octubre)",
+      "Speaker's Networking & Chill Out Full Day (1 de Noviembre)",
+      "Exclusive HODL Merch",
     ],
   },
   en: {
     general: [
-      "1 or 2-day access",
-      "Stages",
-      "Chill Area",
-      "Dinner Points",
-      "Hodleween Party (2-day pass only)",
+      "6 stages",
+      "Exhibitors Area",
+      "Rest Area",
+      "Food Area",
+      "Shows during the event",
+      "HODLWEEN Costume Party (October 31)",
     ],
     businessExtra: [
-      "VIP Area",
-      "Preferred Main Stage space",
-      "All inclusive",
-      "Open bar",
-      "Coffee Bar",
-      "Merch bag",
-      "Trezor Model T",
+      "Free Hardware Wallet",
+      "Exclusive B2B Stage",
+      "VIP Networking Area",
+      "Coffee Station",
+      "Lunch Included",
     ],
     experienceExtra: [
-      "Open Executive · Oct 29",
-      "Closing Day · Nov 1",
-      "Trezor Model One",
+      "B2B Networking Event (October 29)",
+      "Opening Show (October 29)",
+      "Speaker's Networking & Chill Out Full Day (November 1)",
+      "Exclusive HODL Merch",
     ],
   },
 } as const;
@@ -134,10 +154,7 @@ const TICKETS = [
     dark: true,
     background:
       "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
-    prices: [
-      { es: "1 día", en: "1 day", value: "AR$ 30.000" },
-      { es: "2 días", en: "2 days", value: "AR$ 55.000" },
-    ],
+    prices: [{ es: "Early Bird", en: "Early Bird", value: "AR$ 40.000" }],
   },
   {
     tier: "Business",
@@ -146,7 +163,7 @@ const TICKETS = [
     dark: false,
     background:
       "linear-gradient(155deg, #f2f2f2 0%, #cfcfcf 30%, #8a8a8a 55%, #d8d8d8 75%, #a0a0a0 100%)",
-    prices: [{ es: "", en: "", value: "US$ 250" }],
+    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 150" }],
   },
   {
     tier: "Experience",
@@ -155,7 +172,7 @@ const TICKETS = [
     dark: true,
     background:
       "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
-    prices: [{ es: "", en: "", value: "US$ 650" }],
+    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 450" }],
   },
 ] as const;
 
@@ -177,7 +194,7 @@ const SE_PARTE_CARDS = {
       title: "Speakers",
       description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
       cta: "Aplicá",
-      href: "#",
+      href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
     },
   ],
   en: [
@@ -197,15 +214,15 @@ const SE_PARTE_CARDS = {
       title: "Speakers",
       description: "Fill out the form and apply to speak at the 2026 edition. Apply now and share your take on the future of Bitcoin and decentralization in LATAM.",
       cta: "Apply",
-      href: "#",
+      href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
     },
   ],
 } as const;
 
 type SpeakerCard =
   | { kind: "photo"; src: string }
-  | { kind: "stat"; value: string; label: string }
-  | { kind: "label"; title: string; subtitle: string };
+  | { kind: "stat"; value: string; label: { es: string; en: string } }
+  | { kind: "label"; title: { es: string; en: string }; subtitle: string };
 
 // Fotos de galería servidas desde el bucket público de Supabase (no en git),
 // mismo patrón que el video del hero. Sube el equipo por bucket hasta que
@@ -228,7 +245,7 @@ const SPEAKER_LANES: {
     direction: "left",
     duration: 42,
     cards: [
-      { kind: "label", title: "Attendees", subtitle: "LABITCONF '24" },
+      { kind: "label", title: { es: "Asistentes", en: "Attendees" }, subtitle: "LABITCONF '24" },
       galleryPhoto(1),
       galleryPhoto(2),
       galleryPhoto(3),
@@ -241,8 +258,8 @@ const SPEAKER_LANES: {
     cards: [
       galleryPhoto(4),
       galleryPhoto(5),
-      { kind: "stat", value: "+256", label: "Talks" },
-      { kind: "stat", value: "+16", label: "Countries that attend" },
+      { kind: "stat", value: "+256", label: { es: "Charlas", en: "Talks" } },
+      { kind: "stat", value: "+16", label: { es: "Países participantes", en: "Countries that attend" } },
       galleryPhoto(6),
     ],
   },
@@ -252,10 +269,10 @@ const SPEAKER_LANES: {
     duration: 46,
     cards: [
       galleryPhoto(7),
-      { kind: "stat", value: "+27", label: "Media Partners" },
+      { kind: "stat", value: "+27", label: { es: "Medios Aliados", en: "Media Partners" } },
       galleryPhoto(8),
-      { kind: "stat", value: "7", label: "Stages" },
-      { kind: "stat", value: "+58", label: "Sponsors" },
+      { kind: "stat", value: "7", label: { es: "Escenarios", en: "Stages" } },
+      { kind: "stat", value: "+58", label: { es: "Sponsors", en: "Sponsors" } },
     ],
   },
   {
@@ -266,13 +283,13 @@ const SPEAKER_LANES: {
       galleryPhoto(9),
       galleryPhoto(10),
       galleryPhoto(11),
-      { kind: "stat", value: "5", label: "Partners & Collaborators" },
-      { kind: "stat", value: "+420", label: "International Speakers" },
+      { kind: "stat", value: "5", label: { es: "Partners y Colaboradores", en: "Partners & Collaborators" } },
+      { kind: "stat", value: "+420", label: { es: "Speakers Internacionales", en: "International Speakers" } },
     ],
   },
 ];
 
-function SpeakerCardView({ card }: { card: SpeakerCard }) {
+function SpeakerCardView({ card, lang }: { card: SpeakerCard; lang: "es" | "en" }) {
   if (card.kind === "photo") {
     return (
       <div
@@ -298,7 +315,12 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
     return (
       <div
         className="rounded-full shrink-0 flex items-center gap-4 px-6 sm:px-9"
-        style={{ height: "clamp(100px, 24vw, 140px)", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+        style={{
+          height: "clamp(100px, 24vw, 140px)",
+          background: "#2B2B2B",
+          border: "1px solid rgba(255,255,255,0.2)",
+          whiteSpace: "nowrap",
+        }}
       >
         <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#E6EEF2" }}>
           {card.value}
@@ -314,7 +336,7 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
             whiteSpace: "normal",
           }}
         >
-          {card.label}
+          {card.label[lang]}
         </span>
       </div>
     );
@@ -323,7 +345,12 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
   return (
     <div
       className="rounded-full shrink-0 flex flex-col items-start justify-center px-6 sm:px-9"
-      style={{ height: "clamp(100px, 24vw, 140px)", border: "1px solid rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
+      style={{
+        height: "clamp(100px, 24vw, 140px)",
+        background: "#2B2B2B",
+        border: "1px solid rgba(255,255,255,0.2)",
+        whiteSpace: "nowrap",
+      }}
     >
       <span
         style={{
@@ -333,7 +360,7 @@ function SpeakerCardView({ card }: { card: SpeakerCard }) {
           color: "#A5A8B1",
         }}
       >
-        {card.title}
+        {card.title[lang]}
       </span>
       <span style={{ ...labelStyle, fontSize: "14px", color: "#E6EEF2", marginTop: "4px" }}>
         {card.subtitle}
@@ -346,40 +373,29 @@ export default function HomePage() {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
   const seParteCards = SE_PARTE_CARDS[lang];
+  const { width: headlineWidth, probe: headlineProbe } = useHeadlineWidth();
+
+  // Ancho del párrafo de Ubicación anclado al ancho real renderizado del
+  // título "Costa Salguero" (imagen), para justificar el texto hasta esa marca.
+  const costaSalgueroRef = useRef<HTMLDivElement>(null);
+  const costaSalgueroAspect = useRef<number | null>(null);
+  const [costaSalgueroWidth, setCostaSalgueroWidth] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    function measure() {
+      if (!costaSalgueroRef.current || !costaSalgueroAspect.current) return;
+      setCostaSalgueroWidth(costaSalgueroRef.current.getBoundingClientRect().height * costaSalgueroAspect.current);
+    }
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
     <main
       className="relative min-h-screen overflow-hidden"
       style={{ background: "#171616" }}
     >
-      {/* Fondo: ballena estilizada */}
-      <div
-        className="absolute inset-0 pointer-events-none select-none"
-        style={{ zIndex: 0 }}
-      >
-        <Image
-          src="/assets/home/ballena.png"
-          alt=""
-          fill
-          priority
-          style={{
-            objectFit: "contain",
-            objectPosition: "85% 40%",
-            opacity: 0.45,
-            filter: "grayscale(1) brightness(3) contrast(0.9)",
-          }}
-        />
-      </div>
-
-      {/* Degradé para legibilidad sobre la ballena */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 1,
-          background:
-            "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(13,13,11,0.75) 0%, rgba(13,13,11,0.4) 55%, transparent 80%)",
-        }}
-      />
+      {headlineProbe}
 
       {/* Navbar */}
       <Navbar />
@@ -389,10 +405,12 @@ export default function HomePage() {
         className="relative flex flex-col items-center justify-center sm:justify-end overflow-hidden px-6 gap-10 sm:gap-0 pt-28 pb-14 sm:pt-0 sm:pb-[10vh] sm:h-screen"
         style={{ zIndex: 4, background: "#000" }}
       >
-        {/* Video: en mobile bloque 16:9 al ancho (sin negro sobrante); en
-            desktop full-bleed que llena el hero, letterbox fundido con el negro */}
+        {/* Video: en mobile banner full-bleed que rompe el px-6 de la sección
+            (bloque 16:9 al ancho completo de pantalla, sin negro sobrante ni
+            achicarse por el padding); en desktop full-bleed que llena el
+            hero, letterbox fundido con el negro */}
         <div
-          className="relative w-full aspect-video sm:absolute sm:inset-0 sm:aspect-auto"
+          className="relative -mx-6 w-[calc(100%+3rem)] aspect-video sm:absolute sm:inset-0 sm:mx-0 sm:w-full sm:aspect-auto"
           style={{ zIndex: 0 }}
         >
           <HeroVideo
@@ -401,7 +419,7 @@ export default function HomePage() {
           />
         </div>
 
-        <Reveal delay={0.15} className="relative" style={{ zIndex: 1 }}>
+        <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
           {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
           <motion.a
             href="#tickets"
@@ -421,6 +439,17 @@ export default function HomePage() {
           >
             {t.heroButton}
           </motion.a>
+
+          <p
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#E6EEF2",
+              fontSize: "clamp(13px, 1.3vw, 16px)",
+            }}
+          >
+            {t.heroTagline}
+          </p>
         </Reveal>
       </section>
 
@@ -448,9 +477,10 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             // Arranca en #000 (mismo negro del hero) y estira la transición
-            // negro→gris al 30% para que la unión con el banner no sea brusca.
+            // negro→gris a lo largo de más recorrido para que la unión con
+            // el banner y con la sección siguiente sea gradual, no un corte.
             background:
-              "linear-gradient(to bottom, #000 0%, rgba(13,13,11,0.35) 30%, rgba(13,13,11,0.35) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(13,13,11,0.35) 35%, rgba(13,13,11,0.35) 65%, #171616 100%)",
           }}
         />
 
@@ -461,14 +491,14 @@ export default function HomePage() {
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(22vw, 220px)",
-            height: "min(22vw, 220px)",
+            width: "min(19vw, 195px)",
+            height: "min(19vw, 195px)",
             zIndex: 1,
           }}
         >
           <Floating duration={6} y={10} rotate={4}>
             <Image
-              src="/assets/home/pildora.png"
+              src="/assets/home/pildora-final.png"
               alt=""
               fill
               style={{ objectFit: "contain" }}
@@ -486,52 +516,25 @@ export default function HomePage() {
             />
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <p
-              className="relative mt-6"
-              style={{
-                ...labelStyle,
-                color: "#E6EEF2",
-                fontSize: "clamp(20px, 3.2vw, 34px)",
-                zIndex: 2,
-              }}
-            >
-              Latin American <span style={{ color: "#FF4E01" }}>Bitcoin</span> &{" "}
-              <span style={{ color: "#FF4E01" }}>Blockchain</span> Conference
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <p
-              className="relative mt-6 max-w-2xl"
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                color: "#A5A8B1",
-                fontSize: "clamp(14px, 1.4vw, 17px)",
-                lineHeight: 1.6,
-                zIndex: 2,
-              }}
-            >
-              {t.presentacionP1}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.3}>
-            <p
-              className="relative mt-4 max-w-2xl"
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                color: "#A5A8B1",
-                fontSize: "clamp(14px, 1.4vw, 17px)",
-                lineHeight: 1.6,
-                zIndex: 2,
-              }}
-            >
-              {t.presentacionP2}
-            </p>
-          </Reveal>
+          {t.presentacionParagraphs.map((paragraph, i) => (
+            <Reveal key={i} delay={0.1 + i * 0.1}>
+              <p
+                className={i === 0 ? `relative ${TITLE_GAP}` : "relative mt-4"}
+                style={{
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 300,
+                  color: "#A5A8B1",
+                  fontSize: BODY_FS,
+                  lineHeight: 1.6,
+                  zIndex: 2,
+                  maxWidth: headlineWidth,
+                  textAlign: "justify",
+                }}
+              >
+                {paragraph}
+              </p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
@@ -539,29 +542,8 @@ export default function HomePage() {
       <section
         id="speakers"
         className="relative flex flex-col justify-center overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        style={{ zIndex: 3, minHeight: "100vh", background: "#171616" }}
       >
-        {/* Fondo: grilla de puntos */}
-        <div
-          className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.12, filter: "invert(1)" }}
-        >
-          <Image
-            src="/assets/home/pixel-grid.png"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
-
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.5) 15%, rgba(13,13,11,0.5) 85%, #171616 100%)",
-          }}
-        />
 
         <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
           {SPEAKER_LANES.map((lane) => {
@@ -579,7 +561,7 @@ export default function HomePage() {
                   transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
                 >
                   {repeated.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} />
+                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} lang={lang} />
                   ))}
                 </motion.div>
               </div>
@@ -611,7 +593,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
           }}
         />
 
@@ -627,12 +609,14 @@ export default function HomePage() {
 
           <Reveal
             delay={0.15}
-            className="mt-10 sm:mt-16 mx-auto max-w-sm sm:max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch"
+            className={`${TITLE_GAP} mx-auto max-w-sm sm:max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 items-stretch`}
           >
             {TICKETS.map((ticket) => {
               const light = ticket.dark === false; // Business: fondo claro → texto oscuro
               const cText = light ? "#171616" : "#E6EEF2";
-              const cMuted = light ? "rgba(23,22,22,0.6)" : "#A5A8B1";
+              // General (fondo naranja): "Incluye" pasa a oscuro para más contraste (pedido cliente 21/7)
+              const cMuted =
+                ticket.tier === "General" ? "#171616" : light ? "rgba(23,22,22,0.6)" : "#A5A8B1";
               const cDivider = light ? "rgba(23,22,22,0.15)" : "rgba(255,255,255,0.15)";
               const features = ticketFeatures(ticket.tier, lang);
               return (
@@ -755,9 +739,11 @@ export default function HomePage() {
                       className="block w-full text-center rounded-full transition-opacity duration-200 hover:opacity-80"
                       style={{
                         ...labelStyle,
-                        fontSize: "clamp(12px, 1.1vw, 14px)",
+                        fontSize: BUTTON_FS,
                         padding: "12px 20px",
-                        background: light ? "#171616" : "#ABF760",
+                        // Experience: botón pasa a naranja (pedido cliente 21/7)
+                        background:
+                          ticket.tier === "Experience" ? "#FF4E01" : light ? "#171616" : "#ABF760",
                         color: light ? "#E6EEF2" : "#171616",
                       }}
                     >
@@ -784,7 +770,7 @@ export default function HomePage() {
         >
           <Floating duration={5} y={7} rotate={3}>
             <Image
-              src="/assets/home/honeybadger.png"
+              src="/assets/home/honeybadger-final.png"
               alt=""
               fill
               style={{ objectFit: "contain" }}
@@ -796,7 +782,7 @@ export default function HomePage() {
       {/* Sé parte */}
       <section
         id="se-parte"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-28 sm:py-32 overflow-hidden"
         style={{ zIndex: 3, minHeight: "100vh" }}
       >
         {/* Fondo: grilla pixel con iconos */}
@@ -817,12 +803,12 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 15%, rgba(13,13,11,0.4) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
           }}
         />
 
-        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
-          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
+        <div className="relative w-full" style={{ zIndex: 2 }}>
+          <Reveal className="relative w-full max-w-6xl" style={{ height: TITLE_H }}>
             <Image
               src={TITLE_IMAGES.seParte[lang]}
               alt={lang === "es" ? "Sé parte" : "Be part"}
@@ -831,7 +817,9 @@ export default function HomePage() {
             />
           </Reveal>
 
-          <div className="mt-10 mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 max-w-sm sm:max-w-4xl">
+          {/* Mismo max-w/gap que el grid de Tickets, y mismo contenedor de referencia
+              (sin max-w-6xl heredado) para que las cards arranquen en el mismo borde */}
+          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-sm sm:max-w-5xl items-stretch`}>
             {seParteCards.map((card, i) => (
               <Reveal
                 key={card.title}
@@ -852,29 +840,36 @@ export default function HomePage() {
                   {card.title}
                 </h3>
                 <p
-                  className="mt-3 flex-1"
+                  className="mt-3"
                   style={{
                     fontFamily: "var(--font-neue-machina), sans-serif",
                     fontWeight: 300,
                     color: "rgba(13,13,11,0.75)",
-                    fontSize: "clamp(11px, 1.15vw, 15px)",
+                    fontSize: BODY_FS,
                     lineHeight: 1.45,
                   }}
                 >
                   {card.description}
                 </p>
+                {/* CTA — mismo patrón de anclaje al piso de la card que los tickets (mt-auto + block w-full) */}
                 <a
                   href={card.href}
-                  className="mt-5 rounded-full text-center transition-opacity duration-200 hover:opacity-80"
-                  style={{
-                    ...labelStyle,
-                    color: "#FF4E01",
-                    background: "#171616",
-                    fontSize: "clamp(12px, 1.1vw, 14px)",
-                    padding: "10px 0",
-                  }}
+                  target={card.href.startsWith("http") ? "_blank" : undefined}
+                  rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="mt-auto pt-6 block"
                 >
-                  {card.cta}
+                  <span
+                    className="block w-full text-center rounded-full transition-opacity duration-200 hover:opacity-80"
+                    style={{
+                      ...labelStyle,
+                      color: "#FF4E01",
+                      background: "#171616",
+                      fontSize: BUTTON_FS,
+                      padding: "12px 20px",
+                    }}
+                  >
+                    {card.cta}
+                  </span>
                 </a>
               </Reveal>
             ))}
@@ -894,7 +889,7 @@ export default function HomePage() {
         >
           <Floating duration={7} y={14} rotate={6}>
             <Image
-              src="/assets/home/astronauta.png"
+              src="/assets/home/astronauta-final.png"
               alt=""
               fill
               style={{ objectFit: "contain" }}
@@ -927,29 +922,42 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 15%, rgba(13,13,11,0.35) 80%, #171616 100%)",
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 30%, rgba(13,13,11,0.35) 70%, #171616 100%)",
           }}
         />
 
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal className="relative w-full" style={{ height: TITLE_H }}>
-            <Image
-              src={TITLE_IMAGES.costaSalguero}
-              alt="Costa Salguero"
-              fill
-              style={{ objectFit: "contain", objectPosition: "left center" }}
-            />
+            <div ref={costaSalgueroRef} className="relative w-full h-full">
+              <Image
+                src={TITLE_IMAGES.costaSalguero}
+                alt="Costa Salguero"
+                fill
+                onLoad={(e) => {
+                  const img = e.currentTarget;
+                  costaSalgueroAspect.current = img.naturalWidth / img.naturalHeight;
+                  if (costaSalgueroRef.current) {
+                    setCostaSalgueroWidth(
+                      costaSalgueroRef.current.getBoundingClientRect().height * costaSalgueroAspect.current
+                    );
+                  }
+                }}
+                style={{ objectFit: "contain", objectPosition: "left center" }}
+              />
+            </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} className={TITLE_GAP}>
             <p
-              className="mt-3 max-w-2xl"
+              className="max-w-2xl"
               style={{
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 300,
                 color: "#A5A8B1",
-                fontSize: "clamp(12px, 1.2vw, 15px)",
+                fontSize: BODY_FS,
                 lineHeight: 1.5,
+                textAlign: "justify",
+                maxWidth: costaSalgueroWidth,
               }}
             >
               {t.ubicacionP1}
@@ -961,8 +969,10 @@ export default function HomePage() {
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 300,
                 color: "#A5A8B1",
-                fontSize: "clamp(12px, 1.2vw, 15px)",
+                fontSize: BODY_FS,
                 lineHeight: 1.5,
+                textAlign: "justify",
+                maxWidth: costaSalgueroWidth,
               }}
             >
               {t.ubicacionP2}
@@ -979,7 +989,7 @@ export default function HomePage() {
                 ...labelStyle,
                 color: "#ABF760",
                 borderColor: "#ABF760",
-                fontSize: "clamp(11px, 1vw, 13px)",
+                fontSize: BUTTON_FS,
                 padding: "10px 28px",
               }}
             >
@@ -987,15 +997,19 @@ export default function HomePage() {
             </a>
           </Reveal>
 
-          <Reveal delay={0.25} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+          <Reveal delay={0.25} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl">
             <div
-              className="rounded-2xl"
-              style={{
-                aspectRatio: "16 / 9",
-                background: "linear-gradient(135deg, #1c1c1c 0%, #FF4E01 100%)",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
-            />
+              className="relative rounded-2xl overflow-hidden"
+              style={{ aspectRatio: "16 / 9", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              <Image
+                src={COSTA_SALGUERO_PHOTO_URL}
+                alt={t.mapTitle}
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
+            </div>
             <div
               className="rounded-2xl overflow-hidden"
               style={{ aspectRatio: "16 / 9", border: "1px solid rgba(255,255,255,0.1)" }}
@@ -1019,15 +1033,15 @@ export default function HomePage() {
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(48vw, 640px)",
-            height: "min(48vw, 640px)",
+            width: "min(43vw, 575px)",
+            height: "min(43vw, 575px)",
             zIndex: 1,
             opacity: 0.9,
           }}
         >
           <Floating duration={6} y={10} rotate={2}>
             <Image
-              src="/assets/home/ballena-naranja.png"
+              src="/assets/home/ballena-final.png"
               alt=""
               fill
               style={{ objectFit: "contain" }}

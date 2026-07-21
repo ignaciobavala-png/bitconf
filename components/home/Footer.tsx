@@ -41,6 +41,7 @@ const T = {
     location: "Buenos Aires, Argentina",
     quickLinks: "Enlaces Rápidos",
     aboutLink: "Sobre LABITCONF",
+    followUs: "Seguinos en",
   },
   en: {
     footerBlurb:
@@ -49,6 +50,7 @@ const T = {
     location: "Buenos Aires, Argentina",
     quickLinks: "Quick Links",
     aboutLink: "About LABITCONF",
+    followUs: "Follow us on",
   },
 } as const;
 
@@ -57,11 +59,24 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
 
   return (
     <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
-      {/* Fila principal: watermark full-bleed + cápsula centrada + contactos superpuestos a los costados (desktop) */}
-      <div className="relative" style={{ height: "400px" }}>
-        <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} />
+      {/* Fila principal: watermark full-bleed + cápsula arriba + contactos debajo (desktop) */}
+      <div className="relative h-[400px] lg:h-[420px]">
+        <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} compactAlign="top" />
 
-        <div className="hidden lg:flex absolute inset-0 z-10 items-end justify-between gap-6 px-6 sm:px-10 lg:pr-28 pb-8 pointer-events-none">
+        {/* Máscara propia de la franja de contacto (la vignette de HodlReasonsSection solo cubre la cápsula).
+            Concentrada del lado izquierdo (donde va el texto) y más suave hacia el centro/derecha,
+            para que las frases del watermark se sigan viendo pasar del lado derecho. */}
+        <div
+          className="hidden lg:block absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 6,
+            background:
+              "linear-gradient(115deg, rgba(23,22,22,0.92) 0%, rgba(23,22,22,0.6) 24%, transparent 46%), " +
+              "linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(23,22,22,0.4) 55%, rgba(23,22,22,0.62) 100%)",
+          }}
+        />
+
+        <div className="hidden lg:block absolute left-0 bottom-8 z-10 px-6 sm:px-10 pointer-events-none">
           <div className="pointer-events-auto max-w-xs shrink-0">
             <div style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
               LABITCONF.
@@ -88,24 +103,36 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
             >
               {t.footerBlurb}
             </p>
-
-            <div className="flex items-center gap-3 mt-5">
-              {SOCIALS.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                  style={{ width: "34px", height: "34px", background: "#FF4E01" }}
-                >
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="#171616">
-                    <path d={social.path} />
-                  </svg>
-                </a>
-              ))}
-            </div>
           </div>
+        </div>
 
+        {/* Redes sociales — ancladas al piso del footer, lado derecho */}
+        <div className="hidden lg:flex absolute right-0 bottom-8 z-10 flex-col items-end gap-3 px-6 sm:px-10 lg:pr-28 pointer-events-none">
+          <span
+            className="pointer-events-auto"
+            style={{
+              ...labelStyle,
+              color: "#A5A8B1",
+              fontSize: "clamp(11px, 1vw, 13px)",
+            }}
+          >
+            {t.followUs}
+          </span>
+          <div className="pointer-events-auto flex items-center gap-3">
+            {SOCIALS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                aria-label={social.label}
+                className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
+                style={{ width: "34px", height: "34px", background: "#FF4E01" }}
+              >
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#171616">
+                  <path d={social.path} />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -137,7 +164,17 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
           {t.footerBlurb}
         </p>
 
-        <div className="flex items-center gap-3 mt-5">
+        <span
+          className="block mt-5"
+          style={{
+            ...labelStyle,
+            color: "#A5A8B1",
+            fontSize: "clamp(11px, 1vw, 13px)",
+          }}
+        >
+          {t.followUs}
+        </span>
+        <div className="flex items-center gap-3 mt-3">
           {SOCIALS.map((social) => (
             <a
               key={social.label}
