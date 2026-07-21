@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# assets de referencia para el diseño de la homepage (no se sube a git)
+/assets-bitconf/
