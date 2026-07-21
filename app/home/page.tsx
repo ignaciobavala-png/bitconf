@@ -406,11 +406,11 @@ export default function HomePage() {
         style={{ zIndex: 4, background: "#000" }}
       >
         {/* Video: en mobile banner full-bleed que rompe el px-6 de la sección
-            (bloque 16:9 al ancho completo de pantalla, sin negro sobrante ni
+            (bloque 4:5 al ancho completo de pantalla, sin negro sobrante ni
             achicarse por el padding); en desktop full-bleed que llena el
             hero, letterbox fundido con el negro */}
         <div
-          className="relative -mx-6 w-[calc(100%+3rem)] aspect-video sm:absolute sm:inset-0 sm:mx-0 sm:w-full sm:aspect-auto"
+          className="relative -mx-6 w-[calc(100%+3rem)] aspect-[4/5] sm:absolute sm:inset-0 sm:mx-0 sm:w-full sm:aspect-auto"
           style={{ zIndex: 0 }}
         >
           <HeroVideo
@@ -456,8 +456,8 @@ export default function HomePage() {
       {/* Presentación */}
       <section
         id="presentacion"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-20 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
         {/* Fondo: hashes cripto (complementa la textura pixel del título) */}
         <div
@@ -541,8 +541,8 @@ export default function HomePage() {
       {/* Speakers */}
       <section
         id="speakers"
-        className="relative flex flex-col justify-center overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh", background: "#171616" }}
+        className="relative flex flex-col justify-center py-16 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3, background: "#171616" }}
       >
 
         <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
@@ -572,8 +572,8 @@ export default function HomePage() {
       {/* Tickets */}
       <section
         id="tickets"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-28 sm:py-32 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
         {/* Fondo: lluvia de dígitos */}
         <div
@@ -782,8 +782,8 @@ export default function HomePage() {
       {/* Sé parte */}
       <section
         id="se-parte"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-28 sm:py-32 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
         {/* Fondo: grilla pixel con iconos */}
         <div
@@ -901,8 +901,8 @@ export default function HomePage() {
       {/* Ubicación */}
       <section
         id="ubicacion"
-        className="relative flex flex-col justify-center px-6 sm:px-10 overflow-hidden"
-        style={{ zIndex: 3, minHeight: "100vh" }}
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-20 sm:py-0 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
       >
         {/* Fondo: hexmap (puntos tipo mapa) */}
         <div
