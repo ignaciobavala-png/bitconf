@@ -266,7 +266,7 @@ export default function ComunidadPage() {
             <div
               className="absolute pointer-events-none select-none hidden sm:block"
               style={{
-                bottom: "-3rem",
+                bottom: "calc(-12px - min(12vw, 110px))",
                 left: "-1.5rem",
                 width: "min(12vw, 110px)",
                 height: "min(12vw, 110px)",
