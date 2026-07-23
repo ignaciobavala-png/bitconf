@@ -759,9 +759,11 @@ export default function HomePage() {
                     ))}
                   </ul>
 
-                  {/* CTA — link de compra pendiente (apunta a #) */}
+                  {/* CTA — mismo link de compra que el botón del hero (MundoTicket) */}
                   <a
-                    href="#"
+                    href="https://www.mundoticket.com/show/c073f703-02d5-405e-90a4-802fdbc22094"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="mt-auto pt-6 block"
                   >
                     <span
