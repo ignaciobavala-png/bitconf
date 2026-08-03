@@ -38,6 +38,12 @@ const HERO_VIDEO_URL =
 // Foto de Costa Salguero (sección Ubicación): mismo patrón, bucket público de Supabase.
 const COSTA_SALGUERO_PHOTO_URL =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/costa-salguero.jpg";
+// Sponsor deck (PDF): mismo bucket. El `?download=` de Supabase Storage fuerza el
+// Content-Disposition: attachment — sin ese query param el navegador abre el PDF
+// en una pestaña en vez de descargarlo (el atributo `download` de <a> no aplica
+// porque el archivo es cross-origin).
+const SPONSOR_DECK_URL =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/sponsor-deck.pdf?download=LABITCONF-2026-Sponsor-Deck.pdf";
 
 const T = {
   es: {
@@ -193,7 +199,7 @@ const SE_PARTE_CARDS = {
       title: "Sponsor Deck",
       description: "Conocé las propuestas para sponsors y sé parte del evento más relevante de Bitcoin y Blockchain en LATAM.",
       cta: "Descargá",
-      href: "#",
+      href: SPONSOR_DECK_URL,
     },
     {
       title: "Prensa",
@@ -213,7 +219,7 @@ const SE_PARTE_CARDS = {
       title: "Sponsor Deck",
       description: "Check out the sponsor proposals and be part of the most relevant Bitcoin and Blockchain event in LATAM.",
       cta: "Download",
-      href: "#",
+      href: SPONSOR_DECK_URL,
     },
     {
       title: "Press",
