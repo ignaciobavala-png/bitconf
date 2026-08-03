@@ -17,11 +17,18 @@ Nació en Argentina en 2013 y acompañó la evolución del ecosistema, convirti�
 A quién está dirigida
 Tanto a personas que recién comienzan a conocer Bitcoin como a especialistas: usuarios, desarrolladores, emprendedores, inversores, exchanges/billeteras/plataformas de pago, mineros, gobiernos y reguladores, abogados/contadores/compliance, educadores e investigadores, comunicadores y periodistas, artistas, comunidades cripto, y personas interesadas en IA. No requiere conocimientos técnicos previos: la agenda ofrece contenidos introductorios, empresariales, económicos, filosóficos y técnicos.
 
+Principales temas
+Bitcoin, adopción, ahorro, inversión, pagos, Lightning Network, minería, energía, nodos, autocustodia, billeteras, seguridad, privacidad, criptografía, escalabilidad, regulación, impuestos, mercados, trading, stablecoins, tokenización de activos, finanzas descentralizadas, blockchain empresarial, identidad digital, inteligencia artificial, gobernanza, educación, impacto social, economía, filosofía, libertad, comunicación y construcción de comunidades. Bitcoin ocupa el lugar central, pero el evento también abre el debate hacia otras tecnologías y modelos de negocio que interactúan con el ecosistema descentralizado.
+
+Formato y experiencia
+Hay múltiples escenarios y actividades simultáneas: algunas charlas son introductorias y educativas, otras están orientadas a especialistas técnicos, empresas, inversores, emprendedores o responsables de políticas públicas. Además de las conferencias, el evento puede incluir áreas de exposición con empresas y organizaciones, espacios de contacto profesional, talleres y demostraciones, actividades educativas, experiencias interactivas, instalaciones artísticas, música y espectáculos, reuniones comunitarias, presentaciones de productos y proyectos, actividades especiales para empresarios e inversores y encuentros sociales antes y después de las jornadas principales.
+El networking es parte fundamental de la experiencia: LABITCONF busca facilitar conversaciones entre personas que normalmente no coinciden en un mismo espacio (desarrolladores y reguladores, emprendedores e inversores, empresas y comunidades, referentes internacionales y actores locales).
+
 Identidad de LABITCONF
 Identidad latinoamericana, abierta, creativa y comunitaria — evita el formato de conferencia corporativa tradicional. Cada edición desarrolla una temática propia como hilo narrativo. Las opiniones de los speakers pueden ser diferentes o contradictorias entre sí: LABITCONF promueve el pensamiento crítico y el debate, y no adopta como propia cada posición presentada en sus escenarios.
 
 LABITCONF 2026
-Edición 2026: 30 y 31 de octubre en Costa Salguero, Buenos Aires. La campaña gira en torno al concepto HODL y la pregunta "¿Y vos, por qué hodleás?". HODL describe la decisión de conservar bitcoin a largo plazo pese a la volatilidad; para LABITCONF representa sostener una decisión basada en conocimiento, visión y convicción sobre el futuro. La edición explora por qué distintas personas eligen conservar, construir, trabajar o involucrarse con Bitcoin (ahorro, libertad, soberanía individual, protección frente a la inflación, tecnología, privacidad, transferencia de valor sin intermediarios).
+Edición 2026: 30 y 31 de octubre en Costa Salguero, Buenos Aires. La campaña gira en torno al concepto HODL y la pregunta "¿Y vos, por qué hodleás?". HODL describe la decisión de conservar bitcoin a largo plazo pese a la volatilidad; para LABITCONF representa sostener una decisión basada en conocimiento, visión y convicción sobre el futuro. La edición explora por qué distintas personas eligen conservar, construir, trabajar o involucrarse con Bitcoin (ahorro, libertad, soberanía individual, protección frente a la inflación, tecnología, privacidad, transferencia de valor sin intermediarios). Lema de la edición: "HODL ES CREER. SOMOS LOS QUE PERMANECEN."
 
 Organización
 LABITCONF es un proyecto vinculado a Fundación Bitcoin Iberoamérica, parte del trabajo desarrollado desde 2013 para impulsar la educación, adopción y crecimiento del ecosistema regional. Trabaja junto con speakers, sponsors, comunidades, instituciones, medios y organismos públicos. La participación de una empresa, institución, speaker o sponsor no implica que LABITCONF respalde todas sus actividades, productos u opiniones.
@@ -35,7 +42,7 @@ const FAQ = `
 ¿Dónde puedo comprar mi ticket? En labitconf.com. Es la única plataforma oficial de venta. No comprar tickets a revendedores ni a través de terceros.
 ¿Cuándo debo activar mi ticket? Cuando quieras, pero antes de la conferencia. Se recomienda activarlo antes del día del evento para evitar demoras en la puerta.
 ¿Qué incluye cada categoría de ticket?
-- General: acceso por 1 o 2 días, 8 escenarios, Chill Area, Dinner Points y Closing Party (solo día 2).
+- General: acceso a los 2 días, 8 escenarios, Chill Area, Dinner Points y Closing Party.
 - Business: todo lo anterior más Área VIP, espacio preferencial en el Main Stage, all inclusive, open bar, coffee bar y Merch Bag.
 - Experience: todo lo anterior más Open Fest exclusivo (29 oct) y Closing Day (1 nov).
 ¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
