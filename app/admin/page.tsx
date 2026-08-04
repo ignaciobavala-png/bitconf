@@ -108,6 +108,51 @@ export default async function AdminPage() {
           ))}
         </div>
 
+        {/* Descargas */}
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ color: "#A5A8B1", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", marginRight: "4px" }}>
+            Descargar razones
+          </span>
+          <a
+            href="/admin/export?format=csv"
+            download
+            style={{
+              background: "transparent",
+              border: "2px solid #9ACE6A",
+              borderRadius: "9999px",
+              padding: "6px 16px",
+              color: "#9ACE6A",
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 900,
+              fontSize: "11px",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              textDecoration: "none",
+            }}
+          >
+            ↓ CSV (todas)
+          </a>
+          <a
+            href="/admin/export?format=txt"
+            download
+            style={{
+              background: "transparent",
+              border: "2px solid #4A6E2D",
+              borderRadius: "9999px",
+              padding: "6px 16px",
+              color: "#4A6E2D",
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 900,
+              fontSize: "11px",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              textDecoration: "none",
+            }}
+          >
+            ↓ TXT (aprobadas)
+          </a>
+        </div>
+
         {/* Lista usuarios */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {userReasons.length === 0 && (
