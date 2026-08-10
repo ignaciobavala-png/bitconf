@@ -439,7 +439,7 @@ export default function HomePage() {
         <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
           {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
           <motion.a
-            href="https://www.mundoticket.com/show/c073f703-02d5-405e-90a4-802fdbc22094"
+            href="https://www.hallos.io/event/labitconf/checkout?embed=true"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block rounded-full border-2"
@@ -765,9 +765,9 @@ export default function HomePage() {
                     ))}
                   </ul>
 
-                  {/* CTA — mismo link de compra que el botón del hero (MundoTicket) */}
+                  {/* CTA — mismo link de compra que el botón del hero (Hallos) */}
                   <a
-                    href="https://www.mundoticket.com/show/c073f703-02d5-405e-90a4-802fdbc22094"
+                    href="https://www.hallos.io/event/labitconf/checkout?embed=true"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-auto pt-6 block"
