@@ -60,8 +60,17 @@ export default function CheckoutModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 flex items-center justify-center p-3 sm:p-6"
-          style={{ zIndex: 60, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
+          className="fixed left-0 top-0 flex items-center justify-center p-0 sm:p-6"
+          style={{
+            zIndex: 60,
+            // dvh/dvw en vez de `inset-0`: en iOS Safari el viewport de `inset-0`
+            // incluye el área bajo la barra de URL, así que el pie del modal
+            // (y el último paso del checkout) quedaba fuera de pantalla.
+            width: "100dvw",
+            height: "100dvh",
+            background: "rgba(0,0,0,0.75)",
+            backdropFilter: "blur(6px)",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -72,10 +81,15 @@ export default function CheckoutModal({
           aria-label={t.title}
         >
           <motion.div
-            className="relative flex flex-col overflow-hidden rounded-2xl"
+            className="relative flex flex-col overflow-hidden rounded-none sm:rounded-2xl"
             style={{
-              width: "min(100%, 560px)",
-              height: "min(100%, 860px)",
+              // El checkout de Hallos tiene pasos altos (datos + pago + 3DS):
+              // en mobile ocupa la pantalla completa y en desktop se le da
+              // ancho/alto suficientes para no obligar a scrollear dentro del
+              // iframe en cada paso.
+              width: "min(100%, 720px)",
+              height: "100%",
+              maxHeight: "940px",
               background: "#E6EEF2",
               border: "1px solid rgba(255,255,255,0.15)",
               boxShadow: "0 24px 70px rgba(0,0,0,0.6)",
@@ -132,8 +146,11 @@ export default function CheckoutModal({
               src={HALLOS_CHECKOUT_URL}
               title={t.title}
               className="flex-1 w-full"
-              style={{ border: "none", background: "#E6EEF2" }}
-              allow="payment"
+              // `minHeight: 0` es necesario: sin eso el flex item toma como
+              // mínimo el alto del contenido del iframe y desborda el modal en
+              // vez de scrollear adentro (Safari sobre todo).
+              style={{ border: "none", background: "#E6EEF2", minHeight: 0 }}
+              allow="payment; clipboard-write"
             />
 
             {/* Escape hatch: si Hallos pasa su CSP `frame-ancestors` de
