@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import HeroVideo from "@/components/home/HeroVideo";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
@@ -397,6 +398,8 @@ export default function HomePage() {
   const costaSalgueroRef = useRef<HTMLDivElement>(null);
   const costaSalgueroAspect = useRef<number | null>(null);
   const [costaSalgueroWidth, setCostaSalgueroWidth] = useState<number | undefined>(undefined);
+  // Checkout de Hallos embebido en modal (todos los CTA de compra lo abren)
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     function measure() {
@@ -438,10 +441,9 @@ export default function HomePage() {
 
         <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
           {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
-          <motion.a
-            href="https://www.hallos.io/event/labitconf/checkout?embed=true"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.button
+            type="button"
+            onClick={() => setCheckoutOpen(true)}
             className="inline-block rounded-full border-2"
             style={{
               ...labelStyle,
@@ -457,7 +459,7 @@ export default function HomePage() {
             whileTap={{ scale: 0.97 }}
           >
             {t.heroButton}
-          </motion.a>
+          </motion.button>
 
           <p
             style={{
@@ -637,6 +639,9 @@ export default function HomePage() {
               const cMuted =
                 ticket.tier === "General" ? "#171616" : light ? "rgba(23,22,22,0.6)" : "#A5A8B1";
               const cDivider = light ? "rgba(23,22,22,0.15)" : "rgba(255,255,255,0.15)";
+              // "Everything in the Business Ticket" (Experience) va en naranja igual que
+              // la línea equivalente de Business, en vez del acero del acento del tier.
+              const cSummary = ticket.tier === "Experience" ? "#FF4E01" : ticket.accent;
               const features = ticketFeatures(ticket.tier, lang);
               return (
                 <div
@@ -744,7 +749,7 @@ export default function HomePage() {
                               width: "6px",
                               height: "6px",
                               borderRadius: "9999px",
-                              background: ticket.accent,
+                              background: feat.summary ? cSummary : ticket.accent,
                               marginTop: "7px",
                             }}
                           />
@@ -756,7 +761,7 @@ export default function HomePage() {
                             fontSize: "clamp(13px, 1.05vw, 15px)",
                             lineHeight: 1.4,
                             fontStyle: feat.summary ? "italic" : "normal",
-                            color: feat.summary ? ticket.accent : cText,
+                            color: feat.summary ? cSummary : cText,
                           }}
                         >
                           {feat.text}
@@ -765,12 +770,11 @@ export default function HomePage() {
                     ))}
                   </ul>
 
-                  {/* CTA — mismo link de compra que el botón del hero (Hallos) */}
-                  <a
-                    href="https://www.hallos.io/event/labitconf/checkout?embed=true"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto pt-6 block"
+                  {/* CTA — mismo checkout embebido que el botón del hero (Hallos) */}
+                  <button
+                    type="button"
+                    onClick={() => setCheckoutOpen(true)}
+                    className="mt-auto pt-6 block w-full"
                   >
                     <span
                       className="block w-full text-center rounded-full transition-opacity duration-200 hover:opacity-80"
@@ -786,7 +790,7 @@ export default function HomePage() {
                     >
                       {t.ticketsBuy}
                     </span>
-                  </a>
+                  </button>
                 </div>
               );
             })}
@@ -1096,6 +1100,8 @@ export default function HomePage() {
       <Footer lang={lang} />
 
       <QaChatWidget />
+
+      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </main>
   );
 }
