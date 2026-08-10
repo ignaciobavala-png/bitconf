@@ -21,12 +21,14 @@ const T = {
     title: "Comprar Ticket",
     close: "Cerrar",
     fallback: "¿No carga? Abrir en una pestaña nueva",
+    fallbackShort: "Abrir ↗",
     loading: "Cargando checkout...",
   },
   en: {
     title: "Buy Ticket",
     close: "Close",
     fallback: "Not loading? Open in a new tab",
+    fallbackShort: "Open ↗",
     loading: "Loading checkout...",
   },
 } as const;
@@ -60,7 +62,12 @@ export default function CheckoutModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed left-0 top-0 flex items-center justify-center p-0 sm:p-6"
+          // El padding recién aparece en `lg`: abajo de eso le restaría ancho al
+          // iframe y lo tiraría por debajo de los 768px, que es donde el
+          // checkout de Hallos colapsa a una sola columna (ver comentario del
+          // ancho). Preferimos un modal casi a pantalla completa en tablets
+          // antes que perder el layout de dos columnas.
+          className="fixed left-0 top-0 flex items-center justify-center p-0 lg:p-6"
           style={{
             zIndex: 60,
             // dvh/dvw en vez de `inset-0`: en iOS Safari el viewport de `inset-0`
@@ -83,13 +90,17 @@ export default function CheckoutModal({
           <motion.div
             className="relative flex flex-col overflow-hidden rounded-none sm:rounded-2xl"
             style={{
-              // El checkout de Hallos tiene pasos altos (datos + pago + 3DS):
-              // en mobile ocupa la pantalla completa y en desktop se le da
-              // ancho/alto suficientes para no obligar a scrollear dentro del
-              // iframe en cada paso.
-              width: "min(100%, 720px)",
+              // 880px NO es un número estético: medido sobre el checkout real,
+              // todo su layout gira sobre un breakpoint en 768px. Por debajo
+              // colapsa a una columna, recorta el banner (lo estira a ancho
+              // completo con alto fijo sobre un original 2:1) y el resumen de
+              // orden queda flotando sobre el formulario. Por encima pasa a dos
+              // columnas: banner entero y resumen como columna lateral. 880 deja
+              // margen sobre el umbral sin que la columna de tickets quede
+              // angosta.
+              width: "min(100%, 880px)",
               height: "100%",
-              maxHeight: "940px",
+              maxHeight: "1040px",
               background: "#E6EEF2",
               border: "1px solid rgba(255,255,255,0.15)",
               boxShadow: "0 24px 70px rgba(0,0,0,0.6)",
@@ -106,7 +117,10 @@ export default function CheckoutModal({
               className="flex items-center justify-between shrink-0"
               style={{
                 background: "#171616",
-                padding: "12px 16px",
+                // Barra angosta a propósito: cada píxel de cromo propio se le
+                // resta al iframe, y el alto disponible es justamente lo que
+                // determina cuánto tapa el resumen fijo del checkout de Hallos.
+                padding: "8px 14px",
                 borderBottom: "1px solid rgba(255,255,255,0.1)",
               }}
             >
@@ -114,7 +128,7 @@ export default function CheckoutModal({
                 style={{
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 900,
-                  fontSize: "13px",
+                  fontSize: "12px",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
                   color: "#ABF760",
@@ -122,22 +136,44 @@ export default function CheckoutModal({
               >
                 {t.title}
               </span>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label={t.close}
-                className="flex items-center justify-center rounded-full transition-opacity duration-200 hover:opacity-70"
-                style={{
-                  width: "28px",
-                  height: "28px",
-                  background: "rgba(230,238,242,0.1)",
-                  color: "#E6EEF2",
-                  fontSize: "16px",
-                  lineHeight: 1,
-                }}
-              >
-                ×
-              </button>
+              <div className="flex items-center" style={{ gap: "12px" }}>
+                {/* Escape hatch: si Hallos pasa su CSP `frame-ancestors` de
+                    report-only a enforced, el iframe queda en blanco y este
+                    link es la única salida del usuario. Vive en la barra (y no
+                    en una franja al pie) para no gastar alto útil del iframe. */}
+                <a
+                  href={HALLOS_CHECKOUT_STANDALONE}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={t.fallback}
+                  className="transition-opacity duration-200 hover:opacity-70"
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 300,
+                    fontSize: "11px",
+                    color: "#A5A8B1",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t.fallbackShort}
+                </a>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label={t.close}
+                  className="flex items-center justify-center rounded-full transition-opacity duration-200 hover:opacity-70"
+                  style={{
+                    width: "26px",
+                    height: "26px",
+                    background: "rgba(230,238,242,0.1)",
+                    color: "#E6EEF2",
+                    fontSize: "16px",
+                    lineHeight: 1,
+                  }}
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             {/* iframe: se monta solo con el modal abierto (no carga Hallos en
@@ -152,27 +188,6 @@ export default function CheckoutModal({
               style={{ border: "none", background: "#E6EEF2", minHeight: 0 }}
               allow="payment; clipboard-write"
             />
-
-            {/* Escape hatch: si Hallos pasa su CSP `frame-ancestors` de
-                report-only a enforced, el iframe queda en blanco y este link es
-                la única salida del usuario */}
-            <a
-              href={HALLOS_CHECKOUT_STANDALONE}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0 text-center transition-opacity duration-200 hover:opacity-70"
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 300,
-                fontSize: "11px",
-                color: "#A5A8B1",
-                background: "#171616",
-                padding: "10px 16px",
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              {t.fallback}
-            </a>
           </motion.div>
         </motion.div>
       )}
