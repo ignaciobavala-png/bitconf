@@ -34,17 +34,22 @@ const BODY_FS = "clamp(13px, 1.2vw, 16px)";
 const BUTTON_FS = "clamp(12px, 1.1vw, 14px)";
 
 // Banner del hero: video servido desde el bucket público de Supabase (no en git).
+// `-v2` = master recomprimido (5.2MB → 2.05MB, h264 crf 36, mismo 1920x1080).
+// El bucket es la fuente del egress facturado por Supabase y el video es autoplay,
+// así que cada visita nueva se lo baja entero: es el asset que más pesa en la cuota.
+// Nombre nuevo (no sobrescribir) porque el objeto viejo ya está cacheado un año.
 const HERO_VIDEO_URL =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero.mp4";
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero-v2.mp4";
 // Foto de Costa Salguero (sección Ubicación): mismo patrón, bucket público de Supabase.
 const COSTA_SALGUERO_PHOTO_URL =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/costa-salguero.jpg";
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/costa-salguero-v2.jpg";
 // Sponsor deck (PDF): mismo bucket. El `?download=` de Supabase Storage fuerza el
 // Content-Disposition: attachment — sin ese query param el navegador abre el PDF
 // en una pestaña en vez de descargarlo (el atributo `download` de <a> no aplica
 // porque el archivo es cross-origin).
+// `-v2` = mismo deck recomprimido a 150dpi (11.8MB → 2.1MB, visualmente idéntico).
 const SPONSOR_DECK_URL =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/sponsor-deck.pdf?download=LABITCONF-2026-Sponsor-Deck.pdf";
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/sponsor-deck-v2.pdf?download=LABITCONF-2026-Sponsor-Deck.pdf";
 
 const T = {
   es: {
