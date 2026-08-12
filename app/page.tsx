@@ -187,6 +187,10 @@ const TICKETS = [
     background:
       "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "AR$ 40.000" }],
+    note: {
+      es: "*precio final reflejado en dólares",
+      en: "*final price charged in dollars",
+    },
   },
   {
     tier: "Business",
@@ -198,6 +202,7 @@ const TICKETS = [
     background:
       "linear-gradient(155deg, #f2f2f2 0%, #cfcfcf 30%, #8a8a8a 55%, #d8d8d8 75%, #a0a0a0 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 150" }],
+    note: { es: "+ service charge", en: "+ service charge" },
   },
   {
     tier: "Experience",
@@ -209,6 +214,7 @@ const TICKETS = [
     background:
       "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 450" }],
+    note: { es: "+ service charge", en: "+ service charge" },
   },
 ] as const;
 
@@ -731,6 +737,21 @@ export default function HomePage() {
                         </span>
                       </div>
                     ))}
+                    {/* Aclaración de precio (12/8, diseño): moneda de cobro en General,
+                        service charge en los tiers en USD. */}
+                    <div
+                      style={{
+                        fontFamily: "var(--font-neue-machina), sans-serif",
+                        fontWeight: 300,
+                        fontStyle: "italic",
+                        fontSize: "11px",
+                        lineHeight: 1.3,
+                        color: cMuted,
+                        marginTop: "6px",
+                      }}
+                    >
+                      {ticket.note[lang]}
+                    </div>
                   </div>
 
                   <div style={{ height: "1px", background: cDivider, margin: "20px 0 16px" }} />
