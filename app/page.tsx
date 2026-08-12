@@ -167,16 +167,25 @@ function ticketFeatures(
   return [{ text: f.experienceSummary, extra: false, summary: true }, ...experienceExtra];
 }
 
-// Paleta por tier según el manual (16/7): General naranja · Business plateado ·
-// Experience grafito ("Batmóvil"). General va en pesos (AR$); los otros en USD.
+// Paleta por tier (12/8, pedido de diseño): se invirtió el orden respecto del manual
+// del 16/7 — el naranja (identidad Bitcoin) pasó de General a Experience para que el
+// tier más caro sea el que resalta y el de entrada quede sobrio. Queda la rampa
+// grafito → plateado → naranja. `warm` marca la card naranja: las reglas de contraste
+// van atadas a esa flag, no al nombre del tier.
+// `cta` es el color del botón de compra de cada card, definido a mano por tier
+// (negro · naranja · verde) en vez de derivarlo del fondo.
+// General va en pesos (AR$); los otros en USD.
 const TICKETS = [
   {
     tier: "General",
     tagline: "HODL the Community",
-    accent: "#171616", // sobre naranja, acento oscuro (identidad Bitcoin)
+    accent: "#C7CBD1", // acero sobre grafito
     dark: true,
+    warm: false,
+    // Negro sobre la card grafito: sin el borde acero el botón se pierde contra el fondo.
+    cta: { bg: "#171616", fg: "#E6EEF2", border: "1px solid rgba(199,203,209,0.45)" },
     background:
-      "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
+      "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "AR$ 40.000" }],
   },
   {
@@ -184,6 +193,8 @@ const TICKETS = [
     tagline: "HODL the Network",
     accent: "#FF4E01",
     dark: false,
+    warm: false,
+    cta: { bg: "#FF4E01", fg: "#E6EEF2", border: "none" },
     background:
       "linear-gradient(155deg, #f2f2f2 0%, #cfcfcf 30%, #8a8a8a 55%, #d8d8d8 75%, #a0a0a0 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 150" }],
@@ -191,10 +202,12 @@ const TICKETS = [
   {
     tier: "Experience",
     tagline: "HODL Full LABITCONF",
-    accent: "#C7CBD1", // acero sobre grafito
+    accent: "#171616", // sobre naranja, acento oscuro
     dark: true,
+    warm: true,
+    cta: { bg: "#ABF760", fg: "#171616", border: "none" },
     background:
-      "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
+      "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 450" }],
   },
 ] as const;
@@ -640,13 +653,16 @@ export default function HomePage() {
             {TICKETS.map((ticket) => {
               const light = ticket.dark === false; // Business: fondo claro → texto oscuro
               const cText = light ? "#171616" : "#E6EEF2";
-              // General (fondo naranja): "Incluye" pasa a oscuro para más contraste (pedido cliente 21/7)
-              const cMuted =
-                ticket.tier === "General" ? "#171616" : light ? "rgba(23,22,22,0.6)" : "#A5A8B1";
+              // Card naranja: "Incluye" pasa a oscuro para más contraste (pedido cliente 21/7)
+              const cMuted = ticket.warm
+                ? "#171616"
+                : light
+                  ? "rgba(23,22,22,0.6)"
+                  : "#A5A8B1";
               const cDivider = light ? "rgba(23,22,22,0.15)" : "rgba(255,255,255,0.15)";
-              // "Everything in the Business Ticket" (Experience) va en naranja igual que
-              // la línea equivalente de Business, en vez del acero del acento del tier.
-              const cSummary = ticket.tier === "Experience" ? "#FF4E01" : ticket.accent;
+              // Línea-resumen ("Todo lo del Ticket X"): usa el acento del tier — naranja
+              // sobre la card plateada, oscuro sobre la naranja (ahí el naranja no se vería).
+              const cSummary = ticket.accent;
               const features = ticketFeatures(ticket.tier, lang);
               return (
                 <div
@@ -787,10 +803,9 @@ export default function HomePage() {
                         ...labelStyle,
                         fontSize: BUTTON_FS,
                         padding: "12px 20px",
-                        // Experience: botón pasa a naranja (pedido cliente 21/7)
-                        background:
-                          ticket.tier === "Experience" ? "#FF4E01" : light ? "#171616" : "#ABF760",
-                        color: light ? "#E6EEF2" : "#171616",
+                        background: ticket.cta.bg,
+                        color: ticket.cta.fg,
+                        border: ticket.cta.border,
                       }}
                     >
                       {t.ticketsBuy}
