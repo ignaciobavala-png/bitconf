@@ -100,7 +100,11 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(messages);
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    // Groq dio de baja llama-3.3-70b-versatile (2026-08). gpt-oss-120b devuelve
+    // el razonamiento en una part aparte, así que el widget (que solo pinta las
+    // parts de tipo "text") no lo muestra.
+    model: groq("openai/gpt-oss-120b"),
+    providerOptions: { groq: { reasoningEffort: "low" } },
     system: SYSTEM_PROMPT,
     messages: modelMessages,
   });
