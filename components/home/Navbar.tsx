@@ -17,12 +17,14 @@ const LEFT_LINKS = {
   es: [
     { label: "Speakers", href: "/speakers" },
     { label: "Agenda", href: "/agenda" },
+    { label: "Mi agenda", href: "/mi-agenda" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Comunidad", href: "/comunidad" },
   ],
   en: [
     { label: "Speakers", href: "/speakers" },
     { label: "Agenda", href: "/agenda" },
+    { label: "My agenda", href: "/mi-agenda" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Community", href: "/comunidad" },
   ],

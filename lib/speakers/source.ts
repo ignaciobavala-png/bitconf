@@ -144,6 +144,39 @@ function absoluteUrl(value: string | null): string | null {
  * fila se pierde. Por eso el parseo falla en silencio POR SPEAKER en vez de
  * cortar el sync entero.
  */
+/**
+ * Identidad estable de una charla dentro de un speaker.
+ *
+ * NO se usa el índice en el array. Al principio la clave era `speakerKey#0`,
+ * `speakerKey#1`, etc., y eso tiene un problema silencioso: si la organización
+ * reordena las charlas de un speaker en la planilla, la charla que era la #0
+ * pasa a ser la #1 y el upsert **reescribe la misma fila con otro contenido**.
+ * El uuid queda igual pero adentro hay otra charla.
+ *
+ * Mientras nada guardara referencias a `talks.id` eso no se notaba. Con "Mi
+ * agenda" sí: un itinerario guardado apuntaría de golpe a una charla distinta.
+ *
+ * Por eso la clave sale del título normalizado. Reordenar ya no cambia nada, y
+ * si le cambian el título se crea una charla nueva y la vieja se borra por
+ * huérfana — que es lo correcto: una charla retitulada es otra charla, y es más
+ * honesto que desaparezca del itinerario a que mute sin avisar.
+ */
+function talkKey(speakerKey: string, title: string, seen: Map<string, number>): string {
+  const base = title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+
+  // Un mismo speaker con dos charlas de título idéntico: se desempata con un
+  // sufijo, estable mientras no cambie el orden entre esos dos duplicados.
+  const n = seen.get(base) ?? 0;
+  seen.set(base, n + 1);
+  return n === 0 ? `${speakerKey}#${base}` : `${speakerKey}#${base}~${n}`;
+}
+
 function parseTalks(raw: string, speakerKey: string): SourceTalk[] {
   if (!raw) return [];
   let parsed: unknown;
@@ -154,7 +187,9 @@ function parseTalks(raw: string, speakerKey: string): SourceTalk[] {
   }
   if (!Array.isArray(parsed)) return [];
 
-  return parsed.flatMap((item, i): SourceTalk[] => {
+  const seen = new Map<string, number>();
+
+  return parsed.flatMap((item): SourceTalk[] => {
     if (!item || typeof item !== "object") return [];
     const t = item as Record<string, unknown>;
     const title = String(t.titulo ?? "").trim();
@@ -165,7 +200,7 @@ function parseTalks(raw: string, speakerKey: string): SourceTalk[] {
 
     return [
       {
-        sourceKey: `${speakerKey}#${i}`,
+        sourceKey: talkKey(speakerKey, title, seen),
         title,
         abstract: String(t.abstract ?? "").trim() || null,
         description: String(t.descripcion ?? "").trim() || null,

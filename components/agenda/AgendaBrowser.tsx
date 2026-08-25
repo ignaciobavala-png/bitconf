@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
 import { CANONICAL_TAGS, TAG_LABELS, type CanonicalTag } from "@/lib/speakers/tags";
 import { DAYS, DAY_SHORT, compareStages, stageLabel, type Day } from "@/lib/speakers/schedule";
+import AgendaToggle from "./AgendaToggle";
 import type { AgendaTalk } from "@/lib/speakers/queries";
 
 const labelStyle: React.CSSProperties = {
@@ -302,9 +303,12 @@ function TalkCard({
         padding: "20px 22px",
       }}
     >
-      <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.3vw, 16px)", lineHeight: 1.3 }}>
-        {talk.title}
-      </h3>
+      <div className="flex items-start justify-between gap-3">
+        <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.3vw, 16px)", lineHeight: 1.3 }}>
+          {talk.title}
+        </h3>
+        <AgendaToggle talkId={talk.id} />
+      </div>
 
       {/* El abstract solo cuando hay ancho para leerlo: en las columnas
           angostas convierte la tarjeta en un muro de texto. */}

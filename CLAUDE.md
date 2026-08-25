@@ -133,7 +133,7 @@ una página a **4 secciones + una capa transversal**.
 | 01 | Modelo de datos speakers/charlas + sync | listo |
 | 02 | Página de speakers (`/speakers`, `/speakers/[slug]`) | listo |
 | 03 | Página de agenda (`/agenda`) | listo (sin horarios) |
-| 04 | Mi Agenda (local primero, cuenta después) | pendiente |
+| 04 | Mi Agenda (local + respaldo por mail, PWA) | listo |
 | 05 | Sección MÁS (Hub, embajadores, comunidades, voluntarios) | falta contenido |
 | 06 | Bi con datos reales de agenda | pendiente |
 | 07 | Sponsors + FAQ | falta contenido |
@@ -194,6 +194,96 @@ con la misma RLS y el mismo `revalidate = 3600`. No hay modelo de datos nuevo.
   tarjetas.
 - Volumen: entre 1,5 y 3,5 h por escenario por día es poco para dos días. Los 42
   en revisión y 18 disponibles probablemente se repartan ahí.
+
+## Mi Agenda (`/mi-agenda`) — decisiones tomadas
+
+Itinerario personal + PWA instalable para el día del evento.
+
+### Local primero, sin cuenta
+
+El itinerario vive en `localStorage` vía `lib/store/agenda.ts` (zustand +
+`persist`). Tocar el `+` en una charla no pide mail, ni cuenta, ni conexión.
+El respaldo por mail es un paso aparte y opcional.
+
+- `partialize` deja afuera `hydrated`: es estado de UI y persistirlo dejaría la
+  marca en `true` antes de que la hidratación real ocurra.
+- Todo lo que depende del store espera `hydrated` antes de dibujar. El servidor
+  renderiza con `picked: []` y el cliente un instante después con lo guardado:
+  sin esa espera hay mismatch de hidratación y el contador parpadea en 0.
+- `merge()` es **unión, no reemplazo**. Si alguien eligió tres charlas en este
+  teléfono y después recupera el respaldo, no puede perderlas. El costo es que
+  "sacar una charla" no se propaga entre dispositivos hasta el siguiente
+  guardado — mal mucho menor que borrarle la selección a alguien.
+
+### Recuperación por mail, sin verificar
+
+Decisión del equipo: mismo patrón que el rescate de QR de otro proyecto —
+escribís el mail y vuelve tu itinerario, sin link de confirmación ni contraseña.
+El reparo planteado (alguien puede probar mails para averiguar **quién va** al
+evento, y este es público de Bitcoin) se cubre con dos cosas que no agregan
+fricción:
+
+1. **El mail se guarda hasheado** (`sha256(mail + RATE_LIMIT_SALT)`, ver
+   `lib/itinerary/email.ts`). La búsqueda funciona igual porque se hashea lo que
+   escribe el usuario. La tabla **nunca contiene la lista de asistentes**, ni
+   para nosotros ni para quien se lleve un dump.
+   **Contrapartida**: así no se les puede escribir después. Si el cliente quiere
+   mandar mails, necesita una casilla de opt-in explícita y una columna aparte.
+2. **Rate limit por IP** (8 en 10 min) reusando la tabla `rate_limit` que ya
+   existía para las razones. Una persona real escribe su mail una o dos veces y
+   nunca lo nota; probar miles se vuelve inviable.
+
+`lib/db/itineraries.sql` — la tabla **no tiene policy de lectura para anon**: un
+select directo contra PostgREST devuelve vacío aunque se tenga la anon key (que
+es pública por definición). Todo pasa por `app/api/mi-agenda/route.ts`, que
+corre con service_role. Verificado: anon lee `[]` y su insert da error 42501.
+
+### La identidad de las charlas tuvo que cambiar antes
+
+`talks.source_key` era **`speakerKey#<índice>`**. Si la organización reordenaba
+las charlas de un speaker en la planilla, la que era la #0 pasaba a ser la #1 y
+el upsert **reescribía la misma fila con otro contenido**: mismo uuid, adentro
+otra charla.
+
+Mientras nada guardara referencias a `talks.id` no se notaba. Con Mi Agenda sí:
+un itinerario guardado apuntaría de golpe a una charla distinta. Por eso la
+clave pasó a derivarse del **título normalizado** (`talkKey()` en
+`lib/speakers/source.ts`). Se re-sincronizó: 93 charlas, 93 claves únicas, cero
+con el formato viejo.
+
+Corolario: si le cambian el título a una charla, la fila se borra por huérfana y
+se crea otra. La API **filtra los ids que ya no existen** (`keepLiveTalks`) — se
+pierde ese item del itinerario, no se rompe la página.
+
+### PWA
+
+- `app/manifest.ts` (API nativa de Next). `start_url` y `scope` en `/mi-agenda`,
+  no en la home: la app instalada es la agenda del evento, no el sitio entero.
+- **No se usó Serwist**, que es lo que recomienda la doc de Next para offline:
+  necesita configuración de webpack y este proyecto compila con Turbopack. El
+  service worker (`public/sw.js`) está escrito a mano y es corto.
+- Estrategia: network-first para el HTML (cambia en cada deploy), cache-first
+  para assets, y **`/api/*` nunca se cachea** (una respuesta vieja mostraría un
+  itinerario que ya no es el guardado).
+- El SW **solo se registra en producción**: en dev, cacheando el HTML deja el
+  navegador sirviendo builds viejas mientras Turbopack recompila.
+- Por qué importa el offline: el día del evento hay miles de personas en Costa
+  Salguero saturando las antenas. Justo cuando alguien necesita mirar a qué
+  escenario va es cuando peor anda el celular.
+- **No hace falta subdominio.** Instalada, la PWA abre en `standalone` —sin
+  barra de direcciones, con su propio ícono—, así que ya se comporta como una
+  app aparte. Un `mi.labitconf.com` implicaría DNS en la cuenta del cliente y se
+  puede agregar después sin tocar código.
+
+### Pendientes
+
+- El **dashboard** todavía no muestra nada de esto. Lo que le falta, en orden:
+  estado del último sync (hoy solo se ve pegándole al endpoint a mano), botón de
+  sincronizar ahora, panel de faltantes exportable para la organización, y
+  **qué charlas se guarda la gente** — que es planificación de capacidad: dice
+  qué sala se va a desbordar semanas antes del evento.
+- Falta el acceso a `/mi-agenda` desde la home (hoy solo navbar y el contador
+  flotante de `/agenda`).
 
 ## Speakers — origen de datos (planilla de la organización)
 
@@ -300,6 +390,7 @@ Ver memoria `vercel-account-crisis-migracion.md` y `~/Escritorio/labitconf-como-
 - `app/admin/` — panel de moderación protegido por cookie
 - `app/admin/actions.ts` — Server Actions: `moderateReason`, `deleteReason`, `loginAction`, `logoutAction`, `addStaticPhrase`, `toggleStaticPhrase`
 - `app/api/reasons/` — endpoint POST para recibir razones
+- `app/api/mi-agenda/` — PUT guarda y POST recupera un itinerario por mail hasheado
 - `components/WatermarkLayer.tsx` — fondo animado con 10 carriles, tamaños variados, Realtime. Ya NO tiene frases hardcodeadas — todo viene de Supabase
 - `lib/supabase/client.ts` — cliente anon browser (lazy singleton con `getSupabaseClient()`)
 - `lib/supabase/server.ts` — cliente service_role server (`createServiceClient()`)
