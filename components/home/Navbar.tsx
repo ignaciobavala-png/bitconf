@@ -15,10 +15,12 @@ const labelStyle: React.CSSProperties = {
 // "¿Por qué hodleás?" (lleva al final de la página) + selector de idioma.
 const LEFT_LINKS = {
   es: [
+    { label: "Speakers", href: "/speakers" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Comunidad", href: "/comunidad" },
   ],
   en: [
+    { label: "Speakers", href: "/speakers" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Community", href: "/comunidad" },
   ],

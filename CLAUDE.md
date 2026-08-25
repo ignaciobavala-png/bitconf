@@ -112,6 +112,114 @@ Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-c
 
 Además de `assets-bitconf/` (2D/3D), hay un banco de fondos en `~/Escritorio/assets bitconf/SISTEMA DE FONDOS/` (ESTATICOS/HORIZONTALES y VERTICALES): variantes negro/naranja de ballena, astronauta, honeybadger, píldora, hashes, hexmap, lluvia bit, iconos. Ya usados: `HEXMAP_NEGRO` (ubicación) y `HASHES_NEGRO` (presentación). Se copian comprimidos a JPG (`convert -quality 82`, son fondos opacos sin alfa) en `public/assets/home/`.
 
+## FASE 2 — Mapa web definitivo (PDF "FASE 2 - WEB 15.08")
+
+El cliente entregó el mapa de arquitectura de la fase 2: la web pasa de landing de
+una página a **4 secciones + una capa transversal**.
+
+- Nav: izquierda `LABITCONF | SPEAKERS | AGENDA | MÁS ▾`; derecha `COMPRAR TICKET |
+  CHATEÁ CON BI | ¿POR QUÉ HODLEÁS? | ES/EN`.
+- Resumen de la arquitectura: LABITCONF = descubrir · SPEAKERS = conocer ·
+  AGENDA = planificar · MÁS = participar · BI = ayudarte · ¿POR QUÉ HODLEÁS? = pertenecer.
+- Rama de trabajo: **`fase-2`** (salió de `main` el 2026-08-25).
+- Deck para reuniones con la organización:
+  `~/Escritorio/LABITCONF-2026-arquitectura-fase-2.html` (13 láminas, autocontenido).
+
+### Etapas
+
+| # | Etapa | Estado |
+|---|---|---|
+| 00 | Cambios acotados en la home (accesos rápidos + copy nuevo) | listo |
+| 01 | Modelo de datos speakers/charlas + sync | listo |
+| 02 | Página de speakers (`/speakers`, `/speakers/[slug]`) | listo |
+| 03 | Página de agenda | pendiente |
+| 04 | Mi Agenda (local primero, cuenta después) | pendiente |
+| 05 | Sección MÁS (Hub, embajadores, comunidades, voluntarios) | falta contenido |
+| 06 | Bi con datos reales de agenda | pendiente |
+| 07 | Sponsors + FAQ | falta contenido |
+
+### Accesos rápidos de la home (`#accesos`)
+
+Sección entre el hero y la presentación con las 6 burbujas de intención del mapa.
+Va **antes** de "¿Qué es LABITCONF?" a propósito: quien ya sabe a qué vino no tiene
+que scrollear la presentación entera.
+
+- `Bi` se abre desde afuera del widget con el evento `bi:open` / `openBiChat()`
+  (`components/home/QaChatWidget.tsx`). El mapa define a Bi como capa transversal,
+  así que cualquier sección puede abrirlo sin levantar el estado a la página.
+- "Quiero ver la agenda" apunta a `PENDING_LINK` hasta que exista `/agenda`.
+
+## Speakers — origen de datos (planilla de la organización)
+
+**La organización carga speakers y charlas en un Google Sheet**, expuesto por un
+Google Apps Script, y lo administra desde `app-labitconf.github.io/LABITCONF-speakers/mkt.html`
+(GitHub Pages estático, sin backend propio). **No se carga dos veces**: nuestro sitio
+espeja esa planilla.
+
+- Env vars: `SPEAKERS_SOURCE_URL` (el `/exec` del Apps Script) y `SPEAKERS_SOURCE_KEY`.
+- Dos hojas: `Speakers` (83 filas, 38 columnas) y `MKT` (flag `publicado` si/no).
+- La columna **`temas` no son etiquetas: es un JSON con las charlas** — título,
+  abstract, tags, nivel, formato, duración, panel, estado, `stage` (s1..s7) y
+  `day` (oct30/oct31). 93 propuestas, 33 confirmadas con día y escenario.
+- **La planilla NO trae hora de inicio.** Hay día, escenario y duración, pero no
+  horario. `talks.starts_at` queda nullable y la UI dice "Horario a confirmar".
+
+### Trampas del origen (todas encontradas a los golpes)
+
+- **`postulacion_num` NO es único**: 15 números están usados por dos personas
+  distintas (el rango 25-42 aparece duplicado). Como clave de upsert rompe con
+  `ON CONFLICT DO UPDATE command cannot affect row a second time`. La clave real es
+  **`source_key` = num + nombre normalizado**, único en las 83 filas.
+  Corolario para el cliente: **su propio flag `publicado` de la hoja MKT es ambiguo**,
+  porque referencia al speaker solo por número.
+- **Las fotos son links de Google Drive** (`thumbnail?id=...&sz=w400`), 77 de 78.
+  Se espejan, no se linkean (Drive no es CDN, throttlea, y se rompe si mueven el
+  archivo). Ver `lib/speakers/photos.ts`.
+- **400x400 es el techo real de las fotos.** Probamos `sz=w1200`, `sz=w2000`,
+  `lh3.googleusercontent.com/d/<id>` y `uc?export=view`: las cuatro devuelven el
+  mismo archivo byte por byte. El recorte lo hace el formulario de postulación.
+  Por eso el retrato del perfil es contenido (max 260px) y no un hero.
+- **La respuesta del Apps Script incluye mail, whatsapp, telegram y signal.**
+  `lib/speakers/source.ts` es el único lugar donde esos datos existen y **no los
+  copia al resultado**: nunca llegan a la base ni al browser. Nunca hacer el fetch
+  desde el cliente.
+- La key del Apps Script está **a la vista en el JS público de ellos y habilita
+  escritura**. Es problema de la organización, no nuestro (leemos desde el server),
+  pero está reportado.
+- Los tags son texto libre: 77 valores para 93 charlas, con sinónimos
+  ("INTELIGENCIA ARTIFICIAL"/"IA"/"AI"). `lib/speakers/tags.ts` los mapea a 9
+  filtros canónicos. Es una decisión editorial, por eso vive en el repo.
+
+### Arquitectura del sync
+
+- `lib/speakers/source.ts` — lee las 2 hojas, resuelve columnas **por nombre de
+  encabezado** (agregan columnas seguido; hardcodear `r[19]` se rompe en silencio).
+- `lib/speakers/photos.ts` — espeja al bucket `media`, path `speakers/<sha256>.jpg`.
+  **Nombre por hash de contenido**, no por id del speaker: si se reemplaza una foto
+  manteniendo la URL, el CDN y el optimizador de Next siguen sirviendo la vieja
+  (ver "Cosas a tener en cuenta"). El hash es además el control de "¿hay que bajarla?".
+- `lib/speakers/sync.ts` — upsert idempotente. Fotos de a 8 en paralelo (en serie
+  tardaba 98s y se pasaba del límite de la función; ahora ~16s la primera vez, ~11s
+  las siguientes). Speakers que dejan de venir se marcan `present=false`, no se
+  borran (preserva slug y foto si fue un error de carga). Las charlas huérfanas sí
+  se borran.
+- `app/api/sync-speakers/route.ts` — cron cada 6h (`vercel.json`) + manual con
+  header `x-sync-secret: $ADMIN_SECRET`.
+- `lib/db/speakers.sql` — schema y RLS. **Qué se publica: `status = 'confirmado'`**
+  (23 de 83). `mkt_published` se guarda igual para poder cambiar el criterio sin
+  re-sincronizar. Pendiente de confirmar con la organización.
+- `lib/speakers/queries.ts` — lectura pública **con la anon key incluso en el
+  servidor**, para que la RLS siga siendo la que decide qué se publica.
+
+### Pendientes con la organización
+
+- Cuál flag manda para publicar: `estado=confirmado` (lo que asumimos) o el
+  `publicado` de MKT (hoy marca 1 solo speaker, y es ambiguo por lo del num).
+- Dónde se carga el **horario** de cada charla.
+- Si existe el **original** de las fotos en algún lado (o 400x400 es todo).
+- Las **5 fotos faltantes** (uno de esos speakers ya está confirmado).
+- La cifra oficial de speakers: el PDF dice "+400", la planilla tiene 83.
+
 ## Deploy
 
 - **Repo**: `ignaciobavala-png/bitconf` (GitHub de Ignacio)

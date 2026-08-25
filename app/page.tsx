@@ -235,7 +235,7 @@ const PENDING_LINK = "#";
 const QUICK_ACCESS = [
   { key: "ticket", action: "checkout" as const, href: undefined },
   { key: "agenda", action: "link" as const, href: PENDING_LINK },
-  { key: "speakers", action: "link" as const, href: "#speakers" },
+  { key: "speakers", action: "link" as const, href: "/speakers" },
   { key: "hub", action: "link" as const, href: "/comunidad#student-hub" },
   { key: "comunidades", action: "link" as const, href: "/comunidad#comunidades" },
   { key: "bi", action: "bi" as const, href: undefined },

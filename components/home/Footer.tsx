@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import HodlReasonsSection from "@/components/HodlReasonsSection";
+import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -54,7 +55,12 @@ const T = {
   },
 } as const;
 
-export default function Footer({ lang }: { lang: "es" | "en" }) {
+// `lang` es opcional: las páginas que son Server Component (ej. /speakers) no
+// pueden leer el store de zustand para pasárselo, así que el footer lo resuelve
+// solo. Las páginas cliente que ya lo pasaban siguen funcionando igual.
+export default function Footer({ lang: langProp }: { lang?: "es" | "en" }) {
+  const langFromStore = useLangStore((s) => s.lang);
+  const lang = langProp ?? langFromStore;
   const t = T[lang];
 
   return (

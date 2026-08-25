@@ -45,3 +45,7 @@ next-env.d.ts
 
 # assets de referencia para el diseño de la homepage (no se sube a git)
 /assets-bitconf/
+
+# Familia completa Neue Machina (36 TTF, ~5.2MB) — material de diseño.
+# El sitio solo usa los 5 pesos de public/assets/tipografias/neue-machina/.
+public/assets/tipografias/NEUE MACHINA/
