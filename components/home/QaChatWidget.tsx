@@ -20,6 +20,13 @@ const T = {
   },
 } as const;
 
+// Nombre del evento que abre el chat desde afuera del componente.
+export const BI_OPEN_EVENT = "bi:open";
+
+export function openBiChat() {
+  window.dispatchEvent(new Event(BI_OPEN_EVENT));
+}
+
 export default function QaChatWidget() {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
@@ -33,6 +40,17 @@ export default function QaChatWidget() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  // Bi es una capa transversal (mapa web fase 2): cualquier parte del sitio puede
+  // abrir el chat sin que haya que levantar este estado a la página. El evento
+  // `bi:open` lo dispara hoy la burbuja "No sé por dónde empezar" de la home.
+  useEffect(() => {
+    function openFromOutside() {
+      setOpen(true);
+    }
+    window.addEventListener(BI_OPEN_EVENT, openFromOutside);
+    return () => window.removeEventListener(BI_OPEN_EVENT, openFromOutside);
+  }, []);
 
   const isStreaming = status === "streaming" || status === "submitted";
 
