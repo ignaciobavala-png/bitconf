@@ -227,10 +227,10 @@ const SE_PARTE_CARDS = {
       href: SPONSOR_DECK_URL,
     },
     {
-      title: "Prensa",
-      description: "Acreditate como periodista y accedé a las zonas exclusivas de cobertura. Completá el formulario en el link de abajo.",
-      cta: "Acreditate",
-      href: "#",
+      title: "Media Partners",
+      description: "¿Querés ser parte de la cobertura oficial de LABITCONF? Postulate como Media Partner y accedé a beneficios exclusivos para medios aliados.",
+      cta: "Postulate",
+      href: "https://forms.gle/fuLpfnE6puDcv1tx7",
     },
     {
       title: "Speakers",
@@ -247,10 +247,10 @@ const SE_PARTE_CARDS = {
       href: SPONSOR_DECK_URL,
     },
     {
-      title: "Press",
-      description: "Get accredited as a journalist and access exclusive coverage areas. Fill out the form below.",
-      cta: "Get Accredited",
-      href: "#",
+      title: "Media Partners",
+      description: "Want to be part of LABITCONF's official coverage? Apply as a Media Partner and get exclusive benefits for allied media.",
+      cta: "Apply",
+      href: "https://forms.gle/fuLpfnE6puDcv1tx7",
     },
     {
       title: "Speakers",
