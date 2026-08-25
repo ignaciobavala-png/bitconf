@@ -1,6 +1,13 @@
 export const dynamic = "force-dynamic";
 
+// El botón "sincronizar ahora" corre el sync completo dentro de una Server
+// Action de esta página: habla con el Apps Script y baja fotos. El default de
+// la plataforma no alcanza — la corrida del re-keying tardó 60s.
+export const maxDuration = 300;
+
 import { createServiceClient } from "@/lib/supabase/server";
+import SyncPanel from "@/components/admin/SyncPanel";
+import { getLastOkRun, getRecentRuns } from "@/lib/speakers/runs";
 import { moderateReason, logoutAction, deleteReason, addStaticPhrase, toggleStaticPhrase } from "@/app/admin/actions";
 
 type Reason = {
@@ -27,6 +34,8 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default async function AdminPage() {
   const supabase = createServiceClient();
+
+  const [lastOkRun, recentRuns] = await Promise.all([getLastOkRun(), getRecentRuns(10)]);
 
   const { data: reasons } = await supabase
     .from("reasons")
@@ -80,6 +89,10 @@ export default async function AdminPage() {
             </button>
           </form>
         </div>
+
+        {/* Estado del sync — antes que la moderación: si esto se rompió,
+            importa más que cualquier razón pendiente. */}
+        <SyncPanel lastOk={lastOkRun} runs={recentRuns} />
 
         {/* Stats */}
         <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>

@@ -285,6 +285,50 @@ pierde ese item del itinerario, no se rompe la página.
 - Falta el acceso a `/mi-agenda` desde la home (hoy solo navbar y el contador
   flotante de `/agenda`).
 
+## Panel de sync en el admin — el punto ciego resuelto
+
+**El problema**: si el sync se rompía, nadie se enteraba hasta que alguien
+notaba que la página mostraba datos viejos. `syncSpeakers()` arma un reporte
+completo y lo devuelve, pero quien llama es el cron de Vercel, que no lee la
+respuesta: a las 3 de la mañana ese JSON se generaba y se tiraba.
+
+- `lib/db/sync-runs.sql` — tabla `sync_runs`, una fila por corrida. Columnas y
+  no un `jsonb` suelto para poder preguntar "¿desde cuándo sube
+  `photos_skipped`?". Son 4 filas por día, no hay nada que optimizar.
+- `lib/speakers/runs.ts` — `recordRun` / `recordFailure` / `getLastOkRun` /
+  `getRecentRuns` / `isStale`.
+- **El registro vive en la ruta, no dentro de `syncSpeakers()`.** Así la función
+  sigue siendo pura, y desde el `catch` se puede escribir la fila del fallo —
+  que es la que más importa.
+- **La alerta va por AUSENCIA, no por filas con error.** Si la función se pasa
+  de los 300 s, Vercel la mata sin que llegue a escribir nada: no hay fila, ni
+  siquiera con `ok=false`. Por eso el panel pregunta "¿cuándo fue la última
+  exitosa?" y no "¿hay fallidas?". `STALE_AFTER_HOURS = 12` (el cron es cada 6,
+  así que 12 significa que se salteó una entera).
+- **Tres estados, no dos**: `atrasado` / `la última falló pero hay una exitosa
+  reciente` / `al día`. Un semáforo verde arriba de una fila FALLO es engañoso.
+- Los números grandes salen de la **última corrida exitosa**, no de la más
+  reciente: si la última falló, sus contadores vienen en null y el bloque entero
+  se ve como "— — —", que parece un error del panel.
+- Botón **"sincronizar ahora"** (`syncSpeakersNow` en `app/admin/actions.ts`).
+  Llama a `syncSpeakers()` directo en vez de hacer fetch a la ruta: ya estamos
+  autenticados por cookie. Requiere `maxDuration = 300` en `app/admin/page.tsx`
+  porque la Server Action corre el sync completo.
+- El panel va **antes** de la moderación de razones: si el sync se rompió,
+  importa más que cualquier razón pendiente.
+
+### Lo que le falta al dashboard
+
+- **Panel de faltantes exportable** para la organización: los 5 sin foto, las
+  charlas sin día o escenario, el s5 que no aparece, confirmados sin charla.
+- **Interruptor del criterio de publicación** (`estado=confirmado` vs el
+  `publicado` de MKT) sin tener que editar la policy a mano.
+- **Demanda de Mi Agenda**: ranking de charlas más guardadas, agrupado por
+  escenario — dice qué sala se va a desbordar semanas antes del evento.
+  Advertencia a decirle a la organización: solo mide a quienes dejaron el mail,
+  no a quienes armaron su agenda y nunca la respaldaron. Es una muestra sesgada
+  hacia el más comprometido, no el total.
+
 ## Speakers — origen de datos (planilla de la organización)
 
 **La organización carga speakers y charlas en un Google Sheet**, expuesto por un
