@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLangStore } from "@/lib/store/lang";
 import { TAG_LABELS } from "@/lib/speakers/tags";
+import { DAY_LABELS, isDay, stageLabel } from "@/lib/speakers/schedule";
 import type { SpeakerProfile } from "@/lib/speakers/queries";
 
 const labelStyle: React.CSSProperties = {
@@ -28,8 +29,6 @@ const T = {
     minutes: "min",
     panel: "Panel",
     level: { general: "General", intermedio: "Intermedio", avanzado: "Avanzado", todos: "Todos los niveles" } as Record<string, string>,
-    days: { oct30: "Viernes 30 de octubre", oct31: "Sábado 31 de octubre" } as Record<string, string>,
-    stage: "Escenario",
     // La planilla todavía no trae hora de inicio: hay día, escenario y
     // duración, pero no el horario. Se dice explícitamente en vez de dejar un
     // hueco que parezca un error.
@@ -44,8 +43,6 @@ const T = {
     minutes: "min",
     panel: "Panel",
     level: { general: "General", intermedio: "Intermediate", avanzado: "Advanced", todos: "All levels" } as Record<string, string>,
-    days: { oct30: "Friday, October 30", oct31: "Saturday, October 31" } as Record<string, string>,
-    stage: "Stage",
     timeTba: "Time to be confirmed",
   },
 } as const;
@@ -207,12 +204,12 @@ export default function SpeakerProfileView({ speaker }: { speaker: SpeakerProfil
                   <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
                     {talk.day && (
                       <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(9px, 0.95vw, 11px)" }}>
-                        {t.days[talk.day] ?? talk.day}
+                        {isDay(talk.day) ? DAY_LABELS[talk.day][lang] : talk.day}
                       </span>
                     )}
                     {talk.stage && (
                       <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(9px, 0.95vw, 11px)" }}>
-                        {t.stage} {talk.stage.replace(/^s/i, "")}
+                        {stageLabel(talk.stage, lang)}
                       </span>
                     )}
                     <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(9px, 0.95vw, 11px)" }}>

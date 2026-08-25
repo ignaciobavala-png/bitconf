@@ -157,3 +157,84 @@ export async function getSpeakerSlugs(): Promise<string[]> {
   const { data } = await publicClient().from("speakers").select("slug");
   return (data ?? []).map((r) => r.slug as string);
 }
+
+// ── Agenda ──────────────────────────────────────────────────
+
+export type AgendaTalk = {
+  id: string;
+  title: string;
+  abstract: string | null;
+  tags: CanonicalTag[];
+  level: string | null;
+  durationMin: number | null;
+  isPanel: boolean;
+  stage: string;
+  day: string;
+  /** null mientras la planilla no traiga hora — ver getAgenda(). */
+  startsAt: string | null;
+  speaker: { slug: string; name: string; photoUrl: string | null } | null;
+};
+
+type AgendaRow = {
+  id: string;
+  title: string;
+  abstract: string | null;
+  tags: string[] | null;
+  level: string | null;
+  duration_min: number | null;
+  is_panel: boolean;
+  stage: string | null;
+  day: string | null;
+  starts_at: string | null;
+  speakers: { slug: string; name: string; photo_url: string | null } | null;
+};
+
+/**
+ * Charlas publicables con su speaker, para la página de agenda.
+ *
+ * Se descartan las que no tienen día o escenario: sin eso no hay dónde
+ * ubicarlas en el cronograma, y mostrarlas sueltas confunde más de lo que
+ * suma. Hoy las 31 visibles tienen ambos, pero a medida que la organización
+ * confirme más van a aparecer a medio cargar.
+ *
+ * El orden es por día → escenario → hora. `starts_at` todavía viene null en
+ * todas (la planilla no trae horario), así que en la práctica hoy ordena por
+ * día y escenario y adentro queda el orden de carga. Cuando llegue la hora,
+ * esta misma query pasa a devolver el cronograma real sin tocar nada más.
+ */
+export async function getAgenda(): Promise<AgendaTalk[]> {
+  const { data, error } = await publicClient()
+    .from("talks")
+    .select(
+      `id, title, abstract, tags, level, duration_min, is_panel, stage, day, starts_at,
+       speakers ( slug, name, photo_url )`
+    )
+    .not("day", "is", null)
+    .not("stage", "is", null)
+    .order("day", { ascending: true })
+    .order("stage", { ascending: true })
+    .order("starts_at", { ascending: true, nullsFirst: false });
+
+  if (error) {
+    console.error("[agenda] no se pudo leer:", error.message);
+    return [];
+  }
+
+  return ((data ?? []) as unknown as AgendaRow[])
+    .filter((r): r is AgendaRow & { day: string; stage: string } => !!r.day && !!r.stage)
+    .map((r) => ({
+      id: r.id,
+      title: r.title,
+      abstract: r.abstract,
+      tags: (r.tags ?? []) as CanonicalTag[],
+      level: r.level,
+      durationMin: r.duration_min,
+      isPanel: r.is_panel,
+      stage: r.stage,
+      day: r.day,
+      startsAt: r.starts_at,
+      speaker: r.speakers
+        ? { slug: r.speakers.slug, name: r.speakers.name, photoUrl: r.speakers.photo_url }
+        : null,
+    }));
+}

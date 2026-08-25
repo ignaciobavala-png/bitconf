@@ -132,7 +132,7 @@ una página a **4 secciones + una capa transversal**.
 | 00 | Cambios acotados en la home (accesos rápidos + copy nuevo) | listo |
 | 01 | Modelo de datos speakers/charlas + sync | listo |
 | 02 | Página de speakers (`/speakers`, `/speakers/[slug]`) | listo |
-| 03 | Página de agenda | pendiente |
+| 03 | Página de agenda (`/agenda`) | listo (sin horarios) |
 | 04 | Mi Agenda (local primero, cuenta después) | pendiente |
 | 05 | Sección MÁS (Hub, embajadores, comunidades, voluntarios) | falta contenido |
 | 06 | Bi con datos reales de agenda | pendiente |
@@ -148,6 +148,52 @@ que scrollear la presentación entera.
   (`components/home/QaChatWidget.tsx`). El mapa define a Bi como capa transversal,
   así que cualquier sección puede abrirlo sin levantar el estado a la página.
 - "Quiero ver la agenda" apunta a `PENDING_LINK` hasta que exista `/agenda`.
+
+## Agenda (`/agenda`) — decisiones tomadas
+
+Come de las mismas tablas que speakers (`getAgenda()` en `lib/speakers/queries.ts`),
+con la misma RLS y el mismo `revalidate = 3600`. No hay modelo de datos nuevo.
+
+- **Día como tabs, escenario y tema como filtros — no un wizard de tres pasos.**
+  El día 31 tiene escenarios con una sola charla: obligar a elegir día → escenario
+  → cronograma lleva a pantallas de un item en tres clicks. El default muestra el
+  día completo con todos los escenarios; filtrar es opcional.
+- El día inicial es **el primero que tenga contenido**, no `oct30` fijo: si la
+  organización todavía no confirmó nada del viernes, entrar a una pantalla vacía
+  parece un error del sitio.
+- Los chips de escenario y de tema se calculan **por día**: el sábado no usa los
+  mismos escenarios que el viernes, y un chip que no devuelve nada es una promesa
+  vacía. Cambiar de día suelta el filtro de escenario.
+- **Sin hora de inicio no hay grilla horaria.** Cada escenario es una columna con
+  su programa (`md:grid-cols-2 xl:grid-cols-3`), no filas alineadas contra un eje
+  de tiempo que no existe. `getAgenda()` ya ordena por `day → stage → starts_at`:
+  cuando llegue el horario, la misma query devuelve el cronograma real.
+- El aviso de "horarios a confirmar" va **una vez en el header**, no en cada
+  tarjeta: repetirlo 31 veces convierte el dato en ruido. Usa Almico `#FFAB0B`
+  (primer uso de ese color de la paleta en el sitio).
+- El abstract solo se muestra con el filtro de escenario puesto (columna a ancho
+  completo). En las columnas angostas convierte la tarjeta en un muro de texto.
+- **Filtros en tira horizontal en mobile** (`overflow-x-auto`, `sm:flex-wrap`):
+  con 7 escenarios + 9 temas eran diez renglones de chips antes de la primera
+  charla. Verificado que no genera scroll horizontal de página (body 390/390).
+- `lib/speakers/schedule.ts` centraliza días y escenarios. La ficha de speaker
+  importa de ahí: las etiquetas estaban duplicadas en los dos componentes.
+- `STAGE_NAMES` está **vacío a propósito** y cae a "Escenario N". Cuando la
+  organización mande los nombres reales, se llena ese objeto y cambia en todo el
+  sitio a la vez.
+
+### Pendientes de la agenda
+
+- **Hora de inicio** — es el bloqueo principal. Sin eso no hay cronograma.
+- **Nombres de los escenarios**: la planilla manda `s1`..`s7` y nada más.
+  "Escenario 3" no ayuda a elegir, que es justamente para lo que sirve el filtro.
+- **Falta el s5**: hay confirmadas en s1, s2, s3, s4, s6 y s7. El 5 no aparece.
+- **26 de 31 charlas tienen `panel = si`.** Puede ser real (LABITCONF programa
+  muchos paneles) o que en el formulario la casilla se leyera como "acepto que
+  sea panel". Confirmar antes de que el badge "Panel" quede en el 84% de las
+  tarjetas.
+- Volumen: entre 1,5 y 3,5 h por escenario por día es poco para dos días. Los 42
+  en revisión y 18 disponibles probablemente se repartan ahí.
 
 ## Speakers — origen de datos (planilla de la organización)
 

@@ -16,11 +16,13 @@ const labelStyle: React.CSSProperties = {
 const LEFT_LINKS = {
   es: [
     { label: "Speakers", href: "/speakers" },
+    { label: "Agenda", href: "/agenda" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Comunidad", href: "/comunidad" },
   ],
   en: [
     { label: "Speakers", href: "/speakers" },
+    { label: "Agenda", href: "/agenda" },
     { label: "Tickets", href: "/#tickets" },
     { label: "Community", href: "/comunidad" },
   ],

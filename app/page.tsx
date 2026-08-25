@@ -224,17 +224,12 @@ const TICKETS = [
   },
 ] as const;
 
-// Destino todavía sin definir por el cliente. Misma convención que los CTA
-// pendientes de /comunidad: se deja explícito en vez de un "#" suelto perdido
-// en el markup, para que se vea de un vistazo qué falta cerrar.
-const PENDING_LINK = "#";
-
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
 // compra y `action: "bi"` abre el chat, el resto navega por href.
 const QUICK_ACCESS = [
   { key: "ticket", action: "checkout" as const, href: undefined },
-  { key: "agenda", action: "link" as const, href: PENDING_LINK },
+  { key: "agenda", action: "link" as const, href: "/agenda" },
   { key: "speakers", action: "link" as const, href: "/speakers" },
   { key: "hub", action: "link" as const, href: "/comunidad#student-hub" },
   { key: "comunidades", action: "link" as const, href: "/comunidad#comunidades" },
