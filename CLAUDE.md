@@ -74,6 +74,10 @@ Definida por el cliente (`~/Descargas/paleta.jpeg`). Estos son los hex **exactos
 
 ### Comunidad (página `/home/comunidad`) — decisiones tomadas
 
+> **Histórico.** Esta página se eliminó al armar la sección MÁS de fase 2: su
+> contenido vive ahora en `/mas/hub`, `/mas/embajadores` y `/mas/comunidades`,
+> y `/comunidad` redirige a `/mas`. Ver "MÁS (`/mas`) — decisiones tomadas".
+
 - Ruta **anidada bajo `/home`** (`app/home/comunidad/page.tsx`): toda la fase 2 vive bajo ese prefijo y se mueve junta cuando llegue el corte final (`/home` → `/`). Se accede desde el link "Comunidad" del navbar.
 - **Navbar extraído** a `components/home/Navbar.tsx` (compartido entre `/home` y `/home/comunidad`, links con prefijo `/home#...` para que funcionen desde ambas rutas). El **footer también está extraído y compartido**: `components/home/Footer.tsx` (wordmark HODL con gradiente, blurb, redes, Eventos 2026 y quick links, con `HodlReasonsSection variant="compact"` de fondo) — el footer propio de comunidad con astronauta + iconos wireframe **se eliminó** a pedido del cliente, igual que la sección "Partner universities" del Student Hub (el `LogoMarquee` de la sección Comunidades sí quedó).
 - 8 pantallas según mockups (hoy en `~/Descargas/1-9.png`): hero, 3 verticales (Embajadores/Student Hub/Comunidades), grid de embajadores, CTA embajador, Student Hub, CTA hub, Comunidades + logos, CTA comunidad + footer compartido.
@@ -134,7 +138,7 @@ una página a **4 secciones + una capa transversal**.
 | 02 | Página de speakers (`/speakers`, `/speakers/[slug]`) | listo |
 | 03 | Página de agenda (`/agenda`) | listo (sin horarios) |
 | 04 | Mi Agenda (local + respaldo por mail, PWA) | listo |
-| 05 | Sección MÁS (Hub, embajadores, comunidades, voluntarios) | falta contenido |
+| 05 | Sección MÁS (Hub, embajadores, comunidades, voluntarios) | maquetada; falta material del cliente |
 | 06 | Bi con datos reales de agenda | pendiente |
 | 07 | Sponsors + FAQ | falta contenido |
 
@@ -148,6 +152,65 @@ que scrollear la presentación entera.
   (`components/home/QaChatWidget.tsx`). El mapa define a Bi como capa transversal,
   así que cualquier sección puede abrirlo sin levantar el estado a la página.
 - "Quiero ver la agenda" apunta a `PENDING_LINK` hasta que exista `/agenda`.
+
+## MÁS (`/mas`) — decisiones tomadas
+
+"MÁS = participar" del mapa de fase 2. Cuatro páginas propias bajo `/mas`, no
+un one-pager con anchors.
+
+- **Una ruta por item** (`/mas/hub`, `/mas/embajadores`, `/mas/comunidades`,
+  `/mas/voluntarios`) más el índice `/mas`. Solo el Hub ya son cuatro bloques
+  más el Student Demo Day: como sección de una página única quedaba un scroll
+  interminable, y `/comunidad#student-hub` no es un link que alguien mande por
+  WhatsApp. Deja lugar además para `/mas/sponsors` y `/mas/faq`, que el mapa
+  visual del PDF cuelga del mismo nodo.
+- **`/comunidad` se eliminó**: su contenido se repartió entre Hub, Embajadores
+  y Comunidades. El link viejo va a **308 → `/mas`** desde `next.config.ts`
+  (los anchors no llegan al servidor, así que no se pueden redirigir de a uno).
+  Los accesos rápidos de la home apuntan ahora a `/mas/hub` y `/mas/comunidades`.
+- **Navbar con dropdown `MÁS ▾`** (`components/home/Navbar.tsx`). El panel
+  arranca pegado al botón con `padding-top`, no `margin`: un hueco entre ambos
+  cierra el menú antes de que se llegue a clickear. Abre por hover **y** por
+  click, porque en touch no hay hover. En mobile los cuatro items van
+  desplegados como grupo, no detrás de otro tap.
+- **`components/mas/ui.tsx`** centraliza lo que antes estaba copiado en cada
+  sección de `/comunidad`: `MasSection` (fondo parallax + degradé + contenedor),
+  `CopyCard`, `InlineCta`, `Chips`, `FeatureGrid`, `LogoPlaceholderGrid`,
+  títulos. Son cinco páginas: repetir el markup por sección no escalaba.
+- **Solo el hero de cada página es `tall` (100vh).** El patrón "1:1 screen" de
+  la home no aplica acá: estos bloques son cortos y forzar pantalla completa en
+  cada uno deja huecos enormes.
+- Las decoraciones 3D van por la prop `decoration` de `MasSection`, que las
+  monta como hijas de la `<section>` y no del bloque de texto — el astronauta
+  de Voluntarios, puesto adentro, se montaba encima del párrafo.
+- **`components/mas/MasNav.tsx`** — tira de cross-links al pie con los otros
+  tres items. Va abajo y no como tabs fijas arriba: el navbar ya es `fixed` y
+  una segunda barra fija le come media pantalla al mobile.
+- **Los CTA sin formulario se dibujan apagados**, no linkeando a `#`.
+  `lib/mas/links.ts` tiene el mapa de destinos: `null` = pendiente de la
+  organización. Un botón muerto que parece activo es peor que uno que dice
+  "formulario a confirmar".
+- **Las categorías de Comunidades son etiquetas, no filtros.** El PDF pide
+  filtros, pero no hay ni una comunidad cargada: un filtro que no filtra es una
+  promesa vacía. Cuando llegue el listado se convierten en filtro real (mismo
+  criterio que `/agenda`).
+- **El título del Hub va como texto, no como el PNG existente**: el asset
+  `titulos/student-hub-*-trim.png` dice "HUB DE ESTUDIANTES" y el PDF fija
+  **"THE UNIVERSITY HUB"** como nombre de marca. Falta el PNG nuevo. Voluntarios
+  y el índice `/mas` tampoco tienen asset de título.
+
+### Pendientes de MÁS (material del cliente)
+
+- **Formularios**: Hub ("Quiero sumarme"), postular universidad, Student Demo
+  Day y voluntarios. Embajadores y Comunidades ya tienen su `forms.gle`.
+- **Embajadores**: foto, nombre y "universo HODL" de los 6. Hoy las fichas son
+  los íconos placeholder con el sello "Próximamente".
+- **Logos**: universidades asociadas y comunidades asociadas (grillas punteadas).
+- **Voluntarios**: los cuatro roles del listado son una propuesta a validar con
+  la organización; el PDF no los enumera.
+- **Títulos PNG**: "The University Hub" (nombre nuevo), "Voluntarios" y "Más".
+- Del mapa visual del PDF faltan además **Sponsors**, **FAQ** y **Postulate
+  como speaker** como páginas de MÁS (etapa 07).
 
 ## Agenda (`/agenda`) — decisiones tomadas
 

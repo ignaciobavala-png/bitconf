@@ -231,8 +231,8 @@ const QUICK_ACCESS = [
   { key: "ticket", action: "checkout" as const, href: undefined },
   { key: "agenda", action: "link" as const, href: "/agenda" },
   { key: "speakers", action: "link" as const, href: "/speakers" },
-  { key: "hub", action: "link" as const, href: "/comunidad#student-hub" },
-  { key: "comunidades", action: "link" as const, href: "/comunidad#comunidades" },
+  { key: "hub", action: "link" as const, href: "/mas/hub" },
+  { key: "comunidades", action: "link" as const, href: "/mas/comunidades" },
   { key: "bi", action: "bi" as const, href: undefined },
 ] as const;
 
@@ -1272,7 +1272,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer compartido con /comunidad */}
+      {/* Footer compartido con /mas */}
       <Footer lang={lang} />
 
       <QaChatWidget />
