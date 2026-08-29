@@ -3,20 +3,27 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
+import BiFace from "./BiFace";
+import BiText from "./BiText";
 
 const T = {
   es: {
-    title: "Preguntas frecuentes",
+    title: "Bi",
+    subtitle: "Asistente de LABITCONF",
     placeholder: "Escribí tu pregunta...",
     send: "Enviar",
     empty: "Preguntame sobre tickets, agenda, el venue o los programas de LABITCONF.",
+    open: "Chateá con Bi",
   },
   en: {
-    title: "Frequently asked questions",
+    title: "Bi",
+    subtitle: "LABITCONF assistant",
     placeholder: "Type your question...",
     send: "Send",
     empty: "Ask me about tickets, agenda, the venue or LABITCONF's programs.",
+    open: "Chat with Bi",
   },
 } as const;
 
@@ -36,6 +43,7 @@ export default function QaChatWidget() {
     transport: new DefaultChatTransport({ api: "/api/qa-chat" }),
   });
   const scrollRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -53,6 +61,10 @@ export default function QaChatWidget() {
   }, []);
 
   const isStreaming = status === "streaming" || status === "submitted";
+
+  // Llama la atención solo hasta el primer contacto: si la persona ya escribió,
+  // el halo y el vaivén pasan de invitación a molestia.
+  const attract = !open && messages.length === 0 && !reduced;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -81,16 +93,38 @@ export default function QaChatWidget() {
             className="flex items-center justify-between px-4 py-3"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 900,
-                fontSize: "13px",
-                color: "#ABF760",
-                textTransform: "uppercase",
-              }}
-            >
-              {t.title}
+            <span className="flex items-center gap-2.5">
+              <span
+                className="flex items-center justify-center rounded-full"
+                style={{ width: 30, height: 30, background: "#ABF760", flexShrink: 0 }}
+              >
+                <BiFace size={22} state={isStreaming ? "thinking" : "idle"} />
+              </span>
+              <span className="flex flex-col">
+                <span
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 900,
+                    fontSize: "13px",
+                    color: "#ABF760",
+                    textTransform: "uppercase",
+                    lineHeight: 1.1,
+                  }}
+                >
+                  {t.title}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 300,
+                    fontSize: "10px",
+                    color: "#6b6e73",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {t.subtitle}
+                </span>
+              </span>
             </span>
             <button
               onClick={() => setOpen(false)}
@@ -130,7 +164,17 @@ export default function QaChatWidget() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {m.parts.map((p, i) => (p.type === "text" ? <span key={i}>{p.text}</span> : null))}
+                {m.parts.map((p, i) =>
+                  p.type === "text" ? (
+                    m.role === "user" ? (
+                      <span key={i}>{p.text}</span>
+                    ) : (
+                      // Lo que escribe el modelo viene con markdown; el de la
+                      // persona se muestra literal, tal cual lo tipeó.
+                      <BiText key={i} text={p.text} />
+                    )
+                  ) : null
+                )}
               </div>
             ))}
           </div>
@@ -170,25 +214,31 @@ export default function QaChatWidget() {
         </div>
       )}
 
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-105"
-        style={{
-          zIndex: 6,
-          bottom: "28px",
-          right: "28px",
-          width: "56px",
-          height: "56px",
-          background: "#ABF760",
-          color: "#171616",
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 900,
-          fontSize: "12px",
-        }}
-        aria-label="Q&A"
-      >
-        Q&A
-      </button>
+      <div className="fixed flex items-center gap-3" style={{ zIndex: 6, bottom: "24px", right: "24px" }}>
+        <motion.button
+          onClick={() => setOpen((o) => !o)}
+          className="relative flex items-center justify-center rounded-full"
+          style={{ width: "60px", height: "60px", background: "#ABF760" }}
+          aria-label={t.open}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.96 }}
+          // El movimiento vive mientras nadie le habló todavía: una vez que la
+          // persona escribe, el botón deja de pedir atención.
+          animate={attract ? { rotate: [0, -7, 6, -3, 0] } : { rotate: 0 }}
+          transition={{ duration: 0.9, repeat: attract ? Infinity : 0, repeatDelay: 5.5, ease: "easeInOut" }}
+        >
+          {attract && (
+            <motion.span
+              aria-hidden
+              className="absolute inset-0 rounded-full"
+              style={{ border: "2px solid #ABF760" }}
+              animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+            />
+          )}
+          <BiFace size={40} state={isStreaming ? "thinking" : "idle"} />
+        </motion.button>
+      </div>
     </>
   );
 }
