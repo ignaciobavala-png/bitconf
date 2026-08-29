@@ -12,8 +12,9 @@ const labelStyle: React.CSSProperties = {
 const T = {
   es: {
     title: "Agenda",
-    lede: "Dos días, siete escenarios. Elegí el día y mirá qué pasa en cada uno.",
-    count: (n: number) => `${n} charlas confirmadas hasta ahora`,
+    lede:
+      "Cuatro jornadas, del jueves 29 al domingo 1. Elegí el día y mirá qué pasa en cada escenario.",
+    count: (n: number) => `${n} charlas confirmadas en los dos días de conferencia`,
     // Se dice una vez acá arriba y no en cada tarjeta: repetir "horario a
     // confirmar" 31 veces convierte el dato en ruido y ensucia la lectura.
     noticeTitle: "Los horarios todavía no están confirmados",
@@ -22,8 +23,9 @@ const T = {
   },
   en: {
     title: "Agenda",
-    lede: "Two days, seven stages. Pick a day and see what happens on each one.",
-    count: (n: number) => `${n} confirmed talks so far`,
+    lede:
+      "Four days, from Thursday the 29th to Sunday the 1st. Pick a day and see what happens on each stage.",
+    count: (n: number) => `${n} confirmed talks across the two conference days`,
     noticeTitle: "Start times are not confirmed yet",
     noticeBody:
       "The organizers have set the day and stage for each talk, but not the start time. As soon as they confirm it, this page will show the full schedule.",

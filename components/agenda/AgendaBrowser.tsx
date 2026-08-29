@@ -1,12 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
 import { CANONICAL_TAGS, TAG_LABELS, type CanonicalTag } from "@/lib/speakers/tags";
-import { DAYS, DAY_SHORT, compareStages, stageLabel, type Day } from "@/lib/speakers/schedule";
+import {
+  DAYS,
+  DAY_SHORT,
+  HODLWEEN,
+  PROGRAM,
+  PROGRAM_DAYS,
+  compareStages,
+  stageLabel,
+  type ProgramDay,
+} from "@/lib/speakers/schedule";
 import AgendaToggle from "./AgendaToggle";
 import type { AgendaTalk } from "@/lib/speakers/queries";
 
@@ -31,7 +40,13 @@ const T = {
     panel: "Panel",
     empty: "No hay charlas confirmadas con ese criterio todavía.",
     clear: "Limpiar filtros",
+    search: "Buscar charla, speaker o tema",
+    clearSearch: "Borrar búsqueda",
+    otherDay: (n: number, d: string) =>
+      `${n} ${n === 1 ? "coincidencia" : "coincidencias"} el ${d}`,
     count: (n: number) => `${n} ${n === 1 ? "charla" : "charlas"}`,
+    countIn: (n: number, s: number) =>
+      `${n} ${n === 1 ? "charla" : "charlas"} en ${s} ${s === 1 ? "escenario" : "escenarios"}`,
     talksIn: (n: number) => `${n} ${n === 1 ? "charla" : "charlas"}`,
     level: { general: "General", intermedio: "Intermedio", avanzado: "Avanzado", todos: "Todos los niveles" } as Record<string, string>,
   },
@@ -43,7 +58,12 @@ const T = {
     panel: "Panel",
     empty: "No confirmed talks match that filter yet.",
     clear: "Clear filters",
+    search: "Search talk, speaker or topic",
+    clearSearch: "Clear search",
+    otherDay: (n: number, d: string) => `${n} ${n === 1 ? "match" : "matches"} on ${d}`,
     count: (n: number) => `${n} ${n === 1 ? "talk" : "talks"}`,
+    countIn: (n: number, s: number) =>
+      `${n} ${n === 1 ? "talk" : "talks"} across ${s} ${s === 1 ? "stage" : "stages"}`,
     talksIn: (n: number) => `${n} ${n === 1 ? "talk" : "talks"}`,
     level: { general: "General", intermedio: "Intermediate", avanzado: "Advanced", todos: "All levels" } as Record<string, string>,
   },
@@ -72,6 +92,70 @@ const FILTER_ROW =
   "flex gap-2 sm:gap-3 overflow-x-auto sm:overflow-visible sm:flex-wrap " +
   "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
+/**
+ * Sin acentos y en minúsculas: nadie escribe "Regulación" con tilde en un
+ * buscador, y la mitad de los títulos de la planilla vienen en mayúsculas.
+ */
+function norm(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+/** Un solo texto por charla, armado una vez y reusado en cada tecla. */
+function haystack(k: AgendaTalk, lang: "es" | "en"): string {
+  return norm(
+    [
+      k.title,
+      k.abstract ?? "",
+      k.speaker?.name ?? "",
+      stageLabel(k.stage, lang),
+      ...k.tags.map((c) => TAG_LABELS[c][lang]),
+    ].join(" ")
+  );
+}
+
+/**
+ * La tira de filtros en mobile se desliza, pero un chip cortado justo en el
+ * borde no se lee como "hay más": se lee como que eso es todo. El degradé
+ * aparece solo cuando queda algo a la derecha, así una fila que entra completa
+ * (los dos tabs de día) no se ve recortada de gusto.
+ */
+function ScrollRow({ className, children }: { className?: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [more, setMore] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => setMore(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", check);
+      ro.disconnect();
+    };
+  }, [children]);
+
+  return (
+    <div className={`relative ${className ?? ""}`}>
+      <div ref={ref} className={FILTER_ROW}>
+        {children}
+      </div>
+      {more && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0"
+          style={{ width: 56, background: "linear-gradient(to right, rgba(23,22,22,0), #171616)" }}
+        />
+      )}
+    </div>
+  );
+}
+
 function chipStyle(on: boolean, accent: string): React.CSSProperties {
   return {
     ...CHIP_BASE,
@@ -92,9 +176,26 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     () => DAYS.filter((d) => talks.some((k) => k.day === d)),
     [talks]
   );
-  const [day, setDay] = useState<Day>(daysWithContent[0] ?? DAYS[0]);
+  const [day, setDay] = useState<ProgramDay>(daysWithContent[0] ?? DAYS[0]);
+
+  // El jueves y el domingo no tienen escenarios: son jornadas de programa
+  // propio (Open Fest y Closing Day), y la planilla ni siquiera puede
+  // referenciarlas. Cuando el día elegido es uno de esos, la página muestra
+  // el programa en vez de filtros que no filtrarían nada.
+  const dayInfo = PROGRAM[day];
   const [stage, setStage] = useState<string | null>(null);
   const [tag, setTag] = useState<CanonicalTag | null>(null);
+  const [query, setQuery] = useState("");
+
+  const needle = norm(query.trim());
+
+  // El índice se arma una vez por idioma, no en cada tecla: son 31 charlas hoy,
+  // pero la búsqueda corre en cada keystroke y el abstract es largo.
+  const index = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const k of talks) map.set(k.id, haystack(k, lang));
+    return map;
+  }, [talks, lang]);
 
   const ofDay = useMemo(() => talks.filter((k) => k.day === day), [talks, day]);
 
@@ -115,10 +216,23 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
       ofDay.filter((k) => {
         if (stage && k.stage !== stage) return false;
         if (tag && !k.tags.includes(tag)) return false;
+        if (needle && !(index.get(k.id) ?? "").includes(needle)) return false;
         return true;
       }),
-    [ofDay, stage, tag]
+    [ofDay, stage, tag, needle, index]
   );
+
+  // Buscar un speaker sin saber qué día habla es lo normal. En vez de mostrar
+  // "no hay nada" cuando el match está en el otro día, se avisa y se ofrece
+  // saltar — el filtro sigue siendo por día, que es como está pensada la página.
+  const otherDayHits = useMemo(() => {
+    const other = daysWithContent.find((d) => d !== day);
+    if (!needle || !other) return null;
+    const n = talks.filter(
+      (k) => k.day === other && (index.get(k.id) ?? "").includes(needle)
+    ).length;
+    return n > 0 ? { day: other, n } : null;
+  }, [needle, day, daysWithContent, talks, index]);
 
   // Agrupado por escenario: sin hora de inicio no hay eje temporal contra el
   // cual alinear filas, así que cada escenario es una columna con su programa.
@@ -136,16 +250,17 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
 
   // Si el día que estaba elegido se queda sin escenario seleccionado válido
   // (pasa al cambiar de día con un filtro puesto), se suelta el filtro.
-  function selectDay(next: Day) {
+  function selectDay(next: ProgramDay) {
     setDay(next);
     setStage(null);
   }
 
   return (
     <div className="w-full">
-      {/* Días — son dos, así que van como tabs y no como selector */}
-      <div className={FILTER_ROW}>
-        {daysWithContent.map((d) => {
+      {/* Las cuatro jornadas del programa, no solo las dos con charlas: el
+          jueves y el domingo son parte de la agenda aunque no tengan grilla. */}
+      <ScrollRow>
+        {PROGRAM_DAYS.map((d) => {
           const on = d === day;
           return (
             <button
@@ -168,10 +283,65 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
             </button>
           );
         })}
+      </ScrollRow>
+
+      {/* Horario y acceso de la jornada elegida: cambian día a día (el jueves
+          y el domingo son solo Experience) y contestan la primera pregunta. */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
+          {dayInfo.tag[lang]}
+        </span>
+        <span style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
+          {dayInfo.hours[lang]}
+        </span>
+        <span style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
+          {dayInfo.access[lang]}
+        </span>
+      </div>
+
+      {dayInfo.program ? (
+        <ProgramDayBlock info={dayInfo.program} lang={lang} />
+      ) : (
+      <>
+      {/* Buscador — pill, misma familia visual que los chips */}
+      <div
+        className="mt-6 flex items-center gap-3 rounded-full"
+        style={{
+          maxWidth: 420,
+          padding: "11px 18px",
+          border: `1px solid ${needle ? "#ABF760" : "rgba(230,238,242,0.18)"}`,
+          background: "rgba(255,255,255,0.02)",
+          transition: "border-color 200ms",
+        }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0 }}>
+          <circle cx="11" cy="11" r="7" stroke={needle ? "#ABF760" : "#A5A8B1"} strokeWidth="2" />
+          <path d="M16.5 16.5L21 21" stroke={needle ? "#ABF760" : "#A5A8B1"} strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t.search}
+          aria-label={t.search}
+          className="w-full bg-transparent outline-none placeholder:text-[#A5A8B1] [&::-webkit-search-cancel-button]:hidden"
+          style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.2vw, 15px)" }}
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            aria-label={t.clearSearch}
+            className="transition-opacity duration-200 hover:opacity-70"
+            style={{ ...labelStyle, color: "#A5A8B1", fontSize: 14, lineHeight: 1, flexShrink: 0 }}
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {/* Escenarios */}
-      <div className={`mt-6 ${FILTER_ROW}`}>
+      <ScrollRow className="mt-6">
         <button
           type="button"
           onClick={() => setStage(null)}
@@ -191,11 +361,11 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
             {stageLabel(s, lang)}
           </button>
         ))}
-      </div>
+      </ScrollRow>
 
       {/* Temas */}
       {tagsOfDay.length > 0 && (
-        <div className={`mt-3 ${FILTER_ROW}`}>
+        <ScrollRow className="mt-3">
           <button
             type="button"
             onClick={() => setTag(null)}
@@ -215,12 +385,29 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
               {TAG_LABELS[c][lang]}
             </button>
           ))}
-        </div>
+        </ScrollRow>
       )}
 
       <p className="mt-6" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-        {t.count(filtered.length)}
+        {stage ? t.count(filtered.length) : t.countIn(filtered.length, columns.length)}
       </p>
+
+      {otherDayHits && (
+        <button
+          type="button"
+          onClick={() => selectDay(otherDayHits.day)}
+          className="mt-2 rounded-full transition-opacity duration-200 hover:opacity-80"
+          style={{
+            ...labelStyle,
+            color: "#FFAB0B",
+            fontSize: "clamp(10px, 1vw, 12px)",
+            border: "1px solid rgba(255,171,11,0.4)",
+            padding: "8px 16px",
+          }}
+        >
+          {t.otherDay(otherDayHits.n, DAY_SHORT[otherDayHits.day][lang])} →
+        </button>
+      )}
 
       {filtered.length === 0 ? (
         <div className="mt-10 flex flex-col items-start gap-4">
@@ -230,6 +417,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
             onClick={() => {
               setStage(null);
               setTag(null);
+              setQuery("");
             }}
             className="rounded-full transition-opacity duration-200 hover:opacity-80"
             style={{ ...labelStyle, color: "#171616", background: "#ABF760", fontSize: "clamp(11px, 1.05vw, 13px)", padding: "11px 22px" }}
@@ -268,7 +456,98 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
           ))}
         </div>
       )}
+
+      {day === HODLWEEN.day && <HodlweenBlock lang={lang} />}
+      </>
+      )}
     </div>
+  );
+}
+
+/**
+ * Jornada sin grilla: el jueves y el domingo. No hay escenarios que elegir, así
+ * que en vez de filtros vacíos se muestra qué pasa ese día.
+ */
+function ProgramDayBlock({
+  info,
+  lang,
+}: {
+  info: NonNullable<(typeof PROGRAM)[ProgramDay]["program"]>;
+  lang: "es" | "en";
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="mt-8 rounded-2xl"
+      style={{
+        border: "1px solid rgba(230,238,242,0.14)",
+        background: "rgba(255,255,255,0.02)",
+        padding: "26px 28px",
+        maxWidth: "62ch",
+      }}
+    >
+      <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(16px, 1.9vw, 24px)", lineHeight: 1.2 }}>
+        {info.title[lang]}
+      </h2>
+      <p
+        className="mt-3"
+        style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6 }}
+      >
+        {info.lead[lang]}
+      </p>
+      <ul className="mt-6 flex flex-col gap-3">
+        {info.items.map((it) => (
+          <li key={it.en} className="flex items-baseline gap-3">
+            <span aria-hidden style={{ color: "#FF4E01", fontSize: 11, flexShrink: 0 }}>
+              ●
+            </span>
+            <span style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.2vw, 15px)", lineHeight: 1.5 }}>
+              {it[lang]}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </motion.section>
+  );
+}
+
+/** Evento transversal del sábado: va al pie del día, fuera de los escenarios. */
+function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="mt-10 rounded-2xl"
+      style={{
+        border: "1px solid rgba(255,78,1,0.45)",
+        background: "rgba(255,78,1,0.06)",
+        padding: "24px 26px",
+      }}
+    >
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+        <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
+          {HODLWEEN.tag[lang]}
+        </span>
+        <span style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
+          {HODLWEEN.hours[lang]}
+        </span>
+      </div>
+      <h2
+        className="mt-3"
+        style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(20px, 2.6vw, 34px)", lineHeight: 1.1 }}
+      >
+        {HODLWEEN.title[lang]}
+      </h2>
+      <p
+        className="mt-3"
+        style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6, maxWidth: "52ch" }}
+      >
+        {HODLWEEN.lead[lang]}
+      </p>
+    </motion.section>
   );
 }
 
