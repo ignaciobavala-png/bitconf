@@ -177,18 +177,28 @@ function ScrollRow({ className, children }: { className?: string; children: Reac
 const noSubscribe = () => () => {};
 
 /**
- * `?demo=1` — ver lib/speakers/demo.ts.
+ * Si se permiten los horarios de ejemplo (ver lib/speakers/demo.ts).
+ *
+ * Están permitidos POR DEFECTO: mientras la planilla no traiga la hora de
+ * inicio, es la única forma de ver la grilla, y el cliente pidió tenerla a la
+ * vista en `/agenda` desde ya. `?demo=0` los apaga, para poder mirar el estado
+ * real de los datos.
+ *
+ * No alcanza con este permiso para que se usen: solo entran si además faltan
+ * horarios reales — ver `usingSample` más abajo.
  *
  * Va por `useSyncExternalStore` y no por `useState` + efecto: el servidor
- * renderiza sin la flag y el cliente la lee del navegador, que es exactamente
+ * renderiza sin la query y el cliente la lee del navegador, que es exactamente
  * el caso para el que existe este hook. Con un efecto, React avisa (con razón)
  * de la cascada de renders.
  */
-function useDemoFlag(): boolean {
+function useSampleTimesAllowed(): boolean {
   return useSyncExternalStore(
     noSubscribe,
-    () => new URLSearchParams(window.location.search).get("demo") === "1",
-    () => false
+    () => new URLSearchParams(window.location.search).get("demo") !== "0",
+    // En el servidor se asume que sí: es el caso de hoy, y así el HTML
+    // prerenderizado coincide con lo que el cliente va a dibujar.
+    () => true
   );
 }
 
@@ -242,7 +252,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
   const [tag, setTag] = useState<CanonicalTag | null>(null);
   const [query, setQuery] = useState("");
 
-  const demo = useDemoFlag();
+  const sampleAllowed = useSampleTimesAllowed();
   const wideScreen = useWideScreen();
   const [view, setView] = useState<"grid" | "list">("grid");
 
@@ -307,18 +317,26 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     return Array.from(by.entries()).sort((a, b) => compareStages(a[0], b[0]));
   }, [filtered]);
 
-  // Hora de arranque de cada charla: la real de la planilla, o la de ejemplo
-  // cuando se pidió la demo. Si una charla no aparece en este mapa, es que no
-  // tiene horario y no se puede ubicar en la grilla.
-  const startTimes = useMemo(() => {
-    if (demo && isDay(day)) return demoStartTimes(talks, day);
+  /** Los horarios que sí vienen de la planilla. Hoy: ninguno. */
+  const realTimes = useMemo(() => {
     const map = new Map<string, number>();
     for (const k of talks) {
       const m = k.startsAt ? eventMinutes(k.startsAt) : null;
       if (m != null) map.set(k.id, m);
     }
     return map;
-  }, [talks, demo, day]);
+  }, [talks]);
+
+  // Los de ejemplo se usan SOLO mientras falte algún horario real del día. El
+  // día que la organización los cargue, esta condición se apaga sola y la
+  // grilla pasa al cronograma verdadero sin tocar una línea de código.
+  const usingSample =
+    sampleAllowed && isDay(day) && ofDay.some((k) => !realTimes.has(k.id));
+
+  const startTimes = useMemo(
+    () => (usingSample && isDay(day) ? demoStartTimes(talks, day) : realTimes),
+    [usingSample, day, talks, realTimes]
+  );
 
   const scheduled = useMemo<[string, ScheduledTalk[]][]>(
     () =>
@@ -518,7 +536,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
 
       {/* Los horarios de la demo son inventados: el cartel va pegado a la
           grilla, no en el header, para que no se lea salteado. */}
-      {demo && showGrid && (
+      {usingSample && showGrid && (
         <div
           className="mt-4 rounded-xl"
           style={{
