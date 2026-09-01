@@ -154,3 +154,84 @@ export const HODLWEEN = {
     en: "Saturday's closing party, with a performance show and DJ.",
   },
 } as const;
+
+// ---------------------------------------------------------------------------
+// Cronograma: ventana horaria, color por escenario y utilidades de tiempo
+// ---------------------------------------------------------------------------
+
+/**
+ * El evento es presencial en Costa Salguero: la hora es la de Buenos Aires
+ * para todo el mundo. Se fija acá y no se usa la del navegador — alguien que
+ * abre la agenda desde Madrid tiene que leer el horario del evento, no el
+ * suyo. (Nerdearla sí ofrece selector de zona porque es híbrido con streaming;
+ * nosotros no.)
+ */
+export const EVENT_TZ = "America/Argentina/Buenos_Aires";
+
+/** Ventana de la jornada, en minutos desde medianoche. Es el alto de la grilla. */
+export type DayWindow = { opens: number; closes: number };
+
+/**
+ * De 09:30 a 18:00 según `PROGRAM`. Se guarda en minutos y no como texto
+ * porque acá el dato se usa para calcular píxeles, no para mostrar.
+ */
+export const DAY_WINDOW: Record<Day, DayWindow> = {
+  oct30: { opens: 9 * 60 + 30, closes: 18 * 60 },
+  oct31: { opens: 9 * 60 + 30, closes: 18 * 60 },
+};
+
+/**
+ * Color de cada escenario.
+ *
+ * La paleta oficial tiene 6 colores, pero Alamo `#171616` es el fondo: como
+ * acento quedan 5, y los escenarios son 7. Por eso la segunda vuelta reusa los
+ * mismos hex mezclados con el fondo al 60% — sigue siendo el color de la
+ * paleta, más apagado, no un color nuevo.
+ *
+ * El orden pone primero los más legibles sobre fondo oscuro. Electric Ekko es
+ * el más flojo de los cinco, así que va último de los plenos.
+ */
+const STAGE_ACCENTS = [
+  "#FF4E01", // Orange 021 C
+  "#ABF760", // Brote
+  "#FFAB0B", // Almico
+  "#E6EEF2", // Lactica
+  "#1311FC", // Electric Ekko
+  "#A23809", // Orange 021 C al 60% sobre Alamo
+  "#709D42", // Brote al 60% sobre Alamo
+  "#9A6A0A", // Almico al 60% sobre Alamo
+] as const;
+
+/**
+ * Determinista por número de escenario, no por orden de aparición: si un día
+ * no tiene s4, el s6 no se corre de color. Que el escenario 6 sea siempre del
+ * mismo color en los dos días es lo que hace que el color sirva para ubicarse.
+ */
+export function stageColor(stage: string): string {
+  const n = Number(stage.replace(/^s/i, ""));
+  if (!Number.isFinite(n) || n < 1) return STAGE_ACCENTS[0];
+  return STAGE_ACCENTS[(n - 1) % STAGE_ACCENTS.length];
+}
+
+/** Minutos desde medianoche de un instante ISO, leído en la hora del evento. */
+export function eventMinutes(iso: string): number | null {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: EVENT_TZ,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(d);
+  const h = Number(parts.find((p) => p.type === "hour")?.value);
+  const m = Number(parts.find((p) => p.type === "minute")?.value);
+  if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+  return h * 60 + m;
+}
+
+/** 570 → "09:30". Sin AM/PM: en Argentina nadie lee la agenda en 12 horas. */
+export function formatMinutes(min: number): string {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}

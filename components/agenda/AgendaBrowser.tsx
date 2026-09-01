@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,10 +13,15 @@ import {
   PROGRAM,
   PROGRAM_DAYS,
   compareStages,
+  eventMinutes,
+  isDay,
   stageLabel,
+  type Day,
   type ProgramDay,
 } from "@/lib/speakers/schedule";
+import { demoStartTimes } from "@/lib/speakers/demo";
 import AgendaToggle from "./AgendaToggle";
+import ScheduleGrid, { type ScheduledTalk } from "./ScheduleGrid";
 import type { AgendaTalk } from "@/lib/speakers/queries";
 
 const labelStyle: React.CSSProperties = {
@@ -42,6 +47,12 @@ const T = {
     clear: "Limpiar filtros",
     search: "Buscar charla, speaker o tema",
     clearSearch: "Borrar búsqueda",
+    grid: "Grilla",
+    list: "Lista",
+    gridOnDesktop: "La grilla horaria necesita pantalla ancha",
+    demoTitle: "Horarios de ejemplo",
+    demoBody:
+      "Esta grilla usa horarios inventados a partir de la duración de cada charla, solo para mostrar cómo se va a ver. La organización todavía no confirmó la hora de inicio.",
     otherDay: (n: number, d: string) =>
       `${n} ${n === 1 ? "coincidencia" : "coincidencias"} el ${d}`,
     count: (n: number) => `${n} ${n === 1 ? "charla" : "charlas"}`,
@@ -60,6 +71,12 @@ const T = {
     clear: "Clear filters",
     search: "Search talk, speaker or topic",
     clearSearch: "Clear search",
+    grid: "Grid",
+    list: "List",
+    gridOnDesktop: "The time grid needs a wider screen",
+    demoTitle: "Sample times",
+    demoBody:
+      "This grid uses made-up start times derived from each talk's duration, only to show how it will look. The organizers have not confirmed the real schedule yet.",
     otherDay: (n: number, d: string) => `${n} ${n === 1 ? "match" : "matches"} on ${d}`,
     count: (n: number) => `${n} ${n === 1 ? "talk" : "talks"}`,
     countIn: (n: number, s: number) =>
@@ -156,6 +173,44 @@ function ScrollRow({ className, children }: { className?: string; children: Reac
   );
 }
 
+/** La query no cambia sin navegar, así que no hay a qué suscribirse. */
+const noSubscribe = () => () => {};
+
+/**
+ * `?demo=1` — ver lib/speakers/demo.ts.
+ *
+ * Va por `useSyncExternalStore` y no por `useState` + efecto: el servidor
+ * renderiza sin la flag y el cliente la lee del navegador, que es exactamente
+ * el caso para el que existe este hook. Con un efecto, React avisa (con razón)
+ * de la cascada de renders.
+ */
+function useDemoFlag(): boolean {
+  return useSyncExternalStore(
+    noSubscribe,
+    () => new URLSearchParams(window.location.search).get("demo") === "1",
+    () => false
+  );
+}
+
+const WIDE_QUERY = "(min-width: 1024px)";
+
+/**
+ * Abajo de 1024 la vista es siempre la lista: con siete escenarios cada
+ * columna quedaría en ~45px. En el servidor devuelve `false` para que el HTML
+ * prerenderizado sea el de mobile, que es el que nunca depende de la grilla.
+ */
+function useWideScreen(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(WIDE_QUERY);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(WIDE_QUERY).matches,
+    () => false
+  );
+}
+
 function chipStyle(on: boolean, accent: string): React.CSSProperties {
   return {
     ...CHIP_BASE,
@@ -186,6 +241,10 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
   const [stage, setStage] = useState<string | null>(null);
   const [tag, setTag] = useState<CanonicalTag | null>(null);
   const [query, setQuery] = useState("");
+
+  const demo = useDemoFlag();
+  const wideScreen = useWideScreen();
+  const [view, setView] = useState<"grid" | "list">("grid");
 
   const needle = norm(query.trim());
 
@@ -247,6 +306,40 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     }
     return Array.from(by.entries()).sort((a, b) => compareStages(a[0], b[0]));
   }, [filtered]);
+
+  // Hora de arranque de cada charla: la real de la planilla, o la de ejemplo
+  // cuando se pidió la demo. Si una charla no aparece en este mapa, es que no
+  // tiene horario y no se puede ubicar en la grilla.
+  const startTimes = useMemo(() => {
+    if (demo && isDay(day)) return demoStartTimes(talks, day);
+    const map = new Map<string, number>();
+    for (const k of talks) {
+      const m = k.startsAt ? eventMinutes(k.startsAt) : null;
+      if (m != null) map.set(k.id, m);
+    }
+    return map;
+  }, [talks, demo, day]);
+
+  const scheduled = useMemo<[string, ScheduledTalk[]][]>(
+    () =>
+      columns.map(([s, list]) => [
+        s,
+        list
+          .filter((k) => startTimes.has(k.id))
+          .map((k) => ({ ...k, startMin: startTimes.get(k.id) as number }))
+          .sort((a, b) => a.startMin - b.startMin),
+      ]),
+    [columns, startTimes]
+  );
+
+  // La grilla se ofrece solo si TODAS las charlas visibles tienen hora: una
+  // grilla a la que le faltan la mitad de las charlas esconde contenido sin
+  // avisar, que es peor que no tener grilla.
+  const hasSchedule =
+    filtered.length > 0 &&
+    scheduled.every(([, list], i) => list.length === columns[i][1].length);
+
+  const showGrid = hasSchedule && wideScreen && view === "grid" && isDay(day);
 
   // Si el día que estaba elegido se queda sin escenario seleccionado válido
   // (pasa al cambiar de día con un filtro puesto), se suelta el filtro.
@@ -388,9 +481,63 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
         </ScrollRow>
       )}
 
-      <p className="mt-6" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-        {stage ? t.count(filtered.length) : t.countIn(filtered.length, columns.length)}
-      </p>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <p style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
+          {stage ? t.count(filtered.length) : t.countIn(filtered.length, columns.length)}
+        </p>
+
+        {/* El toggle aparece solo cuando hay grilla que ofrecer. Mostrarlo
+            deshabilitado en mobile o sin horarios sería prometer una vista que
+            no existe. */}
+        {hasSchedule && wideScreen && (
+          <div
+            className="flex rounded-full"
+            style={{ border: "1px solid rgba(230,238,242,0.18)", padding: 3 }}
+          >
+            {(["grid", "list"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setView(v)}
+                aria-pressed={view === v}
+                className="rounded-full transition-colors duration-200"
+                style={{
+                  ...labelStyle,
+                  fontSize: "clamp(9px, 0.9vw, 11px)",
+                  padding: "7px 16px",
+                  color: view === v ? "#171616" : "#A5A8B1",
+                  background: view === v ? "#E6EEF2" : "transparent",
+                }}
+              >
+                {v === "grid" ? t.grid : t.list}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Los horarios de la demo son inventados: el cartel va pegado a la
+          grilla, no en el header, para que no se lea salteado. */}
+      {demo && showGrid && (
+        <div
+          className="mt-4 rounded-xl"
+          style={{
+            border: "1px solid rgba(255,171,11,0.45)",
+            background: "rgba(255,171,11,0.07)",
+            padding: "14px 18px",
+          }}
+        >
+          <p style={{ ...labelStyle, color: "#FFAB0B", fontSize: "clamp(10px, 1vw, 12px)" }}>
+            {t.demoTitle}
+          </p>
+          <p
+            className="mt-2"
+            style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.15vw, 14px)", lineHeight: 1.55, maxWidth: "64ch" }}
+          >
+            {t.demoBody}
+          </p>
+        </div>
+      )}
 
       {otherDayHits && (
         <button
@@ -424,6 +571,10 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
           >
             {t.clear}
           </button>
+        </div>
+      ) : showGrid ? (
+        <div className="mt-8">
+          <ScheduleGrid day={day as Day} columns={scheduled} lang={lang} />
         </div>
       ) : (
         <div

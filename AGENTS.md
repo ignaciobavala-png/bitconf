@@ -12,7 +12,7 @@
 | Cliente | LABITCONF |
 | Stack | Next.js 16.2.9 + React 19.2.4 + Supabase + Tailwind + Zustand + Framer Motion + AI SDK + TypeScript + Vercel |
 | Estado | activo |
-| Último commit | 2026-08-17 |
+| Último commit | 2026-08-29 |
 
 ## Perfil del desarrollador
 
@@ -216,6 +216,8 @@ Esto es un índice, no el contenido. Leer el archivo completo solo si la tarea a
   Siempre que un formulario React/Next.js tenga campos numéricos con decimales (dimensiones, peso, precios…
 - `columna-orden-empatada` — **Columna `orden` sin unicidad — cada consulta desempata distinto y "mover" no mueve**
   Cuando el cliente o el tester reporta que **el orden que ve en el admin no es el que se ve en el sitio**, o…
+- `sprites-por-cunas-costura-alfa` — **Partir una foto en sprites por cuñas sin que se vea la costura**
+  Cuando hace falta una secuencia de estados de un objeto (una flor con 5, 4, 3… pétalos; una torta a la que se…
 - `ruta-publica-sirve-bucket-entero` — **Archivo privado nuevo en un bucket que ya tenía ruta pública — la ruta vieja lo sirve**
   Cuando se agrega un **tipo de archivo nuevo** (comprobantes de pago, DNI, contratos, exports) a un…
 - `flag-de-seccion-en-fila-hija` — **Flag de sección puesto en la fila hija — el padre sale repetido**
@@ -266,6 +268,8 @@ Esto es un índice, no el contenido. Leer el archivo completo solo si la tarea a
   Cuando hay que responder "¿esto anda en teléfono?" y **no** está disponible la extensión de Claude in Chrome…
 - `overflow-clip-vs-hidden-scroll-horizontal` — **Scroll horizontal en mobile — overflow-x-clip vs overflow-hidden**
   Cuando en el teléfono **toda la página se mueve para los costados** y no se encuentra el culpable, o cuando…
+- `email-transicion-estado-flujo-etapas` — **Mails de transición de estado en flujos por etapas**
+  Cuando un flujo multi-etapa (inscripción, registro, aprobación) tiene que avisar por mail en cada cambio de…
 - `supabase-conexion-cli` — **Conectar Supabase CLI con PAT**
   El PAT de Supabase es **por cuenta**, no por proyecto. Un solo token sirve para todos los proyectos de la…
 - `supabase-embed-to-one-objeto` — **El embed to-one de PostgREST llega como objeto, no como array**
@@ -327,13 +331,16 @@ Estas no coinciden con el stack por tags, pero las skills de arriba las citan. S
 
 - `webhook-idempotencia-orden-registro` — **Webhooks de pago — registrar el evento DESPUÉS de aplicarlo, no antes**
   Al escribir el webhook de cualquier pasarela (Mercado Pago, Stripe, MODO) que tenga una tabla de eventos con…
-  _citada por `astro-checkorigin-content-type`_
+  _citada por `email-transicion-estado-flujo-etapas`_
 - `panel-admin-fetch-sin-res-ok` — **El panel que ignora `res.ok` convierte un error del backend en "el botón no hace nada**
   Al escribir o revisar cualquier panel de administración con `fetch` a mano (sin React Query / SWR), y sobre…
   _citada por `soft-delete-filtro-incompleto`_
 - `email-list-unsubscribe` — **List-Unsubscribe y baja en un click (RFC 8058)**
   Al armar cualquier envío masivo o de newsletter (Resend, SES, Postmark…), antes del primer envío real.…
   _citada por `react-email-resend`_
+- `logo-jpeg-fondo-plano-a-alfa` — **Logo en JPEG con fondo plano — sacarle el fondo sin romper el antialias**
+  Cuando el cliente o la diseñadora manda el logo **en JPEG** (o en un PNG sin transparencia) con un fondo…
+  _citada por `sprites-por-cunas-costura-alfa`_
 - `cloudflare-d1-migrations` — **Cloudflare D1 — Migraciones y patrones SQLite**
   Cualquier proyecto con Cloudflare D1 (SQLite) que necesite migraciones de schema, especialmente cambios que…
   _citada por `cloudflare-wrangler-deploy`_
@@ -346,6 +353,3 @@ Estas no coinciden con el stack por tags, pero las skills de arriba las citan. S
 - `cloudflare-email-routing-send-email` — **Cloudflare Email Routing + binding send_email (formulario de contacto sin servicio externo)**
   Cuando un dominio propio necesita recibir mail sin contratar casilla, o cuando un formulario de contacto…
   _citada por `landing-conversion-sin-framework`_
-- `mercadopago-checkout-descuentos` — **Mercado Pago Checkout Pro — descuentos por línea sin ítems negativos**
-  Cuando un checkout con Mercado Pago (Checkout Pro / preferences) tiene descuentos (por volumen, por código…
-  _citada por `mercadopago-webhooks-notification-url`_

@@ -245,6 +245,70 @@ con la misma RLS y el mismo `revalidate = 3600`. No hay modelo de datos nuevo.
   organización mande los nombres reales, se llena ese objeto y cambia en todo el
   sitio a la vez.
 
+### Grilla horaria (`ScheduleGrid`) — decisiones tomadas
+
+La organización pasó como referencia el schedule de **Nerdearla 2026** y pidió
+dos cosas: **todos los escenarios de izquierda a derecha en una misma pantalla**
+(sin scroll horizontal) y **el eje de horarios en la barra lateral izquierda,
+respetando la duración**.
+
+- **"Sin scroll" es horizontal, no vertical.** Con el eje respetando duración,
+  el alto lo fija la jornada: 09:30→18:00 son 510 min, y a una escala legible
+  la columna mide ~2040px. Meter eso en una pantalla daría bloques de 47px,
+  donde no entra ni el título.
+- `PX_PER_MIN = 4` — una charla de 30 min queda en 120px: entra el título en
+  dos líneas más el speaker. `MIN_CARD_H = 64` es un piso que con las
+  duraciones reales (mínimo 20 min = 80px) nunca se activa, así que **no puede
+  hacer que dos tarjetas se pisen**.
+- **La grilla sale del `max-w-6xl`** y va a `max-w-[1600px]` (solo ella; el
+  header se queda). Con 7 escenarios dentro de 1152px cada columna queda en
+  **145px** y no entra un título; a 1600px son ~209px.
+- **Se diseñó para 7 columnas, no 6.** El s5 no aparece en la planilla pero
+  existe: el día que carguen algo ahí no hay que rehacer el layout.
+- **Mobile no tiene grilla.** A 390px, siete columnas dan ~45px cada una. Abajo
+  de 1024 la vista es siempre la lista, igual que la referencia — que también
+  tiene el toggle **Grilla/Lista**, replicado acá.
+- El toggle **aparece solo cuando hay grilla que ofrecer**. Mostrarlo apagado
+  en mobile o sin horarios es prometer una vista que no existe.
+- **La grilla exige que TODAS las charlas visibles tengan hora** (`hasSchedule`).
+  Una grilla a la que le faltan la mitad de las charlas esconde contenido sin
+  avisar, que es peor que no tener grilla.
+- **Color por escenario, no por tema** (el mockup pinta por track). La paleta
+  tiene 6 colores pero Alamo es el fondo: como acento quedan **5** para 7
+  escenarios. La segunda vuelta de `STAGE_ACCENTS` reusa los mismos hex
+  mezclados con el fondo al 60% — es el mismo color más apagado, no uno nuevo.
+  `stageColor()` asigna por **número** de escenario, no por orden de aparición:
+  así el escenario 6 es del mismo color los dos días, que es lo que hace que el
+  color sirva para ubicarse.
+- **El fondo de la tarjeta es opaco (`#1D1C1C`)**, no `rgba(255,255,255,0.025)`:
+  con el translúcido, las líneas de media hora se veían **a través** de la
+  tarjeta y parecían cortarla. Es el mismo valor resuelto a sólido.
+- **Qué entra en la tarjeta se mide, no se estima**: se descuentan padding,
+  franja de hora y márgenes, y lo que sobra se reparte en líneas de título
+  (`WebkitLineClamp`). Con umbrales al ojo, en un bloque de 30 min el título a
+  tres líneas empujaba el nombre del speaker fuera del borde.
+- `EVENT_TZ` fija la hora en Buenos Aires y **no se usa la del navegador**:
+  quien abre la agenda desde Madrid tiene que leer el horario del evento. (La
+  referencia sí tiene selector de zona porque es híbrida con streaming.)
+
+### `?demo=1` — horarios de ejemplo
+
+`lib/speakers/demo.ts` encadena las charlas de cada escenario desde la apertura
+usando la duración real. **No entra a la página pública**: se activa solo con
+`?demo=1`, se calcula en el browser, nunca toca la base, y la vista muestra un
+cartel ámbar avisando que los horarios son inventados.
+
+Existe porque sin él la grilla no se puede ni probar ni mostrar, y porque sirve
+para llevarle a la organización una demo funcionando **a la misma reunión donde
+se les pide el horario real**.
+
+**Lo que la demo dejó a la vista**: con las 24 charlas del viernes encadenadas,
+el día se termina a las 14:00 y **de 14:00 a 18:00 la grilla queda vacía**.
+Ocupación real sobre los 510 min de jornada: escenario 1 → 210 min (59% vacío),
+escenario 4 → 80 min (84%), sábado escenario 1 → 30 min (94%). La vista de
+columnas disimulaba eso; la grilla lo expone. Es el mejor argumento para pedir
+los horarios y el resto del programa.
+
 ### Pendientes de la agenda
 
 - **Hora de inicio** — es el bloqueo principal. Sin eso no hay cronograma.

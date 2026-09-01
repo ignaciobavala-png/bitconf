@@ -28,9 +28,13 @@ export default async function AgendaPage() {
       <section className="relative px-6 sm:px-10 pt-32 sm:pt-40 pb-20 sm:pb-28">
         <div className="relative w-full max-w-6xl">
           <AgendaHeader total={talks.length} />
-          <div className="mt-10 sm:mt-14">
-            <AgendaBrowser talks={talks} />
-          </div>
+        </div>
+
+        {/* La grilla sale del `max-w-6xl` del header: con 7 escenarios, dentro
+            de 1152px cada columna queda en 145px y no entra el título. A
+            1600px son ~209px, que es el ancho de la referencia del cliente. */}
+        <div className="relative mt-10 sm:mt-14 w-full max-w-[1600px]">
+          <AgendaBrowser talks={talks} />
         </div>
       </section>
 
