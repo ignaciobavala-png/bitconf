@@ -212,6 +212,89 @@ un one-pager con anchors.
 - Del mapa visual del PDF faltan además **Sponsors**, **FAQ** y **Postulate
   como speaker** como páginas de MÁS (etapa 07).
 
+## Feedback de la organización (03/09/2026) — qué se hizo y qué falta
+
+Cinco pedidos. Tres implementados (commit `857339c`), dos frenados a la espera
+de material y definiciones del cliente.
+
+### Qubit (ex Bi)
+
+- El asistente pasa a llamarse **Qubit** ("el asistente personal al cuadrado").
+  Cambian los componentes (`QubitFace`, `QubitText`), el evento transversal
+  (`qubit:open`) y el system prompt de `app/api/qa-chat/route.ts`. El PNG del
+  asset (`bi-anteojos.png`) **no se renombró**: la cara sigue siendo la ₿
+  oficial girada, que es identidad válida más allá del nombre.
+- **Se presenta siempre al abrir**: el saludo es un primer mensaje del
+  asistente, no el placeholder gris del estado vacío. Es la diferencia entre
+  leerse como asistente propio y como chatbot genérico, que era el pedido.
+- El botón lleva la palabra **CHATEÁ** a la vista (voseo, como el resto del
+  sitio) y se contrae al círculo cuando el panel está abierto: ahí el label ya
+  no informa nada y el título del panel lo repite.
+- **Pendiente**: la organización pidió "explorar visualmente cómo presentarlo".
+  Lo hecho es la variante mínima; falta llevarles 2-3 opciones.
+- **Cuidado**: en `/agenda` el botón, ahora más ancho, se superpone con el
+  toggle Grilla/Lista de abajo a la derecha.
+
+### `LogoMarquee` — un solo componente para TODOS los logos
+
+`components/home/LogoMarquee.tsx`. Pedido explícito: donde haya logos
+(sponsors, partners, universidades, comunidades) nunca una fila estática,
+siempre la barra en movimiento continuo, y **el mismo componente en todas las
+secciones** — no una solución por sección.
+
+- Mismo patrón de loop que los carriles de speakers de la home: el set se
+  repite **x6** y la animación recorre `100/REPEATS`%. Con x2 salta, porque
+  pocos logos son más angostos que el viewport.
+- `LogoPlaceholderGrid` de `/mas` (la grilla estática de huecos que el feedback
+  señalaba) pasó a ser `LogoStrip`, que es un envoltorio de este componente.
+- Sin `items` dibuja huecos punteados. **Falta el material**: ni un logo
+  cargado, ni de universidades ni de comunidades ni de sponsors.
+
+### Mi Agenda como CTA, no como pestaña
+
+- Sale de `LEFT_LINKS` del navbar y pasa a `components/home/MyAgendaButton.tsx`:
+  solapa vertical fija sobre el **borde derecho**, a media altura, en todo el
+  sitio menos `/mi-agenda`.
+- Va al borde y no apilada sobre la burbuja de Qubit porque el panel del chat
+  se abre desde abajo a la derecha y taparía el botón justo cuando se usa. Por
+  eso además queda en `zIndex` menor que el del chat.
+- **Absorbió a `AgendaCounter`** (borrado), que hacía lo mismo pero solo dentro
+  de `/agenda` y solo después de elegir la primera charla.
+
+### Identificación: alias O mail
+
+- Un solo campo. El `@` decide cómo se valida: con arroba tiene que ser un mail
+  bien formado, sin arroba un alias de **6 caracteres mínimo** sin espacios. Así
+  un mail tipeado a medias no pasa como alias raro.
+- `lib/itinerary/rules.ts` es **puro a propósito** (sin `crypto`): lo comparten
+  el formulario y la ruta, así la validación es la misma de los dos lados.
+  `lib/itinerary/identity.ts` queda solo con el hasheo.
+- La columna sigue llamándose `email_hash` y el hash es el mismo sha256 con sal:
+  no hubo migración.
+- El riesgo aceptado: **el alias es adivinable y el mail no**. La contención es
+  el rate limit por IP que ya existía, y el peor caso no es destructivo —
+  `merge()` es unión, así que dos personas con el mismo alias mezclan agendas,
+  no se borran. El formulario avisa que elijan uno difícil de adivinar.
+- El copy de privacidad se reescribió para decir lo que el código hace de
+  verdad: no se guarda el dato en claro, se guarda una huella ilegible. El
+  anterior ("la información no se guarda") era literalmente falso.
+
+### Frenados
+
+- **EXPERIENCIAS (pestaña nueva)**: sacar jueves y domingo de la agenda y
+  llevarlos a una sección propia junto con el Hackathon del Hub y los Side
+  Events. **El código ya está a medio camino**: `PROGRAM` en
+  `lib/speakers/schedule.ts` tiene el Open Fest y el Closing Day escritos a
+  mano en ES/EN, separados de `DAYS` (los dos días con charlas). Falta definir
+  si Experiencias es pestaña propia del navbar o cuelga de MÁS, qué pasa con
+  HODLween (misma naturaleza, no lo nombraron), y llega material: link de Luma
+  del Hackathon, listado de side events y formulario de postulación.
+- **Full width**: hoy todo el sitio es `max-w-6xl`, y eso venía de los mockups
+  aprobados. Antes de rehacerlo hay que decirles que "full width" no es "texto
+  sin límite de ancho" (200 caracteres por línea es ilegible) y esperar la
+  estructura de pestañas que ellos mismos dijeron que iban a mandar: rehacer el
+  layout antes de saber qué contenido lleva cada pestaña es trabajo que se tira.
+
 ## Agenda (`/agenda`) — decisiones tomadas
 
 Come de las mismas tablas que speakers (`getAgenda()` en `lib/speakers/queries.ts`),
