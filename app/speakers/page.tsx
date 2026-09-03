@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import SpeakersBrowser from "@/components/speakers/SpeakersBrowser";
 import SpeakersHeader from "@/components/speakers/SpeakersHeader";
 import { getSpeakers } from "@/lib/speakers/queries";
@@ -35,6 +36,7 @@ export default async function SpeakersPage() {
 
       <Footer />
       <QaChatWidget />
+      <MyAgendaButton />
     </main>
   );
 }

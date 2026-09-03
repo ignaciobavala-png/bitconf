@@ -3,13 +3,17 @@ import { persist } from "zustand/middleware";
 
 // Mi Agenda — itinerario personal.
 //
-// Vive PRIMERO en el dispositivo: agregar una charla no pide mail, ni cuenta,
-// ni conexión. El respaldo por mail es opcional y posterior.
+// Vive PRIMERO en el dispositivo: agregar una charla no pide mail, ni alias, ni
+// cuenta, ni conexión. El respaldo es opcional y posterior.
 
 interface AgendaState {
   /** ids de talks elegidos. */
   picked: string[];
-  /** Mail con el que se respaldó, para no volver a escribirlo. Solo local. */
+  /**
+   * Con qué se respaldó —mail o alias, a elección— para no volver a
+   * escribirlo. Solo local. El nombre del campo quedó de cuando era solo mail:
+   * renombrarlo perdería el valor ya guardado en localStorage de la gente.
+   */
   savedEmail: string | null;
   /**
    * Si el store ya se rehidrató desde localStorage.

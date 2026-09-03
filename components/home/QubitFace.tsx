@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 /**
- * Bi, la cara del asistente.
+ * Qubit, la cara del asistente.
  *
  * La idea es de la organización y el truco está en la B: girada 90° es un par
  * de anteojos. No es una B dibujada a ojo — es **la ₿ oficial de Bitcoin**
@@ -26,7 +26,7 @@ const EYES = [
   { cx: B.x + 0.6817 * B.w, cy: B.y + 0.5198 * B.h },
 ];
 
-export default function BiFace({
+export default function QubitFace({
   size = 40,
   state = "idle",
   ink = "#171616",

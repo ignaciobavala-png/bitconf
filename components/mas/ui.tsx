@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Reveal from "@/components/home/Reveal";
 import ParallaxBg from "@/components/home/ParallaxBg";
+import LogoMarquee, { type LogoItem } from "@/components/home/LogoMarquee";
 
 // Piezas compartidas por las páginas de /mas. Salen de la vieja /comunidad
 // (tarjeta de copy con borde Brote, CTA integrado, títulos PNG a altura fija);
@@ -399,42 +400,28 @@ export function InlineCta({
 }
 
 /**
- * Grilla de huecos para logos (universidades, comunidades). Es placeholder
- * explícito: la organización todavía no mandó los archivos.
+ * Tira de logos (universidades, comunidades, sponsors).
+ *
+ * Es un envoltorio de `LogoMarquee`: la organización pidió que en TODA sección
+ * con logos el movimiento sea el mismo, así que acá no hay layout propio, solo
+ * el título de sección y los huecos mientras no lleguen los archivos.
  */
-export function LogoPlaceholderGrid({
+export function LogoStrip({
   count = 8,
   label,
-  delay = 0.1,
+  items,
+  direction = "right",
 }: {
   count?: number;
   label: string;
-  delay?: number;
+  /** Logos reales. Sin esto se dibujan `count` huecos punteados. */
+  items?: LogoItem[];
+  direction?: "left" | "right";
 }) {
-  return (
-    <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-      {Array.from({ length: count }, (_, i) => (
-        <Reveal
-          key={i}
-          delay={delay + i * 0.06}
-          className="flex items-center justify-center rounded-2xl"
-          style={{
-            border: "1px dashed rgba(171,247,96,0.35)",
-            background: "rgba(13,13,11,0.35)",
-            aspectRatio: "16 / 9",
-          }}
-        >
-          <span
-            style={{
-              ...labelStyle,
-              color: "rgba(165,168,177,0.7)",
-              fontSize: "11px",
-            }}
-          >
-            {label}
-          </span>
-        </Reveal>
-      ))}
-    </div>
-  );
+  const list: LogoItem[] =
+    items && items.length > 0
+      ? items
+      : Array.from({ length: count }, () => ({ alt: label }));
+
+  return <LogoMarquee items={list} direction={direction} className="mt-8" />;
 }

@@ -5,7 +5,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import HeroVideo from "@/components/home/HeroVideo";
-import QaChatWidget, { openBiChat } from "@/components/home/QaChatWidget";
+import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
@@ -226,14 +227,14 @@ const TICKETS = [
 
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
-// compra y `action: "bi"` abre el chat, el resto navega por href.
+// compra y `action: "qubit"` abre el chat, el resto navega por href.
 const QUICK_ACCESS = [
   { key: "ticket", action: "checkout" as const, href: undefined },
   { key: "agenda", action: "link" as const, href: "/agenda" },
   { key: "speakers", action: "link" as const, href: "/speakers" },
   { key: "hub", action: "link" as const, href: "/mas/hub" },
   { key: "comunidades", action: "link" as const, href: "/mas/comunidades" },
-  { key: "bi", action: "bi" as const, href: undefined },
+  { key: "qubit", action: "qubit" as const, href: undefined },
 ] as const;
 
 const QUICK_ACCESS_LABELS = {
@@ -243,7 +244,7 @@ const QUICK_ACCESS_LABELS = {
     speakers: "Quiero conocer los speakers",
     hub: "Quiero saber qué es el Hub",
     comunidades: "Quiero participar con mi comunidad",
-    bi: "No sé por dónde empezar",
+    qubit: "No sé por dónde empezar",
   },
   en: {
     ticket: "I want to buy my ticket",
@@ -251,7 +252,7 @@ const QUICK_ACCESS_LABELS = {
     speakers: "I want to meet the speakers",
     hub: "I want to know what the Hub is",
     comunidades: "I want to join with my community",
-    bi: "I don't know where to start",
+    qubit: "I don't know where to start",
   },
 } as const;
 
@@ -600,7 +601,7 @@ export default function HomePage() {
                 <Reveal key={item.key} delay={0.15 + i * 0.06}>
                   <button
                     type="button"
-                    onClick={item.action === "checkout" ? () => setCheckoutOpen(true) : openBiChat}
+                    onClick={item.action === "checkout" ? () => setCheckoutOpen(true) : openQubitChat}
                     className={className}
                     style={bubbleStyle}
                   >
@@ -1276,6 +1277,7 @@ export default function HomePage() {
       <Footer lang={lang} />
 
       <QaChatWidget />
+      <MyAgendaButton />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </main>

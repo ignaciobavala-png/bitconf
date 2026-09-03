@@ -11,7 +11,7 @@ import {
   Chips,
   FeatureGrid,
   InlineCta,
-  LogoPlaceholderGrid,
+  LogoStrip,
 } from "@/components/mas/ui";
 
 // MÁS → THE UNIVERSITY HUB (bloque 04 del PDF "FASE 2 - WEB 15.08").
@@ -201,7 +201,7 @@ export default function HubPage() {
       <MasSection bg="/assets/home/fondo-hexmap.jpg" bgOpacity={0.22} bgPosition="center bottom">
         <BlockTitle>{t.universidadesTitle}</BlockTitle>
         <CopyCard paragraphs={[t.universidadesNote]} delay={0.1} className="mt-6" />
-        <LogoPlaceholderGrid count={8} label={t.logoPlaceholder} />
+        <LogoStrip count={8} label={t.logoPlaceholder} />
         <InlineCta
           title={t.ctaUniversidad}
           label={t.postularUniversidad}

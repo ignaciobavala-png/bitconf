@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAgendaStore } from "@/lib/store/agenda";
 import { useLangStore } from "@/lib/store/lang";
+import { MIN_ALIAS_LENGTH, identityKind, isValidIdentity } from "@/lib/itinerary/rules";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -19,33 +20,37 @@ const bodyStyle: React.CSSProperties = {
 const T = {
   es: {
     title: "¿Querés recuperarla en otro teléfono?",
-    body: "Tu agenda vive en este dispositivo. Si dejás un mail, podés volver a cargarla en cualquier otro escribiendo ese mismo mail.",
-    placeholder: "tu@mail.com",
+    body: "Tu agenda vive en este dispositivo. Dejá tu alias o tu mail —lo que prefieras— y podés volver a cargarla en cualquier otro escribiendo lo mismo.",
+    placeholder: "Tu alias o tu mail",
     save: "Guardar",
     restore: "Recuperar",
     saving: "Guardando…",
     restoring: "Buscando…",
     saved: (n: number) => `Listo. Guardamos ${n} ${n === 1 ? "charla" : "charlas"}.`,
     restored: (n: number) => `Recuperamos ${n} ${n === 1 ? "charla" : "charlas"}.`,
-    notFound: "No encontramos ninguna agenda guardada con ese mail.",
-    invalid: "Revisá el mail.",
+    notFound: "No encontramos ninguna agenda guardada con ese dato.",
+    invalid: `Si usás alias, tiene que tener al menos ${MIN_ALIAS_LENGTH} caracteres, sin espacios. Si usás mail, revisá que esté completo.`,
     error: "No se pudo. Probá de nuevo en un momento.",
-    privacy: "Guardamos el mail encriptado, solo para encontrar tu agenda. No te vamos a escribir.",
+    aliasTip: "Elegí un alias difícil de adivinar: si otra persona escribe el mismo, va a ver tu selección.",
+    privacy:
+      "No guardamos tu mail ni tu alias: se convierte en una huella ilegible que solo sirve para volver a encontrar tu agenda. No te vamos a escribir ni compartirlo.",
   },
   en: {
     title: "Want it back on another phone?",
-    body: "Your agenda lives on this device. Leave an email and you can load it on any other one by typing that same email.",
-    placeholder: "you@mail.com",
+    body: "Your agenda lives on this device. Leave your alias or your email — whichever you prefer — and you can load it on any other one by typing the same thing.",
+    placeholder: "Your alias or your email",
     save: "Save",
     restore: "Restore",
     saving: "Saving…",
     restoring: "Looking…",
     saved: (n: number) => `Done. We saved ${n} ${n === 1 ? "talk" : "talks"}.`,
     restored: (n: number) => `Restored ${n} ${n === 1 ? "talk" : "talks"}.`,
-    notFound: "We couldn't find an agenda saved with that email.",
-    invalid: "Check the email.",
+    notFound: "We couldn't find an agenda saved with that.",
+    invalid: `An alias needs at least ${MIN_ALIAS_LENGTH} characters, no spaces. If you use an email, check it's complete.`,
     error: "Couldn't do it. Try again in a moment.",
-    privacy: "We store the email encrypted, only to find your agenda. We won't write to you.",
+    aliasTip: "Pick an alias that's hard to guess: anyone typing the same one will see your selection.",
+    privacy:
+      "We don't store your email or alias: it becomes an unreadable fingerprint that only serves to find your agenda again. We won't write to you or share it.",
   },
 } as const;
 
@@ -66,6 +71,12 @@ export default function BackupPanel() {
 
   async function call(mode: "save" | "restore") {
     if (busy) return;
+    // Misma regla que la ruta (lib/itinerary/rules.ts): así el error se ve al
+    // instante y no después de un viaje al servidor.
+    if (!isValidIdentity(value)) {
+      setMsg({ kind: "err", text: t.invalid });
+      return;
+    }
     setBusy(mode);
     setMsg(null);
     try {
@@ -73,7 +84,7 @@ export default function BackupPanel() {
         method: mode === "save" ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
-          mode === "save" ? { email: value, talkIds: picked } : { email: value }
+          mode === "save" ? { identity: value, talkIds: picked } : { identity: value }
         ),
       });
       const data = await res.json().catch(() => null);
@@ -110,9 +121,9 @@ export default function BackupPanel() {
 
       <div className="mt-5 flex flex-col sm:flex-row gap-3">
         <input
-          type="email"
-          inputMode="email"
-          autoComplete="email"
+          type="text"
+          autoComplete="username"
+          spellCheck={false}
           value={value}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t.placeholder}
@@ -148,6 +159,12 @@ export default function BackupPanel() {
           </button>
         </div>
       </div>
+
+      {value.trim().length > 0 && identityKind(value) !== "email" && (
+        <p className="mt-3" style={{ ...bodyStyle, color: "#6E7178", fontSize: "clamp(10px, 1vw, 12px)", lineHeight: 1.5 }}>
+          {t.aliasTip}
+        </p>
+      )}
 
       {msg && (
         <p className="mt-4" role="status" style={{ ...bodyStyle, color: msg.kind === "ok" ? "#ABF760" : "#FFAB0B", fontSize: "clamp(12px, 1.1vw, 14px)" }}>

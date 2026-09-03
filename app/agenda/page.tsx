@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import AgendaHeader from "@/components/agenda/AgendaHeader";
 import AgendaBrowser from "@/components/agenda/AgendaBrowser";
-import AgendaCounter from "@/components/agenda/AgendaCounter";
 import { getAgenda } from "@/lib/speakers/queries";
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default async function AgendaPage() {
 
       <Footer />
       <QaChatWidget />
-      <AgendaCounter />
+      <MyAgendaButton />
     </main>
   );
 }

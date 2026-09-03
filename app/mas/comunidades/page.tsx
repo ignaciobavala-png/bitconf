@@ -11,7 +11,7 @@ import {
   Chips,
   FeatureGrid,
   InlineCta,
-  LogoPlaceholderGrid,
+  LogoStrip,
 } from "@/components/mas/ui";
 
 // MÁS → COMUNIDADES (bloque 06 del PDF "FASE 2 - WEB 15.08").
@@ -105,7 +105,7 @@ export default function ComunidadesPage() {
       <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
         <BlockTitle>{t.asociadasTitle}</BlockTitle>
         <CopyCard paragraphs={[t.asociadasNote]} delay={0.1} className="mt-6" />
-        <LogoPlaceholderGrid count={8} label={t.logoPlaceholder} />
+        <LogoStrip count={8} label={t.logoPlaceholder} />
       </MasSection>
 
       {/* 3 — Beneficios + CTA */}

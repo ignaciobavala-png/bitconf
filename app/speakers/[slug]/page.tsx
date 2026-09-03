@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import SpeakerProfileView from "@/components/speakers/SpeakerProfileView";
 import { getSpeakerBySlug, getSpeakerSlugs } from "@/lib/speakers/queries";
 
@@ -51,6 +52,7 @@ export default async function SpeakerPage({
       <SpeakerProfileView speaker={speaker} />
       <Footer />
       <QaChatWidget />
+      <MyAgendaButton />
     </main>
   );
 }

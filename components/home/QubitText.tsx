@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
  * pide—, pero los modelos lo escupen igual cada tanto: la única forma de que no
  * se vea nunca es entenderlo del lado del cliente.
  *
- * Es deliberadamente chico: negrita, links y viñetas, que es todo lo que Bi usa
+ * Es deliberadamente chico: negrita, links y viñetas, que es todo lo que Qubit usa
  * al contestar una FAQ. No vale traer un parser de markdown entero (y su peso)
  * para una burbuja de chat.
  */
@@ -50,7 +50,7 @@ function inline(text: string, keyPrefix: string): ReactNode[] {
   });
 }
 
-export default function BiText({ text }: { text: string }) {
+export default function QubitText({ text }: { text: string }) {
   const lines = text.split("\n");
 
   // Columna en vez de confiar en `white-space: pre-wrap`: las viñetas son
@@ -60,7 +60,7 @@ export default function BiText({ text }: { text: string }) {
     <span className="flex flex-col">
       {lines.map((line, i) => {
         // Las viñetas se dibujan como tales en vez de dejar el guion suelto:
-        // Bi enumera bastante (qué incluye cada ticket, cómo llegar).
+        // Qubit enumera bastante (qué incluye cada ticket, cómo llegar).
         const bullet = /^\s*[-*•]\s+(.*)$/.exec(line);
         if (bullet) {
           return (

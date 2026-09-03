@@ -3,11 +3,12 @@
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import MasNav from "@/components/mas/MasNav";
 import { useLangStore } from "@/lib/store/lang";
 
 // Shell de la sección MÁS (mapa de fase 2: "MÁS = participar"). Las cuatro
-// páginas comparten navbar, cross-links, footer y el widget de Bi; cada
+// páginas comparten navbar, cross-links, footer y el widget de Qubit; cada
 // page.tsx aporta solo sus secciones.
 export default function MasLayout({ children }: { children: React.ReactNode }) {
   const lang = useLangStore((s) => s.lang);
@@ -19,6 +20,7 @@ export default function MasLayout({ children }: { children: React.ReactNode }) {
       <MasNav />
       <Footer lang={lang} />
       <QaChatWidget />
+      <MyAgendaButton />
     </main>
   );
 }
