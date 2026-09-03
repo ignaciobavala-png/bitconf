@@ -287,7 +287,6 @@ const SPEAKER_LANES: {
     direction: "left",
     duration: 42,
     cards: [
-      { kind: "label", title: { es: "Asistentes", en: "Attendees" }, subtitle: "LABITCONF '24" },
       galleryPhoto(1),
       galleryPhoto(2),
       galleryPhoto(3),
