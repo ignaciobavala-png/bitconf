@@ -239,55 +239,83 @@ export default function QaChatWidget() {
         </div>
       )}
 
-      {/* Botón de acceso. Lleva la palabra "CHATEÁ" a la vista (pedido de la
-          organización, feedback 03/09): con la cara sola no se leía como un
-          chat. Cuando el panel está abierto se contrae al círculo — el label
-          ahí ya no informa nada y el título del panel lo repite. */}
-      <div className="fixed flex items-center gap-3" style={{ zIndex: 6, bottom: "24px", right: "24px" }}>
-        <motion.button
+      {/* Botón de acceso.
+
+          Qubit es un personaje, así que el botón es su cara y nada más: un
+          círculo, sin la palabra adentro. El "CHATEÁ" que pidió la
+          organización (feedback 03/09) va AFUERA del círculo, a la izquierda,
+          dibujado como globo de conversación con la cola apuntando a la cara —
+          así se lee como algo que Qubit dice, no como la etiqueta de un botón.
+          Con el panel abierto el globo desaparece: el título del panel ya lo
+          repite. */}
+      <div className="fixed flex items-center" style={{ zIndex: 6, bottom: "24px", right: "24px" }}>
+        <button
           onClick={() => setOpen((o) => !o)}
-          className="relative flex items-center justify-center gap-2.5 rounded-full"
-          style={{
-            height: "60px",
-            paddingLeft: "10px",
-            paddingRight: open ? "10px" : "20px",
-            background: "#ABF760",
-          }}
+          className="flex items-center gap-1.5"
           aria-label={t.open}
           aria-expanded={open}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.96 }}
-          // El movimiento vive mientras nadie le habló todavía: una vez que la
-          // persona escribe, el botón deja de pedir atención.
-          animate={attract ? { rotate: [0, -7, 6, -3, 0] } : { rotate: 0 }}
-          transition={{ duration: 0.9, repeat: attract ? Infinity : 0, repeatDelay: 5.5, ease: "easeInOut" }}
         >
-          {attract && (
-            <motion.span
-              aria-hidden
-              className="absolute inset-0 rounded-full"
-              style={{ border: "2px solid #ABF760" }}
-              animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-            />
-          )}
-          <QubitFace size={40} state={isStreaming ? "thinking" : "idle"} />
           {!open && (
-            <span
+            <motion.span
+              className="relative"
               style={{
+                background: "#E6EEF2",
+                color: "#171616",
+                borderRadius: "16px",
+                padding: "9px 14px",
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
                 fontSize: "12px",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
-                color: "#171616",
                 whiteSpace: "nowrap",
               }}
+              initial={reduced ? false : { opacity: 0, x: 8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
             >
               {t.cta}
-            </span>
+              {/* Cola del globo: un cuadrado girado 45° del mismo color,
+                  medio metido debajo del cuerpo para que no se vea la unión. */}
+              <span
+                aria-hidden
+                className="absolute"
+                style={{
+                  right: "-3px",
+                  top: "50%",
+                  width: "10px",
+                  height: "10px",
+                  background: "#E6EEF2",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  borderRadius: "2px",
+                }}
+              />
+            </motion.span>
           )}
-        </motion.button>
+
+          <motion.span
+            className="relative flex items-center justify-center rounded-full"
+            style={{ width: "60px", height: "60px", background: "#ABF760" }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.96 }}
+            // El movimiento vive mientras nadie le habló todavía: una vez que
+            // la persona escribe, Qubit deja de pedir atención. Se mueve solo
+            // la cara, no el globo: si oscilara todo, el texto se marea.
+            animate={attract ? { rotate: [0, -7, 6, -3, 0] } : { rotate: 0 }}
+            transition={{ duration: 0.9, repeat: attract ? Infinity : 0, repeatDelay: 5.5, ease: "easeInOut" }}
+          >
+            {attract && (
+              <motion.span
+                aria-hidden
+                className="absolute inset-0 rounded-full"
+                style={{ border: "2px solid #ABF760" }}
+                animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+              />
+            )}
+            <QubitFace size={40} state={isStreaming ? "thinking" : "idle"} />
+          </motion.span>
+        </button>
       </div>
     </>
   );
