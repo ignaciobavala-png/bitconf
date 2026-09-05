@@ -76,6 +76,12 @@ const T = {
   en: { stage: "Stage", minutes: "min", panel: "Panel", to: "to" },
 } as const;
 
+/** Colchón antes de la primera charla y después de la última. */
+const WINDOW_PAD = 30;
+
+const floor30 = (m: number) => Math.floor(m / 30) * 30;
+const ceil30 = (m: number) => Math.ceil(m / 30) * 30;
+
 /** Marcas del eje: cada 30 minutos, de la apertura al cierre. */
 function ticks(opens: number, closes: number): number[] {
   const out: number[] = [];
@@ -94,14 +100,25 @@ export default function ScheduleGrid({
 }) {
   const win = DAY_WINDOW[day];
 
-  // La ventana se estira si alguna charla se sale de ella: si la organización
-  // carga algo a las 19:00, tiene que verse, no quedar fuera del contenedor.
+  // La ventana la fija el contenido, no el horario nominal de la jornada.
+  //
+  // `DAY_WINDOW` dice 09:30-18:00, pero mientras el programa esté a medio
+  // cargar el día real termina mucho antes: con lo de hoy, a las 15:00. Fijar
+  // el cierre en 18:00 dejaba 3 horas de grilla vacía — 720px de scroll que no
+  // muestran nada. La ventana se recorta a la primera y la última charla (con
+  // media hora de colchón para que el bloque no quede pegado al borde) y
+  // `DAY_WINDOW` pasa a ser un techo: nunca la agranda de más, pero tampoco la
+  // achica si la organización carga algo a las 19:00 — ahí sigue estirándose
+  // para afuera, que es lo que hacía antes.
   const all = columns.flatMap(([, list]) => list);
-  const opens = Math.min(win.opens, ...all.map((k) => k.startMin));
-  const closes = Math.max(
-    win.closes,
-    ...all.map((k) => k.startMin + (k.durationMin ?? 30))
-  );
+  const starts = all.map((k) => k.startMin);
+  const ends = all.map((k) => k.startMin + (k.durationMin ?? 30));
+  const first = starts.length ? Math.min(...starts) : win.opens;
+  const last = ends.length ? Math.max(...ends) : win.closes;
+
+  // Redondeado a la media hora para que el eje arranque y termine en una marca.
+  const opens = floor30(Math.min(first, Math.max(win.opens, first - WINDOW_PAD)));
+  const closes = ceil30(Math.max(last, Math.min(win.closes, last + WINDOW_PAD)));
 
   const totalPx = (closes - opens) * PX_PER_MIN;
   const marks = ticks(opens, closes);
