@@ -20,10 +20,12 @@ export type SyncRun = {
 };
 
 /**
- * El cron corre cada 6 horas. Doce sin una corrida exitosa significa que se
- * salteó al menos una entera: ahí algo se rompió.
+ * El cron corre una vez por día (la cuenta de Vercel es Hobby y no permite
+ * más). Treinta horas sin una corrida exitosa significa que se salteó una
+ * entera: ahí algo se rompió. Si la cuenta pasa a Pro y el cron vuelve a ser
+ * cada 6 horas, esto baja a 12.
  */
-export const STALE_AFTER_HOURS = 12;
+export const STALE_AFTER_HOURS = 30;
 
 type Trigger = "cron" | "manual";
 

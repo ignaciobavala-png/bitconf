@@ -593,8 +593,12 @@ espeja esa planilla.
   las siguientes). Speakers que dejan de venir se marcan `present=false`, no se
   borran (preserva slug y foto si fue un error de carga). Las charlas huérfanas sí
   se borran.
-- `app/api/sync-speakers/route.ts` — cron cada 6h (`vercel.json`) + manual con
-  header `x-sync-secret: $ADMIN_SECRET`.
+- `app/api/sync-speakers/route.ts` — cron **diario** a las 06:00 UTC
+  (`vercel.json`) + manual con header `x-sync-secret: $ADMIN_SECRET`.
+  **Por qué diario y no cada 6h**: la cuenta de Vercel del cliente es Hobby y
+  rechaza el deploy entero —preview incluido— con un cron que corra más de una
+  vez por día (`Hobby accounts are limited to daily cron jobs`). Si la cuenta
+  pasa a Pro, vuelve a `0 */6 * * *` y `STALE_AFTER_HOURS` baja de 30 a 12.
 - `lib/db/speakers.sql` — schema y RLS. **Qué se publica: `status = 'confirmado'`**
   (23 de 83). `mkt_published` se guarda igual para poder cambiar el criterio sin
   re-sincronizar. Pendiente de confirmar con la organización.
