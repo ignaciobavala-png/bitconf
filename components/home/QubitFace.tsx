@@ -13,6 +13,11 @@ import { motion, useReducedMotion } from "framer-motion";
  * cuelgan como lentes. Los ojos son las contraformas de la letra: no se dibujó
  * ningún agujero, ya estaban ahí.
  *
+ * **Sin boca** (pedido de la organización, 05/09/2026): son solo los anteojos.
+ * La cara es el glifo, y agregarle una sonrisa la volvía un emoticón. Todo el
+ * gesto queda en los ojos: parpadeo y vagabundeo cuando está libre, mirada
+ * hacia arriba mientras piensa.
+ *
  * Las pupilas van sobre esas contraformas, en las coordenadas medidas sobre el
  * propio archivo (centro del hueco izquierdo en 33,4% / 54,1% del bitmap;
  * derecho en 68,2% / 52,0%). Si se reemplaza el PNG por otro trazo, hay que
@@ -20,7 +25,9 @@ import { motion, useReducedMotion } from "framer-motion";
  */
 
 // Caja del glifo dentro del viewBox de 100, y las pupilas derivadas de ella.
-const B = { x: 12, y: 14, w: 76, h: 76 / (184 / 126) };
+// `y` centra el glifo: sin boca abajo, anclarlo arriba dejaba la cara colgada.
+const GLYPH_H = 76 / (184 / 126);
+const B = { x: 12, y: (100 - GLYPH_H) / 2, w: 76, h: GLYPH_H };
 const EYES = [
   { cx: B.x + 0.3336 * B.w, cy: B.y + 0.5413 * B.h },
   { cx: B.x + 0.6817 * B.w, cy: B.y + 0.5198 * B.h },
@@ -32,9 +39,9 @@ export default function QubitFace({
   ink = "#171616",
 }: {
   size?: number;
-  /** `thinking` mientras el modelo responde: mira para arriba y cierra la boca. */
+  /** `thinking` mientras el modelo responde: mira para arriba y deja de vagar. */
   state?: "idle" | "thinking";
-  /** Color de pupilas y boca. Los anteojos vienen del PNG y son negros. */
+  /** Color de las pupilas. Los anteojos vienen del PNG y son negros. */
   ink?: string;
 }) {
   const reduced = useReducedMotion();
@@ -67,16 +74,6 @@ export default function QubitFace({
           <circle key={i} cx={e.cx} cy={e.cy} r="6.4" fill={ink} />
         ))}
       </motion.g>
-
-      {/* Boca: sonrisa cuando está libre, línea corta mientras piensa */}
-      <motion.path
-        animate={{ d: thinking ? "M44 80 h12" : "M38 77 q12 9 24 0" }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        stroke={ink}
-        strokeWidth="5.5"
-        strokeLinecap="round"
-        fill="none"
-      />
     </svg>
   );
 }
