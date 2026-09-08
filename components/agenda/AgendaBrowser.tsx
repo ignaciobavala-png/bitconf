@@ -11,13 +11,10 @@ import {
   DAY_SHORT,
   HODLWEEN,
   PROGRAM,
-  PROGRAM_DAYS,
   compareStages,
   eventMinutes,
-  isDay,
   stageLabel,
   type Day,
-  type ProgramDay,
 } from "@/lib/speakers/schedule";
 import { demoStartTimes } from "@/lib/speakers/demo";
 import AgendaToggle from "./AgendaToggle";
@@ -241,12 +238,12 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     () => DAYS.filter((d) => talks.some((k) => k.day === d)),
     [talks]
   );
-  const [day, setDay] = useState<ProgramDay>(daysWithContent[0] ?? DAYS[0]);
+  const [day, setDay] = useState<Day>(daysWithContent[0] ?? DAYS[0]);
 
-  // El jueves y el domingo no tienen escenarios: son jornadas de programa
-  // propio (Open Fest y Closing Day), y la planilla ni siquiera puede
-  // referenciarlas. Cuando el día elegido es uno de esos, la página muestra
-  // el programa en vez de filtros que no filtrarían nada.
+  // La agenda son los dos días de conferencia. El jueves (Open Fest) y el
+  // domingo (Closing Day) quedaron fuera por decisión de la organización: son
+  // solo Experience y no tienen charlas. Su contenido sigue en `PROGRAM`, para
+  // la sección de experiencias.
   const dayInfo = PROGRAM[day];
   const [stage, setStage] = useState<string | null>(null);
   const [tag, setTag] = useState<CanonicalTag | null>(null);
@@ -331,10 +328,10 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
   // día que la organización los cargue, esta condición se apaga sola y la
   // grilla pasa al cronograma verdadero sin tocar una línea de código.
   const usingSample =
-    sampleAllowed && isDay(day) && ofDay.some((k) => !realTimes.has(k.id));
+    sampleAllowed && ofDay.some((k) => !realTimes.has(k.id));
 
   const startTimes = useMemo(
-    () => (usingSample && isDay(day) ? demoStartTimes(talks, day) : realTimes),
+    () => (usingSample ? demoStartTimes(talks, day) : realTimes),
     [usingSample, day, talks, realTimes]
   );
 
@@ -357,21 +354,20 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     filtered.length > 0 &&
     scheduled.every(([, list], i) => list.length === columns[i][1].length);
 
-  const showGrid = hasSchedule && wideScreen && view === "grid" && isDay(day);
+  const showGrid = hasSchedule && wideScreen && view === "grid";
 
   // Si el día que estaba elegido se queda sin escenario seleccionado válido
   // (pasa al cambiar de día con un filtro puesto), se suelta el filtro.
-  function selectDay(next: ProgramDay) {
+  function selectDay(next: Day) {
     setDay(next);
     setStage(null);
   }
 
   return (
     <div className="w-full">
-      {/* Las cuatro jornadas del programa, no solo las dos con charlas: el
-          jueves y el domingo son parte de la agenda aunque no tengan grilla. */}
+      {/* Los dos días de conferencia. */}
       <ScrollRow>
-        {PROGRAM_DAYS.map((d) => {
+        {DAYS.map((d) => {
           const on = d === day;
           return (
             <button
@@ -396,8 +392,8 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
         })}
       </ScrollRow>
 
-      {/* Horario y acceso de la jornada elegida: cambian día a día (el jueves
-          y el domingo son solo Experience) y contestan la primera pregunta. */}
+      {/* Horario y acceso de la jornada elegida: contesta la primera pregunta
+          antes de entrar a los escenarios. */}
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
           {dayInfo.tag[lang]}
@@ -410,10 +406,6 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
         </span>
       </div>
 
-      {dayInfo.program ? (
-        <ProgramDayBlock info={dayInfo.program} lang={lang} />
-      ) : (
-      <>
       {/* Buscador — pill, misma familia visual que los chips */}
       <div
         className="mt-6 flex items-center gap-3 rounded-full"
@@ -627,58 +619,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
       )}
 
       {day === HODLWEEN.day && <HodlweenBlock lang={lang} />}
-      </>
-      )}
     </div>
-  );
-}
-
-/**
- * Jornada sin grilla: el jueves y el domingo. No hay escenarios que elegir, así
- * que en vez de filtros vacíos se muestra qué pasa ese día.
- */
-function ProgramDayBlock({
-  info,
-  lang,
-}: {
-  info: NonNullable<(typeof PROGRAM)[ProgramDay]["program"]>;
-  lang: "es" | "en";
-}) {
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="mt-8 rounded-2xl"
-      style={{
-        border: "1px solid rgba(230,238,242,0.14)",
-        background: "rgba(255,255,255,0.02)",
-        padding: "26px 28px",
-        maxWidth: "62ch",
-      }}
-    >
-      <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(16px, 1.9vw, 24px)", lineHeight: 1.2 }}>
-        {info.title[lang]}
-      </h2>
-      <p
-        className="mt-3"
-        style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6 }}
-      >
-        {info.lead[lang]}
-      </p>
-      <ul className="mt-6 flex flex-col gap-3">
-        {info.items.map((it) => (
-          <li key={it.en} className="flex items-baseline gap-3">
-            <span aria-hidden style={{ color: "#FF4E01", fontSize: 11, flexShrink: 0 }}>
-              ●
-            </span>
-            <span style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.2vw, 15px)", lineHeight: 1.5 }}>
-              {it[lang]}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </motion.section>
   );
 }
 

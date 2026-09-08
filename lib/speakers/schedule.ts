@@ -56,15 +56,14 @@ export function compareStages(a: string, b: string): number {
 // Programa público (PDF "LABITCONF 26 · AGENDA" de la organización)
 // ---------------------------------------------------------------------------
 //
-// `DAYS` de arriba es el vocabulario de la PLANILLA: una charla solo puede
-// caer en oct30 u oct31, que son los dos días de conferencia. El programa que
-// ve el público tiene cuatro jornadas: el jueves abre con el Open Fest y el
-// domingo cierra, ambos solo para Experience, y ninguno de los dos tiene
-// charlas cargadas ni las va a tener.
+// `DAYS` de arriba es el vocabulario de la PLANILLA y también lo que muestra
+// la agenda: oct30 y oct31, los dos días de conferencia.
 //
-// Por eso el contenido de esas dos jornadas vive acá, en el repo, y no en la
-// base: no viene de ningún origen sincronizable. Cuando la organización
-// confirme el detalle, se edita este archivo.
+// El jueves (Open Fest) y el domingo (Closing Day) siguen descriptos acá pero
+// **la agenda ya no los lista** — decisión de la organización (08/09/2026):
+// son solo Experience y no tienen charlas. Se dejan porque son el material de
+// la sección de experiencias; no viene de ningún origen sincronizable, así que
+// cuando confirmen el detalle se edita este archivo.
 
 export const PROGRAM_DAYS = ["oct29", "oct30", "oct31", "nov1"] as const;
 export type ProgramDay = (typeof PROGRAM_DAYS)[number];

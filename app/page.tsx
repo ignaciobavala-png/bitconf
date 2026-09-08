@@ -72,6 +72,8 @@ const T = {
     mapTitle: "Ubicación Costa Salguero",
     ticketsIncludes: "Incluye",
     ticketsBuy: "Comprar",
+    mediaTitle: "Media Partners",
+    mediaSubtitle: "Los medios que cuentan LABITCONF.",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -92,6 +94,8 @@ const T = {
     mapTitle: "Costa Salguero Location",
     ticketsIncludes: "Includes",
     ticketsBuy: "Buy",
+    mediaTitle: "Media Partners",
+    mediaSubtitle: "The media covering LABITCONF.",
   },
 } as const;
 
@@ -193,7 +197,7 @@ const TICKETS = [
     cta: { bg: "#171616", fg: "#E6EEF2", border: "1px solid rgba(199,203,209,0.45)" },
     background:
       "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
-    prices: [{ es: "Early Bird", en: "Early Bird", value: "AR$ 40.000" }],
+    prices: [{ es: "Second Chance", en: "Second Chance", value: "AR$ 65.000" }],
     note: {
       es: "*precio final reflejado en dólares",
       en: "*final price charged in dollars",
@@ -224,6 +228,45 @@ const TICKETS = [
     note: { es: "+ service charge", en: "+ service charge" },
   },
 ] as const;
+
+// Media partners — primera tanda entregada por el equipo de diseño (08/09/2026).
+//
+// `scale` NO es un capricho: los archivos van de 1:1 (CCS, una moneda) a 12:1
+// (Noticias Fintech Latam, una línea de texto). Puestos todos a la misma altura,
+// el más ancho pesa doce veces más que el cuadrado. El valor iguala el ÁREA DE
+// TINTA de cada logo (píxeles opacos) con exponente 0.35 —el ojo no compara
+// áreas de forma lineal— y está topeado en [0.8, 1.25] para que ningún ajuste
+// se note como error. Al agregar logos nuevos se recalcula con el mismo criterio.
+//
+// Los PNG salen de `~/Descargas/Tanda #1` recortados con `convert -trim +repage`
+// (el lienzo transparente de sobra hace que un logo se vea chico aunque la caja
+// sea igual) y reescalados a 2x del render. Dos venían con fondo NEGRO SÓLIDO,
+// no transparente: Bitcoin Argentina se resolvió con floodfill desde la esquina,
+// y CCS con una máscara circular —es un render 3D de una moneda encuadrado al
+// borde del lienzo—. Pedido a diseño el archivo con alfa real.
+const MEDIA_PARTNERS = [
+  { src: "/assets/home/media-partners/bitcoin-argentina.png", alt: "Bitcoin Argentina", scale: 0.8 },
+  { src: "/assets/home/media-partners/bank-magazine.png", alt: "Bank Magazine", scale: 0.8 },
+  { src: "/assets/home/media-partners/ccs.png", alt: "CCS", scale: 0.85 },
+  { src: "/assets/home/media-partners/cripto247.png", alt: "Cripto247", scale: 0.87 },
+  { src: "/assets/home/media-partners/cryptopolitan.png", alt: "Cryptopolitan", scale: 1 },
+  { src: "/assets/home/media-partners/deed-to-chain.png", alt: "Deed to Chain", scale: 1 },
+  { src: "/assets/home/media-partners/diario-bitcoin.png", alt: "DiarioBitcoin", scale: 1.02, wide: true },
+  { src: "/assets/home/media-partners/inversor-latam.png", alt: "Inversor Latam", scale: 1.24 },
+  { src: "/assets/home/media-partners/iproup.png", alt: "iProUP", scale: 0.8 },
+  { src: "/assets/home/media-partners/random-access.png", alt: "Random Access", scale: 1.25, wide: true },
+  { src: "/assets/home/media-partners/noticias-fintech-latam.png", alt: "Noticias Fintech Latam", scale: 1.16, wide: true },
+  { src: "/assets/home/media-partners/sla.png", alt: "SLA", scale: 0.8 },
+  { src: "/assets/home/media-partners/territorio-bitcoin.png", alt: "Territorio Bitcoin", scale: 1.1 },
+  { src: "/assets/home/media-partners/thenewscrypto.png", alt: "TheNewsCrypto", scale: 1.04, wide: true },
+] as const;
+
+// `wide` = relación de aspecto de 6:1 para arriba. En mobile la grilla es de dos
+// columnas y ~155px de ancho dejan a un logo de 12:1 en 13px de alto, ilegible:
+// esos ocupan las dos columnas. Desde sm vuelven a una sola.
+// Alto de la caja de cada logo. Todos comparten caja: lo que cambia entre uno y
+// otro es cuánto de esa caja ocupan (`scale`), nunca la caja.
+const MEDIA_LOGO_H = "clamp(48px, 6.2vw, 76px)";
 
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
@@ -543,7 +586,7 @@ export default function HomePage() {
         className="relative px-6 sm:px-10 py-16 sm:py-24 overflow-hidden"
         style={{ zIndex: 3, background: "#000" }}
       >
-        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
+        <div className="relative w-full max-w-6xl mx-auto text-center" style={{ zIndex: 2 }}>
           <Reveal>
             <h2
               style={{
@@ -570,21 +613,25 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <div className={`${TITLE_GAP} flex flex-wrap gap-3 sm:gap-4`}>
+          <div className={`${TITLE_GAP} flex flex-wrap justify-center gap-3 sm:gap-4`}>
             {QUICK_ACCESS.map((item, i) => {
               const label = QUICK_ACCESS_LABELS[lang][item.key];
+              // El borde alterna Orange 021 C / Brote burbuja por burbuja: con un
+              // solo color las seis pastillas se leen como una lista gris; alternando
+              // se ven como opciones distintas sin agregar más peso tipográfico.
+              const accent = i % 2 === 0 ? "#FF4E01" : "#ABF760";
               // Burbujas: el CTA de compra y el de Bi son acciones, no navegación,
               // así que el elemento cambia de <a> a <button> según el caso.
               const bubbleStyle: React.CSSProperties = {
                 ...labelStyle,
-                color: "#E6EEF2",
                 background: "rgba(230,238,242,0.04)",
-                border: "1px solid rgba(230,238,242,0.18)",
+                border: `1px solid ${accent}`,
                 fontSize: BUTTON_FS,
                 padding: "14px 26px",
+                ["--accent" as string]: accent,
               };
               const className =
-                "rounded-full transition-colors duration-200 hover:border-[#ABF760] hover:text-[#ABF760]";
+                "rounded-full transition-colors duration-200 text-[#E6EEF2] hover:bg-[var(--accent)] hover:text-[#171616]";
 
               if (item.action === "link") {
                 return (
@@ -996,6 +1043,92 @@ export default function HomePage() {
               style={{ objectFit: "contain" }}
             />
           </Floating>
+        </div>
+      </section>
+
+      {/* Media partners — entre Tickets y Sé parte: los medios acompañan al
+          evento, y la sección siguiente es justamente la de postularse como uno.
+
+          Grilla FIJA y no `LogoMarquee`, que es lo que se usa en /mas: con 14
+          marcas entran todas en una pantalla, que era el argumento del marquee
+          (muchos logos en poco espacio). Pedido de la organización del 08/09. */}
+      <section
+        id="media-partners"
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        style={{ zIndex: 3 }}
+      >
+        {/* Fondo: iconos (el único del banco que no está usado en la home) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.18 }}
+        >
+          <Image
+            src="/assets/home/fondo-iconos.jpg"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
+          }}
+        />
+
+        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
+          {/* Título como texto: no hay PNG "Media Partners" en la tanda de
+              títulos. Se reemplaza por <Image> cuando diseño lo mande. */}
+          <Reveal>
+            <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(28px, 4.6vw, 56px)", lineHeight: 1.05 }}>
+              {t.mediaTitle}
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p
+              className="mt-3"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: BODY_FS,
+              }}
+            >
+              {t.mediaSubtitle}
+            </p>
+          </Reveal>
+
+          <div className={`${TITLE_GAP} grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-10 sm:gap-y-14 items-center`}>
+            {MEDIA_PARTNERS.map((logo, i) => (
+              <Reveal
+                key={logo.src}
+                delay={0.15 + i * 0.05}
+                className={`flex items-center justify-center ${"wide" in logo && logo.wide ? "col-span-2 sm:col-span-1" : ""}`}
+                style={{ height: MEDIA_LOGO_H }}
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={440}
+                  height={152}
+                  // El cap de ancho es para los `wide` en mobile: a dos columnas
+                  // de ancho quedarían más grandes que el resto de la grilla.
+                  className={`w-auto ${"wide" in logo && logo.wide ? "max-w-[78%] sm:max-w-full" : "max-w-full"}`}
+                  style={{
+                    // La escala limita el ALTO, nunca el ancho: así un logo con
+                    // scale > 1 crece hasta donde la columna se lo permite y no
+                    // se desborda de su celda.
+                    maxHeight: `calc(${MEDIA_LOGO_H} * ${logo.scale})`,
+                    objectFit: "contain",
+                  }}
+                />
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
