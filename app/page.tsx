@@ -233,6 +233,12 @@ const SE_PARTE_CARDS = {
       href: "https://forms.gle/fuLpfnE6puDcv1tx7",
     },
     {
+      title: "Acreditación de prensa",
+      description: "¿Sos periodista, medio o agencia? ¿Querés contar lo que pasa en LABITCONF 26? Acreditate como prensa y sé parte de la cobertura.",
+      cta: "Acreditate",
+      href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
+    },
+    {
       title: "Speakers",
       description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
       cta: "Aplicá",
@@ -251,6 +257,12 @@ const SE_PARTE_CARDS = {
       description: "Want to be part of LABITCONF's official coverage? Apply as a Media Partner and get exclusive benefits for allied media.",
       cta: "Apply",
       href: "https://forms.gle/fuLpfnE6puDcv1tx7",
+    },
+    {
+      title: "Press Accreditation",
+      description: "Are you a journalist, outlet or agency? Do you want to cover what happens at LABITCONF 26? Get accredited as press and be part of the coverage.",
+      cta: "Get accredited",
+      href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
     },
     {
       title: "Speakers",
@@ -901,9 +913,11 @@ export default function HomePage() {
             />
           </Reveal>
 
-          {/* Mismo max-w/gap que el grid de Tickets, y mismo contenedor de referencia
-              (sin max-w-6xl heredado) para que las cards arranquen en el mismo borde */}
-          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-sm sm:max-w-5xl items-stretch`}>
+          {/* 4 cards: 2x2 en tablet y fila de 4 en desktop. Con `sm:grid-cols-3`
+              la cuarta quedaba sola en una segunda fila. El contenedor sube a
+              `max-w-6xl` en lg —el mismo del título "Sé parte"— porque a 4
+              columnas dentro de 5xl cada card no llega a ancho legible. */}
+          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-sm sm:max-w-3xl lg:max-w-6xl items-stretch`}>
             {seParteCards.map((card, i) => (
               <Reveal
                 key={card.title}
