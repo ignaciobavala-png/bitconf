@@ -922,9 +922,14 @@ export default function HomePage() {
               <Reveal
                 key={card.title}
                 delay={0.1 + i * 0.12}
-                className="rounded-2xl flex flex-col"
+                /* La card entera es el área de hover (`group`): sube, gana sombra
+                   y prende el CTA. Naranja plano x4 se leía como un bloque
+                   monótono: el degradé (mismo Orange 021 C mezclado con el fondo
+                   Alamo) le da volumen sin sumar un color fuera de paleta. */
+                className="group relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_22px_45px_-20px_rgba(0,0,0,0.9)]"
                 style={{
-                  background: "#FF4E01",
+                  background:
+                    "linear-gradient(155deg, #FF4E01 0%, color-mix(in srgb, #FF4E01 78%, #171616) 100%)",
                   padding: "22px 22px",
                 }}
               >
@@ -949,7 +954,9 @@ export default function HomePage() {
                 >
                   {card.description}
                 </p>
-                {/* CTA — mismo patrón de anclaje al piso de la card que los tickets (mt-auto + block w-full) */}
+                {/* CTA — mismo patrón de anclaje al piso de la card que los tickets (mt-auto + block w-full).
+                    Texto en Lactica (no naranja sobre negro, que vibra) y al hover de la card
+                    pasa a Brote con texto Alamo: el mismo par que ya usan los botones del sitio. */}
                 <a
                   href={card.href}
                   target={card.href.startsWith("http") ? "_blank" : undefined}
@@ -957,16 +964,20 @@ export default function HomePage() {
                   className="mt-auto pt-6 block"
                 >
                   <span
-                    className="block w-full text-center rounded-full transition-opacity duration-200 hover:opacity-80"
+                    className="flex w-full items-center justify-center gap-2 rounded-full transition-colors duration-300 bg-[#171616] text-[#E6EEF2] group-hover:bg-[#ABF760] group-hover:text-[#171616]"
                     style={{
                       ...labelStyle,
-                      color: "#FF4E01",
-                      background: "#171616",
                       fontSize: BUTTON_FS,
                       padding: "12px 20px",
                     }}
                   >
                     {card.cta}
+                    <span
+                      aria-hidden
+                      className="inline-block transition-transform duration-300 group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
                   </span>
                 </a>
               </Reveal>
@@ -974,16 +985,17 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Astronauta — anclado dentro de la sección para que no lo recorte el overflow.
-            zIndex 1 (por debajo del contenido en zIndex 2): mismo criterio que el honeybadger
-            de Tickets, así nunca tapa el CTA de la card cuando el viewport achica el gutter. */}
+        {/* Astronauta — pasa de abajo a la derecha al hueco de arriba a la derecha:
+            con 4 cards en una fila, la grilla ocupa todo el ancho y abajo quedaba
+            tapado. Ese hueco existe solo en lg (el título es corto y está a la
+            izquierda), por eso `hidden lg:block`. zIndex 1 (bajo el contenido). */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden lg:block"
           style={{
-            bottom: "2rem",
+            top: "2.5rem",
             right: "2rem",
-            width: "min(22vw, 260px)",
-            height: "min(22vw, 260px)",
+            width: "min(15vw, 180px)",
+            height: "min(15vw, 180px)",
             zIndex: 1,
           }}
         >
