@@ -273,6 +273,21 @@ const SE_PARTE_CARDS = {
   ],
 } as const;
 
+/* Un acento por card — pedido de la organización: que las cuatro no tengan
+   todas lo mismo. El color se asigna por significado, siguiendo los roles que
+   la paleta oficial le da a cada uno: Orange = fuerza/BTC (el pitch comercial),
+   Almico = calidez/hogar (los aliados), Electric Ekko = seguridad (la
+   credencial de prensa), Brote = futuro (el contenido). Lactica no entra como
+   relleno: la paleta ya le asigna el rol de texto.
+   El orden es el mismo que `SE_PARTE_CARDS` en los dos idiomas.
+   `dark` marca el único relleno oscuro, que invierte el color del texto. */
+const SE_PARTE_ACCENTS = [
+  { color: "#FF4E01", dark: false },
+  { color: "#FFAB0B", dark: false },
+  { color: "#1311FC", dark: true },
+  { color: "#ABF760", dark: false },
+] as const;
+
 type SpeakerCard =
   | { kind: "photo"; src: string }
   | { kind: "stat"; value: string; label: { es: string; en: string } }
@@ -918,25 +933,32 @@ export default function HomePage() {
               `max-w-6xl` en lg —el mismo del título "Sé parte"— porque a 4
               columnas dentro de 5xl cada card no llega a ancho legible. */}
           <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-sm sm:max-w-3xl lg:max-w-6xl items-stretch`}>
-            {seParteCards.map((card, i) => (
+            {seParteCards.map((card, i) => {
+              const accent = SE_PARTE_ACCENTS[i] ?? SE_PARTE_ACCENTS[0];
+              const ink = accent.dark ? "#E6EEF2" : "#171616";
+              return (
               <Reveal
                 key={card.title}
                 delay={0.1 + i * 0.12}
                 /* La card entera es el área de hover (`group`): sube, gana sombra
-                   y prende el CTA. Naranja plano x4 se leía como un bloque
-                   monótono: el degradé (mismo Orange 021 C mezclado con el fondo
-                   Alamo) le da volumen sin sumar un color fuera de paleta. */
+                   y prende el CTA. El degradé mezcla el acento con el fondo Alamo
+                   para dar volumen sin sumar un color fuera de paleta.
+                   La mezcla es 90% y no 78%: con 78% el pie de la card naranja
+                   queda en #CC4206, donde el texto Alamo da 3.7:1 — debajo del
+                   mínimo legible aun a opacidad plena. Con 90% son 4.6:1.
+                   El borde transparente está en las cuatro para que la única con
+                   borde visible (la oscura) no mida 2px menos que sus hermanas. */
                 className="group relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_22px_45px_-20px_rgba(0,0,0,0.9)]"
                 style={{
-                  background:
-                    "linear-gradient(155deg, #FF4E01 0%, color-mix(in srgb, #FF4E01 78%, #171616) 100%)",
+                  background: `linear-gradient(155deg, ${accent.color} 0%, color-mix(in srgb, ${accent.color} 90%, #171616) 100%)`,
+                  border: `1px solid ${accent.dark ? "rgba(230,238,242,0.45)" : "transparent"}`,
                   padding: "22px 22px",
                 }}
               >
                 <h3
                   style={{
                     ...labelStyle,
-                    color: "#171616",
+                    color: ink,
                     fontSize: "clamp(16px, 2vw, 24px)",
                   }}
                 >
@@ -947,7 +969,10 @@ export default function HomePage() {
                   style={{
                     fontFamily: "var(--font-neue-machina), sans-serif",
                     fontWeight: 300,
-                    color: "rgba(13,13,11,0.75)",
+                    /* Opacidad plena: al 0.75 sobre el naranja el copy daba
+                       3.2:1. La jerarquía con el título la sostienen el peso
+                       900 y el cuerpo, no un gris. */
+                    color: ink,
                     fontSize: BODY_FS,
                     lineHeight: 1.45,
                   }}
@@ -955,8 +980,10 @@ export default function HomePage() {
                   {card.description}
                 </p>
                 {/* CTA — mismo patrón de anclaje al piso de la card que los tickets (mt-auto + block w-full).
-                    Texto en Lactica (no naranja sobre negro, que vibra) y al hover de la card
-                    pasa a Brote con texto Alamo: el mismo par que ya usan los botones del sitio. */}
+                    El botón es idéntico en las cuatro cards, la oscura incluida: es el
+                    elemento que las alinea como familia ahora que el relleno cambia.
+                    Al hover pasa a Lactica y no a Brote —como era cuando las cuatro eran
+                    naranjas— porque sobre la card Brote el verde sobre verde desaparecía. */}
                 <a
                   href={card.href}
                   target={card.href.startsWith("http") ? "_blank" : undefined}
@@ -964,7 +991,7 @@ export default function HomePage() {
                   className="mt-auto pt-6 block"
                 >
                   <span
-                    className="flex w-full items-center justify-center gap-2 rounded-full transition-colors duration-300 bg-[#171616] text-[#E6EEF2] group-hover:bg-[#ABF760] group-hover:text-[#171616]"
+                    className="flex w-full items-center justify-center gap-2 rounded-full transition-colors duration-300 bg-[#171616] text-[#E6EEF2] group-hover:bg-[#E6EEF2] group-hover:text-[#171616]"
                     style={{
                       ...labelStyle,
                       fontSize: BUTTON_FS,
@@ -981,7 +1008,8 @@ export default function HomePage() {
                   </span>
                 </a>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
 
