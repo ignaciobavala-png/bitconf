@@ -24,6 +24,11 @@ export type LogoItem = {
   src?: string;
   alt: string;
   href?: string | null;
+  /**
+   * Compensación óptica: cuánto del alto de la caja ocupa ESTE logo. Todos
+   * comparten caja; lo que cambia es cuánto la llenan. Default 1.
+   */
+  scale?: number;
 };
 
 const REPEATS = 6;
@@ -36,6 +41,16 @@ export default function LogoMarquee({
   duration = 40,
   height = "clamp(56px, 9vw, 88px)",
   gap = 48,
+  /**
+   * Ancho máximo de cada logo, como múltiplo del alto de la caja.
+   *
+   * En una grilla el ancho lo frena la columna; en un carril no hay columna, y
+   * un wordmark largo (12:1, tipo "NOTICIAS FINTECH LATAM") se estira hasta
+   * ocupar media pantalla y se ve MÁS grande que el resto aunque comparta el
+   * alto. Con el tope, esos bajan de alto hasta entrar — que es exactamente lo
+   * que hacía la grilla.
+   */
+  maxAspect = 4.5,
   className = "",
 }: {
   items: LogoItem[];
@@ -43,6 +58,7 @@ export default function LogoMarquee({
   duration?: number;
   height?: string;
   gap?: number;
+  maxAspect?: number;
   className?: string;
 }) {
   const reduced = useReducedMotion();
@@ -77,22 +93,28 @@ export default function LogoMarquee({
         transition={{ duration, repeat: Infinity, ease: "linear" }}
       >
         {repeated.map((item, i) => (
-          <LogoSlot key={`${item.alt}-${i}`} item={item} />
+          <LogoSlot
+            key={`${item.alt}-${i}`}
+            item={item}
+            maxWidth={`calc(${height} * ${maxAspect})`}
+          />
         ))}
       </motion.div>
     </div>
   );
 }
 
-function LogoSlot({ item }: { item: LogoItem }) {
+function LogoSlot({ item, maxWidth }: { item: LogoItem; maxWidth: string }) {
   const content = item.src ? (
     <Image
       src={item.src}
       alt={item.alt}
-      width={220}
-      height={88}
+      width={440}
+      height={152}
       className="h-full w-auto object-contain"
-      style={{ maxHeight: "100%" }}
+      // La escala topea el ALTO, nunca el ancho: un logo con scale > 1 crece
+      // hasta donde la caja se lo permite y no se desborda del carril.
+      style={{ maxHeight: `${(item.scale ?? 1) * 100}%`, maxWidth }}
     />
   ) : (
     // Hueco explícito mientras la organización no mande los archivos.

@@ -9,10 +9,13 @@ import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
+import LogoMarquee from "@/components/home/LogoMarquee";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
+import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
+import { mediaPartnerLanes } from "@/lib/media-partners";
 
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
 // con alturas de texto muy dispares, lo que hacía que cada título se viera de
@@ -234,50 +237,34 @@ const TICKETS = [
 // `scale` NO es un capricho: los archivos van de 1:1 (CCS, una moneda) a 12:1
 // (Noticias Fintech Latam, una línea de texto). Puestos todos a la misma altura,
 // el más ancho pesa doce veces más que el cuadrado. El valor iguala el ÁREA DE
-// TINTA de cada logo (píxeles opacos) con exponente 0.35 —el ojo no compara
-// áreas de forma lineal— y está topeado en [0.8, 1.25] para que ningún ajuste
-// se note como error. Al agregar logos nuevos se recalcula con el mismo criterio.
-//
-// Los PNG salen de `~/Descargas/Tanda #1` recortados con `convert -trim +repage`
-// (el lienzo transparente de sobra hace que un logo se vea chico aunque la caja
-// sea igual) y reescalados a 2x del render. Dos venían con fondo NEGRO SÓLIDO,
-// no transparente: Bitcoin Argentina se resolvió con floodfill desde la esquina,
-// y CCS con una máscara circular —es un render 3D de una moneda encuadrado al
-// borde del lienzo—. Pedido a diseño el archivo con alfa real.
-const MEDIA_PARTNERS = [
-  { src: "/assets/home/media-partners/bitcoin-argentina.png", alt: "Bitcoin Argentina", scale: 0.8 },
-  { src: "/assets/home/media-partners/bank-magazine.png", alt: "Bank Magazine", scale: 0.8 },
-  { src: "/assets/home/media-partners/ccs.png", alt: "CCS", scale: 0.85 },
-  { src: "/assets/home/media-partners/cripto247.png", alt: "Cripto247", scale: 0.87 },
-  { src: "/assets/home/media-partners/cryptopolitan.png", alt: "Cryptopolitan", scale: 1 },
-  { src: "/assets/home/media-partners/deed-to-chain.png", alt: "Deed to Chain", scale: 1 },
-  { src: "/assets/home/media-partners/diario-bitcoin.png", alt: "DiarioBitcoin", scale: 1.02, wide: true },
-  { src: "/assets/home/media-partners/inversor-latam.png", alt: "Inversor Latam", scale: 1.24 },
-  { src: "/assets/home/media-partners/iproup.png", alt: "iProUP", scale: 0.8 },
-  { src: "/assets/home/media-partners/random-access.png", alt: "Random Access", scale: 1.25, wide: true },
-  { src: "/assets/home/media-partners/noticias-fintech-latam.png", alt: "Noticias Fintech Latam", scale: 1.16, wide: true },
-  { src: "/assets/home/media-partners/sla.png", alt: "SLA", scale: 0.8 },
-  { src: "/assets/home/media-partners/territorio-bitcoin.png", alt: "Territorio Bitcoin", scale: 1.1 },
-  { src: "/assets/home/media-partners/thenewscrypto.png", alt: "TheNewsCrypto", scale: 1.04, wide: true },
-] as const;
-
-// `wide` = relación de aspecto de 6:1 para arriba. En mobile la grilla es de dos
-// columnas y ~155px de ancho dejan a un logo de 12:1 en 13px de alto, ilegible:
-// esos ocupan las dos columnas. Desde sm vuelven a una sola.
 // Alto de la caja de cada logo. Todos comparten caja: lo que cambia entre uno y
 // otro es cuánto de esa caja ocupan (`scale`), nunca la caja.
-const MEDIA_LOGO_H = "clamp(48px, 6.2vw, 76px)";
+// Bajado un 25% respecto del original (feedback 10/09: "quiero que se vean más
+// pequeños"): clamp(48,6.2vw,76) → clamp(36,4.65vw,57).
+const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
+
+// Cinco carriles alternando dirección. Las duraciones son distintas a propósito
+// —igual que los carriles de speakers— para que no se sincronicen entre sí.
+const MEDIA_LANE_DURATIONS = [44, 52, 47, 58, 50];
+
+// El reparto no depende de nada del render: se calcula una vez por módulo.
+const mediaLanes = mediaPartnerLanes();
 
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
 // compra y `action: "qubit"` abre el chat, el resto navega por href.
+// Agenda y Speakers salen por flag (feedback 10/09: "no mostramos aún"), y en
+// su lugar entran Embajadores y Sé parte — pedido de la misma nota. Quedan
+// escritos acá para que vuelvan solos cuando se prenda el flag.
 const QUICK_ACCESS = [
-  { key: "ticket", action: "checkout" as const, href: undefined },
-  { key: "agenda", action: "link" as const, href: "/agenda" },
-  { key: "speakers", action: "link" as const, href: "/speakers" },
-  { key: "hub", action: "link" as const, href: "/mas/hub" },
-  { key: "comunidades", action: "link" as const, href: "/mas/comunidades" },
-  { key: "qubit", action: "qubit" as const, href: undefined },
+  { key: "ticket", action: "checkout" as const, href: undefined, show: true },
+  { key: "agenda", action: "link" as const, href: "/agenda", show: SHOW_AGENDA },
+  { key: "speakers", action: "link" as const, href: "/speakers", show: SHOW_SPEAKERS },
+  { key: "embajadores", action: "link" as const, href: "/mas/embajadores", show: true },
+  { key: "hub", action: "link" as const, href: "/mas/hub", show: true },
+  { key: "comunidades", action: "link" as const, href: "/mas/comunidades", show: true },
+  { key: "separte", action: "link" as const, href: "/#se-parte", show: true },
+  { key: "qubit", action: "qubit" as const, href: undefined, show: true },
 ] as const;
 
 const QUICK_ACCESS_LABELS = {
@@ -285,16 +272,20 @@ const QUICK_ACCESS_LABELS = {
     ticket: "Quiero comprar mi ticket",
     agenda: "Quiero ver la agenda",
     speakers: "Quiero conocer los speakers",
+    embajadores: "¿Quiénes son los embajadores?",
     hub: "Quiero saber qué es el Hub",
     comunidades: "Quiero participar con mi comunidad",
+    separte: "Quiero ser parte",
     qubit: "No sé por dónde empezar",
   },
   en: {
     ticket: "I want to buy my ticket",
     agenda: "I want to see the agenda",
     speakers: "I want to meet the speakers",
+    embajadores: "Who are the ambassadors?",
     hub: "I want to know what the Hub is",
     comunidades: "I want to join with my community",
+    separte: "I want to take part",
     qubit: "I don't know where to start",
   },
 } as const;
@@ -626,7 +617,7 @@ export default function HomePage() {
           </Reveal>
 
           <div className={`${TITLE_GAP} flex flex-wrap justify-center gap-3 sm:gap-4`}>
-            {QUICK_ACCESS.map((item, i) => {
+            {QUICK_ACCESS.filter((item) => item.show).map((item, i) => {
               const label = QUICK_ACCESS_LABELS[lang][item.key];
               // El borde alterna Orange 021 C / Brote burbuja por burbuja: con un
               // solo color las seis pastillas se leen como una lista gris; alternando
@@ -1091,7 +1082,11 @@ export default function HomePage() {
           }}
         />
 
-        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
+        {/* Sin `max-w-6xl` (feedback 10/09: "insisto con la alineación de todo
+            hasta la margen derecha"): el bloque ocupa el ancho completo de la
+            sección, así el borde derecho de los carriles coincide con el del
+            navbar en vez de cortarse antes. */}
+        <div className="relative w-full" style={{ zIndex: 2 }}>
           {/* Título como texto: no hay PNG "Media Partners" en la tanda de
               títulos. Se reemplaza por <Image> cuando diseño lo mande. */}
           <Reveal>
@@ -1114,29 +1109,20 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <div className={`${TITLE_GAP} grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-10 sm:gap-y-14 items-center`}>
-            {MEDIA_PARTNERS.map((logo, i) => (
-              <Reveal
-                key={logo.src}
-                delay={0.15 + i * 0.05}
-                className={`flex items-center justify-center ${"wide" in logo && logo.wide ? "col-span-2 sm:col-span-1" : ""}`}
-                style={{ height: MEDIA_LOGO_H }}
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={440}
-                  height={152}
-                  // El cap de ancho es para los `wide` en mobile: a dos columnas
-                  // de ancho quedarían más grandes que el resto de la grilla.
-                  className={`w-auto ${"wide" in logo && logo.wide ? "max-w-[78%] sm:max-w-full" : "max-w-full"}`}
-                  style={{
-                    // La escala limita el ALTO, nunca el ancho: así un logo con
-                    // scale > 1 crece hasta donde la columna se lo permite y no
-                    // se desborda de su celda.
-                    maxHeight: `calc(${MEDIA_LOGO_H} * ${logo.scale})`,
-                    objectFit: "contain",
-                  }}
+          {/* Cinco carriles en movimiento en vez de la grilla estática. Resuelve
+              los tres pedidos del 10/09 de una: la barra llega hasta el margen
+              derecho, los logos son más chicos, y la sección mide siempre lo
+              mismo por más partners que se sumen (nada de scroll infinito).
+              Alternan dirección carril por carril, como los de speakers. */}
+          <div className={`${TITLE_GAP} flex flex-col gap-6 sm:gap-8`}>
+            {mediaLanes.map((lane, i) => (
+              <Reveal key={`media-lane-${i}`} delay={0.15 + i * 0.08}>
+                <LogoMarquee
+                  items={lane}
+                  direction={i % 2 === 0 ? "right" : "left"}
+                  duration={MEDIA_LANE_DURATIONS[i % MEDIA_LANE_DURATIONS.length]}
+                  height={MEDIA_LOGO_H}
+                  gap={56}
                 />
               </Reveal>
             ))}

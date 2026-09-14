@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/generate-media-partners.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/generate-media-partners.mjs",
     "build": "next build",
+    "media-partners": "node scripts/generate-media-partners.mjs",
     "start": "next start",
     "lint": "eslint"
   },
