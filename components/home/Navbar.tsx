@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLangStore } from "@/lib/store/lang";
 import LangToggle from "@/components/LangToggle";
+import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -17,16 +18,18 @@ const labelStyle: React.CSSProperties = {
 // Mi Agenda NO está acá a propósito (feedback 03/09 de la organización): es un
 // CTA que acompaña toda la experiencia, no una pestaña más. Vive en el botón
 // lateral `components/home/MyAgendaButton.tsx`.
+// Speakers y Agenda se filtran por flag (feedback 10/09): el orden queda
+// escrito para cuando vuelvan, no hay que reconstruirlo.
 const LEFT_LINKS = {
   es: [
-    { label: "Speakers", href: "/speakers" },
-    { label: "Agenda", href: "/agenda" },
-    { label: "Tickets", href: "/#tickets" },
+    { label: "Speakers", href: "/speakers", show: SHOW_SPEAKERS },
+    { label: "Agenda", href: "/agenda", show: SHOW_AGENDA },
+    { label: "Tickets", href: "/#tickets", show: true },
   ],
   en: [
-    { label: "Speakers", href: "/speakers" },
-    { label: "Agenda", href: "/agenda" },
-    { label: "Tickets", href: "/#tickets" },
+    { label: "Speakers", href: "/speakers", show: SHOW_SPEAKERS },
+    { label: "Agenda", href: "/agenda", show: SHOW_AGENDA },
+    { label: "Tickets", href: "/#tickets", show: true },
   ],
 } as const;
 
@@ -94,6 +97,7 @@ export default function Navbar() {
   }, [masOpen]);
 
   const mas = MAS_MENU[lang];
+  const leftLinks = LEFT_LINKS[lang].filter((l) => l.show);
 
   return (
     <header
@@ -115,11 +119,11 @@ export default function Navbar() {
             fontSize: "clamp(14px, 1.4vw, 18px)",
           }}
         >
-          LABITCONF.
+          LABITCONF
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
-          {LEFT_LINKS[lang].map((link) => (
+          {leftLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -260,7 +264,7 @@ export default function Navbar() {
             maxHeight: "calc(100vh - 100%)",
           }}
         >
-          {[...LEFT_LINKS[lang], HODLEAS_LINK[lang]].map((link) => (
+          {[...leftLinks, HODLEAS_LINK[lang]].map((link) => (
             <a
               key={link.href}
               href={link.href}

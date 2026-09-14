@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAgendaStore } from "@/lib/store/agenda";
 import { useLangStore } from "@/lib/store/lang";
+import { SHOW_MI_AGENDA } from "@/lib/flags";
 
 const T = {
   es: { label: "Mi agenda" },
@@ -29,6 +30,10 @@ export default function MyAgendaButton() {
   const hydrated = useAgendaStore((s) => s.hydrated);
   const n = useAgendaStore((s) => s.picked.length);
   const pathname = usePathname();
+
+  // Apagado mientras la organización no publique el programa (feedback 10/09).
+  // El botón lo montan cinco páginas: el corte va acá y no en cada una.
+  if (!SHOW_MI_AGENDA) return null;
 
   // Dentro de /mi-agenda el botón no lleva a ningún lado.
   if (pathname?.startsWith("/mi-agenda")) return null;
