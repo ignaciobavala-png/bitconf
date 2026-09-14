@@ -316,14 +316,19 @@ existen en `main`.
 - **Accesos rápidos**: salen Agenda y Speakers (mismo flag), entran
   "¿Quiénes son los embajadores?" (`/mas/embajadores`) y "Quiero ser parte"
   (`/#se-parte`).
-- **Media Partners**: la grilla estática pasa a **5 carriles de `LogoMarquee`**.
-  El pedido eran cuatro cosas a la vez —alinear hasta el margen derecho, logos
-  25% más chicos, cinco líneas, y que se actualice solo **sin** quedar en
-  scroll infinito— y el marquee las resuelve juntas: el contenedor pierde
-  `max-w-6xl` (llega al mismo borde que el navbar), el alto baja a
-  `clamp(36px, 4.65vw, 57px)`, son cinco carriles fijos, y como el número de
-  carriles no depende de cuántos logos haya, **la sección mide lo mismo con 14
-  que con 60**. Lo que cambia es cuántos circulan por carril.
+- **Media Partners**: sigue siendo **grilla FIJA** (decisión del 08/09, que el
+  10/09 reconfirma al pedir que no quede en "scroll infinito"), ahora en
+  **5 filas**. Se probó pasarla a `LogoMarquee` y se revirtió: "scroll
+  infinito" leído junto con la decisión previa es *que no se mueva*, no solo
+  que no crezca. Del pedido quedan: cinco filas, logos 25% más chicos
+  (`clamp(36px, 4.65vw, 57px)`), y el bloque sin `max-w-6xl` para que llegue al
+  mismo borde derecho que el navbar.
+  Cada fila reparte sus logos en **celdas iguales a lo ancho**: con columnas
+  fijas, la última fila incompleta deja el hueco a la derecha que era
+  justamente el reclamo. Y el ancho de cada logo se topea contra el **alto** de
+  la caja (4.5x), no contra la celda — una fila con menos logos tiene celdas
+  más anchas y sin el tope un wordmark largo sale al doble de tamaño que el
+  mismo logo en una fila llena.
 - **Actualización automática de logos**: `scripts/generate-media-partners.mjs`
   lee `public/assets/home/media-partners/` y regenera
   `lib/media-partners.generated.ts` en cada `dev` y `build` (`predev`/
