@@ -109,37 +109,28 @@ export default function Footer({ lang: langProp }: { lang?: "es" | "en" }) {
             >
               {t.footerBlurb}
             </p>
-          </div>
-        </div>
 
-        {/* Redes sociales — ancladas al piso del footer, lado derecho */}
-        <div className="hidden lg:flex absolute right-0 bottom-8 z-10 flex-col items-end gap-3 px-6 sm:px-10 lg:pr-28 pointer-events-none">
-          <span
-            className="pointer-events-auto"
-            style={{
-              ...labelStyle,
-              color: "#A5A8B1",
-              fontSize: "clamp(11px, 1vw, 13px)",
-            }}
-          >
-            {t.followUs}
-          </span>
-          <div className="pointer-events-auto flex items-center gap-3">
-            {SOCIALS.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                aria-label={social.label}
-                target={social.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel={social.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-                style={{ width: "34px", height: "34px", background: "#FF4E01" }}
-              >
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="#171616">
-                  <path d={social.path} />
-                </svg>
-              </a>
-            ))}
+            {/* Redes debajo del logo y la descripción.
+                Antes estaban ancladas abajo a la derecha y quedaban TAPADAS por
+                la burbuja de Qubit, que es `fixed` en esa misma esquina: los
+                botones se veían pero no se podían clickear (feedback 10/09).
+                Moverlas acá saca el problema de raíz, en vez de pelearlo con
+                z-index —Qubit tiene que seguir estando por encima de todo— o de
+                acortar el footer. Es la opción que propuso la organización y
+                además deja la columna igual que en mobile. */}
+            <span
+              className="block mt-5"
+              style={{
+                ...labelStyle,
+                color: "#A5A8B1",
+                fontSize: "clamp(11px, 1vw, 13px)",
+              }}
+            >
+              {t.followUs}
+            </span>
+            <div className="mt-3">
+              <SocialLinks size={34} icon={14} />
+            </div>
           </div>
         </div>
       </div>
@@ -182,24 +173,35 @@ export default function Footer({ lang: langProp }: { lang?: "es" | "en" }) {
         >
           {t.followUs}
         </span>
-        <div className="flex items-center gap-3 mt-3">
-          {SOCIALS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              aria-label={social.label}
-              target={social.href.startsWith("mailto:") ? undefined : "_blank"}
-              rel={social.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-              className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
-              style={{ width: "38px", height: "38px", background: "#FF4E01" }}
-            >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="#171616">
-                <path d={social.path} />
-              </svg>
-            </a>
-          ))}
+        <div className="mt-3">
+          <SocialLinks size={38} icon={16} />
         </div>
       </div>
     </footer>
+  );
+}
+
+function SocialLinks({ size, icon }: { size: number; icon: number }) {
+  return (
+    <div className="flex items-center gap-3">
+      {SOCIALS.map((social) => {
+        const external = !social.href.startsWith("mailto:");
+        return (
+          <a
+            key={social.label}
+            href={social.href}
+            aria-label={social.label}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
+            style={{ width: size, height: size, background: "#FF4E01" }}
+          >
+            <svg viewBox="0 0 24 24" width={icon} height={icon} fill="#171616">
+              <path d={social.path} />
+            </svg>
+          </a>
+        );
+      })}
+    </div>
   );
 }
