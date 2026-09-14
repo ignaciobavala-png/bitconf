@@ -731,36 +731,47 @@ export default function HomePage() {
 
                   {/* Precio(s) */}
                   <div style={{ marginTop: "18px" }}>
+                    {/* Nombre de tanda ARRIBA del precio, no al lado.
+                        En una línea no entra: la fila mide 270px y "Second
+                        Chance" (103) + gap (8) + "AR$ 65.000" (189) necesitan
+                        300. Como la fila es flex con `nowrap`, el label se
+                        encogía a 73px y el texto se desbordaba encima del
+                        número (lo reportó la organización el 10/09). Con
+                        "Early Bird" entraba justo y no se veía.
+                        Va en las tres cards y no solo en General: si una
+                        quedara en dos líneas y las otras en una, los precios
+                        dejarían de alinearse entre tarjetas. Además así
+                        cualquier tanda futura entra sin volver a romperse. */}
                     {ticket.prices.map((p, pi) => (
                       <div
                         key={pi}
-                        className="flex items-baseline gap-2"
-                        style={{ marginTop: pi === 0 ? 0 : "6px", whiteSpace: "nowrap" }}
+                        style={{ marginTop: pi === 0 ? 0 : "10px", whiteSpace: "nowrap" }}
                       >
                         {p[lang] && (
-                          <span
+                          <div
                             style={{
                               fontFamily: "var(--font-neue-machina), sans-serif",
                               fontWeight: 500,
                               fontSize: "13px",
                               color: cText,
                               opacity: 0.85,
-                              minWidth: "52px",
+                              marginBottom: "2px",
                             }}
                           >
                             {p[lang]}
-                          </span>
+                          </div>
                         )}
-                        <span
+                        <div
                           style={{
                             ...labelStyle,
                             color: cText,
                             fontSize: ticket.prices.length > 1 ? "clamp(16px, 1.7vw, 20px)" : "clamp(20px, 2.4vw, 28px)",
                             letterSpacing: "0.02em",
+                            lineHeight: 1.1,
                           }}
                         >
                           {p.value}
-                        </span>
+                        </div>
                       </div>
                     ))}
                     {/* Aclaración de precio (12/8, diseño): moneda de cobro en General,
