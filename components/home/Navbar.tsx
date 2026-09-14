@@ -69,7 +69,7 @@ export default function Navbar() {
             fontSize: "clamp(14px, 1.4vw, 18px)",
           }}
         >
-          LABITCONF.
+          LABITCONF
         </a>
 
         <nav className="hidden md:flex items-center gap-8">

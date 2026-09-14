@@ -4,6 +4,20 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
+/**
+ * Cuánto más lento va todo respecto del ajuste original.
+ *
+ * Feedback de la organización (10/09): "las frases están pasando demasiado
+ * deprisa, bajarle la velocidad un 40%, tienen que ser legibles y tranquis".
+ * Bajar la velocidad un 40% es multiplicar la DURACIÓN por 1/0.6 = 1.667.
+ *
+ * Va como factor y no reescribiendo los números para no perder el reparto
+ * original entre carriles: la gracia es que ninguno vaya al mismo ritmo que
+ * otro, y esa relación se mantiene al escalarlos todos por igual. Si vuelven a
+ * pedir un ajuste de velocidad, se toca solo esta constante.
+ */
+const SPEED_FACTOR = 1 / 0.6;
+
 const STATIC_LANES: {
   id: string;
   y: number;
@@ -20,7 +34,7 @@ const STATIC_LANES: {
   { id: "l8",  y: 39, duration: 20, fontSize: "10px" },
   { id: "l9",  y: 49, duration: 34, fontSize: "14px" },
   { id: "l10", y: 59, duration: 27, fontSize: "11px" },
-];
+].map((lane) => ({ ...lane, duration: lane.duration * SPEED_FACTOR }));
 
 interface DBReason {
   id: string;
