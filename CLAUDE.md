@@ -295,6 +295,75 @@ secciones** — no una solución por sección.
   estructura de pestañas que ellos mismos dijeron que iban a mandar: rehacer el
   layout antes de saber qué contenido lleva cada pestaña es trabajo que se tira.
 
+## Feedback de la organización (10/09/2026) — qué se hizo y qué falta
+
+Las notas llegaron como screenshots anotados del preview de `fase-2` (doc
+"FASE 2 - WEB 15.08", pestaña de notas del 10/09). **Son sobre `fase-2`, no
+sobre producción**: el navbar con MÁS, Qubit y los tickets del screenshot no
+existen en `main`.
+
+### Lo que se hizo
+
+- **Navbar**: `LABITCONF` pierde el punto; queda `LABITCONF | TICKETS | MÁS ▾`
+  a la izquierda y `¿Por qué hodleás? | ES/EN` a la derecha.
+- **"No mostramos aún: Agenda, Speakers, Mi Agenda"** → `lib/flags.ts`
+  (`SHOW_AGENDA`, `SHOW_SPEAKERS`, `SHOW_MI_AGENDA`, los tres en `false`).
+  Se apagan los **accesos**, no las páginas: `/agenda`, `/speakers` y
+  `/mi-agenda` siguen andando por URL directa y se prerenderizan igual. La
+  nota dice "aún", así que el día que publiquen el programa se prenden los
+  flags y vuelven navbar, menú mobile, accesos rápidos y botón lateral sin
+  reescribir nada.
+- **Accesos rápidos**: salen Agenda y Speakers (mismo flag), entran
+  "¿Quiénes son los embajadores?" (`/mas/embajadores`) y "Quiero ser parte"
+  (`/#se-parte`).
+- **Media Partners**: la grilla estática pasa a **5 carriles de `LogoMarquee`**.
+  El pedido eran cuatro cosas a la vez —alinear hasta el margen derecho, logos
+  25% más chicos, cinco líneas, y que se actualice solo **sin** quedar en
+  scroll infinito— y el marquee las resuelve juntas: el contenedor pierde
+  `max-w-6xl` (llega al mismo borde que el navbar), el alto baja a
+  `clamp(36px, 4.65vw, 57px)`, son cinco carriles fijos, y como el número de
+  carriles no depende de cuántos logos haya, **la sección mide lo mismo con 14
+  que con 60**. Lo que cambia es cuántos circulan por carril.
+- **Actualización automática de logos**: `scripts/generate-media-partners.mjs`
+  lee `public/assets/home/media-partners/` y regenera
+  `lib/media-partners.generated.ts` en cada `dev` y `build` (`predev`/
+  `prebuild`). Para sumar un partner alcanza con dejar el archivo ahí: el
+  nombre del archivo se vuelve el `alt`. Lo que no se puede deducir del archivo
+  —la compensación óptica por logo— vive en el mapa `SCALE` de
+  `lib/media-partners.ts`; un logo nuevo entra en `1`, que es un default
+  correcto y no un placeholder.
+- **`LogoMarquee` con tope de ancho** (`maxAspect`, default 4.5× el alto): en
+  una grilla el ancho lo frena la columna, en un carril no hay columna y un
+  wordmark de 12:1 ("NOTICIAS FINTECH LATAM", "RANDOM ACCESS") se estiraba
+  hasta media pantalla — se veía **más grande** que el resto aunque compartiera
+  el alto.
+- **Frases del watermark 40% más lentas**: `SPEED_FACTOR = 1/0.6` sobre las
+  duraciones de los diez carriles de `WatermarkLayer`. Va como factor y no
+  reescribiendo la tabla para no perder el reparto entre carriles — la gracia
+  es que ninguno vaya al ritmo de otro, y escalarlos a todos por igual mantiene
+  esa relación. Otro ajuste de velocidad toca una sola constante.
+- **Redes sociales fuera del paso de Qubit**: estaban ancladas abajo a la
+  derecha, exactamente donde la burbuja de Qubit es `fixed`; se veían pero no
+  se podían clickear. Pasan **debajo del logo y la descripción de LABITCONF**
+  (la opción que propuso la organización), que saca el problema de raíz en vez
+  de pelearlo con z-index — Qubit tiene que seguir estando por encima de todo.
+  De paso la columna de desktop queda igual que la de mobile.
+
+### Frenado
+
+- **Sección nueva "ACTIVIDADES 2026"** (galería a pantalla completa ocupando
+  tres franjas: Workshops & Experiencias, HODL Stories, HODLween, Comunidades,
+  Monumento de Satoshi, Edu Hub, +6 Escenarios). Comentario del cliente en el
+  doc: *"NO LO HAGAS AHORA, estoy preparando las imágenes ya con los textos,
+  para que solo tengas que incrustarlas en el carrusel"*. Espera material.
+
+### Pendiente de material o definición
+
+- **Tickets**: "AR$ 65.000" se solapa con "Second Chance" en la card General.
+- **Sección SPONSORS** (con link) — "de momento no están".
+- **Sección CONTENT PARTNERS** (con link).
+- La nota de "Sé Parte" (acreditación de prensa + colores) ya estaba hecha.
+
 ## Agenda (`/agenda`) — decisiones tomadas
 
 Come de las mismas tablas que speakers (`getAgenda()` en `lib/speakers/queries.ts`),
