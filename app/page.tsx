@@ -9,7 +9,6 @@ import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
-import LogoMarquee from "@/components/home/LogoMarquee";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
@@ -243,12 +242,8 @@ const TICKETS = [
 // pequeños"): clamp(48,6.2vw,76) → clamp(36,4.65vw,57).
 const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
 
-// Cinco carriles alternando dirección. Las duraciones son distintas a propósito
-// —igual que los carriles de speakers— para que no se sincronicen entre sí.
-const MEDIA_LANE_DURATIONS = [44, 52, 47, 58, 50];
-
-// El reparto no depende de nada del render: se calcula una vez por módulo.
-const mediaLanes = mediaPartnerLanes();
+// El reparto en filas no depende de nada del render: se calcula una vez.
+const mediaRows = mediaPartnerLanes();
 
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
@@ -1120,21 +1115,46 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          {/* Cinco carriles en movimiento en vez de la grilla estática. Resuelve
-              los tres pedidos del 10/09 de una: la barra llega hasta el margen
-              derecho, los logos son más chicos, y la sección mide siempre lo
-              mismo por más partners que se sumen (nada de scroll infinito).
-              Alternan dirección carril por carril, como los de speakers. */}
-          <div className={`${TITLE_GAP} flex flex-col gap-6 sm:gap-8`}>
-            {mediaLanes.map((lane, i) => (
-              <Reveal key={`media-lane-${i}`} delay={0.15 + i * 0.08}>
-                <LogoMarquee
-                  items={lane}
-                  direction={i % 2 === 0 ? "right" : "left"}
-                  duration={MEDIA_LANE_DURATIONS[i % MEDIA_LANE_DURATIONS.length]}
-                  height={MEDIA_LOGO_H}
-                  gap={56}
-                />
+          {/* Cinco filas FIJAS, sin movimiento.
+              El 08/09 ya se había decidido grilla y no `LogoMarquee` (con esta
+              cantidad de marcas entran todas en una pantalla, que era el
+              argumento del marquee), y la nota del 10/09 pide explícitamente
+              que la sección no quede en "scroll infinito". Así que el pedido
+              de "5 líneas + más chicos" se resuelve quieto.
+              Cada fila reparte sus logos en celdas iguales a lo ancho de la
+              sección: así todas llegan al margen derecho aunque una tenga
+              menos logos que otra, en vez de dejar el hueco a la derecha que
+              era justamente lo que reclamaban. */}
+          <div className={`${TITLE_GAP} flex flex-col gap-8 sm:gap-10`}>
+            {mediaRows.map((row, i) => (
+              <Reveal key={`media-row-${i}`} delay={0.15 + i * 0.08}>
+                <div className="flex items-center">
+                  {row.map((logo) => (
+                    <div
+                      key={logo.src}
+                      className="flex flex-1 items-center justify-center px-2"
+                      style={{ height: MEDIA_LOGO_H }}
+                    >
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={440}
+                        height={152}
+                        className="h-full w-auto object-contain"
+                        // La escala topea el ALTO (compensación óptica por
+                        // logo). El ancho NO puede depender de la celda: una
+                        // fila con menos logos tiene celdas más anchas y un
+                        // wordmark largo crecería hasta el doble que el mismo
+                        // logo en una fila llena. Se topea contra el alto de
+                        // la caja, que es igual en todas las filas.
+                        style={{
+                          maxHeight: `${logo.scale * 100}%`,
+                          maxWidth: `min(100%, calc(${MEDIA_LOGO_H} * 4.5))`,
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
               </Reveal>
             ))}
           </div>
