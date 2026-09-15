@@ -43,18 +43,21 @@ export const MEDIA_PARTNERS: MediaPartner[] = MEDIA_PARTNER_FILES.map((f) => ({
   scale: SCALE[f.slug] ?? 1,
 }));
 
-/** Cuántos carriles tiene la sección. Fijo a propósito — ver `mediaPartnerLanes`. */
-export const MEDIA_LANES = 5;
+/** Cuántas filas tiene la sección. Fijo a propósito — ver `mediaPartnerLanes`. */
+export const MEDIA_LANES = 3;
 
 /**
- * Reparte los logos en 5 carriles.
+ * Reparte los logos en 3 filas.
  *
- * Pedido de la organización (10/09): cinco líneas, logos más chicos, y que la
- * sección NO crezca a medida que se suman partners ("no me gustaría que quede
- * un scroll infinito"). Por eso el número de carriles es fijo y lo que cambia
- * es cuántos logos circulan por cada uno: con 14 o con 60, la sección mide lo
- * mismo. El reparto es por módulo para que queden parejos y para que un logo
- * nuevo no reordene a todos los demás.
+ * Pedido de la organización (15/09): tres filas de cinco. Con 14 logos la
+ * última queda en cuatro; el hueco se disimula en el render centrando la fila
+ * sobre celdas del mismo ancho que las llenas (medio hueco de cada lado en vez
+ * de uno entero a la derecha).
+ *
+ * El número de filas es fijo y lo que cambia es cuántos logos entran en cada
+ * una: con 14 o con 60, la sección mide lo mismo — la nota del 10/09 pedía que
+ * no quedara en "scroll infinito". El reparto es por módulo para que queden
+ * parejas y para que un logo nuevo no reordene a todos los demás.
  */
 export function mediaPartnerLanes(
   items: MediaPartner[] = MEDIA_PARTNERS,

@@ -244,6 +244,10 @@ const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
 
 // El reparto en filas no depende de nada del render: se calcula una vez.
 const mediaRows = mediaPartnerLanes();
+// Ancho de celda = el de la fila MÁS llena. Así la fila incompleta no estira
+// sus celdas: queda centrada con medio hueco de cada lado, que se nota mucho
+// menos que un hueco entero contra el margen derecho.
+const MEDIA_COLS = Math.max(...mediaRows.map((row) => row.length));
 
 // Accesos rápidos del mapa web de fase 2 ("¿QUÉ QUERÉS SABER DE LABITCONF?").
 // Seis intenciones de entrada distintas; `action: "checkout"` abre el modal de
@@ -1063,7 +1067,11 @@ export default function HomePage() {
           (muchos logos en poco espacio). Pedido de la organización del 08/09. */}
       <section
         id="media-partners"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        // Sin `sm:min-h-screen`: el patrón "1:1 screen" del resto de la home
+        // no aplica a un bloque corto. Con tres filas el contenido mide ~460px
+        // y el `justify-center` repartía el sobrante de la pantalla arriba y
+        // abajo, dejando un hueco muerto contra "Sé parte".
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:pt-32 sm:pb-20 overflow-hidden"
         style={{ zIndex: 3 }}
       >
         {/* Fondo: iconos (el único del banco que no está usado en la home) */}
@@ -1115,25 +1123,28 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          {/* Cinco filas FIJAS, sin movimiento.
+          {/* Tres filas FIJAS, sin movimiento.
               El 08/09 ya se había decidido grilla y no `LogoMarquee` (con esta
               cantidad de marcas entran todas en una pantalla, que era el
               argumento del marquee), y la nota del 10/09 pide explícitamente
               que la sección no quede en "scroll infinito". Así que el pedido
-              de "5 líneas + más chicos" se resuelve quieto.
-              Cada fila reparte sus logos en celdas iguales a lo ancho de la
-              sección: así todas llegan al margen derecho aunque una tenga
-              menos logos que otra, en vez de dejar el hueco a la derecha que
-              era justamente lo que reclamaban. */}
+              de la organización (15/09) de "3 filas de 5" se resuelve quieto.
+              Con 14 logos la última fila queda en 4: todas las celdas miden lo
+              mismo (el ancho de la fila llena) y la fila incompleta se centra,
+              así el hueco se parte en dos mitades en vez de caer entero contra
+              el margen derecho. */}
           <div className={`${TITLE_GAP} flex flex-col gap-8 sm:gap-10`}>
             {mediaRows.map((row, i) => (
               <Reveal key={`media-row-${i}`} delay={0.15 + i * 0.08}>
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                   {row.map((logo) => (
                     <div
                       key={logo.src}
-                      className="flex flex-1 items-center justify-center px-2"
-                      style={{ height: MEDIA_LOGO_H }}
+                      className="flex items-center justify-center px-2"
+                      style={{
+                        height: MEDIA_LOGO_H,
+                        flex: `0 0 ${100 / MEDIA_COLS}%`,
+                      }}
                     >
                       <Image
                         src={logo.src}
