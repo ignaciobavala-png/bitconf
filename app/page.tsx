@@ -57,10 +57,11 @@ const T = {
     heroButton: "Comprar Ticket",
     heroTagline: "Latin American Bitcoin & Blockchain Conference",
     presentacionParagraphs: [
-      "El evento #1 de América Latina que reúne a las personas, ideas y proyectos que están redefiniendo el dinero, la tecnología y la economía a través de Bitcoin, Blockchain e Inteligencia Artificial.",
-      "Más de 300 referentes internacionales, 200 charlas, experiencias inmersivas y dos días de networking con quienes están construyendo la próxima década.",
-      "HODL no es esperar. Es tener la convicción de construir el futuro.",
+      "Desde 2013, LABITCONF reúne en América Latina a quienes están construyendo el futuro de la tecnología y las finanzas. El viernes 30 y sábado 31 de octubre, Costa Salguero, Buenos Aires, será nuevamente el punto de encuentro de la comunidad.",
+      "Esta edición pone a Bitcoin, Blockchain e Inteligencia Artificial en la misma conversación. Dos días de charlas, experiencias y encuentros con referentes de la industria y quienes están dando forma a lo que viene.",
+      "HODL no es esperar: es tener la convicción de seguir construyendo. ¿Y vos, por qué hodleás?",
     ],
+    presentacionTopics: ["Bitcoin", "Tecnología", "IA", "Finanzas", "Startups", "Comunidad"],
     ubicacionP1:
       "Centro Costa Salguero es uno de los espacios más reconocidos para eventos en la Ciudad de Buenos Aires.",
     ubicacionP2:
@@ -76,10 +77,11 @@ const T = {
     heroButton: "Buy Ticket",
     heroTagline: "Latin American Bitcoin & Blockchain Conference",
     presentacionParagraphs: [
-      "Latin America's #1 event, bringing together the people, ideas and projects redefining money, technology and the economy through Bitcoin, Blockchain and Artificial Intelligence.",
-      "300+ international speakers, 200 talks, immersive experiences and two days of networking with the people building the next decade.",
-      "HODL isn't waiting. It's having the conviction to build the future.",
+      "Since 2013, LABITCONF has brought together the people building the future of technology and finance across Latin America. On Friday October 30 and Saturday October 31, Costa Salguero, Buenos Aires, will once again be the community's meeting point.",
+      "This edition puts Bitcoin, Blockchain and Artificial Intelligence in the same conversation. Two days of talks, experiences and encounters with industry leaders and the people shaping what comes next.",
+      "HODL isn't waiting: it's having the conviction to keep building. So, why do you hodl?",
     ],
+    presentacionTopics: ["Bitcoin", "Technology", "AI", "Finance", "Startups", "Community"],
     ubicacionP1:
       "Centro Costa Salguero is one of the most recognized event spaces in the City of Buenos Aires.",
     ubicacionP2:
@@ -612,8 +614,8 @@ export default function HomePage() {
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
                   color: "#E6EEF2",
-                  fontSize: "clamp(21px, 2.02vw, 27px)",
-                  lineHeight: 1.6,
+                  fontSize: "clamp(15px, 1.5vw, 20px)",
+                  lineHeight: 1.7,
                   zIndex: 2,
                   maxWidth: headlineWidth,
                   textAlign: "justify",
@@ -623,6 +625,26 @@ export default function HomePage() {
               </p>
             </Reveal>
           ))}
+
+          {/* Temas destacados — "globos" pedidos en el mapa web, debajo del copy */}
+          <div className="mt-8 flex flex-wrap gap-2 sm:gap-3">
+            {t.presentacionTopics.map((topic, i) => (
+              <Reveal key={topic} delay={0.4 + i * 0.06}>
+                <span
+                  className="inline-block rounded-full"
+                  style={{
+                    ...labelStyle,
+                    color: "#FF4E01",
+                    border: "1px solid rgba(255,78,1,0.5)",
+                    fontSize: "clamp(11px, 1vw, 13px)",
+                    padding: "8px 18px",
+                  }}
+                >
+                  {topic}
+                </span>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
