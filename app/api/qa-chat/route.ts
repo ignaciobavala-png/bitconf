@@ -39,21 +39,22 @@ La cantidad de asistentes, speakers, charlas y activaciones cambia en cada edici
 
 const FAQ = `
 1. Tickets y acceso
-¿Dónde puedo comprar mi ticket? En labitconf.com. Es la única plataforma oficial de venta. No comprar tickets a revendedores ni a través de terceros.
+¿Dónde puedo comprar mi ticket? En labitconf.com. Es la única plataforma oficial de venta. La pasarela de pagos es HALLOS.IO: https://www.hallos.io/event/labitconf/checkout. No comprar tickets a revendedores ni a través de terceros.
 ¿Cuándo debo activar mi ticket? Cuando quieras, pero antes de la conferencia. Se recomienda activarlo antes del día del evento para evitar demoras en la puerta.
 ¿Qué incluye cada categoría de ticket?
-- General: acceso a los 2 días, 8 escenarios, Chill Area, Dinner Points y Closing Party.
+- General: acceso a los 2 días, 5 escenarios (VISIÓN, ORANGE PILL, ABC, CODERS y VIP-Business), Chill Area, Dinner Points y Closing Party: la fiesta de disfraces HODLWEEN.
 - Business: todo lo anterior más Área VIP, espacio preferencial en el Main Stage, all inclusive, open bar, coffee bar y Merch Bag.
 - Experience: todo lo anterior más Open Fest exclusivo (29 oct) y Closing Day (1 nov).
 ¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
 ¿Los menores de 16 pueden entrar solos? No, deben estar acompañados por un mayor de edad en todo momento dentro del predio.
 ¿Se pueden transferir o revender tickets? No, los tickets son personales e intransferibles. LABITCONF no se responsabiliza por compras fuera de la plataforma oficial.
 ¿Puedo comprar el ticket el día del evento? Depende de la disponibilidad; se recomienda comprar con anticipación porque los tickets pueden agotarse, especialmente las tandas más baratas.
+¿Se puede ingresar a la zona VIP con niños? Sí: los adultos con entrada a la zona VIP pueden ingresar acompañados de niños, siempre bajo la responsabilidad del adulto a cargo.
 
 2. Agenda y contenido
-¿Dónde puedo ver la agenda completa? En agenda.labitconf.com.
-¿Cuántos escenarios hay? 8 escenarios simultáneos, con temáticas y audiencias diferenciadas. Agenda completa por escenario en agenda.labitconf.com.
-¿Las charlas tienen traducción simultánea? Sí, en el Main Stage, vía Interprefy: ingresar en interprefy.interpret.world con el token oficial del evento (se publica antes del evento) o descargar la app INTERPREFY (Google Play / App Store), conectar auriculares y seguir la charla en el idioma elegido.
+¿Dónde puedo ver la agenda completa? En labitconf.com/agenda. Puede que todavía no esté publicada: en ese caso, seguir las redes oficiales. Próximamente se va a poder marcar las charlas que no querés perderte y planificar tu asistencia en MI AGENDA. Se recomienda llevar cuaderno o computadora para tomar notas.
+¿Cuántos escenarios hay? 6 escenarios simultáneos, con temáticas y audiencias diferenciadas. Cinco de ellos son VISIÓN, ORANGE PILL, ABC, CODERS y VIP-Business.
+¿Las charlas tienen traducción simultánea? No, esta edición no tiene traducción simultánea.
 ¿Hay side events? Sí, la información se publica próximamente en las redes oficiales de LABITCONF.
 ¿Puedo asistir solo a algunas charlas específicas? Sí, la entrada general da acceso libre a todos los escenarios durante los días del ticket. Restricciones solo en espacios exclusivos Business/Experience.
 
@@ -66,17 +67,18 @@ const FAQ = `
 
 4. Comunidad y programas especiales
 ¿Qué es el Programa de Comunidades Asociadas? Vincula comunidades del ecosistema cripto, tech y blockchain con LABITCONF; reciben beneficios (descuentos, tickets gratuitos, visibilidad) a cambio de difundir el evento. Para sumarse: labitconf.com.
-¿Qué es el HUB de Estudiantes? Programa para estudiantes universitarios: universidades aliadas dan acceso gratuito y certificado digital de participación. Tiene espacio físico propio en el predio y organiza el Pitch Demo Day, donde 4 ganadores exponen en LABITCONF.
+¿Qué es el EDU HUB? Es el espacio de LABITCONF 2026 para estudiantes, profesores, alumni y la comunidad educativa de las universidades acreditadas: una comunidad que conecta a las universidades con el ecosistema de Bitcoin, blockchain, tecnología e innovación, con acceso a contenidos, experiencias, networking y actividades especiales antes y durante LABITCONF. El formulario para sumar una universidad todavía no fue publicado.
+¿Qué es LABITCONF Bitcoin College? Una experiencia formativa inmersiva en el ecosistema Bitcoin dentro del marco de LABITCONF 2026: una capacitación intensiva de un día completo, dictada y certificada en conjunto por la Escuelita Bitcoin y la Universidad Champagnat. Busca formar y certificar a estudiantes y docentes universitarios en conocimientos fundamentales sobre Bitcoin y generar una red de multiplicadores. Está abierta a toda la comunidad universitaria de Argentina y países vecinos, sin distinción de origen.
 ¿Cómo puedo postularme como voluntario? A través del formulario en labitconf.com antes del cierre de la convocatoria. Los voluntarios reciben capacitación previa, acreditación especial y acceso al evento.
-¿Qué es el Programa de Embajadores HODL? La primera convocatoria de embajadores en la historia de LABITCONF; se seleccionan 6 personas relevantes del ecosistema. Postulación vía formulario (aún no publicado).
+¿Qué es el Programa de Embajadores HODL? La primera convocatoria de embajadores en la historia de LABITCONF: se seleccionan 6 personas relevantes del ecosistema. Quiénes son los 6 todavía no fue anunciado.
 
 5. Soporte y contacto
 ¿A dónde escribo si tengo un problema con mi ticket? A contacto@labitconf.com, incluyendo nombre, número de orden y descripción del problema. El equipo responde en días hábiles.
 ¿Hay atención presencial el día del evento? Sí, punto de atención e información dentro del predio para consultas, acreditación y gestión de inconvenientes.
-¿Dónde puedo seguir las novedades del evento? Instagram @labitconf, X @labitconf, web labitconf.com, agenda agenda.labitconf.com.
+¿Dónde puedo seguir las novedades del evento? Instagram @labitconf, X @labitconf, web labitconf.com, agenda labitconf.com/agenda.
 `.trim();
 
-const SYSTEM_PROMPT = `Sos Qubit, el asistente personal oficial de LABITCONF 2026 (Costa Salguero, Buenos Aires, 29 oct - 1 nov).
+const SYSTEM_PROMPT = `Sos Qubit, el asistente personal oficial de LABITCONF 2026 (Costa Salguero, Buenos Aires). La conferencia es el 30 y 31 de octubre; el Open Fest del 29 de octubre y el Closing Day del 1 de noviembre son exclusivos del ticket Experience.
 
 Tu criterio es profesional: respondés con precisión, calidez y sin inventar información. Sos bilingüe español/inglés — respondé siempre en el mismo idioma en el que te escribe el usuario (si escribe en inglés, respondé en inglés; si escribe en español, respondé en español).
 
