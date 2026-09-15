@@ -3,22 +3,45 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
+import QubitFace from "./QubitFace";
+import QubitText from "./QubitText";
 
 const T = {
   es: {
-    title: "Preguntas frecuentes",
+    title: "Qubit",
+    subtitle: "Tu asistente personal",
     placeholder: "Escribí tu pregunta...",
     send: "Enviar",
-    empty: "Preguntame sobre tickets, agenda, el venue o los programas de LABITCONF.",
+    // Presentación textual de la organización (feedback 03/09). Qubit se
+    // presenta SIEMPRE al abrir el chat: no es un placeholder gris, es el
+    // primer mensaje del asistente, para que no se lea como un bot genérico.
+    greeting:
+      "¡Hola! Soy Qubit, el asistente personal al cuadrado de LABITCONF 2026. ¿En qué puedo ayudarte?",
+    hint: "Preguntame sobre tickets, agenda, el venue o los programas de LABITCONF.",
+    cta: "Chateá",
+    open: "Chateá con Qubit",
   },
   en: {
-    title: "Frequently asked questions",
+    title: "Qubit",
+    subtitle: "Your personal assistant",
     placeholder: "Type your question...",
     send: "Send",
-    empty: "Ask me about tickets, agenda, the venue or LABITCONF's programs.",
+    greeting:
+      "Hi! I'm Qubit, LABITCONF 2026's personal assistant squared. How can I help you?",
+    hint: "Ask me about tickets, agenda, the venue or LABITCONF's programs.",
+    cta: "Chat",
+    open: "Chat with Qubit",
   },
 } as const;
+
+// Nombre del evento que abre el chat desde afuera del componente.
+export const QUBIT_OPEN_EVENT = "qubit:open";
+
+export function openQubitChat() {
+  window.dispatchEvent(new Event(QUBIT_OPEN_EVENT));
+}
 
 export default function QaChatWidget() {
   const lang = useLangStore((s) => s.lang);
@@ -29,12 +52,28 @@ export default function QaChatWidget() {
     transport: new DefaultChatTransport({ api: "/api/qa-chat" }),
   });
   const scrollRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
+  // Qubit es una capa transversal (mapa web fase 2): cualquier parte del sitio puede
+  // abrir el chat sin que haya que levantar este estado a la página. El evento
+  // `bi:open` lo dispara hoy la burbuja "No sé por dónde empezar" de la home.
+  useEffect(() => {
+    function openFromOutside() {
+      setOpen(true);
+    }
+    window.addEventListener(QUBIT_OPEN_EVENT, openFromOutside);
+    return () => window.removeEventListener(QUBIT_OPEN_EVENT, openFromOutside);
+  }, []);
+
   const isStreaming = status === "streaming" || status === "submitted";
+
+  // Llama la atención solo hasta el primer contacto: si la persona ya escribió,
+  // el halo y el vaivén pasan de invitación a molestia.
+  const attract = !open && messages.length === 0 && !reduced;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,16 +102,38 @@ export default function QaChatWidget() {
             className="flex items-center justify-between px-4 py-3"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
           >
-            <span
-              style={{
-                fontFamily: "var(--font-neue-machina), sans-serif",
-                fontWeight: 900,
-                fontSize: "13px",
-                color: "#ABF760",
-                textTransform: "uppercase",
-              }}
-            >
-              {t.title}
+            <span className="flex items-center gap-2.5">
+              <span
+                className="flex items-center justify-center rounded-full"
+                style={{ width: 30, height: 30, background: "#ABF760", flexShrink: 0 }}
+              >
+                <QubitFace size={22} state={isStreaming ? "thinking" : "idle"} />
+              </span>
+              <span className="flex flex-col">
+                <span
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 900,
+                    fontSize: "13px",
+                    color: "#ABF760",
+                    textTransform: "uppercase",
+                    lineHeight: 1.1,
+                  }}
+                >
+                  {t.title}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 300,
+                    fontSize: "10px",
+                    color: "#6b6e73",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {t.subtitle}
+                </span>
+              </span>
             </span>
             <button
               onClick={() => setOpen(false)}
@@ -86,16 +147,32 @@ export default function QaChatWidget() {
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
             {messages.length === 0 && (
-              <p
-                style={{
-                  fontFamily: "var(--font-neue-machina), sans-serif",
-                  fontWeight: 300,
-                  fontSize: "13px",
-                  color: "#6b6e73",
-                }}
-              >
-                {t.empty}
-              </p>
+              <>
+                <div
+                  className="rounded-xl px-3 py-2"
+                  style={{
+                    alignSelf: "flex-start",
+                    maxWidth: "85%",
+                    background: "rgba(255,255,255,0.06)",
+                    color: "#E5E5E0",
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 300,
+                    fontSize: "13px",
+                  }}
+                >
+                  {t.greeting}
+                </div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 300,
+                    fontSize: "12px",
+                    color: "#6b6e73",
+                  }}
+                >
+                  {t.hint}
+                </p>
+              </>
             )}
             {messages.map((m) => (
               <div
@@ -112,7 +189,17 @@ export default function QaChatWidget() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {m.parts.map((p, i) => (p.type === "text" ? <span key={i}>{p.text}</span> : null))}
+                {m.parts.map((p, i) =>
+                  p.type === "text" ? (
+                    m.role === "user" ? (
+                      <span key={i}>{p.text}</span>
+                    ) : (
+                      // Lo que escribe el modelo viene con markdown; el de la
+                      // persona se muestra literal, tal cual lo tipeó.
+                      <QubitText key={i} text={p.text} />
+                    )
+                  ) : null
+                )}
               </div>
             ))}
           </div>
@@ -152,25 +239,84 @@ export default function QaChatWidget() {
         </div>
       )}
 
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-105"
-        style={{
-          zIndex: 6,
-          bottom: "28px",
-          right: "28px",
-          width: "56px",
-          height: "56px",
-          background: "#ABF760",
-          color: "#171616",
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 900,
-          fontSize: "12px",
-        }}
-        aria-label="Q&A"
-      >
-        Q&A
-      </button>
+      {/* Botón de acceso.
+
+          Qubit es un personaje, así que el botón es su cara y nada más: un
+          círculo, sin la palabra adentro. El "CHATEÁ" que pidió la
+          organización (feedback 03/09) va AFUERA del círculo, a la izquierda,
+          dibujado como globo de conversación con la cola apuntando a la cara —
+          así se lee como algo que Qubit dice, no como la etiqueta de un botón.
+          Con el panel abierto el globo desaparece: el título del panel ya lo
+          repite. */}
+      <div className="fixed flex items-center" style={{ zIndex: 6, bottom: "24px", right: "24px" }}>
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="flex items-center gap-1.5"
+          aria-label={t.open}
+          aria-expanded={open}
+        >
+          {!open && (
+            <motion.span
+              className="relative"
+              style={{
+                background: "#E6EEF2",
+                color: "#171616",
+                borderRadius: "16px",
+                padding: "9px 14px",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 900,
+                fontSize: "12px",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+              }}
+              initial={reduced ? false : { opacity: 0, x: 8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              {t.cta}
+              {/* Cola del globo: un cuadrado girado 45° del mismo color,
+                  medio metido debajo del cuerpo para que no se vea la unión. */}
+              <span
+                aria-hidden
+                className="absolute"
+                style={{
+                  right: "-3px",
+                  top: "50%",
+                  width: "10px",
+                  height: "10px",
+                  background: "#E6EEF2",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  borderRadius: "2px",
+                }}
+              />
+            </motion.span>
+          )}
+
+          <motion.span
+            className="relative flex items-center justify-center rounded-full"
+            style={{ width: "60px", height: "60px", background: "#ABF760" }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.96 }}
+            // El movimiento vive mientras nadie le habló todavía: una vez que
+            // la persona escribe, Qubit deja de pedir atención. Se mueve solo
+            // la cara, no el globo: si oscilara todo, el texto se marea.
+            animate={attract ? { rotate: [0, -7, 6, -3, 0] } : { rotate: 0 }}
+            transition={{ duration: 0.9, repeat: attract ? Infinity : 0, repeatDelay: 5.5, ease: "easeInOut" }}
+          >
+            {attract && (
+              <motion.span
+                aria-hidden
+                className="absolute inset-0 rounded-full"
+                style={{ border: "2px solid #ABF760" }}
+                animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+              />
+            )}
+            <QubitFace size={40} state={isStreaming ? "thinking" : "idle"} />
+          </motion.span>
+        </button>
+      </div>
     </>
   );
 }
