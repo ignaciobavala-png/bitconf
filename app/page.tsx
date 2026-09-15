@@ -12,6 +12,7 @@ import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
+import { mediaPartnerLanes } from "@/lib/media-partners";
 
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
 // con alturas de texto muy dispares, lo que hacía que cada título se viera de
@@ -68,6 +69,8 @@ const T = {
     mapTitle: "Ubicación Costa Salguero",
     ticketsIncludes: "Incluye",
     ticketsBuy: "Comprar",
+    mediaTitle: "Media Partners",
+    mediaSubtitle: "Los medios que cuentan LABITCONF.",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -85,8 +88,22 @@ const T = {
     mapTitle: "Costa Salguero Location",
     ticketsIncludes: "Includes",
     ticketsBuy: "Buy",
+    mediaTitle: "Media Partners",
+    mediaSubtitle: "The media covering LABITCONF.",
   },
 } as const;
+
+// Media partners — alto de la caja de cada logo. Lo único que se repite entre
+// todos es esta caja; lo que cambia por logo es cuánto de esa caja ocupa
+// (`scale` en lib/media-partners.ts), nunca la caja.
+const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
+
+// El reparto en filas no depende de nada del render: se calcula una vez.
+const mediaRows = mediaPartnerLanes();
+// Ancho de celda = el de la fila MÁS llena. Así la fila incompleta no estira
+// sus celdas: queda centrada con medio hueco de cada lado, que se nota mucho
+// menos que un hueco entero contra el margen derecho.
+const MEDIA_COLS = Math.max(...mediaRows.map((row) => row.length));
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -898,6 +915,119 @@ export default function HomePage() {
               style={{ objectFit: "contain" }}
             />
           </Floating>
+        </div>
+      </section>
+
+      {/* Media partners — entre Tickets y Sé parte: los medios acompañan al
+          evento, y la sección siguiente es justamente la de postularse como uno.
+
+          Grilla FIJA y no `LogoMarquee`, que es lo que se usa en /mas: con 14
+          marcas entran todas en una pantalla, que era el argumento del marquee
+          (muchos logos en poco espacio). Pedido de la organización del 08/09. */}
+      <section
+        id="media-partners"
+        // Sin `sm:min-h-screen`: el patrón "1:1 screen" del resto de la home
+        // no aplica a un bloque corto. Con tres filas el contenido mide ~460px
+        // y el `justify-center` repartía el sobrante de la pantalla arriba y
+        // abajo, dejando un hueco muerto contra "Sé parte".
+        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:pt-32 sm:pb-20 overflow-hidden"
+        style={{ zIndex: 3 }}
+      >
+        {/* Fondo: iconos (el único del banco que no está usado en la home) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none"
+          style={{ zIndex: 0, opacity: 0.18 }}
+        >
+          <Image
+            src="/assets/home/fondo-iconos.jpg"
+            alt=""
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
+          }}
+        />
+
+        {/* Sin `max-w-6xl` (feedback 10/09: "insisto con la alineación de todo
+            hasta la margen derecha"): el bloque ocupa el ancho completo de la
+            sección, así el borde derecho de los carriles coincide con el del
+            navbar en vez de cortarse antes. */}
+        <div className="relative w-full" style={{ zIndex: 2 }}>
+          {/* Título como texto: no hay PNG "Media Partners" en la tanda de
+              títulos. Se reemplaza por <Image> cuando diseño lo mande. */}
+          <Reveal>
+            <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(28px, 4.6vw, 56px)", lineHeight: 1.05 }}>
+              {t.mediaTitle}
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p
+              className="mt-3"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: BODY_FS,
+              }}
+            >
+              {t.mediaSubtitle}
+            </p>
+          </Reveal>
+
+          {/* Tres filas FIJAS, sin movimiento.
+              El 08/09 ya se había decidido grilla y no `LogoMarquee` (con esta
+              cantidad de marcas entran todas en una pantalla, que era el
+              argumento del marquee), y la nota del 10/09 pide explícitamente
+              que la sección no quede en "scroll infinito". Así que el pedido
+              de la organización (15/09) de "3 filas de 5" se resuelve quieto.
+              Con 14 logos la última fila queda en 4: todas las celdas miden lo
+              mismo (el ancho de la fila llena) y la fila incompleta se centra,
+              así el hueco se parte en dos mitades en vez de caer entero contra
+              el margen derecho. */}
+          <div className={`${TITLE_GAP} flex flex-col gap-8 sm:gap-10`}>
+            {mediaRows.map((row, i) => (
+              <Reveal key={`media-row-${i}`} delay={0.15 + i * 0.08}>
+                <div className="flex items-center justify-center">
+                  {row.map((logo) => (
+                    <div
+                      key={logo.src}
+                      className="flex items-center justify-center px-2"
+                      style={{
+                        height: MEDIA_LOGO_H,
+                        flex: `0 0 ${100 / MEDIA_COLS}%`,
+                      }}
+                    >
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={440}
+                        height={152}
+                        className="h-full w-auto object-contain"
+                        // La escala topea el ALTO (compensación óptica por
+                        // logo). El ancho NO puede depender de la celda: una
+                        // fila con menos logos tiene celdas más anchas y un
+                        // wordmark largo crecería hasta el doble que el mismo
+                        // logo en una fila llena. Se topea contra el alto de
+                        // la caja, que es igual en todas las filas.
+                        style={{
+                          maxHeight: `${logo.scale * 100}%`,
+                          maxWidth: `min(100%, calc(${MEDIA_LOGO_H} * 4.5))`,
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
