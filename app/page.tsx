@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import HeroVideo from "@/components/home/HeroVideo";
-import QaChatWidget from "@/components/home/QaChatWidget";
+import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
@@ -13,6 +13,7 @@ import Floating from "@/components/home/Floating";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes } from "@/lib/media-partners";
+import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
 // con alturas de texto muy dispares, lo que hacía que cada título se viera de
@@ -62,6 +63,8 @@ const T = {
       "HODL no es esperar: es tener la convicción de seguir construyendo. ¿Y vos, por qué hodleás?",
     ],
     presentacionTopics: ["Bitcoin", "Tecnología", "IA", "Finanzas", "Startups", "Comunidad"],
+    accesosTitle: "¿Qué querés saber de LABITCONF?",
+    accesosSubtitle: "No todo el mundo llega con la misma intención. Elegí por dónde empezar.",
     ubicacionP1:
       "Centro Costa Salguero es uno de los espacios más reconocidos para eventos en la Ciudad de Buenos Aires.",
     ubicacionP2:
@@ -82,6 +85,8 @@ const T = {
       "HODL isn't waiting: it's having the conviction to keep building. So, why do you hodl?",
     ],
     presentacionTopics: ["Bitcoin", "Technology", "AI", "Finance", "Startups", "Community"],
+    accesosTitle: "What do you want to know about LABITCONF?",
+    accesosSubtitle: "Not everyone arrives with the same intent. Pick where to start.",
     ubicacionP1:
       "Centro Costa Salguero is one of the most recognized event spaces in the City of Buenos Aires.",
     ubicacionP2:
@@ -106,6 +111,43 @@ const mediaRows = mediaPartnerLanes();
 // sus celdas: queda centrada con medio hueco de cada lado, que se nota mucho
 // menos que un hueco entero contra el margen derecho.
 const MEDIA_COLS = Math.max(...mediaRows.map((row) => row.length));
+
+// Burbujas de intención de `#accesos`. Agenda y Speakers viajan apagadas
+// (`lib/flags.ts`): la organización pidió no mostrarlas hasta confirmar el
+// programa, y en esta rama las páginas todavía no existen.
+const QUICK_ACCESS = [
+  { key: "ticket", action: "checkout" as const, href: undefined, show: true },
+  { key: "agenda", action: "link" as const, href: "/agenda", show: SHOW_AGENDA },
+  { key: "speakers", action: "link" as const, href: "/speakers", show: SHOW_SPEAKERS },
+  { key: "embajadores", action: "link" as const, href: "/comunidad#embajadores", show: true },
+  { key: "hub", action: "link" as const, href: "/comunidad#student-hub", show: true },
+  { key: "comunidades", action: "link" as const, href: "/comunidad#comunidades", show: true },
+  { key: "separte", action: "link" as const, href: "/#se-parte", show: true },
+  { key: "qubit", action: "qubit" as const, href: undefined, show: true },
+] as const;
+
+const QUICK_ACCESS_LABELS = {
+  es: {
+    ticket: "Quiero comprar mi ticket",
+    agenda: "Quiero ver la agenda",
+    speakers: "Quiero conocer los speakers",
+    embajadores: "¿Quiénes son los embajadores?",
+    hub: "Quiero saber qué es el Hub",
+    comunidades: "Quiero participar con mi comunidad",
+    separte: "Quiero ser parte",
+    qubit: "No sé por dónde empezar",
+  },
+  en: {
+    ticket: "I want to buy my ticket",
+    agenda: "I want to see the agenda",
+    speakers: "I want to meet the speakers",
+    embajadores: "Who are the ambassadors?",
+    hub: "I want to know what the Hub is",
+    comunidades: "I want to join with my community",
+    separte: "I want to take part",
+    qubit: "I don't know where to start",
+  },
+} as const;
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -541,6 +583,88 @@ export default function HomePage() {
             {t.heroTagline}
           </p>
         </Reveal>
+      </section>
+
+      {/* Accesos rápidos — primera bifurcación después del hero (mapa web fase 2).
+          Va antes de "¿Qué es LABITCONF?" a propósito: el usuario que ya sabe a
+          qué vino no tiene que scrollear la presentación entera para llegar. */}
+      <section
+        id="accesos"
+        className="relative px-6 sm:px-10 py-16 sm:py-24 overflow-hidden"
+        style={{ zIndex: 3, background: "#000" }}
+      >
+        <div className="relative w-full max-w-6xl mx-auto text-center" style={{ zIndex: 2 }}>
+          <Reveal>
+            <h2
+              style={{
+                ...labelStyle,
+                color: "#E6EEF2",
+                fontSize: "clamp(20px, 2.6vw, 34px)",
+              }}
+            >
+              {t.accesosTitle}
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p
+              className="mt-3"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: BODY_FS,
+              }}
+            >
+              {t.accesosSubtitle}
+            </p>
+          </Reveal>
+
+          <div className={`${TITLE_GAP} flex flex-wrap justify-center gap-3 sm:gap-4`}>
+            {QUICK_ACCESS.filter((item) => item.show).map((item, i) => {
+              const label = QUICK_ACCESS_LABELS[lang][item.key];
+              // El borde alterna Orange 021 C / Brote burbuja por burbuja: con un
+              // solo color las pastillas se leen como una lista gris; alternando
+              // se ven como opciones distintas sin agregar más peso tipográfico.
+              const accent = i % 2 === 0 ? "#FF4E01" : "#ABF760";
+              // El CTA de compra y el de Qubit son acciones, no navegación, así
+              // que el elemento cambia de <a> a <button> según el caso.
+              const bubbleStyle: React.CSSProperties = {
+                ...labelStyle,
+                background: "rgba(230,238,242,0.04)",
+                border: `1px solid ${accent}`,
+                fontSize: BUTTON_FS,
+                padding: "14px 26px",
+                ["--accent" as string]: accent,
+              };
+              const className =
+                "rounded-full transition-colors duration-200 text-[#E6EEF2] hover:bg-[var(--accent)] hover:text-[#171616]";
+
+              if (item.action === "link") {
+                return (
+                  <Reveal key={item.key} delay={0.15 + i * 0.06}>
+                    <a href={item.href} className={`inline-block ${className}`} style={bubbleStyle}>
+                      {label}
+                    </a>
+                  </Reveal>
+                );
+              }
+
+              return (
+                <Reveal key={item.key} delay={0.15 + i * 0.06}>
+                  <button
+                    type="button"
+                    onClick={item.action === "checkout" ? () => setCheckoutOpen(true) : openQubitChat}
+                    className={className}
+                    style={bubbleStyle}
+                  >
+                    {label}
+                  </button>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {/* Presentación */}
