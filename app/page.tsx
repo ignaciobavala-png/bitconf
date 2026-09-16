@@ -10,6 +10,7 @@ import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
+import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes } from "@/lib/media-partners";
@@ -349,154 +350,45 @@ const SE_PARTE_ACCENTS = [
   { color: "#ABF760", dark: false },
 ] as const;
 
-type SpeakerCard =
-  | { kind: "photo"; src: string }
-  | { kind: "stat"; value: string; label: { es: string; en: string } }
-  | { kind: "label"; title: { es: string; en: string }; subtitle: string };
+/* Las placas del carrusel de la home. Viven en el bucket público de Supabase,
+   igual que las fotos de galería y el video del hero: son material del evento
+   que la organización repone sola, no assets de build, y no tienen por qué
+   inflar el clone del repo para siempre.
+   Vienen con el texto horneado en el render (851x315), así que el componente
+   respeta esa relación y no recorta: el `alt` transcribe lo que dice cada una.
+   Orden = orden de reproducción. */
+const CAROUSEL_BASE =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/carrusel";
 
-// Fotos de galería servidas desde el bucket público de Supabase (no en git),
-// mismo patrón que el video del hero. Sube el equipo por bucket hasta que
-// exista el dashboard de carga.
-const GALLERY_BASE =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/gallery";
-const galleryPhoto = (n: number): { kind: "photo"; src: string } => ({
-  kind: "photo",
-  src: `${GALLERY_BASE}/gallery-${String(n).padStart(2, "0")}.jpg`,
-});
-
-const SPEAKER_LANES: {
-  id: string;
-  direction: "left" | "right";
-  duration: number;
-  cards: SpeakerCard[];
-}[] = [
+const CAROUSEL_SLIDES: CarouselSlide[] = [
   {
-    id: "s1",
-    direction: "left",
-    duration: 42,
-    cards: [
-      galleryPhoto(1),
-      galleryPhoto(2),
-      galleryPhoto(3),
-    ],
+    src: `${CAROUSEL_BASE}/slide-01.jpg`,
+    alt: { es: "Todo esto sucede en LABITCONF", en: "All of this happens at LABITCONF" },
   },
   {
-    id: "s2",
-    direction: "right",
-    duration: 50,
-    cards: [
-      galleryPhoto(4),
-      galleryPhoto(5),
-      { kind: "stat", value: "+256", label: { es: "Charlas", en: "Talks" } },
-      { kind: "stat", value: "+16", label: { es: "Países participantes", en: "Countries that attend" } },
-      galleryPhoto(6),
-    ],
+    src: `${CAROUSEL_BASE}/slide-02.jpg`,
+    alt: { es: "+5 escenarios", en: "+5 stages" },
   },
   {
-    id: "s3",
-    direction: "left",
-    duration: 46,
-    cards: [
-      galleryPhoto(7),
-      { kind: "stat", value: "+27", label: { es: "Medios Aliados", en: "Media Partners" } },
-      galleryPhoto(8),
-      { kind: "stat", value: "7", label: { es: "Escenarios", en: "Stages" } },
-      { kind: "stat", value: "+58", label: { es: "Sponsors", en: "Sponsors" } },
-    ],
+    src: `${CAROUSEL_BASE}/slide-03.jpg`,
+    alt: { es: "Workshops: aprendé, probá, construí", en: "Workshops: learn, try, build" },
   },
   {
-    id: "s4",
-    direction: "right",
-    duration: 55,
-    cards: [
-      galleryPhoto(9),
-      galleryPhoto(10),
-      galleryPhoto(11),
-      { kind: "stat", value: "5", label: { es: "Partners y Colaboradores", en: "Partners & Collaborators" } },
-      { kind: "stat", value: "+420", label: { es: "Speakers Internacionales", en: "International Speakers" } },
-    ],
+    src: `${CAROUSEL_BASE}/slide-04.jpg`,
+    alt: { es: "Closing party: fiesta de disfraces Hodlween", en: "Closing party: Hodlween costume party" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-05.jpg`,
+    alt: { es: "Experiencias: todo lo que pasa, todo lo que vivís", en: "Experiences: everything that happens, everything you live" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-06.jpg`,
+    alt: {
+      es: "Speakers internacionales: las voces que están construyendo el futuro",
+      en: "International speakers: the voices building the future",
+    },
   },
 ];
-
-function SpeakerCardView({ card, lang }: { card: SpeakerCard; lang: "es" | "en" }) {
-  if (card.kind === "photo") {
-    return (
-      <div
-        className="relative rounded-full shrink-0 overflow-hidden"
-        style={{
-          height: "clamp(100px, 24vw, 140px)",
-          aspectRatio: "11 / 7",
-          border: "1px solid rgba(255,255,255,0.1)",
-        }}
-      >
-        <Image
-          src={card.src}
-          alt=""
-          fill
-          sizes="(max-width: 640px) 160px, 220px"
-          style={{ objectFit: "cover" }}
-        />
-      </div>
-    );
-  }
-
-  if (card.kind === "stat") {
-    return (
-      <div
-        className="rounded-full shrink-0 flex items-center gap-4 px-6 sm:px-9"
-        style={{
-          height: "clamp(100px, 24vw, 140px)",
-          background: "#2B2B2B",
-          border: "1px solid rgba(255,255,255,0.2)",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#E6EEF2" }}>
-          {card.value}
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            fontSize: "13px",
-            color: "#A5A8B1",
-            maxWidth: "100px",
-            lineHeight: 1.3,
-            whiteSpace: "normal",
-          }}
-        >
-          {card.label[lang]}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="rounded-full shrink-0 flex flex-col items-start justify-center px-6 sm:px-9"
-      style={{
-        height: "clamp(100px, 24vw, 140px)",
-        background: "#2B2B2B",
-        border: "1px solid rgba(255,255,255,0.2)",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 300,
-          fontSize: "12px",
-          color: "#A5A8B1",
-        }}
-      >
-        {card.title[lang]}
-      </span>
-      <span style={{ ...labelStyle, fontSize: "14px", color: "#E6EEF2", marginTop: "4px" }}>
-        {card.subtitle}
-      </span>
-    </div>
-  );
-}
 
 export default function HomePage() {
   const lang = useLangStore((s) => s.lang);
@@ -772,36 +664,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Speakers */}
+      {/* Carrusel de placas — reemplaza los carriles de píldoras de 2025 */}
       <section
         id="speakers"
-        className="relative flex flex-col justify-center py-16 sm:py-0 sm:min-h-screen overflow-hidden"
+        className="relative flex flex-col justify-center py-16 sm:py-24 overflow-hidden"
         style={{ zIndex: 3, background: "#171616" }}
       >
-
-        <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
-          {SPEAKER_LANES.map((lane) => {
-            // Un solo set de cards (4-5, ~900-1500px) es más angosto que el viewport,
-            // así que duplicar una vez no alcanza para tapar la pantalla: hay que
-            // repetir el set varias veces para que el loop -50% quede sin huecos.
-            const REPEATS = 6;
-            const repeated = Array.from({ length: REPEATS }, () => lane.cards).flat();
-            return (
-              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "clamp(100px, 24vw, 140px)" }}>
-                <motion.div
-                  className="flex items-center absolute top-0 left-0"
-                  style={{ gap: "24px", width: "max-content" }}
-                  animate={{ x: lane.direction === "left" ? ["0%", `-${100 / REPEATS}%`] : [`-${100 / REPEATS}%`, "0%"] }}
-                  transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
-                >
-                  {repeated.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} lang={lang} />
-                  ))}
-                </motion.div>
-              </div>
-            );
-          })}
-        </div>
+        <Reveal>
+          <PhotoCarousel slides={CAROUSEL_SLIDES} lang={lang} />
+        </Reveal>
       </section>
       {/* Tickets */}
       <section
