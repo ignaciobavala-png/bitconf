@@ -107,7 +107,34 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         </div>
 
         {/* Redes sociales — ancladas al piso del footer, lado derecho */}
-        <div className="hidden lg:flex absolute right-0 bottom-8 z-10 flex-col items-end gap-3 px-6 sm:px-10 lg:pr-28 pointer-events-none">
+        {/* Sello de la Fundación Bitcoin Iberoamérica, debajo de la cápsula de
+            "¿por qué hodleás?" y centrado: queda en el mismo renglón de piso
+            que el bloque de contacto (izquierda) y las redes (derecha), así el
+            footer cierra con tres anclas y no con un elemento suelto.
+            Es marca de un tercero: va tal cual lo mandaron, sin teñir ni
+            adaptar a la paleta. */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-8 z-10 pointer-events-none"
+          style={{ height: "clamp(56px, 7vw, 80px)", width: "clamp(56px, 7vw, 80px)" }}
+        >
+          <Image
+            src="/assets/home/fbi-iberoamerica.png"
+            alt="Fundación Bitcoin Iberoamérica"
+            fill
+            sizes="80px"
+            style={{ objectFit: "contain" }}
+          />
+        </div>
+
+        {/* Pegadas al borde derecho, con el mismo margen que el bloque de
+            contacto usa contra el izquierdo: ya no hace falta reservarle lugar
+            a Qubit, porque `data-qubit-stop` le avisa al lanzador que frene
+            acá arriba en vez de taparlas al llegar al pie. El footer marca
+            dónde parar; el widget no sabe qué hay adentro. */}
+        <div
+          data-qubit-stop
+          className="hidden lg:flex absolute right-0 bottom-8 z-10 flex-col items-end gap-3 px-6 sm:px-10 pointer-events-none"
+        >
           <span
             className="pointer-events-auto"
             style={{
@@ -167,6 +194,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         </p>
 
         <span
+          data-qubit-stop
           className="block mt-5"
           style={{
             ...labelStyle,
@@ -194,6 +222,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
           ))}
         </div>
       </div>
+
     </footer>
   );
 }
