@@ -40,6 +40,7 @@ const T = {
     eventos2026: "Eventos 2026",
     location: "Buenos Aires, Argentina",
     quickLinks: "Enlaces Rápidos",
+    fbiBlurb: "LABITCONF es un proyecto impulsado por Fundación Bitcoin Iberoamérica",
     aboutLink: "Sobre LABITCONF",
     followUs: "Seguinos en",
   },
@@ -49,6 +50,7 @@ const T = {
     eventos2026: "2026 Events",
     location: "Buenos Aires, Argentina",
     quickLinks: "Quick Links",
+    fbiBlurb: "LABITCONF is a project powered by Fundación Bitcoin Iberoamérica",
     aboutLink: "About LABITCONF",
     followUs: "Follow us on",
   },
@@ -106,34 +108,46 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
           </div>
         </div>
 
-        {/* Redes sociales — ancladas al piso del footer, lado derecho */}
-        {/* Sello de la Fundación Bitcoin Iberoamérica, debajo de la cápsula de
-            "¿por qué hodleás?" y centrado: queda en el mismo renglón de piso
-            que el bloque de contacto (izquierda) y las redes (derecha), así el
-            footer cierra con tres anclas y no con un elemento suelto.
-            Es marca de un tercero: va tal cual lo mandaron, sin teñir ni
-            adaptar a la paleta. */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-8 z-10 pointer-events-none"
-          style={{ height: "clamp(56px, 7vw, 80px)", width: "clamp(56px, 7vw, 80px)" }}
-        >
-          <Image
-            src="/assets/home/fbi-iberoamerica.png"
-            alt="Fundación Bitcoin Iberoamérica"
-            fill
-            sizes="80px"
-            style={{ objectFit: "contain" }}
-          />
-        </div>
-
-        {/* Pegadas al borde derecho, con el mismo margen que el bloque de
-            contacto usa contra el izquierdo: ya no hace falta reservarle lugar
-            a Qubit, porque `data-qubit-stop` le avisa al lanzador que frene
-            acá arriba en vez de taparlas al llegar al pie. El footer marca
-            dónde parar; el widget no sabe qué hay adentro. */}
+        {/* Sello de la Fundación Bitcoin Iberoamérica — lado derecho, con la
+            bajada que explica el vínculo. Es marca de un tercero: va tal cual
+            lo mandaron, sin teñir ni adaptar a la paleta.
+            `data-qubit-stop` va acá porque este es ahora el bloque más a la
+            derecha: el lanzador de Qubit frena arriba de él en vez de taparlo. */}
         <div
           data-qubit-stop
           className="hidden lg:flex absolute right-0 bottom-8 z-10 flex-col items-end gap-3 px-6 sm:px-10 pointer-events-none"
+        >
+          <div
+            className="relative pointer-events-auto"
+            style={{ height: "clamp(56px, 7vw, 80px)", width: "clamp(56px, 7vw, 80px)" }}
+          >
+            <Image
+              src="/assets/home/fbi-iberoamerica.png"
+              alt="Fundación Bitcoin Iberoamérica"
+              fill
+              sizes="80px"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+          <p
+            className="pointer-events-auto max-w-[260px] text-right"
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#A5A8B1",
+              fontSize: "clamp(11px, 1vw, 13px)",
+              lineHeight: 1.5,
+            }}
+          >
+            {t.fbiBlurb}
+          </p>
+        </div>
+
+        {/* Redes centradas al pie, debajo de la cápsula de "¿por qué hodleás?":
+            el footer cierra con tres anclas en el mismo renglón — contacto
+            (izquierda), redes (centro) y el sello de la FBI (derecha). */}
+        <div
+          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 bottom-8 z-10 flex-col items-center gap-3 pointer-events-none"
         >
           <span
             className="pointer-events-auto"
@@ -192,6 +206,32 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         >
           {t.footerBlurb}
         </p>
+
+        {/* Sello + bajada de la FBI: en mobile el trío del desktop
+            (contacto / redes / sello) se apila en una sola columna. */}
+        <div className="mt-6 flex items-center gap-3">
+          <div className="relative shrink-0" style={{ height: "56px", width: "56px" }}>
+            <Image
+              src="/assets/home/fbi-iberoamerica.png"
+              alt="Fundación Bitcoin Iberoamérica"
+              fill
+              sizes="56px"
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+          <p
+            className="max-w-[240px]"
+            style={{
+              fontFamily: "var(--font-neue-machina), sans-serif",
+              fontWeight: 300,
+              color: "#A5A8B1",
+              fontSize: "clamp(11px, 1vw, 13px)",
+              lineHeight: 1.5,
+            }}
+          >
+            {t.fbiBlurb}
+          </p>
+        </div>
 
         <span
           data-qubit-stop
