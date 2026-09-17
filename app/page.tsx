@@ -354,35 +354,44 @@ const SE_PARTE_ACCENTS = [
    igual que las fotos de galería y el video del hero: son material del evento
    que la organización repone sola, no assets de build, y no tienen por qué
    inflar el clone del repo para siempre.
-   Vienen con el texto horneado en el render (851x315), así que el componente
-   respeta esa relación y no recorta: el `alt` transcribe lo que dice cada una.
-   Orden = orden de reproducción. */
+   Vienen con el texto horneado en el render, así que el componente respeta esa
+   relación (2,7:1) y no recorta: el `alt` transcribe lo que dice cada una.
+   Orden = orden de reproducción.
+
+   `-v2` = las placas a 2659x984 que mandó la organización el 17/09, contra las
+   851x315 originales. Eran el motivo de que se vieran blandas: la pieza es
+   full-bleed, así que las viejas se estiraban entre 2x y 4x y el optimizador no
+   puede inventar píxeles (servía 851px de ancho pidiera lo que pidiera).
+   Nombre nuevo y no sobrescritura, como el hero y el deck: el objeto viejo ya
+   está cacheado un año. Se suben en JPEG q92 y no en el PNG original de 3MB —
+   son fotos sin alfa, y la diferencia en la zona del texto es de 42dB PSNR
+   (imperceptible) por un quinto del peso. */
 const CAROUSEL_BASE =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/carrusel";
 
 const CAROUSEL_SLIDES: CarouselSlide[] = [
   {
-    src: `${CAROUSEL_BASE}/slide-01.jpg`,
+    src: `${CAROUSEL_BASE}/slide-01-v2.jpg`,
     alt: { es: "Todo esto sucede en LABITCONF", en: "All of this happens at LABITCONF" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-02.jpg`,
+    src: `${CAROUSEL_BASE}/slide-02-v2.jpg`,
     alt: { es: "+5 escenarios", en: "+5 stages" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-03.jpg`,
+    src: `${CAROUSEL_BASE}/slide-03-v2.jpg`,
     alt: { es: "Workshops: aprendé, probá, construí", en: "Workshops: learn, try, build" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-04.jpg`,
+    src: `${CAROUSEL_BASE}/slide-04-v2.jpg`,
     alt: { es: "Closing party: fiesta de disfraces Hodlween", en: "Closing party: Hodlween costume party" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-05.jpg`,
+    src: `${CAROUSEL_BASE}/slide-05-v2.jpg`,
     alt: { es: "Experiencias: todo lo que pasa, todo lo que vivís", en: "Experiences: everything that happens, everything you live" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-06.jpg`,
+    src: `${CAROUSEL_BASE}/slide-06-v2.jpg`,
     alt: {
       es: "Speakers internacionales: las voces que están construyendo el futuro",
       en: "International speakers: the voices building the future",
@@ -689,7 +698,20 @@ export default function HomePage() {
       {/* Tickets */}
       <section
         id="tickets"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        // `sm:justify-start` y no `justify-center`: la sección sigue ocupando la pantalla
+        // (patrón 1:1), pero el contenido mide 660px fijos, así que centrarlo repartía el
+        // sobrante mitad arriba — y ese medio sobrante caía justo entre el carrusel y el
+        // título, creciendo con la altura de pantalla (82px en 1080, 262px en 1440). La
+        // organización lo marcó como un hueco. Con el contenido arriba, la distancia al
+        // carrusel es constante (el `pt`) en cualquier alto de pantalla.
+        //
+        // Y sin `sm:min-h-screen` (decisión tomada el 17/09, sale del patrón "1:1 screen"
+        // que rige para Hero y Presentación): forzar la pantalla completa con un contenido
+        // de 660px fijos solo mueve el sobrante de arriba a abajo — 556px de negro entre
+        // las tarjetas y Media Partners en un monitor de 1440 de alto. Midiendo lo que
+        // necesita, el aire es el mismo en toda pantalla y arriba del pliegue asoma la
+        // sección siguiente, que invita a seguir bajando.
+        className="relative flex flex-col justify-start px-6 sm:px-10 py-16 sm:pt-24 sm:pb-32 overflow-hidden"
         style={{ zIndex: 3 }}
       >
         {/* Fondo: lluvia de dígitos */}
