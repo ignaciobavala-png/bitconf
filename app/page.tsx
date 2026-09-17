@@ -913,14 +913,23 @@ export default function HomePage() {
         {/* Honeybadger — anclado al borde de la sección para que no lo recorte el overflow.
             zIndex 1 (por debajo del contenido en zIndex 2): si el ancho de viewport achica
             el gutter y la card de tickets llega a superponerse, la card pinta encima y el
-            honeybadger nunca tapa el botón de compra. */}
+            honeybadger nunca tapa el botón de compra.
+
+            No puede pisar las cards en ningún ancho (pedido de la organización): sigue
+            anclado a la esquina (`left: 2rem`, misma composición de siempre), pero su ancho
+            ya no es libre — lo limita el gutter que realmente sobra entre esa esquina y el
+            borde izquierdo del grid (`max-w-5xl` = 1024px → 512px desde el centro), con 16px
+            de aire. Así el solapamiento es imposible por geometría, no por z-index: en
+            pantallas anchas mide sus 170px de siempre y en las angostas se achica solo.
+            Desde `xl` (1280px) para arriba el gutter alcanza; por debajo no hay lugar para
+            una figura legible y directamente no se muestra. */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden xl:block"
           style={{
             bottom: "1.5rem",
             left: "2rem",
-            width: "min(16vw, 170px)",
-            height: "min(16vw, 170px)",
+            width: "min(170px, max(0px, calc(50% - 512px - 2rem - 16px)))",
+            aspectRatio: "1 / 1",
             zIndex: 1,
           }}
         >
