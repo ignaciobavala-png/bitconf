@@ -670,10 +670,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Carrusel de placas — reemplaza los carriles de píldoras de 2025 */}
+      {/* Carrusel de placas — reemplaza los carriles de píldoras de 2025.
+
+          Sin padding vertical propio (antes `py-16 sm:py-24`): la pieza es full-bleed y el
+          aire de más la dejaba flotando como un bloque suelto en vez de leerse como parte
+          de la home (reporte de la organización del 17/09). El aire de arriba ya lo pone el
+          centrado vertical de Presentación, y el de abajo el `py` de Tickets; lo único
+          propio es el colchón de los indicadores. */}
       <section
         id="speakers"
-        className="relative flex flex-col justify-center py-16 sm:py-24 overflow-hidden"
+        className="relative flex flex-col justify-center pb-10 sm:pb-12 overflow-hidden"
         style={{ zIndex: 3, background: "#171616" }}
       >
         <Reveal>
