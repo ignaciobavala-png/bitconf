@@ -102,7 +102,12 @@ export default function HodlReasonsSection({
   const [input, setInput] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const [placeholder, setPlaceholder] = useState("");
+  // Lo que el typewriter lleva escrito, junto al idioma al que pertenece: al
+  // cambiar de idioma el texto viejo deja de valer en el mismo render, sin
+  // pasar por un `setState` dentro del efecto (que pinta un cuadro con el
+  // placeholder anterior y recién ahí lo vacía).
+  const [typed, setTyped] = useState({ lang, text: "" });
+  const placeholder = typed.lang === lang ? typed.text : "";
   const [isMobile, setIsMobile] = useState(false);
   const [sponsorState, setSponsorState] = useState<"idle" | "copied" | "show">("idle");
 
@@ -115,17 +120,25 @@ export default function HodlReasonsSection({
 
   useEffect(() => {
     const FULL = T[lang].placeholder;
-    setPlaceholder("");
     let i = 0;
+    // El interval se declara acá afuera a propósito: el `return` que estaba
+    // adentro del `setTimeout` no era el cleanup del efecto —un setTimeout
+    // descarta lo que devuelve su callback—, así que al cambiar de idioma
+    // pasados los 300ms el interval viejo seguía vivo y quedaban dos
+    // typewriters escribiendo sobre el mismo placeholder hasta que el anterior
+    // terminaba su frase.
+    let interval: ReturnType<typeof setInterval> | undefined;
     const timer = setTimeout(() => {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         i++;
-        setPlaceholder(FULL.slice(0, i));
+        setTyped({ lang, text: FULL.slice(0, i) });
         if (i >= FULL.length) clearInterval(interval);
       }, 90);
-      return () => clearInterval(interval);
     }, 300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [lang]);
 
   const handleSubmit = async () => {
