@@ -179,8 +179,15 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         </div>
       </div>
 
-      {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse) */}
-      <div className="lg:hidden px-6 pt-8 pb-12">
+      {/* Contactos en mobile: debajo de la cápsula, en flujo normal (evita superponerse).
+
+          `data-qubit-stop` va en el bloque entero, no adentro: en mobile el trío
+          del desktop (contacto / redes / sello) se apila en una sola columna a
+          ancho completo, así que no queda carril lateral libre y cualquier
+          frenada más abajo deja al lanzador —que mide 60px y crece hacia
+          arriba— encima del texto. Frenando acá se suelta al entrar el footer y
+          sube con la página, igual que hace en desktop contra el sello. */}
+      <div data-qubit-stop className="lg:hidden px-6 pt-8 pb-12">
         <div style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
           LABITCONF.
         </div>
@@ -234,7 +241,6 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
         </div>
 
         <span
-          data-qubit-stop
           className="block mt-5"
           style={{
             ...labelStyle,
