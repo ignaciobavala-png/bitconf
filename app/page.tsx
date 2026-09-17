@@ -590,15 +590,21 @@ export default function HomePage() {
           }}
         />
 
-        {/* Píldora BTC — contra el borde derecho de la sección, fuera del bloque de texto */}
+        {/* Píldora BTC — contra el borde derecho de la sección, fuera del bloque de texto.
+
+            El ancho no es libre: lo limita el gutter que sobra a la derecha del bloque de
+            contenido (`max-w-6xl` = 1152px + 2.5rem de padding izquierdo), con 16px de aire.
+            Antes era `min(19vw, 195px)` y por debajo de 1440px se metía sobre los párrafos.
+            De 1440px para arriba mide los mismos ~195px de siempre; por debajo no hay gutter
+            que alcance para una figura legible, así que no se muestra. */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden min-[1440px]:block"
           style={{
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(19vw, 195px)",
-            height: "min(19vw, 195px)",
+            width: "min(195px, max(0px, calc(100% - 1240px)))",
+            aspectRatio: "1 / 1",
             zIndex: 1,
           }}
         >
@@ -1333,15 +1339,22 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        {/* Ballena naranja — completa en pantalla (right negativo la dejaba por la mitad) */}
+        {/* Ballena naranja — completa en pantalla (right negativo la dejaba por la mitad).
+
+            Es la que reportó la organización: con `min(43vw, 575px)` se montaba sobre el
+            iframe del mapa (hasta 81% tapado en 1024px, 25% todavía en 1440px). Ahora el
+            ancho lo limita el gutter real a la derecha del grid foto+mapa (`max-w-4xl` =
+            896px + 2.5rem de padding izquierdo), con 16px de aire, así que cruzarlo es
+            imposible. De 1600px para arriba mide sus 575px de siempre; por debajo de 1280px
+            el gutter no da para una figura de este porte y no se muestra. */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden min-[1280px]:block"
           style={{
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(43vw, 575px)",
-            height: "min(43vw, 575px)",
+            width: "min(575px, max(0px, calc(100% - 984px)))",
+            aspectRatio: "1 / 1",
             zIndex: 1,
             opacity: 0.9,
           }}

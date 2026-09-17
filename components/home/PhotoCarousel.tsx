@@ -88,6 +88,13 @@ export default function PhotoCarousel({
               alt={slides[index].alt[lang]}
               fill
               sizes="100vw"
+              // Las placas vienen a 851px de ancho nativo y la pieza es
+              // full-bleed, así que ya se estiran 2-4x. Con el default (75) el
+              // optimizador suma una segunda pasada de pérdida justo sobre el
+              // texto horneado, que es lo que más se nota. 90 no recupera
+              // detalle —eso depende de que la organización mande las placas a
+              // >=2560px— pero evita empeorar lo que sí hay.
+              quality={90}
               priority={index === 0}
               style={{ objectFit: "cover" }}
             />
