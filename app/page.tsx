@@ -10,6 +10,7 @@ import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
+import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes } from "@/lib/media-partners";
@@ -349,154 +350,54 @@ const SE_PARTE_ACCENTS = [
   { color: "#ABF760", dark: false },
 ] as const;
 
-type SpeakerCard =
-  | { kind: "photo"; src: string }
-  | { kind: "stat"; value: string; label: { es: string; en: string } }
-  | { kind: "label"; title: { es: string; en: string }; subtitle: string };
+/* Las placas del carrusel de la home. Viven en el bucket público de Supabase,
+   igual que las fotos de galería y el video del hero: son material del evento
+   que la organización repone sola, no assets de build, y no tienen por qué
+   inflar el clone del repo para siempre.
+   Vienen con el texto horneado en el render, así que el componente respeta esa
+   relación (2,7:1) y no recorta: el `alt` transcribe lo que dice cada una.
+   Orden = orden de reproducción.
 
-// Fotos de galería servidas desde el bucket público de Supabase (no en git),
-// mismo patrón que el video del hero. Sube el equipo por bucket hasta que
-// exista el dashboard de carga.
-const GALLERY_BASE =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/gallery";
-const galleryPhoto = (n: number): { kind: "photo"; src: string } => ({
-  kind: "photo",
-  src: `${GALLERY_BASE}/gallery-${String(n).padStart(2, "0")}.jpg`,
-});
+   `-v2` = las placas a 2659x984 que mandó la organización el 17/09, contra las
+   851x315 originales. Eran el motivo de que se vieran blandas: la pieza es
+   full-bleed, así que las viejas se estiraban entre 2x y 4x y el optimizador no
+   puede inventar píxeles (servía 851px de ancho pidiera lo que pidiera).
+   Nombre nuevo y no sobrescritura, como el hero y el deck: el objeto viejo ya
+   está cacheado un año. Se suben en JPEG q92 y no en el PNG original de 3MB —
+   son fotos sin alfa, y la diferencia en la zona del texto es de 42dB PSNR
+   (imperceptible) por un quinto del peso. */
+const CAROUSEL_BASE =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/carrusel";
 
-const SPEAKER_LANES: {
-  id: string;
-  direction: "left" | "right";
-  duration: number;
-  cards: SpeakerCard[];
-}[] = [
+const CAROUSEL_SLIDES: CarouselSlide[] = [
   {
-    id: "s1",
-    direction: "left",
-    duration: 42,
-    cards: [
-      galleryPhoto(1),
-      galleryPhoto(2),
-      galleryPhoto(3),
-    ],
+    src: `${CAROUSEL_BASE}/slide-01-v2.jpg`,
+    alt: { es: "Todo esto sucede en LABITCONF", en: "All of this happens at LABITCONF" },
   },
   {
-    id: "s2",
-    direction: "right",
-    duration: 50,
-    cards: [
-      galleryPhoto(4),
-      galleryPhoto(5),
-      { kind: "stat", value: "+256", label: { es: "Charlas", en: "Talks" } },
-      { kind: "stat", value: "+16", label: { es: "Países participantes", en: "Countries that attend" } },
-      galleryPhoto(6),
-    ],
+    src: `${CAROUSEL_BASE}/slide-02-v2.jpg`,
+    alt: { es: "+5 escenarios", en: "+5 stages" },
   },
   {
-    id: "s3",
-    direction: "left",
-    duration: 46,
-    cards: [
-      galleryPhoto(7),
-      { kind: "stat", value: "+27", label: { es: "Medios Aliados", en: "Media Partners" } },
-      galleryPhoto(8),
-      { kind: "stat", value: "7", label: { es: "Escenarios", en: "Stages" } },
-      { kind: "stat", value: "+58", label: { es: "Sponsors", en: "Sponsors" } },
-    ],
+    src: `${CAROUSEL_BASE}/slide-03-v2.jpg`,
+    alt: { es: "Workshops: aprendé, probá, construí", en: "Workshops: learn, try, build" },
   },
   {
-    id: "s4",
-    direction: "right",
-    duration: 55,
-    cards: [
-      galleryPhoto(9),
-      galleryPhoto(10),
-      galleryPhoto(11),
-      { kind: "stat", value: "5", label: { es: "Partners y Colaboradores", en: "Partners & Collaborators" } },
-      { kind: "stat", value: "+420", label: { es: "Speakers Internacionales", en: "International Speakers" } },
-    ],
+    src: `${CAROUSEL_BASE}/slide-04-v2.jpg`,
+    alt: { es: "Closing party: fiesta de disfraces Hodlween", en: "Closing party: Hodlween costume party" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-05-v2.jpg`,
+    alt: { es: "Experiencias: todo lo que pasa, todo lo que vivís", en: "Experiences: everything that happens, everything you live" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-06-v2.jpg`,
+    alt: {
+      es: "Speakers internacionales: las voces que están construyendo el futuro",
+      en: "International speakers: the voices building the future",
+    },
   },
 ];
-
-function SpeakerCardView({ card, lang }: { card: SpeakerCard; lang: "es" | "en" }) {
-  if (card.kind === "photo") {
-    return (
-      <div
-        className="relative rounded-full shrink-0 overflow-hidden"
-        style={{
-          height: "clamp(100px, 24vw, 140px)",
-          aspectRatio: "11 / 7",
-          border: "1px solid rgba(255,255,255,0.1)",
-        }}
-      >
-        <Image
-          src={card.src}
-          alt=""
-          fill
-          sizes="(max-width: 640px) 160px, 220px"
-          style={{ objectFit: "cover" }}
-        />
-      </div>
-    );
-  }
-
-  if (card.kind === "stat") {
-    return (
-      <div
-        className="rounded-full shrink-0 flex items-center gap-4 px-6 sm:px-9"
-        style={{
-          height: "clamp(100px, 24vw, 140px)",
-          background: "#2B2B2B",
-          border: "1px solid rgba(255,255,255,0.2)",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <span style={{ ...labelStyle, fontSize: "clamp(32px, 3.5vw, 44px)", color: "#E6EEF2" }}>
-          {card.value}
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-neue-machina), sans-serif",
-            fontWeight: 300,
-            fontSize: "13px",
-            color: "#A5A8B1",
-            maxWidth: "100px",
-            lineHeight: 1.3,
-            whiteSpace: "normal",
-          }}
-        >
-          {card.label[lang]}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="rounded-full shrink-0 flex flex-col items-start justify-center px-6 sm:px-9"
-      style={{
-        height: "clamp(100px, 24vw, 140px)",
-        background: "#2B2B2B",
-        border: "1px solid rgba(255,255,255,0.2)",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "var(--font-neue-machina), sans-serif",
-          fontWeight: 300,
-          fontSize: "12px",
-          color: "#A5A8B1",
-        }}
-      >
-        {card.title[lang]}
-      </span>
-      <span style={{ ...labelStyle, fontSize: "14px", color: "#E6EEF2", marginTop: "4px" }}>
-        {card.subtitle}
-      </span>
-    </div>
-  );
-}
 
 export default function HomePage() {
   const lang = useLangStore((s) => s.lang);
@@ -698,15 +599,21 @@ export default function HomePage() {
           }}
         />
 
-        {/* Píldora BTC — contra el borde derecho de la sección, fuera del bloque de texto */}
+        {/* Píldora BTC — contra el borde derecho de la sección, fuera del bloque de texto.
+
+            El ancho no es libre: lo limita el gutter que sobra a la derecha del bloque de
+            contenido (`max-w-6xl` = 1152px + 2.5rem de padding izquierdo), con 16px de aire.
+            Antes era `min(19vw, 195px)` y por debajo de 1440px se metía sobre los párrafos.
+            De 1440px para arriba mide los mismos ~195px de siempre; por debajo no hay gutter
+            que alcance para una figura legible, así que no se muestra. */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden min-[1440px]:block"
           style={{
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(19vw, 195px)",
-            height: "min(19vw, 195px)",
+            width: "min(195px, max(0px, calc(100% - 1240px)))",
+            aspectRatio: "1 / 1",
             zIndex: 1,
           }}
         >
@@ -772,41 +679,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Speakers */}
+      {/* Carrusel de placas — reemplaza los carriles de píldoras de 2025.
+
+          Sin padding vertical propio (antes `py-16 sm:py-24`): la pieza es full-bleed y el
+          aire de más la dejaba flotando como un bloque suelto en vez de leerse como parte
+          de la home (reporte de la organización del 17/09). El aire de arriba ya lo pone el
+          centrado vertical de Presentación, y el de abajo el `py` de Tickets; lo único
+          propio es el colchón de los indicadores. */}
       <section
         id="speakers"
-        className="relative flex flex-col justify-center py-16 sm:py-0 sm:min-h-screen overflow-hidden"
+        className="relative flex flex-col justify-center pb-10 sm:pb-12 overflow-hidden"
         style={{ zIndex: 3, background: "#171616" }}
       >
-
-        <div className="relative flex flex-col gap-6" style={{ zIndex: 2 }}>
-          {SPEAKER_LANES.map((lane) => {
-            // Un solo set de cards (4-5, ~900-1500px) es más angosto que el viewport,
-            // así que duplicar una vez no alcanza para tapar la pantalla: hay que
-            // repetir el set varias veces para que el loop -50% quede sin huecos.
-            const REPEATS = 6;
-            const repeated = Array.from({ length: REPEATS }, () => lane.cards).flat();
-            return (
-              <div key={lane.id} className="relative w-full overflow-hidden" style={{ height: "clamp(100px, 24vw, 140px)" }}>
-                <motion.div
-                  className="flex items-center absolute top-0 left-0"
-                  style={{ gap: "24px", width: "max-content" }}
-                  animate={{ x: lane.direction === "left" ? ["0%", `-${100 / REPEATS}%`] : [`-${100 / REPEATS}%`, "0%"] }}
-                  transition={{ duration: lane.duration, repeat: Infinity, ease: "linear" }}
-                >
-                  {repeated.map((card, i) => (
-                    <SpeakerCardView key={`${lane.id}-${i}`} card={card} lang={lang} />
-                  ))}
-                </motion.div>
-              </div>
-            );
-          })}
-        </div>
+        <Reveal>
+          <PhotoCarousel slides={CAROUSEL_SLIDES} lang={lang} />
+        </Reveal>
       </section>
       {/* Tickets */}
       <section
         id="tickets"
-        className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
+        // `sm:justify-start` y no `justify-center`: la sección sigue ocupando la pantalla
+        // (patrón 1:1), pero el contenido mide 660px fijos, así que centrarlo repartía el
+        // sobrante mitad arriba — y ese medio sobrante caía justo entre el carrusel y el
+        // título, creciendo con la altura de pantalla (82px en 1080, 262px en 1440). La
+        // organización lo marcó como un hueco. Con el contenido arriba, la distancia al
+        // carrusel es constante (el `pt`) en cualquier alto de pantalla.
+        //
+        // Y sin `sm:min-h-screen` (decisión tomada el 17/09, sale del patrón "1:1 screen"
+        // que rige para Hero y Presentación): forzar la pantalla completa con un contenido
+        // de 660px fijos solo mueve el sobrante de arriba a abajo — 556px de negro entre
+        // las tarjetas y Media Partners en un monitor de 1440 de alto. Midiendo lo que
+        // necesita, el aire es el mismo en toda pantalla y arriba del pliegue asoma la
+        // sección siguiente, que invita a seguir bajando.
+        className="relative flex flex-col justify-start px-6 sm:px-10 py-16 sm:pt-24 sm:pb-32 overflow-hidden"
         style={{ zIndex: 3 }}
       >
         {/* Fondo: lluvia de dígitos */}
@@ -1462,15 +1367,22 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        {/* Ballena naranja — completa en pantalla (right negativo la dejaba por la mitad) */}
+        {/* Ballena naranja — completa en pantalla (right negativo la dejaba por la mitad).
+
+            Es la que reportó la organización: con `min(43vw, 575px)` se montaba sobre el
+            iframe del mapa (hasta 81% tapado en 1024px, 25% todavía en 1440px). Ahora el
+            ancho lo limita el gutter real a la derecha del grid foto+mapa (`max-w-4xl` =
+            896px + 2.5rem de padding izquierdo), con 16px de aire, así que cruzarlo es
+            imposible. De 1600px para arriba mide sus 575px de siempre; por debajo de 1280px
+            el gutter no da para una figura de este porte y no se muestra. */}
         <div
-          className="absolute pointer-events-none select-none hidden sm:block"
+          className="absolute pointer-events-none select-none hidden min-[1280px]:block"
           style={{
             top: "50%",
             right: "2rem",
             transform: "translateY(-50%)",
-            width: "min(43vw, 575px)",
-            height: "min(43vw, 575px)",
+            width: "min(575px, max(0px, calc(100% - 984px)))",
+            aspectRatio: "1 / 1",
             zIndex: 1,
             opacity: 0.9,
           }}

@@ -1,12 +1,64 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
 import QubitFace from "./QubitFace";
 import QubitText from "./QubitText";
+
+/** Margen del lanzador contra el borde inferior, y aire contra lo que no debe tapar. */
+const LAUNCHER_BOTTOM = 24;
+const STOP_GAP = 16;
+
+/**
+ * Alto del carril por donde flota el lanzador: de la cabeza de la página hasta
+ * `STOP_GAP` arriba del marcador `data-qubit-stop` que pone el footer.
+ *
+ * Acá **no** se posiciona nada. El lanzador es `position: sticky` dentro de un
+ * carril de este alto, así que la frenada la hace el navegador: flota pegado al
+ * borde inferior y, cuando el carril se termina, se queda ahí y sigue con la
+ * página. Este hook solo mide el carril, al montar y al cambiar de tamaño.
+ *
+ * Los dos intentos anteriores movían el botón desde JavaScript —uno con
+ * `scroll` + rAF, otro con un `IntersectionObserver`— y los dos rebotaban: el
+ * callback llega uno o varios cuadros después del scroll (el observer, sobre
+ * todo, se entrega tarde justo cuando se scrollea rápido), así que en esos
+ * cuadros el botón se pintaba en su lugar viejo. Se veía tocar el piso y
+ * saltar. Nada atado al scroll por JS puede evitarlo; `sticky` sí, porque lo
+ * resuelve el compositor antes de pintar.
+ */
+function useCarrilHeight() {
+  const [alto, setAlto] = useState<number | null>(null);
+
+  useEffect(() => {
+    const medir = () => {
+      // Puede haber más de un marcador (desktop y mobile son bloques
+      // distintos): vale el visible, que es el que tiene altura.
+      const marker = [...document.querySelectorAll<HTMLElement>("[data-qubit-stop]")].find(
+        (el) => el.getBoundingClientRect().height > 0,
+      );
+      if (!marker) return setAlto(null);
+      setAlto(marker.getBoundingClientRect().top + window.scrollY - STOP_GAP);
+    };
+
+    medir();
+    window.addEventListener("resize", medir);
+    // La página cambia de alto sola (el footer, el copy en otro idioma, las
+    // imágenes que entran): sin esto el carril se queda con la medida vieja.
+    const ro = new ResizeObserver(medir);
+    ro.observe(document.body);
+
+    return () => {
+      window.removeEventListener("resize", medir);
+      ro.disconnect();
+    };
+  }, []);
+
+  return alto;
+}
 
 const T = {
   es: {
@@ -53,6 +105,15 @@ export default function QaChatWidget() {
   });
   const scrollRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const carril = useCarrilHeight();
+  // El portal necesita el DOM: en el server no hay nada donde montarlo.
+  // `useSyncExternalStore` da false en el server y true en el cliente sin
+  // pasar por un efecto, que es lo que evita el render en cascada.
+  const montado = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -82,15 +143,40 @@ export default function QaChatWidget() {
     setInput("");
   }
 
-  return (
-    <>
+  if (!montado) return null;
+
+  /* Carril + caja sticky.
+
+     El carril va por portal al <body> a propósito: el <main> de las páginas
+     tiene `overflow-hidden`, y un `sticky` adentro de un ancestro con overflow
+     se pega a esa caja —que no scrollea— en vez de al viewport, o sea que no
+     se pega a nada.
+
+     El carril arranca en la cabeza de la página y termina arriba de las redes.
+     La caja sticky es su último hijo (`justify-end`), así que su lugar natural
+     es el final del carril: `sticky bottom` la mantiene flotando sobre el
+     viewport durante todo el scroll y la suelta justo cuando el carril se
+     termina. El panel abierto va adentro de la misma caja, arriba del botón,
+     para que lo acompañe sin tener que posicionarlo por separado. */
+  return createPortal(
+    <div
+      className="absolute left-0 flex w-full flex-col justify-end pointer-events-none"
+      style={{
+        top: 0,
+        // Sin marcador (una página sin footer) el carril llega hasta el fondo
+        // y el lanzador flota hasta el final, que es el comportamiento viejo.
+        height: carril === null ? "100%" : `${carril}px`,
+        zIndex: 6,
+      }}
+    >
+      <div
+        className="sticky flex flex-col items-end gap-3 pr-6 pointer-events-none"
+        style={{ bottom: `${LAUNCHER_BOTTOM}px` }}
+      >
       {open && (
         <div
-          className="fixed flex flex-col overflow-hidden rounded-2xl"
+          className="flex flex-col overflow-hidden rounded-2xl pointer-events-auto"
           style={{
-            zIndex: 6,
-            bottom: "96px",
-            right: "20px",
             width: "min(90vw, 360px)",
             height: "min(70vh, 480px)",
             background: "#151512",
@@ -248,7 +334,7 @@ export default function QaChatWidget() {
           así se lee como algo que Qubit dice, no como la etiqueta de un botón.
           Con el panel abierto el globo desaparece: el título del panel ya lo
           repite. */}
-      <div className="fixed flex items-center" style={{ zIndex: 6, bottom: "24px", right: "24px" }}>
+      <div className="flex items-center pointer-events-auto">
         <button
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-1.5"
@@ -317,6 +403,8 @@ export default function QaChatWidget() {
           </motion.span>
         </button>
       </div>
-    </>
+      </div>
+    </div>,
+    document.body,
   );
 }
