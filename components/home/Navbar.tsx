@@ -17,10 +17,12 @@ const LEFT_LINKS = {
   es: [
     { label: "Tickets", href: "/#tickets" },
     { label: "Comunidad", href: "/comunidad" },
+    { label: "Más (Edu Hub)", href: "/mas" },
   ],
   en: [
     { label: "Tickets", href: "/#tickets" },
     { label: "Community", href: "/comunidad" },
+    { label: "More (Edu Hub)", href: "/mas" },
   ],
 } as const;
 
