@@ -66,3 +66,24 @@ create policy "rate_limit_service_only"
 --     .subscribe()
 --
 -- IMPORTANTE: nunca suscribirse sin filtro (expondría pending/rejected).
+
+
+-- =============================================================
+-- edu_hub_universities: lectura pública, escritura solo service_role
+-- (se recarga a mano desde el Google Sheet del cliente, no hay API
+-- de escritura pública)
+-- =============================================================
+alter table public.edu_hub_universities enable row level security;
+
+create policy "edu_hub_universities_public_read"
+  on public.edu_hub_universities
+  for select
+  to anon, authenticated
+  using (true);
+
+create policy "edu_hub_universities_service_write"
+  on public.edu_hub_universities
+  for all
+  to service_role
+  using (true)
+  with check (true);

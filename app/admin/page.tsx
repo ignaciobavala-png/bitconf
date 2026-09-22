@@ -1,7 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import { createServiceClient } from "@/lib/supabase/server";
-import { moderateReason, logoutAction, deleteReason, addStaticPhrase, toggleStaticPhrase } from "@/app/admin/actions";
+import {
+  moderateReason,
+  logoutAction,
+  deleteReason,
+  addStaticPhrase,
+  toggleStaticPhrase,
+  addUniversity,
+  toggleUniversityAccredited,
+  deleteUniversity,
+  uploadUniversityLogo,
+} from "@/app/admin/actions";
 
 type Reason = {
   id: string;
@@ -25,6 +35,13 @@ const STATUS_COLORS: Record<string, string> = {
   rejected: "#E3551C",
 };
 
+type University = {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  accredited: boolean;
+};
+
 export default async function AdminPage() {
   const supabase = createServiceClient();
 
@@ -32,6 +49,13 @@ export default async function AdminPage() {
     .from("reasons")
     .select("id, text, status, flagged, lane_index, is_static, created_at")
     .order("created_at", { ascending: false });
+
+  const { data: universities } = await supabase
+    .from("edu_hub_universities")
+    .select("id, name, logo_url, accredited")
+    .order("name", { ascending: true });
+
+  const unis = (universities ?? []) as University[];
 
   const all = (reasons ?? []) as Reason[];
   const userReasons = all.filter((r) => !r.is_static);
@@ -396,6 +420,216 @@ export default async function AdminPage() {
                   </button>
                 </form>
                 <form action={deleteReason.bind(null, phrase.id)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #E3551C44",
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: "#E3551C",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    borrar
+                  </button>
+                </form>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Universidades EDU HUB — /mas#universidades-acreditadas lee esta
+            misma tabla en vivo desde el cliente (Supabase anon read), así
+            que estos cambios se ven en la landing sin redeploy. */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div>
+            <p style={{ color: "#4A6E2D", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 4px" }}>
+              Universidades EDU HUB
+            </p>
+            <p style={{ color: "#A5A8B1", fontSize: "12px", margin: 0 }}>
+              {unis.filter((u) => u.accredited).length} acreditadas · {unis.length} en total — subí el logo de cada una para que aparezca en el carrusel de /mas.
+            </p>
+          </div>
+
+          {/* Agregar universidad nueva */}
+          <form
+            action={addUniversity}
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              border: "2px dashed #4A6E2D",
+              borderRadius: "12px",
+              padding: "16px 20px",
+            }}
+          >
+            <input
+              name="name"
+              placeholder="nombre de la universidad..."
+              required
+              style={{
+                flex: 1,
+                minWidth: "200px",
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid #4A6E2D",
+                color: "#FCFCFC",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontSize: "14px",
+                outline: "none",
+                padding: "4px 0",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: "#4A6E2D",
+                border: "none",
+                borderRadius: "9999px",
+                padding: "8px 18px",
+                color: "#0D0D0B",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 900,
+                fontSize: "12px",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                letterSpacing: "0.05em",
+              }}
+            >
+              + Agregar
+            </button>
+          </form>
+
+          {/* Lista de universidades */}
+          {unis.length === 0 && (
+            <p style={{ color: "#A5A8B1", fontSize: "14px" }}>No hay universidades cargadas todavía.</p>
+          )}
+          {unis.map((uni) => (
+            <div
+              key={uni.id}
+              style={{
+                border: `2px solid ${uni.accredited ? "#9ACE6A33" : "#A5A8B122"}`,
+                borderRadius: "12px",
+                padding: "16px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                flexWrap: "wrap",
+                opacity: uni.accredited ? 1 : 0.6,
+              }}
+            >
+              {/* Logo actual (preview) */}
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 8,
+                  background: "#FCFCFC0D",
+                  border: "1px solid #4A6E2D55",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  overflow: "hidden",
+                }}
+              >
+                {uni.logo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- preview chico en un panel interno, no forma parte del bundle público optimizado por next/image
+                  <img src={uni.logo_url} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                ) : (
+                  <span style={{ color: "#4A6E2D", fontSize: "9px", textAlign: "center" }}>sin logo</span>
+                )}
+              </div>
+
+              {/* Nombre + estado */}
+              <div style={{ flex: 1, minWidth: "180px" }}>
+                <p style={{
+                  color: "#FCFCFC",
+                  fontSize: "14px",
+                  margin: "0 0 4px",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 700,
+                }}>
+                  {uni.name}
+                </p>
+                <span style={{
+                  color: uni.accredited ? "#9ACE6A" : "#A5A8B1",
+                  fontSize: "11px",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}>
+                  {uni.accredited ? "Acreditada" : "No acreditada"}
+                </span>
+              </div>
+
+              {/* Subir logo */}
+              <form
+                action={uploadUniversityLogo.bind(null, uni.id)}
+                style={{ display: "flex", gap: "6px", alignItems: "center" }}
+              >
+                <input
+                  type="file"
+                  name="logo"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  required
+                  style={{
+                    color: "#A5A8B1",
+                    fontSize: "11px",
+                    maxWidth: 150,
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    background: "transparent",
+                    border: "2px solid #4A6E2D",
+                    borderRadius: "9999px",
+                    padding: "6px 14px",
+                    color: "#4A6E2D",
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 700,
+                    fontSize: "11px",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    letterSpacing: "0.05em",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  subir
+                </button>
+              </form>
+
+              {/* Acreditar/desacreditar + borrar */}
+              <div style={{ display: "flex", gap: "8px" }}>
+                <form action={toggleUniversityAccredited.bind(null, uni.id, uni.accredited)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: `2px solid ${uni.accredited ? "#A5A8B1" : "#9ACE6A"}`,
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: uni.accredited ? "#A5A8B1" : "#9ACE6A",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {uni.accredited ? "desacreditar" : "acreditar"}
+                  </button>
+                </form>
+                <form action={deleteUniversity.bind(null, uni.id)}>
                   <button
                     type="submit"
                     style={{
