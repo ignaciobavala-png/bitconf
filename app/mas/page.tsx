@@ -254,20 +254,25 @@ export default function MasPage() {
           className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-6 sm:px-10"
           style={{ zIndex: 2 }}
         >
-          <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 sm:gap-10">
+          {/* Botones al 80% del tamaño original + más separados entre sí
+              (gap más grande) — pedido explícito, no van a full width del
+              contenedor: por eso flex-1 pasó a flex-none con un ancho fijo
+              en vez de repartir el maxWidth del contenedor. */}
+          <div className="mx-auto flex w-full max-w-3xl items-center justify-center gap-[40px] sm:gap-[100px]">
             <a
               href={SOY_ALUMNO_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-1 flex-col items-center justify-center rounded-2xl border-2 text-center transition-transform duration-200 hover:scale-[1.03]"
+              className="flex flex-none flex-col items-center justify-center rounded-2xl border-2 text-center transition-transform duration-200 hover:scale-[1.03]"
               style={{
                 ...labelStyle,
                 color: "#E6EEF2",
                 background: "#FF4E01",
                 borderColor: "#ABF760",
-                fontSize: "clamp(13px, 1.6vw, 18px)",
+                width: "clamp(110px, 18vw, 220px)",
+                fontSize: "clamp(11px, 1.45vw, 16px)",
                 lineHeight: 1.3,
-                padding: "clamp(18px, 2.6vw, 30px) clamp(10px, 2vw, 20px)",
+                padding: "clamp(16px, 2.4vw, 27px) clamp(9px, 1.8vw, 18px)",
               }}
             >
               <span>{t.soyAlumnoL1}</span>
@@ -277,15 +282,16 @@ export default function MasPage() {
               href={SOY_UNIVERSIDAD_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-1 flex-col items-center justify-center rounded-2xl border-2 text-center transition-transform duration-200 hover:scale-[1.03]"
+              className="flex flex-none flex-col items-center justify-center rounded-2xl border-2 text-center transition-transform duration-200 hover:scale-[1.03]"
               style={{
                 ...labelStyle,
                 color: "#E6EEF2",
                 background: "#FFAB0B",
                 borderColor: "#ABF760",
-                fontSize: "clamp(13px, 1.6vw, 18px)",
+                width: "clamp(110px, 18vw, 220px)",
+                fontSize: "clamp(11px, 1.45vw, 16px)",
                 lineHeight: 1.3,
-                padding: "clamp(18px, 2.6vw, 30px) clamp(10px, 2vw, 20px)",
+                padding: "clamp(16px, 2.4vw, 27px) clamp(9px, 1.8vw, 18px)",
               }}
             >
               <span>{t.soyUniversidadL1}</span>
@@ -294,15 +300,18 @@ export default function MasPage() {
           </div>
         </Reveal>
 
-        {/* Headline — abajo, alineado al margen izquierdo de página (como el
-            resto de los títulos de sección), no centrado */}
-        <Reveal delay={0.2} className="relative w-full max-w-3xl" style={{ zIndex: 2 }}>
+        {/* Headline — centrada, un solo renglón: sin max-w (usa todo el
+            ancho disponible) y el mínimo del clamp baja con el vw para que
+            en mobile achique lo suficiente en vez de cortar línea. */}
+        <Reveal delay={0.2} className="relative w-full" style={{ zIndex: 2 }}>
           <h1
             style={{
               ...labelStyle,
               color: "#E6EEF2",
-              fontSize: "clamp(22px, 3.6vw, 44px)",
+              textAlign: "center",
+              fontSize: "clamp(11px, 3.6vw, 44px)",
               lineHeight: 1.15,
+              whiteSpace: "nowrap",
               textShadow: "0 2px 24px rgba(0,0,0,0.6)",
             }}
           >
