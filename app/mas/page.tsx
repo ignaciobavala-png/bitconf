@@ -763,9 +763,9 @@ function MarqueeRow({ reverse, duration }: { reverse?: boolean; duration: number
         animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
       >
-        {[...items, ...items].map((i) => (
+        {[...items, ...items].map((i, idx) => (
           <span
-            key={i}
+            key={`${i}-${idx}`}
             style={{
               ...labelStyle,
               color: "#E6EEF2",
