@@ -24,6 +24,12 @@ const ALT_OVERRIDES = {
   sla: "SLA",
   thenewscrypto: "TheNewsCrypto",
   "noticias-fintech-latam": "Noticias Fintech Latam",
+  fxstreet: "FXStreet",
+  livebnews: "LiveBNews",
+  "tyn-magazine": "TyN Magazine",
+  "women-in-crypto": "Women in Crypto",
+  "revista-plebs": "Revista Pleb's",
+  "bitcoin-only-events": "BitcoinØnly Events",
 };
 
 const titleCase = (slug) =>

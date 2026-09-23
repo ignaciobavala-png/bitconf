@@ -13,7 +13,7 @@ import Floating from "@/components/home/Floating";
 import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
-import { mediaPartnerLanes } from "@/lib/media-partners";
+import { mediaPartnerLanes, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
@@ -105,6 +105,10 @@ const T = {
 // todos es esta caja; lo que cambia por logo es cuánto de esa caja ocupa
 // (`scale` en lib/media-partners.ts), nunca la caja.
 const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
+// Fila destacada (iProUP + CriptoNoticias, pedido 23/09): misma caja que el
+// resto pero ~40% más alta, para que se note que tienen más lugar sin salirse
+// del lenguaje visual de la sección.
+const FEATURED_MEDIA_LOGO_H = "clamp(50px, 6.5vw, 80px)";
 
 // El reparto en filas no depende de nada del render: se calcula una vez.
 const mediaRows = mediaPartnerLanes();
@@ -1052,7 +1056,34 @@ export default function HomePage() {
               mismo (el ancho de la fila llena) y la fila incompleta se centra,
               así el hueco se parte en dos mitades en vez de caer entero contra
               el margen derecho. */}
-          <div className={`${TITLE_GAP} flex flex-col gap-8 sm:gap-10`}>
+          {/* Fila destacada — iProUP y CriptoNoticias por separado del resto,
+              con caja más alta (pedido de la organización 23/09: "más
+              presencia"), no solo primeros en el orden de la grilla de abajo. */}
+          <Reveal delay={0.12} className={TITLE_GAP}>
+            <div className="flex items-center justify-center gap-10 sm:gap-16 pb-8 sm:pb-10 mb-2 border-b border-white/10">
+              {FEATURED_MEDIA_PARTNERS.map((logo) => (
+                <div
+                  key={logo.src}
+                  className="flex items-center justify-center px-2"
+                  style={{ height: FEATURED_MEDIA_LOGO_H }}
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={440}
+                    height={152}
+                    className="h-full w-auto object-contain"
+                    style={{
+                      maxHeight: `${logo.scale * 100}%`,
+                      maxWidth: `calc(${FEATURED_MEDIA_LOGO_H} * 4.5)`,
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <div className="flex flex-col gap-8 sm:gap-10">
             {mediaRows.map((row, i) => (
               <Reveal key={`media-row-${i}`} delay={0.15 + i * 0.08}>
                 <div className="flex items-center justify-center">

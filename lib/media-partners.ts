@@ -37,11 +37,25 @@ export type MediaPartner = {
   href?: string | null;
 };
 
-export const MEDIA_PARTNERS: MediaPartner[] = MEDIA_PARTNER_FILES.map((f) => ({
+const toMediaPartner = (f: (typeof MEDIA_PARTNER_FILES)[number]): MediaPartner => ({
   src: f.src,
   alt: f.alt,
   scale: SCALE[f.slug] ?? 1,
-}));
+});
+
+// Pedido de la organización (23/09): iProUP y CriptoNoticias van en su propia
+// fila destacada arriba de la grilla, no mezclados con el resto — más
+// presencia, no solo primeros en el orden.
+const FEATURED_SLUGS = ["iproup", "criptonoticias"];
+
+export const FEATURED_MEDIA_PARTNERS: MediaPartner[] = FEATURED_SLUGS
+  .map((slug) => MEDIA_PARTNER_FILES.find((f) => f.slug === slug))
+  .filter((f): f is (typeof MEDIA_PARTNER_FILES)[number] => Boolean(f))
+  .map(toMediaPartner);
+
+export const MEDIA_PARTNERS: MediaPartner[] = MEDIA_PARTNER_FILES.filter(
+  (f) => !FEATURED_SLUGS.includes(f.slug),
+).map(toMediaPartner);
 
 /** Cuántas filas tiene la sección. Fijo a propósito — ver `mediaPartnerLanes`. */
 export const MEDIA_LANES = 3;
