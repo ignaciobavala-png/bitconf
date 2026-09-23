@@ -724,13 +724,13 @@ export default function MasPage() {
           <Reveal delay={0.08}>
             <UniversitySearch t={t} />
           </Reveal>
-        </div>
 
-        <Reveal delay={0.14}>
-          <div className="mt-16">
-            <LogoMarquee />
-          </div>
-        </Reveal>
+          <Reveal delay={0.14}>
+            <div className="mt-16">
+              <LogoMarquee />
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       <MasNav />

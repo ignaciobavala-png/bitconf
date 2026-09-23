@@ -5,7 +5,6 @@ import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Reveal from "@/components/home/Reveal";
-import Floating from "@/components/home/Floating";
 import { useLangStore } from "@/lib/store/lang";
 import { MAS_FORMS } from "@/lib/mas/links";
 import MasNav from "@/components/mas/MasNav";
@@ -21,8 +20,10 @@ import {
 } from "@/components/mas/ui";
 
 // MÁS → EMBAJADORES (bloque 05 del PDF "FASE 2 - WEB 15.08"). Página editorial.
-// Las 6 fichas están en placeholder: la organización todavía no mandó fotos,
-// nombres ni el "universo HODL" de cada uno.
+// Los 6 embajadores ya tienen foto y nombre (gráficas propias de la
+// organización, con su marco "EMBAJADORES" + placa de nombre horneados) — se
+// usan tal cual las mandaron, sin recortar. El "universo HODL" y la bio de
+// cada uno todavía no llegaron.
 
 const TITLE = {
   es: "/assets/home/titulos/embajadores-es-trim.png",
@@ -33,14 +34,15 @@ const TITLE = {
 const TITLE_DIMS = { es: { w: 973, h: 92 }, en: { w: 976, h: 86 } } as const;
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
-// Íconos placeholder (transparentes) hasta tener los retratos reales.
-const ICONS = [
-  "/assets/home/iconos/candado.png",
-  "/assets/home/iconos/casa.png",
-  "/assets/home/iconos/diamante.png",
-  "/assets/home/iconos/llave.png",
-  "/assets/home/iconos/ojo.png",
-  "/assets/home/iconos/rayo.png",
+// Gráficas reales de cada embajador (foto + nombre horneados por la
+// organización). Orden alfabético, sin preferencia editorial.
+const AMBASSADORS = [
+  { src: "/assets/home/embajadores/gabriela-pirela.jpg", name: "Gabriela Pirela" },
+  { src: "/assets/home/embajadores/gaucho.jpg", name: "Gaucho" },
+  { src: "/assets/home/embajadores/hernan-gonzalez.jpg", name: "Hernán González" },
+  { src: "/assets/home/embajadores/martin-gutter.jpg", name: "Martín Gütter" },
+  { src: "/assets/home/embajadores/mery-fiorentini.jpg", name: "Mery Fiorentini" },
+  { src: "/assets/home/embajadores/noelia-robles.jpg", name: "Noelia Robles" },
 ] as const;
 
 const T = {
@@ -54,7 +56,7 @@ const T = {
       "Este año, por primera vez en la historia de LABITCONF, queremos reconocerlas y darles un lugar oficial dentro de la conferencia.",
     ],
     universoTitle: "Los seis universos",
-    universoNote: "Foto, nombre y universo HODL de cada embajador — a confirmar por la organización.",
+    universoNote: "El universo HODL y la historia de cada embajador se suman pronto.",
     ayudaTitle: "¿En qué te puede ayudar un embajador?",
     ayuda: [
       { title: "Conectar con comunidades", detail: "Te presenta a la comunidad que tiene que ver con lo tuyo." },
@@ -80,7 +82,7 @@ const T = {
       "This year, for the first time in LABITCONF's history, we want to recognize them and give them an official place within the conference.",
     ],
     universoTitle: "The six universes",
-    universoNote: "Photo, name and HODL universe for each ambassador — to be confirmed by the organization.",
+    universoNote: "Each ambassador's HODL universe and story are coming soon.",
     ayudaTitle: "How can an ambassador help you?",
     ayuda: [
       { title: "Connect with communities", detail: "They introduce you to the community that matches what you do." },
@@ -136,37 +138,18 @@ export default function EmbajadoresPage() {
         <CopyCard paragraphs={[t.universoNote]} delay={0.1} className="mt-6" />
 
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-          {ICONS.map((icon, i) => (
+          {AMBASSADORS.map((amb, i) => (
             <Reveal
-              key={icon}
+              key={amb.name}
               delay={0.1 + i * 0.1}
               className="relative rounded-2xl overflow-hidden w-full"
               style={{
-                aspectRatio: "3 / 4",
+                aspectRatio: "1892 / 2130",
                 border: "1px solid #ABF760",
                 background: "rgba(13,13,11,0.4)",
               }}
             >
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-                <div className="relative" style={{ width: "46%", height: "46%", opacity: 0.9 }}>
-                  <Floating duration={4 + i * 0.4} y={6} rotate={2}>
-                    <Image src={icon} alt="" fill style={{ objectFit: "contain" }} />
-                  </Floating>
-                </div>
-              </div>
-              <span
-                className="absolute left-0 right-0 bottom-0 text-center"
-                style={{
-                  ...lightStyle,
-                  color: "rgba(165,168,177,0.75)",
-                  fontSize: "10px",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  padding: "10px 6px",
-                }}
-              >
-                {t.proximamente}
-              </span>
+              <Image src={amb.src} alt={amb.name} fill style={{ objectFit: "cover" }} />
             </Reveal>
           ))}
         </div>

@@ -11,6 +11,10 @@ import {
   toggleUniversityAccredited,
   deleteUniversity,
   uploadUniversityLogo,
+  addComunidad,
+  toggleComunidadActive,
+  deleteComunidad,
+  uploadComunidadLogo,
 } from "@/app/admin/actions";
 
 type Reason = {
@@ -42,6 +46,13 @@ type University = {
   accredited: boolean;
 };
 
+type Comunidad = {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  active: boolean;
+};
+
 export default async function AdminPage() {
   const supabase = createServiceClient();
 
@@ -56,6 +67,13 @@ export default async function AdminPage() {
     .order("name", { ascending: true });
 
   const unis = (universities ?? []) as University[];
+
+  const { data: comunidades } = await supabase
+    .from("mas_comunidades")
+    .select("id, name, logo_url, active")
+    .order("name", { ascending: true });
+
+  const comus = (comunidades ?? []) as Comunidad[];
 
   const all = (reasons ?? []) as Reason[];
   const userReasons = all.filter((r) => !r.is_static);
@@ -630,6 +648,215 @@ export default async function AdminPage() {
                   </button>
                 </form>
                 <form action={deleteUniversity.bind(null, uni.id)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #E3551C44",
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: "#E3551C",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    borrar
+                  </button>
+                </form>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Comunidades asociadas — /mas/comunidades lee esta misma tabla en
+            vivo desde el cliente (Supabase anon read), igual que EDU HUB. */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div>
+            <p style={{ color: "#4A6E2D", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 4px" }}>
+              Comunidades asociadas
+            </p>
+            <p style={{ color: "#A5A8B1", fontSize: "12px", margin: 0 }}>
+              {comus.filter((c) => c.active).length} activas · {comus.length} en total — el logo de cada una activa aparece en el cinturón de /mas/comunidades.
+            </p>
+          </div>
+
+          {/* Agregar comunidad nueva */}
+          <form
+            action={addComunidad}
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              border: "2px dashed #4A6E2D",
+              borderRadius: "12px",
+              padding: "16px 20px",
+            }}
+          >
+            <input
+              name="name"
+              placeholder="nombre de la comunidad..."
+              required
+              style={{
+                flex: 1,
+                minWidth: "200px",
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid #4A6E2D",
+                color: "#FCFCFC",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontSize: "14px",
+                outline: "none",
+                padding: "4px 0",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: "#4A6E2D",
+                border: "none",
+                borderRadius: "9999px",
+                padding: "8px 18px",
+                color: "#0D0D0B",
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 900,
+                fontSize: "12px",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                letterSpacing: "0.05em",
+              }}
+            >
+              + Agregar
+            </button>
+          </form>
+
+          {/* Lista de comunidades */}
+          {comus.length === 0 && (
+            <p style={{ color: "#A5A8B1", fontSize: "14px" }}>No hay comunidades cargadas todavía.</p>
+          )}
+          {comus.map((comu) => (
+            <div
+              key={comu.id}
+              style={{
+                border: `2px solid ${comu.active ? "#9ACE6A33" : "#A5A8B122"}`,
+                borderRadius: "12px",
+                padding: "16px 20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                flexWrap: "wrap",
+                opacity: comu.active ? 1 : 0.6,
+              }}
+            >
+              {/* Logo actual (preview) */}
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 8,
+                  background: "#FCFCFC0D",
+                  border: "1px solid #4A6E2D55",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  overflow: "hidden",
+                }}
+              >
+                {comu.logo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- preview chico en un panel interno, no forma parte del bundle público optimizado por next/image
+                  <img src={comu.logo_url} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                ) : (
+                  <span style={{ color: "#4A6E2D", fontSize: "9px", textAlign: "center" }}>sin logo</span>
+                )}
+              </div>
+
+              {/* Nombre + estado */}
+              <div style={{ flex: 1, minWidth: "180px" }}>
+                <p style={{
+                  color: "#FCFCFC",
+                  fontSize: "14px",
+                  margin: "0 0 4px",
+                  fontFamily: "var(--font-neue-machina), sans-serif",
+                  fontWeight: 700,
+                }}>
+                  {comu.name}
+                </p>
+                <span style={{
+                  color: comu.active ? "#9ACE6A" : "#A5A8B1",
+                  fontSize: "11px",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}>
+                  {comu.active ? "Activa" : "Inactiva"}
+                </span>
+              </div>
+
+              {/* Subir logo */}
+              <form
+                action={uploadComunidadLogo.bind(null, comu.id)}
+                style={{ display: "flex", gap: "6px", alignItems: "center" }}
+              >
+                <input
+                  type="file"
+                  name="logo"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  required
+                  style={{
+                    color: "#A5A8B1",
+                    fontSize: "11px",
+                    maxWidth: 150,
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    background: "transparent",
+                    border: "2px solid #4A6E2D",
+                    borderRadius: "9999px",
+                    padding: "6px 14px",
+                    color: "#4A6E2D",
+                    fontFamily: "var(--font-neue-machina), sans-serif",
+                    fontWeight: 700,
+                    fontSize: "11px",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    letterSpacing: "0.05em",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  subir
+                </button>
+              </form>
+
+              {/* Activar/desactivar + borrar */}
+              <div style={{ display: "flex", gap: "8px" }}>
+                <form action={toggleComunidadActive.bind(null, comu.id, comu.active)}>
+                  <button
+                    type="submit"
+                    style={{
+                      background: "transparent",
+                      border: `2px solid ${comu.active ? "#A5A8B1" : "#9ACE6A"}`,
+                      borderRadius: "9999px",
+                      padding: "6px 16px",
+                      color: comu.active ? "#A5A8B1" : "#9ACE6A",
+                      fontFamily: "var(--font-neue-machina), sans-serif",
+                      fontWeight: 700,
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      letterSpacing: "0.05em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {comu.active ? "desactivar" : "activar"}
+                  </button>
+                </form>
+                <form action={deleteComunidad.bind(null, comu.id)}>
                   <button
                     type="submit"
                     style={{

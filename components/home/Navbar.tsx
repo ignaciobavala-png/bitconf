@@ -11,18 +11,14 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase",
 };
 
-// Orden acordado (reunión 16/7): izquierda Tickets → Comunidad → Más ▾.
+// Orden acordado (reunión 16/7): izquierda Tickets → Más ▾.
+// "Comunidad" (/comunidad) se sacó de acá: ahora vive dentro de Más como
+// "Comunidades" (/mas/comunidades) y quedaba duplicada.
 // "¿Por qué hodleás?" (lleva al final de la página) + selector de idioma van
 // a la derecha.
 const LEFT_LINKS = {
-  es: [
-    { label: "Tickets", href: "/#tickets" },
-    { label: "Comunidad", href: "/comunidad" },
-  ],
-  en: [
-    { label: "Tickets", href: "/#tickets" },
-    { label: "Community", href: "/comunidad" },
-  ],
+  es: [{ label: "Tickets", href: "/#tickets" }],
+  en: [{ label: "Tickets", href: "/#tickets" }],
 } as const;
 
 // MÁS = las 5 secciones del slide del cliente "DISEÑO WEB" (22/09/2026).

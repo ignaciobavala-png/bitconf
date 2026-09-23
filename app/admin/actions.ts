@@ -127,3 +127,48 @@ export async function uploadUniversityLogo(id: string, formData: FormData) {
   await supabase.from("edu_hub_universities").update({ logo_url: pub.publicUrl }).eq("id", id);
   revalidatePath("/admin");
 }
+
+// ── Comunidades asociadas (/mas/comunidades, cinturón de logos) ───────────
+
+export async function addComunidad(formData: FormData) {
+  const name = (formData.get("name") as string)?.trim();
+  if (!name) return;
+
+  const supabase = createServiceClient();
+  await supabase.from("mas_comunidades").insert({ name, active: true });
+  revalidatePath("/admin");
+}
+
+export async function toggleComunidadActive(id: string, current: boolean) {
+  const supabase = createServiceClient();
+  await supabase.from("mas_comunidades").update({ active: !current }).eq("id", id);
+  revalidatePath("/admin");
+}
+
+export async function deleteComunidad(id: string) {
+  const supabase = createServiceClient();
+  await supabase.from("mas_comunidades").delete().eq("id", id);
+  revalidatePath("/admin");
+}
+
+export async function uploadComunidadLogo(id: string, formData: FormData) {
+  const file = formData.get("logo") as File | null;
+  if (!file || file.size === 0) return;
+
+  const ext = LOGO_EXT_BY_TYPE[file.type];
+  if (!ext || file.size > LOGO_MAX_BYTES) return;
+
+  const supabase = createServiceClient();
+  const path = `comunidades/${id}-${Date.now()}.${ext}`;
+  const bytes = Buffer.from(await file.arrayBuffer());
+
+  const { error } = await supabase.storage.from("media").upload(path, bytes, {
+    contentType: file.type,
+    upsert: true,
+  });
+  if (error) return;
+
+  const { data: pub } = supabase.storage.from("media").getPublicUrl(path);
+  await supabase.from("mas_comunidades").update({ logo_url: pub.publicUrl }).eq("id", id);
+  revalidatePath("/admin");
+}

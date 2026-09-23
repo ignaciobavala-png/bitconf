@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import { useLangStore } from "@/lib/store/lang";
 import { MAS_FORMS } from "@/lib/mas/links";
+import { getSupabaseClient } from "@/lib/supabase/client";
 import MasNav from "@/components/mas/MasNav";
 import {
   MasSection,
@@ -15,7 +18,6 @@ import {
   Chips,
   FeatureGrid,
   InlineCta,
-  LogoStrip,
 } from "@/components/mas/ui";
 
 // MÁS → COMUNIDADES (bloque 06 del PDF "FASE 2 - WEB 15.08").
@@ -33,7 +35,8 @@ const TITLE = {
 const T = {
   es: {
     alt: "Comunidades",
-    lead: "LABITCONF no es solamente un evento. Es una red.",
+    leadIntro: "LABITCONF no es solamente un evento.",
+    leadEmphasis: "Es una red.",
     copy: [
       "Las comunidades son el corazón del ecosistema. El programa de Comunidades Asociadas está abierto a comunidades crypto, tech, universitarias y de nicho que quieran ser parte de la edición 2026.",
       "Las comunidades adheridas acceden a beneficios exclusivos para sus miembros y tienen la posibilidad de tener presencia dentro del evento. Si tu comunidad forma parte del ecosistema, tiene un lugar acá.",
@@ -42,7 +45,7 @@ const T = {
     categorias: ["Bitcoin", "Tech", "Startups", "Creators", "Finanzas", "Universidades"],
     asociadasTitle: "Comunidades asociadas",
     asociadasNote:
-      "El listado con logo, nombre y descripción de cada comunidad lo carga la organización. Cuando esté, estas categorías pasan a funcionar como filtro.",
+      "Estas son algunas de las comunidades que ya forman parte del ecosistema LABITCONF. La lista sigue creciendo — cuando el listado completo esté cargado, estas categorías pasan a funcionar como filtro.",
     logoPlaceholder: "Logo",
     beneficiosTitle: "¿Qué gana tu comunidad?",
     beneficios: [
@@ -59,7 +62,8 @@ const T = {
   },
   en: {
     alt: "Communities",
-    lead: "LABITCONF isn't just an event. It's a network.",
+    leadIntro: "LABITCONF isn't just an event.",
+    leadEmphasis: "It's a network.",
     copy: [
       "Communities are the heart of the ecosystem. The Associated Communities program is open to crypto, tech, university and niche communities that want to be part of the 2026 edition.",
       "Partner communities get exclusive benefits for their members and the chance to have a presence at the event. If your community is part of the ecosystem, it has a place here.",
@@ -68,7 +72,7 @@ const T = {
     categorias: ["Bitcoin", "Tech", "Startups", "Creators", "Finance", "Universities"],
     asociadasTitle: "Partner communities",
     asociadasNote:
-      "The list with each community's logo, name and description is provided by the organization. Once it's in, these categories become working filters.",
+      "These are some of the communities already part of the LABITCONF ecosystem. The list keeps growing — once the full list is in, these categories become working filters.",
     logoPlaceholder: "Logo",
     beneficiosTitle: "What does your community get?",
     beneficios: [
@@ -96,7 +100,9 @@ export default function ComunidadesPage() {
       {/* 1 — Hero */}
       <MasSection bg="/assets/home/fondo-hexmap.jpg" bgOpacity={0.22} bgPosition="center bottom" first tall>
         <TitleImage src={TITLE[lang]} alt={t.alt} />
-        <Lead>{t.lead}</Lead>
+        <Lead>
+          {t.leadIntro} <span style={{ whiteSpace: "nowrap" }}>{t.leadEmphasis}</span>
+        </Lead>
         <CopyCard paragraphs={t.copy} justify />
 
         <div className="mt-10">
@@ -107,11 +113,14 @@ export default function ComunidadesPage() {
         </div>
       </MasSection>
 
-      {/* 2 — Grilla de comunidades (logos pendientes de la organización) */}
+      {/* 2 — Comunidades asociadas — logos reales cargados desde /admin
+          (tabla mas_comunidades, mismo patrón que EDU HUB). */}
       <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
         <BlockTitle>{t.asociadasTitle}</BlockTitle>
         <CopyCard paragraphs={[t.asociadasNote]} delay={0.1} className="mt-6" />
-        <LogoStrip count={8} label={t.logoPlaceholder} />
+        <div className="mt-16">
+          <ComunidadesLogoMarquee />
+        </div>
       </MasSection>
 
       {/* 3 — Beneficios + CTA */}
@@ -131,5 +140,75 @@ export default function ComunidadesPage() {
       <Footer lang={lang} />
       <QaChatWidget />
     </main>
+  );
+}
+
+type ComunidadLogo = { name: string; logo_url: string };
+
+// Cinturón de logos — misma tabla que gestiona /admin (mas_comunidades),
+// mismo patrón de dos carriles en loop infinito que EDU HUB (ver
+// app/mas/edu-hub/page.tsx).
+function ComunidadesLogoLane({
+  comunidades,
+  reverse,
+  duration,
+}: {
+  comunidades: ComunidadLogo[];
+  reverse?: boolean;
+  duration: number;
+}) {
+  return (
+    <div className="overflow-hidden flex" style={{ flexWrap: "nowrap" }}>
+      {[0, 1].map((track) => (
+        <motion.div
+          key={track}
+          className="flex items-center gap-16 shrink-0"
+          style={{ minWidth: "100%", justifyContent: "space-around" }}
+          animate={{ x: reverse ? ["-100%", "0%"] : ["0%", "-100%"] }}
+          transition={{ duration, repeat: Infinity, ease: "linear" }}
+        >
+          {comunidades.map((comu) => (
+            // eslint-disable-next-line @next/next/no-img-element -- logos pre-comprimidos con aspect ratio variable, no vale la pena el overhead de next/image para un marquee decorativo
+            <img
+              key={comu.name}
+              src={comu.logo_url}
+              alt={comu.name}
+              style={{ height: "clamp(28px, 3.4vw, 44px)", width: "auto", maxWidth: 160, objectFit: "contain" }}
+            />
+          ))}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+function ComunidadesLogoMarquee() {
+  const [comunidades, setComunidades] = useState<ComunidadLogo[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSupabaseClient()
+      .from("mas_comunidades")
+      .select("name, logo_url")
+      .eq("active", true)
+      .not("logo_url", "is", null)
+      .then(({ data }) => {
+        if (!cancelled) setComunidades((data as ComunidadLogo[] | null) ?? []);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!comunidades || comunidades.length === 0) return null;
+
+  const rowA = comunidades.filter((_, i) => i % 2 === 0);
+  const rowB = comunidades.filter((_, i) => i % 2 === 1);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <ComunidadesLogoLane comunidades={rowA} duration={38} />
+      <ComunidadesLogoLane comunidades={rowB} duration={44} reverse />
+    </div>
   );
 }
