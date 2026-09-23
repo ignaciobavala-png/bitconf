@@ -51,7 +51,6 @@ const T = {
     verticalComunidades: "Comunidades",
     ctaEmbajadorTitle: "¿Por qué HODLeás? Contanos tu historia y postulate.",
     ctaHubTitle: "¿Querés unirte al hub?",
-    ctaComunidadTitle: "¿Querés unir tu comunidad?",
     ctaButtonLabel: "Inscribite acá",
     proximamente: "Próximamente",
     embajadoresCopy: [
@@ -65,7 +64,7 @@ const T = {
       "Porque descentralizar el conocimiento es el primer paso para descentralizar el futuro.",
     ],
     comunidadesCopy:
-      "Las comunidades son el corazón del ecosistema. El programa de Comunidades Asociadas está abierto a comunidades crypto, tech, universitarias y de nicho que quieran ser parte de la edición 2026. Las comunidades adheridas acceden a beneficios exclusivos para sus miembros y tienen la posibilidad de tener presencia dentro del evento. Si tu comunidad forma parte del ecosistema, tiene un lugar acá. Completá el formulario y sumala a LABITCONF.",
+      "Las comunidades son el corazón del ecosistema. El programa de Comunidades Asociadas reúne a comunidades crypto, tech, universitarias y de nicho que son parte de la edición 2026. Las comunidades adheridas acceden a beneficios exclusivos para sus miembros y tienen la posibilidad de tener presencia dentro del evento. La inscripción de comunidades para esta edición ya está cerrada.",
   },
   en: {
     presentacionP1:
@@ -77,7 +76,6 @@ const T = {
     verticalComunidades: "Communities",
     ctaEmbajadorTitle: "Why do you HODL? Tell us your story and apply.",
     ctaHubTitle: "Want to join the hub?",
-    ctaComunidadTitle: "Want to connect your community?",
     ctaButtonLabel: "Sign up here",
     proximamente: "Coming soon",
     embajadoresCopy: [
@@ -91,7 +89,7 @@ const T = {
       "Because decentralizing knowledge is the first step to decentralizing the future.",
     ],
     comunidadesCopy:
-      "Communities are the heart of the ecosystem. The Associated Communities program is open to crypto, tech, university and niche communities that want to be part of the 2026 edition. Partner communities get exclusive benefits for their members and the chance to have a presence at the event. If your community is part of the ecosystem, it has a place here. Fill out the form and add it to LABITCONF.",
+      "Communities are the heart of the ecosystem. The Associated Communities program brings together crypto, tech, university and niche communities that are part of the 2026 edition. Partner communities get exclusive benefits for their members and the chance to have a presence at the event. Community sign-ups for this edition are now closed.",
   },
 } as const;
 
@@ -579,13 +577,6 @@ export default function ComunidadPage() {
               {t.comunidadesCopy}
             </p>
           </Reveal>
-
-          <InlineCta
-            title={t.ctaComunidadTitle}
-            label={t.ctaButtonLabel}
-            delay={0.25}
-            href="https://forms.gle/wUCHHJEgr8ZeWGK49"
-          />
         </div>
       </section>
 
