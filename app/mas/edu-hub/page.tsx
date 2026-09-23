@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
@@ -100,7 +101,7 @@ const T = {
       "EDU Hub es la comunidad de LABITCONF que conecta a estudiantes, profesores, alumni y universidades con el ecosistema de Bitcoin, tecnología e innovación.",
     queEsBody2:
       "Una experiencia diseñada para aprender, conectar y construir, con acceso a contenidos exclusivos, workshops, networking, Hackathon, LABITCONF Bitcoin College y experiencias especiales durante LABITCONF.",
-    queEsAudiencia: "ESTUDIANTES • PROFESORES • ALUMNI • UNIVERSIDADES",
+    queEsAudiencia: ["ESTUDIANTES", "PROFESORES", "ALUMNI", "UNIVERSIDADES"],
 
     beneficiosTitle: "Beneficios y experiencias",
     cardEspacioTitle: "Espacio físico exclusivo en el evento",
@@ -127,9 +128,9 @@ const T = {
     step2Title: "Soy Alumno",
     step2Body:
       "Si tu uni está acreditada, recibirás un código para sacar tu entrada. Si no está acreditada, pídeles que se acrediten.",
+    step1Cta: "Acredita tu universidad →",
     step2Cta: "Ver si mi uni está acreditada →",
     closingLine: "Tu universidad → tu código → tu entrada → EDU Hub → la comunidad.",
-    scrollHint: "↓ scroll para descubrir",
 
     acreditadasTitle: "Universidades acreditadas",
     searchLabel: "¿Tu universidad forma parte del EDU HUB?",
@@ -151,7 +152,7 @@ const T = {
       "EDU Hub is LABITCONF's community that connects students, professors, alumni and universities with the Bitcoin, technology and innovation ecosystem.",
     queEsBody2:
       "An experience designed to learn, connect and build, with access to exclusive content, workshops, networking, Hackathon, LABITCONF Bitcoin College and special experiences during LABITCONF.",
-    queEsAudiencia: "STUDENTS • PROFESSORS • ALUMNI • UNIVERSITIES",
+    queEsAudiencia: ["STUDENTS", "PROFESSORS", "ALUMNI", "UNIVERSITIES"],
 
     beneficiosTitle: "Benefits and experiences",
     cardEspacioTitle: "Exclusive physical space at the event",
@@ -178,9 +179,9 @@ const T = {
     step2Title: "I'm a Student",
     step2Body:
       "If your university is accredited, you'll get a code to claim your ticket. If it isn't, ask it to get accredited.",
+    step1Cta: "Accredit your university →",
     step2Cta: "Check if my university is accredited →",
     closingLine: "Your university → your code → your ticket → EDU Hub → the community.",
-    scrollHint: "↓ scroll to discover",
 
     acreditadasTitle: "Accredited universities",
     searchLabel: "Is your university part of the EDU HUB?",
@@ -204,6 +205,16 @@ const HACKATHON_LUMA_HREF = "https://luma.com/cwhw1uls";
 const HACKATHON_BASES_HREF: string | undefined = undefined;
 // Bootcamp/Workshops "más info" reusa el mismo grupo de WhatsApp de alumnos.
 const BOOTCAMP_WHATSAPP_HREF = SOY_ALUMNO_HREF;
+
+// Flyers de la organización (Descargas/EDU HUB - Flyers, 23/09/2026),
+// recomprimidos (BITCOIN COLLEGE.png pesaba 11,8MB a 4320x5760) y subidos
+// al mismo bucket que el resto de los assets de esta página.
+const HACKATHON_FLYER_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon.jpg";
+// Flyer completo (foto + título + calendario + footer), no el recorte del
+// calendario — a 3:4, el aspect ratio real del flyer original.
+const BITCOIN_COLLEGE_FLYER_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/bitcoin-college.jpg";
 // "UNITE" del Bitcoin College: carpeta de Drive con la info del college,
 // confirmada por Ignacio (22/09/2026).
 const BITCOIN_COLLEGE_UNITE_HREF =
@@ -364,15 +375,21 @@ export default function MasPage() {
           </Reveal>
 
           <Reveal delay={0.18}>
+            {/* text-align-last justifica el renglón (el único, en desktop; cada
+                uno si wrappea en mobile) para que llegue exacto al borde derecho
+                de la caja de arriba — mismo ancho, sin tocar el tamaño de fuente
+                a mano por breakpoint. */}
             <p
               style={{
                 ...labelStyle,
                 color: "#E6EEF2",
-                fontSize: "clamp(16px, 2.4vw, 26px)",
+                fontSize: "clamp(16px, 2.6vw, 29px)",
                 marginTop: 40,
+                textAlign: "justify",
+                textAlignLast: "justify",
               }}
             >
-              {t.queEsAudiencia}
+              {t.queEsAudiencia.join(" • ")}
             </p>
           </Reveal>
         </div>
@@ -410,41 +427,55 @@ export default function MasPage() {
               </Reveal>
 
               <Reveal delay={0.1}>
-                <div style={cardStyle({ padding: "28px" })}>
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                      {t.cardHackathonTitle}
-                    </h3>
-                    <span
+                <div
+                  style={cardStyle({ padding: 0, overflow: "hidden" })}
+                  className="flex flex-col sm:flex-row sm:items-start sm:min-h-[410px]"
+                >
+                  <div className="relative shrink-0 w-full sm:w-[220px]" style={{ aspectRatio: "4 / 5" }}>
+                    <Image
+                      src={HACKATHON_FLYER_SRC}
+                      alt={t.cardHackathonTitle}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 220px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  <div style={{ padding: "28px" }} className="flex-1">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                        {t.cardHackathonTitle}
+                      </h3>
+                      <span
+                        style={{
+                          ...labelStyle,
+                          color: "#171616",
+                          background: "#FF4E01",
+                          borderRadius: 999,
+                          fontSize: "clamp(11px, 0.9vw, 13px)",
+                          padding: "6px 14px",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {t.cardHackathonPremio}
+                      </span>
+                    </div>
+                    <p
                       style={{
-                        ...labelStyle,
-                        color: "#171616",
-                        background: "#FF4E01",
-                        borderRadius: 999,
-                        fontSize: "clamp(11px, 0.9vw, 13px)",
-                        padding: "6px 14px",
-                        whiteSpace: "nowrap",
+                        ...lightStyle,
+                        color: "#E6EEF2",
+                        fontSize: "clamp(14px, 1.3vw, 16px)",
+                        lineHeight: 1.5,
+                        marginTop: 16,
                       }}
                     >
-                      {t.cardHackathonPremio}
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      ...lightStyle,
-                      color: "#E6EEF2",
-                      fontSize: "clamp(14px, 1.3vw, 16px)",
-                      lineHeight: 1.5,
-                      marginTop: 16,
-                    }}
-                  >
-                    {t.cardHackathonBody}
-                  </p>
-                  <div className="flex items-center gap-3 mt-6">
-                    <PillLink href={HACKATHON_LUMA_HREF}>{t.cardHackathonParticipa}</PillLink>
-                    <PillLink href={HACKATHON_BASES_HREF} disabled={!HACKATHON_BASES_HREF}>
-                      {t.cardHackathonMasInfo}
-                    </PillLink>
+                      {t.cardHackathonBody}
+                    </p>
+                    <div className="flex items-center gap-3 mt-6">
+                      <PillLink href={HACKATHON_LUMA_HREF}>{t.cardHackathonParticipa}</PillLink>
+                      <PillLink href={HACKATHON_BASES_HREF} disabled={!HACKATHON_BASES_HREF}>
+                        {t.cardHackathonMasInfo}
+                      </PillLink>
+                    </div>
                   </div>
                 </div>
               </Reveal>
@@ -477,7 +508,7 @@ export default function MasPage() {
                       aria-label={t.cardWhatsappTitle}
                     >
                       <svg width="28" height="28" viewBox="0 0 24 24" fill="#ABF760" aria-hidden>
-                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.44.79 3.06 1.2 4.71 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8c2.16 0 4.19.84 5.72 2.37a8.07 8.07 0 0 1 2.38 5.74c0 4.47-3.64 8.1-8.11 8.1a8.1 8.1 0 0 1-4.11-1.12l-.3-.17-3.12.82.83-3.04-.19-.31a8.05 8.05 0 0 1-1.24-4.31c0-4.47 3.64-8.08 8.14-8.08m-4.49 4.65c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.57.12.16 1.74 2.77 4.29 3.78 2.12.84 2.55.67 3.01.63.46-.04 1.49-.61 1.7-1.19.21-.59.21-1.09.15-1.19-.06-.11-.23-.17-.48-.29-.25-.13-1.49-.74-1.72-.82-.23-.09-.4-.13-.57.13-.17.25-.65.82-.8.99-.15.17-.29.19-.54.06-.25-.13-1.05-.39-2-1.24-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.57-1.4-.79-1.91-.2-.5-.42-.43-.57-.44Z" />
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
                       </svg>
                     </a>
                   </div>
@@ -485,23 +516,46 @@ export default function MasPage() {
               </Reveal>
 
               <Reveal delay={0.1}>
-                <div style={cardStyle({ padding: "28px" })}>
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                    {t.cardCollegeTitle}
-                  </h3>
-                  <p
-                    style={{
-                      ...lightStyle,
-                      color: "#E6EEF2",
-                      fontSize: "clamp(14px, 1.3vw, 16px)",
-                      lineHeight: 1.5,
-                      marginTop: 16,
-                    }}
-                  >
-                    {t.cardCollegeBody}
-                  </p>
-                  <div className="mt-6">
-                    <PillLink href={BITCOIN_COLLEGE_UNITE_HREF}>{t.cardCollegeUnite}</PillLink>
+                {/* sm:min-h-[410px] es el mismo valor que la card del
+                    hackathon (medido en pantalla, con el título de esa card
+                    en 2 líneas) — así las dos cajas quedan igual de altas.
+                    Ancho fijo (220px) en vez de derivarlo del stretch del
+                    flex porque el <Image fill> queda position:absolute y no
+                    le da al contenedor un tamaño intrínseco del que
+                    aspect-ratio pueda tirar (el width le quedaba en 0). Con
+                    este tamaño se ve el flyer completo (foto + título +
+                    calendario + footer) sin recortar. */}
+                <div
+                  style={cardStyle({ padding: 0, overflow: "hidden" })}
+                  className="flex flex-col sm:flex-row sm:min-h-[410px]"
+                >
+                  <div className="relative shrink-0 w-full sm:w-[220px]" style={{ aspectRatio: "3 / 4" }}>
+                    <Image
+                      src={BITCOIN_COLLEGE_FLYER_SRC}
+                      alt={t.cardCollegeTitle}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 220px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  <div style={{ padding: "28px" }} className="flex-1">
+                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                      {t.cardCollegeTitle}
+                    </h3>
+                    <p
+                      style={{
+                        ...lightStyle,
+                        color: "#E6EEF2",
+                        fontSize: "clamp(14px, 1.3vw, 16px)",
+                        lineHeight: 1.5,
+                        marginTop: 16,
+                      }}
+                    >
+                      {t.cardCollegeBody}
+                    </p>
+                    <div className="mt-6">
+                      <PillLink href={BITCOIN_COLLEGE_UNITE_HREF}>{t.cardCollegeUnite}</PillLink>
+                    </div>
                   </div>
                 </div>
               </Reveal>
@@ -550,7 +604,10 @@ export default function MasPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
             <Reveal delay={0.05}>
-              <div style={cardStyle({ padding: "28px 32px", height: "100%" })}>
+              <div
+                style={cardStyle({ padding: "28px 32px", height: "100%" })}
+                className="flex flex-col h-full"
+              >
                 <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(32px, 4vw, 48px)" }}>1</span>
                 <h3
                   style={{
@@ -577,16 +634,19 @@ export default function MasPage() {
                   href={SOY_UNIVERSIDAD_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mt-5 transition-opacity duration-200 hover:opacity-70"
+                  className="inline-block mt-auto pt-5 transition-opacity duration-200 hover:opacity-70"
                   style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(12px, 1vw, 14px)" }}
                 >
-                  →
+                  {t.step1Cta}
                 </a>
               </div>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <div style={cardStyle({ padding: "28px 32px", height: "100%" })}>
+              <div
+                style={cardStyle({ padding: "28px 32px", height: "100%" })}
+                className="flex flex-col h-full"
+              >
                 <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(32px, 4vw, 48px)" }}>2</span>
                 <h3
                   style={{
@@ -611,7 +671,7 @@ export default function MasPage() {
                 </p>
                 <a
                   href="#universidades-acreditadas"
-                  className="inline-block mt-5 transition-opacity duration-200 hover:opacity-70"
+                  className="inline-block mt-auto pt-5 transition-opacity duration-200 hover:opacity-70"
                   style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(12px, 1vw, 14px)" }}
                 >
                   {t.step2Cta}
@@ -633,8 +693,6 @@ export default function MasPage() {
               {t.closingLine}
             </p>
           </Reveal>
-
-          <p style={{ ...lightStyle, color: "#A5A8B1", fontSize: 14, marginTop: 24 }}>{t.scrollHint}</p>
         </div>
       </section>
 
@@ -759,45 +817,69 @@ function UniversitySearch({ t }: { t: MasCopy }) {
   );
 }
 
-// Marquee de logos de universidades — placeholder ("logo") hasta que
-// carguemos los assets reales de la carpeta de Drive del machete. Dos
-// carriles en direcciones opuestas, cada uno con el set duplicado y
-// animado a -50% de su propio ancho (sin salto, ver skill
-// css-marquee-infinito-dos-tracks) — mismo patrón que las lanes de
-// speakers, reducido a 2 filas porque acá son logos, no cards variadas.
-function MarqueeRow({ reverse, duration }: { reverse?: boolean; duration: number }) {
-  const items = Array.from({ length: 10 }, (_, i) => i);
+type UniLogo = { name: string; logo_url: string };
+
+// Logos reales de universidades acreditadas (cargados desde el bucket de
+// Supabase — ver edu_hub_universities). Dos carriles en direcciones
+// opuestas, cada uno con DOS tracks hermanos idénticos y `min-width: 100%`,
+// animados de 0% a -100% de su propio ancho: con pocos logos (19 repartidos
+// en 2 filas) un solo track duplicado a -50% puede medir menos que el
+// viewport en pantallas anchas y dejar un hueco al reiniciar el ciclo (ver
+// skill css-marquee-infinito-dos-tracks). `justify-around` reparte el
+// contenido cuando el track es más angosto que la pantalla.
+function LogoLane({ unis, reverse, duration }: { unis: UniLogo[]; reverse?: boolean; duration: number }) {
   return (
-    <div className="overflow-hidden">
-      <motion.div
-        className="flex w-max items-center gap-16"
-        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
-        transition={{ duration, repeat: Infinity, ease: "linear" }}
-      >
-        {[...items, ...items].map((i, idx) => (
-          <span
-            key={`${i}-${idx}`}
-            style={{
-              ...labelStyle,
-              color: "#E6EEF2",
-              opacity: 0.35,
-              fontSize: "clamp(22px, 3vw, 36px)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            logo
-          </span>
-        ))}
-      </motion.div>
+    <div className="overflow-hidden flex" style={{ flexWrap: "nowrap" }}>
+      {[0, 1].map((track) => (
+        <motion.div
+          key={track}
+          className="flex items-center gap-16 shrink-0"
+          style={{ minWidth: "100%", justifyContent: "space-around" }}
+          animate={{ x: reverse ? ["-100%", "0%"] : ["0%", "-100%"] }}
+          transition={{ duration, repeat: Infinity, ease: "linear" }}
+        >
+          {unis.map((uni) => (
+            // eslint-disable-next-line @next/next/no-img-element -- logos pre-comprimidos (5-130KB) con aspect ratio variable, no vale la pena el overhead de next/image para un marquee decorativo
+            <img
+              key={uni.name}
+              src={uni.logo_url}
+              alt={uni.name}
+              style={{ height: "clamp(28px, 3.4vw, 44px)", width: "auto", maxWidth: 160, objectFit: "contain" }}
+            />
+          ))}
+        </motion.div>
+      ))}
     </div>
   );
 }
 
 function LogoMarquee() {
+  const [unis, setUnis] = useState<UniLogo[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSupabaseClient()
+      .from("edu_hub_universities")
+      .select("name, logo_url")
+      .eq("accredited", true)
+      .not("logo_url", "is", null)
+      .then(({ data }) => {
+        if (!cancelled) setUnis((data as UniLogo[] | null) ?? []);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!unis || unis.length === 0) return null;
+
+  const rowA = unis.filter((_, i) => i % 2 === 0);
+  const rowB = unis.filter((_, i) => i % 2 === 1);
+
   return (
     <div className="flex flex-col gap-6">
-      <MarqueeRow duration={38} />
-      <MarqueeRow duration={44} reverse />
+      <LogoLane unis={rowA} duration={38} />
+      <LogoLane unis={rowB} duration={44} reverse />
     </div>
   );
 }
