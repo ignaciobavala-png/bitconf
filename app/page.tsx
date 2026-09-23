@@ -304,12 +304,6 @@ const SE_PARTE_CARDS = {
       cta: "Acreditate",
       href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
     },
-    {
-      title: "Speakers",
-      description: "Completá el formulario y postulá tu charla para la edición 2026. Aplicá ahora y compartí tu mirada sobre el futuro de Bitcoin y la descentralización en LATAM.",
-      cta: "Aplicá",
-      href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
-    },
   ],
   en: [
     {
@@ -330,28 +324,21 @@ const SE_PARTE_CARDS = {
       cta: "Get accredited",
       href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
     },
-    {
-      title: "Speakers",
-      description: "Fill out the form and apply to speak at the 2026 edition. Apply now and share your take on the future of Bitcoin and decentralization in LATAM.",
-      cta: "Apply",
-      href: "https://app-labitconf.github.io/LABITCONF-speakers/form/",
-    },
   ],
 } as const;
 
-/* Un acento por card — pedido de la organización: que las cuatro no tengan
-   todas lo mismo. El color se asigna por significado, siguiendo los roles que
-   la paleta oficial le da a cada uno: Orange = fuerza/BTC (el pitch comercial),
+/* Un acento por card — pedido de la organización: que no tengan todas lo
+   mismo. El color se asigna por significado, siguiendo los roles que la
+   paleta oficial le da a cada uno: Orange = fuerza/BTC (el pitch comercial),
    Almico = calidez/hogar (los aliados), Electric Ekko = seguridad (la
-   credencial de prensa), Brote = futuro (el contenido). Lactica no entra como
-   relleno: la paleta ya le asigna el rol de texto.
+   credencial de prensa). Lactica no entra como relleno: la paleta ya le
+   asigna el rol de texto.
    El orden es el mismo que `SE_PARTE_CARDS` en los dos idiomas.
    `dark` marca el único relleno oscuro, que invierte el color del texto. */
 const SE_PARTE_ACCENTS = [
   { color: "#FF4E01", dark: false },
   { color: "#FFAB0B", dark: false },
   { color: "#1311FC", dark: true },
-  { color: "#ABF760", dark: false },
 ] as const;
 
 /* Las placas del carrusel de la home. Viven en el bucket público de Supabase,
@@ -1160,11 +1147,9 @@ export default function HomePage() {
             />
           </Reveal>
 
-          {/* 4 cards: 2x2 en tablet y fila de 4 en desktop. Con `sm:grid-cols-3`
-              la cuarta quedaba sola en una segunda fila. El contenedor sube a
-              `max-w-6xl` en lg —el mismo del título "Sé parte"— porque a 4
-              columnas dentro de 5xl cada card no llega a ancho legible. */}
-          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-sm sm:max-w-3xl lg:max-w-6xl items-stretch`}>
+          {/* 3 cards: 1 columna en mobile, fila de 3 desde tablet — sin quedar
+              nunca una sola en una segunda fila. */}
+          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-sm sm:max-w-4xl items-stretch`}>
             {seParteCards.map((card, i) => {
               const accent = SE_PARTE_ACCENTS[i] ?? SE_PARTE_ACCENTS[0];
               const ink = accent.dark ? "#E6EEF2" : "#171616";
@@ -1178,7 +1163,7 @@ export default function HomePage() {
                    La mezcla es 90% y no 78%: con 78% el pie de la card naranja
                    queda en #CC4206, donde el texto Alamo da 3.7:1 — debajo del
                    mínimo legible aun a opacidad plena. Con 90% son 4.6:1.
-                   El borde transparente está en las cuatro para que la única con
+                   El borde transparente está en las tres para que la única con
                    borde visible (la oscura) no mida 2px menos que sus hermanas. */
                 className="group relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_22px_45px_-20px_rgba(0,0,0,0.9)]"
                 style={{
@@ -1212,9 +1197,9 @@ export default function HomePage() {
                   {card.description}
                 </p>
                 {/* CTA — mismo patrón de anclaje al piso de la card que los tickets (mt-auto + block w-full).
-                    El botón es idéntico en las cuatro cards, la oscura incluida: es el
+                    El botón es idéntico en las tres cards, la oscura incluida: es el
                     elemento que las alinea como familia ahora que el relleno cambia.
-                    Al hover pasa a Lactica y no a Brote —como era cuando las cuatro eran
+                    Al hover pasa a Lactica y no a Brote —como era cuando eran todas
                     naranjas— porque sobre la card Brote el verde sobre verde desaparecía. */}
                 <a
                   href={card.href}
