@@ -6,7 +6,6 @@ import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
-import { MAS_FORMS } from "@/lib/mas/links";
 import MasNav from "@/components/mas/MasNav";
 import {
   MasSection,
@@ -14,9 +13,6 @@ import {
   Lead,
   CopyCard,
   FeatureGrid,
-  InlineCta,
-  labelStyle,
-  lightStyle,
 } from "@/components/mas/ui";
 
 // MÁS → EMBAJADORES (bloque 05 del PDF "FASE 2 - WEB 15.08"). Página editorial.
@@ -48,7 +44,6 @@ const AMBASSADORS = [
 const T = {
   es: {
     alt: "Embajadores",
-    proximamente: "Próximamente",
     lead: "Seis voces. Seis universos. Una misma convicción.",
     copy: [
       "El programa reúne referentes con comunidades estratégicas para representar, activar y amplificar LABITCONF desde sus propios territorios.",
@@ -66,15 +61,9 @@ const T = {
       { title: "Conocer proyectos y personas", detail: "Puertas de entrada al ecosistema que no están en el programa." },
     ],
     ayudaCols: "sm:grid-cols-2 lg:grid-cols-3",
-    redesTitle: "Conectá con...",
-    redes: ["Instagram", "X", "LinkedIn", "YouTube / Podcast"],
-    ctaTitle: "¿Por qué HODLeás? Contanos tu historia y postulate.",
-    ctaLabel: "Inscribite acá",
-    pending: "Formulario a confirmar",
   },
   en: {
     alt: "Ambassadors",
-    proximamente: "Coming soon",
     lead: "Six voices. Six universes. One conviction.",
     copy: [
       "The program brings together referents with strategic communities to represent, activate and amplify LABITCONF from their own territories.",
@@ -92,11 +81,6 @@ const T = {
       { title: "Meet projects and people", detail: "Ways into the ecosystem that aren't on the program." },
     ],
     ayudaCols: "sm:grid-cols-2 lg:grid-cols-3",
-    redesTitle: "Connect through...",
-    redes: ["Instagram", "X", "LinkedIn", "YouTube / Podcast"],
-    ctaTitle: "Why do you HODL? Tell us your story and apply.",
-    ctaLabel: "Sign up here",
-    pending: "Form to be confirmed",
   },
 } as const;
 
@@ -121,11 +105,6 @@ export default function EmbajadoresPage() {
               style={{ height: TITLE_H, width: "auto" }}
             />
           </Reveal>
-          <Reveal delay={0.05}>
-            <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(13px, 1.2vw, 16px)" }}>
-              {t.proximamente}
-            </span>
-          </Reveal>
         </div>
 
         <Lead>{t.lead}</Lead>
@@ -133,7 +112,7 @@ export default function EmbajadoresPage() {
       </MasSection>
 
       {/* 2 — Las seis fichas (placeholder hasta tener fotos y nombres) */}
-      <MasSection bg="/assets/home/lluvia-naranja.png" bgOpacity={0.22}>
+      <MasSection bg="/assets/home/lluvia-naranja.png" bgOpacity={0.22} compactTop>
         <BlockTitle>{t.universoTitle}</BlockTitle>
         <CopyCard paragraphs={[t.universoNote]} delay={0.1} className="mt-6" />
 
@@ -159,39 +138,6 @@ export default function EmbajadoresPage() {
       <MasSection bg="/assets/home/hashes.jpg" bgOpacity={0.25}>
         <BlockTitle>{t.ayudaTitle}</BlockTitle>
         <FeatureGrid items={t.ayuda} cols={t.ayudaCols} />
-
-        <div className="mt-12">
-          <BlockTitle delay={0.1} color="#ABF760">
-            {t.redesTitle}
-          </BlockTitle>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {t.redes.map((red, i) => (
-              <Reveal key={red} delay={0.15 + i * 0.05}>
-                <span
-                  className="inline-block rounded-full"
-                  style={{
-                    ...labelStyle,
-                    color: "#A5A8B1",
-                    border: "1px solid rgba(165,168,177,0.35)",
-                    background: "rgba(13,13,11,0.5)",
-                    fontSize: "clamp(11px, 1vw, 13px)",
-                    padding: "9px 18px",
-                  }}
-                >
-                  {red}
-                </span>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-
-        <InlineCta
-          title={t.ctaTitle}
-          label={t.ctaLabel}
-          href={MAS_FORMS.embajadores}
-          pendingLabel={t.pending}
-          delay={0.3}
-        />
       </MasSection>
 
       <MasNav />

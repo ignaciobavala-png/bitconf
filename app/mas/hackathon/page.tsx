@@ -1,30 +1,73 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
+import Reveal from "@/components/home/Reveal";
 import MasNav from "@/components/mas/MasNav";
 import { useLangStore } from "@/lib/store/lang";
-import { MasSection, TitleText, Lead, CopyCard } from "@/components/mas/ui";
+import { MasSection, CtaButton, labelStyle } from "@/components/mas/ui";
 
-// MÁS → HACKATHON (slide del cliente "DISEÑO WEB", 22/09/2026). Placeholder
-// hasta que la organización mande el brief de la sección — sin copy, brand
-// ni formato todavía.
+// MÁS → HACKATHON, página propia (antes placeholder "Próximamente"). Primer
+// maquetado a partir de dos capturas que la organización pasó por Descargas
+// (24/09/2026): hero + cartel oficial del Hackathon EDU HUB.
+//
+// Assets nuevos en public/assets/home/ (de la carpeta de Drive que
+// compartieron, comprimidos con `convert`, nunca el original):
+// - hackathon-logo.png: versión blanca del wordmark "HACKATHON EDU HUB",
+//   recortada al contenido (-trim). El Drive también tenía naranja y negra;
+//   blanca es la que lee sobre el fondo oscuro del sitio.
+// - hackathon-cartel-legs2.jpg: recorte del cartel (foto de la carrera de la
+//   edición anterior) a la franja de piernas corriendo, sin texto horneado.
+//   Se probó como fondo del hero, pero Ignacio confirmó que el diseño de
+//   Canva de la organización para esta pantalla es negro liso (no la foto)
+//   — así que el hero quedó con bgOpacity 0 y este archivo sin usarse por
+//   ahora. Se deja en public/assets/home/ por si en otra sección de esta
+//   página hace falta un fondo con textura (ver /mas/edu-hub para el mismo
+//   patrón con hashes.jpg). El cartel completo sí confirma la fecha "30 y
+//   31 de octubre", que no estaba en ningún otro lado todavía.
+//
+// El link de LUMA ya estaba resuelto en /mas/edu-hub (HACKATHON_LUMA_HREF)
+// — la segunda captura lo confirma tal cual. La primera captura traía
+// además un "link al LUMA" que apunta a /event/manage/... (la URL de
+// administración del evento, no la pública): no se usa, un visitante
+// caería en un login de Luma.
+//
+// Bases del hackathon: Ignacio pasó el link definitivo (24/09/2026) — un
+// Google Doc, no una URL propia de LABITCONF. El botón "Más info" queda
+// habilitado con ese doc.
+//
+// Copy pendiente: la organización anotó en la propia captura "escribir aquí
+// el texto de Gabi o Rochi" — el cuerpo de abajo reusa el copy ya aprobado
+// en /mas/edu-hub (mismo hackathon) hasta que llegue el texto definitivo de
+// esta página.
+const HACKATHON_LUMA_HREF = "https://luma.com/cwhw1uls";
+const HACKATHON_BASES_HREF =
+  "https://docs.google.com/document/d/1h6GlcaLcnSlQdjanoidrk7rA0T6Q1Jwe1ttdXHUoUvk/edit?tab=t.0#heading=h.ty347pwluepb";
+const HACKATHON_FLYER_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon.jpg";
 
 const T = {
   es: {
-    title: "Hackathon",
-    lead: "Próximamente",
-    copy: [
-      "Todavía no tenemos el contenido de esta sección. En cuanto la organización confirme el formato del Hackathon, esta página se completa.",
-    ],
+    alt: "Hackathon EDU HUB",
+    fechaLugar: "30 y 31 de octubre — Costa Salguero, Bs. As.",
+    tagline: "Tu próximo proyecto empieza acá.",
+    participa: "Participá",
+    masInfo: "Más info",
+    pending: "Bases a confirmar",
+    premio: "+ USD 1500 en premios",
+    body: "Un hackathon de innovación donde la comunidad EDU HUB trabaja durante los dos días del evento, para crear soluciones a desafíos reales y presentar sus proyectos ante un jurado.",
   },
   en: {
-    title: "Hackathon",
-    lead: "Coming soon",
-    copy: [
-      "This section's content isn't ready yet. Once the organization confirms the Hackathon format, this page will be filled in.",
-    ],
+    alt: "Hackathon EDU HUB",
+    fechaLugar: "October 30–31 — Costa Salguero, Buenos Aires",
+    tagline: "Your next project starts here.",
+    participa: "Join in",
+    masInfo: "More info",
+    pending: "Rules to be confirmed",
+    premio: "+ USD 1500 in prizes",
+    body: "An innovation hackathon where the EDU HUB community works during the two days of the event, to build solutions to real challenges and present their projects to a jury.",
   },
 } as const;
 
@@ -36,10 +79,108 @@ export default function HackathonPage() {
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
       <Navbar />
 
-      <MasSection bg="/assets/home/hashes.jpg" bgOpacity={0.25} first tall>
-        <TitleText>{t.title}</TitleText>
-        <Lead>{t.lead}</Lead>
-        <CopyCard paragraphs={t.copy} justify />
+      {/* Hero — la organización lo diseñó en Canva con fondo negro liso (no
+          el cartel/foto): bgOpacity 0 deja el negro de MasSection sin la
+          imagen de fondo, wordmark + fecha + CTA arriba. */}
+      <MasSection bg="/assets/home/hackathon-cartel-legs2.jpg" bgOpacity={0} first tall centered>
+        <div className="flex flex-col items-center text-center gap-6">
+          <Reveal className="relative w-full max-w-xl" style={{ aspectRatio: "698 / 307" }}>
+            <Image
+              src="/assets/home/hackathon-logo.png"
+              alt={t.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, 576px"
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(14px, 1.6vw, 18px)" }}>
+              {t.fechaLugar}
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <p style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2.6vw, 30px)" }}>{t.tagline}</p>
+          </Reveal>
+
+          <Reveal delay={0.22} className="flex flex-wrap items-center justify-center gap-4 mt-2">
+            <CtaButton label={t.participa} href={HACKATHON_LUMA_HREF} pendingLabel={t.pending} />
+            <CtaButton label={t.masInfo} href={HACKATHON_BASES_HREF} pendingLabel={t.pending} />
+          </Reveal>
+        </div>
+      </MasSection>
+
+      {/* Sobre el Hackathon — layout tal como está en hackaton1.png
+          (Descargas): flyer a la izquierda, wordmark + copy + los dos CTA
+          (participá / más info) a la derecha, todo dentro de una misma card
+          con borde Brote. El copy reusa el ya aprobado en /mas/edu-hub para
+          este mismo hackathon. */}
+      <MasSection id="sobre-hackathon" bg="/assets/home/hashes.jpg" bgOpacity={0.25} centered>
+        <div
+          className="flex flex-col sm:flex-row sm:items-start gap-6 rounded-3xl overflow-hidden"
+          style={{ border: "1px solid #ABF760", background: "rgba(13,13,11,0.55)", padding: "16px" }}
+        >
+          <div
+            className="relative shrink-0 w-full sm:w-[260px] rounded-2xl overflow-hidden"
+            style={{ aspectRatio: "4 / 5" }}
+          >
+            <Image
+              src={HACKATHON_FLYER_SRC}
+              alt={t.alt}
+              fill
+              sizes="(max-width: 640px) 100vw, 260px"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+          <div
+            style={{ padding: "clamp(8px, 1.5vw, 20px) clamp(8px, 1.5vw, 20px) clamp(8px, 1.5vw, 20px) 0" }}
+            className="flex-1 flex flex-col justify-center"
+          >
+            <div className="relative w-full max-w-xs" style={{ aspectRatio: "698 / 307" }}>
+              <Image
+                src="/assets/home/hackathon-logo.png"
+                alt={t.alt}
+                fill
+                sizes="320px"
+                style={{ objectFit: "contain", objectPosition: "left center" }}
+              />
+            </div>
+
+            <span
+              className="mt-5"
+              style={{
+                ...labelStyle,
+                color: "#171616",
+                background: "#FF4E01",
+                borderRadius: 999,
+                fontSize: "clamp(11px, 0.9vw, 13px)",
+                padding: "6px 14px",
+                width: "fit-content",
+              }}
+            >
+              {t.premio}
+            </span>
+            <p
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#E6EEF2",
+                fontSize: "clamp(14px, 1.4vw, 17px)",
+                lineHeight: 1.6,
+                marginTop: 16,
+              }}
+            >
+              {t.body}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 mt-6">
+              <CtaButton label={t.participa} href={HACKATHON_LUMA_HREF} pendingLabel={t.pending} />
+              <CtaButton label={t.masInfo} href={HACKATHON_BASES_HREF} pendingLabel={t.pending} />
+            </div>
+          </div>
+        </div>
       </MasSection>
 
       <MasNav />

@@ -43,6 +43,8 @@ export function MasSection({
   bgPosition = "center",
   tall = false,
   first = false,
+  compactTop = false,
+  centered = false,
   decoration,
   children,
 }: {
@@ -53,6 +55,18 @@ export function MasSection({
   bgPosition?: string;
   tall?: boolean;
   first?: boolean;
+  /** Menos aire arriba, para pegarla al contenedor anterior. */
+  compactTop?: boolean;
+  /**
+   * El contenedor interno (max-w-6xl) no lleva mx-auto por defecto: queda
+   * pegado al borde izquierdo (mismo borde que el logo del navbar), a
+   * propósito para secciones como "Presentación". Un hero con contenido
+   * centrado (text-center + items-center) necesita `centered` para que ese
+   * centrado sea real contra toda la pantalla y no contra esa caja corrida
+   * a la izquierda — si no, en pantallas anchas queda más aire a la derecha
+   * que a la izquierda.
+   */
+  centered?: boolean;
   /** Figura 3D u otro adorno, anclado a la sección y no al bloque de texto. */
   decoration?: React.ReactNode;
   children: React.ReactNode;
@@ -66,7 +80,11 @@ export function MasSection({
       style={{
         zIndex: 3,
         // El navbar es fixed: la primera sección necesita despejarlo.
-        paddingTop: first ? "clamp(120px, 16vh, 180px)" : "clamp(72px, 10vh, 120px)",
+        paddingTop: first
+          ? "clamp(120px, 16vh, 180px)"
+          : compactTop
+            ? "clamp(24px, 3vh, 48px)"
+            : "clamp(72px, 10vh, 120px)",
         paddingBottom: "clamp(72px, 10vh, 120px)",
       }}
     >
@@ -87,7 +105,7 @@ export function MasSection({
         }}
       />
       {decoration}
-      <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
+      <div className={`relative w-full max-w-6xl ${centered ? "mx-auto" : ""}`} style={{ zIndex: 2 }}>
         {children}
       </div>
     </section>

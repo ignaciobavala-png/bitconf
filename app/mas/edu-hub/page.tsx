@@ -28,6 +28,11 @@ const lightStyle: React.CSSProperties = {
 // fondo de un scroll se funde con el del siguiente en vez de cortar en seco.
 const SECTION_FADE = "180px";
 
+// Altura compartida por la card de Bootcamp y el par Certificado/Networking:
+// están en columnas de flex distintas (no se alinean solas por grid), así que
+// sin este mínimo común las dos chicas quedan bastante más bajas que Bootcamp.
+const BOOTCAMP_ROW_MIN_H = "132px";
+
 // Estilo compartido de las cards con borde de sección (todas las de
 // "Beneficios", los 2 pasos de "¿Querés estar dentro?" y el buscador de
 // universidades) — el machete las dibuja todas con el mismo borde
@@ -115,7 +120,8 @@ const T = {
       "Un hackathon de innovación donde la comunidad EDU HUB trabaja durante los dos días del evento, para crear soluciones a desafíos reales y presentar sus proyectos ante un jurado.",
     cardHackathonParticipa: "participá",
     cardHackathonMasInfo: "más info",
-    cardBootcampTitle: "Bootcamp - Workshops y charlas",
+    cardBootcampPrefix: "Bootcamp -",
+    cardBootcampLocked: "Workshops y charlas",
     cardBootcampMasInfo: "más info",
     cardWhatsappTitle: "Comunidad de WhatsApp",
     cardCollegeTitle: "LABITCONF Bitcoin College",
@@ -166,7 +172,8 @@ const T = {
       "An innovation hackathon where the EDU HUB community works during the two days of the event, to build solutions to real challenges and present their projects to a jury.",
     cardHackathonParticipa: "join in",
     cardHackathonMasInfo: "more info",
-    cardBootcampTitle: "Bootcamp - Workshops and talks",
+    cardBootcampPrefix: "Bootcamp -",
+    cardBootcampLocked: "Workshops and talks",
     cardBootcampMasInfo: "more info",
     cardWhatsappTitle: "WhatsApp community",
     cardCollegeTitle: "LABITCONF Bitcoin College",
@@ -325,7 +332,7 @@ export default function MasPage() {
               ...labelStyle,
               color: "#E6EEF2",
               textAlign: "center",
-              fontSize: "clamp(11px, 3.6vw, 44px)",
+              fontSize: "clamp(10.5px, 3.42vw, 41.8px)",
               lineHeight: 1.15,
               whiteSpace: "nowrap",
               textShadow: "0 2px 24px rgba(0,0,0,0.6)",
@@ -336,13 +343,11 @@ export default function MasPage() {
         </Reveal>
       </section>
 
-      {/* ¿Qué es EDU HUB? — MAS-BITCONF/28.png. Mismo fondo punteado
-          (pixel-grid-2 invertido) ya usado en /comunidad, en vez de intentar
-          reproducir el detalle de la ballena punteada con líneas HUD del
-          mock: es un efecto de Figma sobre el mismo asset, no un archivo
-          nuevo del banco de diseño. */}
+      {/* ¿Qué es EDU HUB? — MAS-BITCONF/28.png. Fondo de hashes (hashes.jpg)
+          en vez de pixel-grid-2: esta página ya usa pixel-grid-2 invertido
+          en la sección "¿Querés estar dentro?", así que acá se varía. */}
       <section id="que-es" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} fadeEdges={SECTION_FADE} />
+        <ParallaxBg src="/assets/home/hashes.jpg" opacity={0.25} drift={10} fadeEdges={SECTION_FADE} />
 
         <div className="relative mx-auto w-full max-w-5xl" style={{ zIndex: 1 }}>
           <Reveal>
@@ -445,10 +450,13 @@ export default function MasPage() {
 
               <Reveal delay={0.1}>
                 <div
-                  style={cardStyle({ padding: 0, overflow: "hidden" })}
-                  className="flex flex-col sm:flex-row sm:items-start sm:min-h-[410px]"
+                  style={cardStyle({ padding: "16px", overflow: "hidden" })}
+                  className="flex flex-col sm:flex-row sm:items-start gap-5 sm:min-h-[410px]"
                 >
-                  <div className="relative shrink-0 w-full sm:w-[220px]" style={{ aspectRatio: "4 / 5" }}>
+                  <div
+                    className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
+                    style={{ aspectRatio: "4 / 5" }}
+                  >
                     <Image
                       src={HACKATHON_FLYER_SRC}
                       alt={t.cardHackathonTitle}
@@ -457,7 +465,7 @@ export default function MasPage() {
                       style={{ objectFit: "cover" }}
                     />
                   </div>
-                  <div style={{ padding: "28px" }} className="flex-1">
+                  <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
                         {t.cardHackathonTitle}
@@ -498,9 +506,17 @@ export default function MasPage() {
               </Reveal>
 
               <Reveal delay={0.15}>
-                <div style={cardStyle({ padding: "28px" })}>
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                    {t.cardBootcampTitle}
+                <div
+                  style={cardStyle({
+                    padding: "28px",
+                    minHeight: BOOTCAMP_ROW_MIN_H,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  })}
+                >
+                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.3 }}>
+                    {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
                   </h3>
                   <div className="mt-6">
                     <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
@@ -543,10 +559,13 @@ export default function MasPage() {
                     este tamaño se ve el flyer completo (foto + título +
                     calendario + footer) sin recortar. */}
                 <div
-                  style={cardStyle({ padding: 0, overflow: "hidden" })}
-                  className="flex flex-col sm:flex-row sm:min-h-[410px]"
+                  style={cardStyle({ padding: "16px", overflow: "hidden" })}
+                  className="flex flex-col sm:flex-row gap-5 sm:min-h-[410px]"
                 >
-                  <div className="relative shrink-0 w-full sm:w-[220px]" style={{ aspectRatio: "3 / 4" }}>
+                  <div
+                    className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
+                    style={{ aspectRatio: "3 / 4" }}
+                  >
                     <Image
                       src={BITCOIN_COLLEGE_FLYER_SRC}
                       alt={t.cardCollegeTitle}
@@ -555,7 +574,7 @@ export default function MasPage() {
                       style={{ objectFit: "cover" }}
                     />
                   </div>
-                  <div style={{ padding: "28px" }} className="flex-1">
+                  <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
                     <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
                       {t.cardCollegeTitle}
                     </h3>
@@ -579,14 +598,32 @@ export default function MasPage() {
 
               <div className="grid grid-cols-2 gap-6">
                 <Reveal delay={0.15}>
-                  <div style={cardStyle({ padding: "24px", textAlign: "center" })}>
+                  <div
+                    style={cardStyle({
+                      padding: "24px",
+                      textAlign: "center",
+                      minHeight: BOOTCAMP_ROW_MIN_H,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    })}
+                  >
                     <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 17px)" }}>
                       {t.cardCertificadoTitle}
                     </h3>
                   </div>
                 </Reveal>
                 <Reveal delay={0.18}>
-                  <div style={cardStyle({ padding: "24px", textAlign: "center" })}>
+                  <div
+                    style={cardStyle({
+                      padding: "24px",
+                      textAlign: "center",
+                      minHeight: BOOTCAMP_ROW_MIN_H,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    })}
+                  >
                     <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 17px)" }}>
                       {t.cardNetworkingTitle}
                     </h3>
