@@ -24,6 +24,10 @@ const lightStyle: React.CSSProperties = {
   fontWeight: 300,
 };
 
+// Largo del desvanecido de cada fondo en los bordes de su sección: el
+// fondo de un scroll se funde con el del siguiente en vez de cortar en seco.
+const SECTION_FADE = "180px";
+
 // Estilo compartido de las cards con borde de sección (todas las de
 // "Beneficios", los 2 pasos de "¿Querés estar dentro?" y el buscador de
 // universidades) — el machete las dibuja todas con el mismo borde
@@ -254,7 +258,7 @@ export default function MasPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, rgba(23,22,22,0.55) 0%, rgba(23,22,22,0.35) 45%, rgba(23,22,22,0.85) 100%)",
+              "linear-gradient(to bottom, rgba(23,22,22,0.55) 0%, rgba(23,22,22,0.35) 45%, rgba(23,22,22,0.85) 80%, #171616 100%)",
           }}
         />
 
@@ -338,7 +342,7 @@ export default function MasPage() {
           mock: es un efecto de Figma sobre el mismo asset, no un archivo
           nuevo del banco de diseño. */}
       <section id="que-es" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} />
+        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} fadeEdges={SECTION_FADE} />
 
         <div className="relative mx-auto w-full max-w-5xl" style={{ zIndex: 1 }}>
           <Reveal>
@@ -399,8 +403,21 @@ export default function MasPage() {
           scroll partido en dos capturas por el diseñador). Grid de 2
           columnas: izquierda espacio físico + hackathon + bootcamp,
           derecha whatsapp + bitcoin college + certificado/networking. */}
-      <section id="beneficios" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden" style={{ background: "#000" }}>
-        <div className="relative mx-auto w-full max-w-6xl">
+      <section id="beneficios" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
+        {/* Íconos wireframe: mismo fondo y degradé que en /comunidad; no se
+            repite con los vecinos (pixel-grid arriba y abajo) */}
+        <ParallaxBg src="/assets/home/fondo-iconos.jpg" opacity={0.22} drift={12} fadeEdges={SECTION_FADE} />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+          }}
+        />
+
+        <div className="relative mx-auto w-full max-w-6xl" style={{ zIndex: 2 }}>
           <Reveal>
             <h2
               style={{
@@ -585,7 +602,7 @@ export default function MasPage() {
           externo: "Ver si mi uni está acreditada" scrollea a la sección
           siguiente (ancla #universidades-acreditadas). */}
       <section id="queres-estar-dentro" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} />
+        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} fadeEdges={SECTION_FADE} />
 
         <div className="relative mx-auto w-full max-w-5xl text-center" style={{ zIndex: 1 }}>
           <Reveal>
@@ -704,9 +721,21 @@ export default function MasPage() {
       <section
         id="universidades-acreditadas"
         className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden"
-        style={{ background: "#000" }}
       >
-        <div className="relative mx-auto w-full max-w-5xl">
+        {/* Mapa de puntos: afinidad con "universidades de toda la región",
+            mismo fondo y degradé que Comunidades en /comunidad */}
+        <ParallaxBg src="/assets/home/fondo-hexmap.jpg" opacity={0.22} objectPosition="center bottom" drift={12} fadeEdges={SECTION_FADE} />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+          }}
+        />
+
+        <div className="relative mx-auto w-full max-w-5xl" style={{ zIndex: 2 }}>
           <Reveal>
             <h2
               style={{
