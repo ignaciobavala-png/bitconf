@@ -188,10 +188,9 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setMasOpen(false)}
-                      className="transition-colors duration-200 hover:bg-[#ABF760] hover:text-[#171616]"
+                      className="text-[#E6EEF2] transition-colors duration-200 hover:bg-[#ABF760] hover:text-[#171616]"
                       style={{
                         ...labelStyle,
-                        color: "#E6EEF2",
                         fontSize: "12px",
                         padding: "13px 18px",
                         whiteSpace: "nowrap",

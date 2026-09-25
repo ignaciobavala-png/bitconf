@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import Footer from "@/components/home/Footer";
@@ -91,6 +91,55 @@ function PillLink({
 // Bitcoin College — llenan el espacio que el flyer deja libre cuando la
 // card se estira para igualar la altura de su vecina, con info real en vez
 // de relleno decorativo. No tocan el flyer ni su aspect-ratio.
+// Charset de "glitch" para el efecto decode — solo letras/números/símbolos,
+// nunca espacio ni "→" (esos se muestran siempre, para no romper el layout
+// del texto mientras decodea).
+const DECODE_CHARS = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*";
+const DECODE_DURATION_MS = 900;
+const DECODE_TICK_MS = 35;
+
+/**
+ * Frase que "decodea": arranca en glitch y va asentando letra por letra, de
+ * izquierda a derecha. Basado en tiempo transcurrido (no en conteo de
+ * frames): así, si algún tick se demora (dev con Fast Refresh, CPU cargada),
+ * el último tick fuerza `progress = 1` y muestra el texto real completo en
+ * vez de quedar con letras en glitch congeladas.
+ */
+function DecodeText({ text, style }: { text: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -80px 0px" });
+  const [display, setDisplay] = useState(text);
+
+  useEffect(() => {
+    if (!inView) return;
+    const start = Date.now();
+    const id = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(1, elapsed / DECODE_DURATION_MS);
+      // La letra en índice i se asienta cuando `progress` supera su umbral;
+      // el último 15% de la barra de progreso asienta todo lo que quede.
+      setDisplay(
+        text
+          .split("")
+          .map((ch, i) => {
+            const threshold = (i / text.length) * 0.85;
+            if (ch === " " || ch === "→" || progress >= threshold) return ch;
+            return DECODE_CHARS[Math.floor(Math.random() * DECODE_CHARS.length)];
+          })
+          .join(""),
+      );
+      if (progress >= 1) clearInterval(id);
+    }, DECODE_TICK_MS);
+    return () => clearInterval(id);
+  }, [inView, text]);
+
+  return (
+    <p ref={ref} style={style}>
+      {display}
+    </p>
+  );
+}
+
 function InfoChips({ items }: { items: readonly string[] }) {
   return (
     <div className="flex flex-col gap-2 mt-3 w-full sm:w-[220px]">
@@ -902,7 +951,8 @@ export default function MasPage() {
           </div>
 
           <Reveal delay={0.16}>
-            <p
+            <DecodeText
+              text={t.closingLine}
               style={{
                 ...labelStyle,
                 color: "#E6EEF2",
@@ -910,9 +960,7 @@ export default function MasPage() {
                 lineHeight: 1.4,
                 marginTop: 48,
               }}
-            >
-              {t.closingLine}
-            </p>
+            />
           </Reveal>
         </div>
       </section>
