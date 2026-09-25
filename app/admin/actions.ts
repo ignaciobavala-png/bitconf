@@ -172,3 +172,29 @@ export async function uploadComunidadLogo(id: string, formData: FormData) {
   await supabase.from("mas_comunidades").update({ logo_url: pub.publicUrl }).eq("id", id);
   revalidatePath("/admin");
 }
+
+// ── Speakers — sync con la planilla de la organización ─────────────────────
+
+/**
+ * Dispara el sync a mano desde el admin.
+ *
+ * Llama a `syncSpeakers()` directo en vez de hacer fetch a /api/sync-speakers:
+ * ya estamos autenticados por la cookie, así que dar la vuelta por HTTP solo
+ * agregaría un secreto de más en el camino.
+ *
+ * Registra la corrida igual que la ruta — incluido el fallo, que es la fila que
+ * más importa del historial.
+ */
+export async function syncSpeakersNow() {
+  const { syncSpeakers } = await import("@/lib/speakers/sync");
+  const { recordRun, recordFailure } = await import("@/lib/speakers/runs");
+
+  const startedAt = Date.now();
+  try {
+    await recordRun(await syncSpeakers(), "manual");
+  } catch (err) {
+    console.error("[admin] sync manual falló:", err);
+    await recordFailure(err, "manual", Date.now() - startedAt);
+  }
+  revalidatePath("/admin");
+}

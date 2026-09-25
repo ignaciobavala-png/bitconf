@@ -147,6 +147,7 @@ const T = {
     searchIdle: "Escribí el nombre de tu universidad para verificar.",
     searchYes: "✓ Está acreditada.",
     searchNo: "Todavía no está acreditada — pedile que complete el formulario de arriba.",
+    searchAmbiguous: "Hay más de una universidad que coincide — escribí el nombre completo.",
     searchLoading: "Buscando…",
   },
   en: {
@@ -199,6 +200,7 @@ const T = {
     searchIdle: "Type your university's name to check.",
     searchYes: "✓ It's accredited.",
     searchNo: "Not accredited yet — ask it to fill out the form above.",
+    searchAmbiguous: "More than one university matches — type the full name.",
     searchLoading: "Searching…",
   },
 } as const;
@@ -831,6 +833,15 @@ type MasCopy = (typeof T)[keyof typeof T];
 
 type Uni = { name: string; accredited: boolean };
 
+/** "Universidad Católica" → "universidad catolica", para comparar sin acentos. */
+function normalizeSearch(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 // Buscador contra edu_hub_universities. Carga la tabla entera una sola vez
 // (la lista de universidades acreditadas es chica, no hace falta paginar ni
 // pegarle a Supabase en cada tecla) y filtra en el cliente.
@@ -851,12 +862,21 @@ function UniversitySearch({ t }: { t: MasCopy }) {
     };
   }, []);
 
-  const q = query.trim().toLowerCase();
-  const match = q && unis ? unis.find((u) => u.name.toLowerCase().includes(q)) : undefined;
+  // Antes: unis.find(...) se quedaba con el PRIMER nombre que contuviera el
+  // substring y contestaba por él — con términos genéricos ("universidad",
+  // "de", una sola letra) eso significaba confirmar "acreditada" para
+  // cualquier cosa que se escribiera, si la primera coincidencia al azar
+  // resultaba estar acreditada. Ahora: normaliza acentos, exige mínimo 3
+  // caracteres, y si hay más de una coincidencia no arriesga una respuesta —
+  // pide el nombre completo en vez de contestar por la que encontró primero.
+  const q = normalizeSearch(query);
+  const matches = q.length >= 3 && unis ? unis.filter((u) => normalizeSearch(u.name).includes(q)) : [];
+  const match = matches.length === 1 ? matches[0] : undefined;
 
   let feedback: string | null = null;
-  if (q) {
+  if (q.length >= 3) {
     if (unis === null) feedback = t.searchLoading;
+    else if (matches.length > 1) feedback = t.searchAmbiguous;
     else feedback = match?.accredited ? t.searchYes : t.searchNo;
   }
 
