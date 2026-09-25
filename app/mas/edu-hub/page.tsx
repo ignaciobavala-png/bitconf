@@ -117,7 +117,7 @@ const T = {
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 en premios",
     cardHackathonBody:
-      "2 días. 4 tracks. +1.500 USD en premios.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero.\n\nElegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween.\n\nIncluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
+      "2 días. 4 tracks.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero.\n\nElegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween.\n\nIncluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
     cardHackathonParticipa: "participá",
     cardHackathonMasInfo: "más info",
     cardBootcampPrefix: "Bootcamp -",
@@ -169,7 +169,7 @@ const T = {
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 in prizes",
     cardHackathonBody:
-      "2 days. 4 tracks. +1,500 USD in prizes.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero.\n\nPick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party.\n\nIncludes a 4-session Bootcamp in October to get you ready.",
+      "2 days. 4 tracks.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero.\n\nPick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party.\n\nIncludes a 4-session Bootcamp in October to get you ready.",
     cardHackathonParticipa: "join in",
     cardHackathonMasInfo: "more info",
     cardBootcampPrefix: "Bootcamp -",
