@@ -16,6 +16,12 @@ import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 
+// Fondo de "Media Partners": reemplaza fondo-iconos.jpg (estático) por
+// fondo1.mp4 (25/09/2026, mismo clip que embajadores/edu-hub), pedido de
+// Ignacio para darle movimiento también a esta sección de la home.
+const MEDIA_PARTNERS_BG_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/media-partners-bg.mp4";
+
 // Versiones -trim (recortadas al texto): los originales tienen lienzo 1000x500
 // con alturas de texto muy dispares, lo que hacía que cada título se viera de
 // un tamaño distinto. Recortados + altura fija = misma altura de letra en todos.
@@ -984,17 +990,22 @@ export default function HomePage() {
         className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:pt-32 sm:pb-20 overflow-hidden"
         style={{ zIndex: 3 }}
       >
-        {/* Fondo: iconos (el único del banco que no está usado en la home) */}
+        {/* Fondo: fondo1.mp4 en loop (antes fondo-iconos.jpg estático) */}
         <div
-          className="absolute inset-0 pointer-events-none select-none"
+          className="absolute inset-0 pointer-events-none select-none overflow-hidden"
           style={{ zIndex: 0, opacity: 0.18 }}
         >
-          <Image
-            src="/assets/home/fondo-iconos.jpg"
-            alt=""
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+          >
+            <source src={MEDIA_PARTNERS_BG_VIDEO_SRC} type="video/mp4" />
+          </video>
         </div>
 
         <div
