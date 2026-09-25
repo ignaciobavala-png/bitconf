@@ -1097,13 +1097,16 @@ export default function HomePage() {
         className="relative flex flex-col justify-center px-6 sm:px-10 py-16 sm:py-32 sm:min-h-screen overflow-hidden"
         style={{ zIndex: 3 }}
       >
-        {/* Fondo: grilla pixel con iconos */}
+        {/* Fondo: lluvia de dígitos naranja — antes era pixel-grid-2.png
+            (misma textura que Media Partners, solo invertida: la organización
+            marcó el 25/09 que quedaban dos fondos iguales seguidos). Variante
+            en naranja de lluvia.png (Tickets) para que tampoco repita esa. */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.15, filter: "invert(1)" }}
+          style={{ zIndex: 0, opacity: 0.25 }}
         >
           <Image
-            src="/assets/home/pixel-grid-2.png"
+            src="/assets/home/lluvia-naranja.png"
             alt=""
             fill
             style={{ objectFit: "cover", objectPosition: "center" }}
