@@ -57,7 +57,7 @@ const T = {
     masInfo: "Más info",
     pending: "Bases a confirmar",
     premio: "+ USD 1500 en premios",
-    body: "Un hackathon de innovación donde la comunidad EDU HUB trabaja durante los dos días del evento, para crear soluciones a desafíos reales y presentar sus proyectos ante un jurado.",
+    body: "2 días. 4 tracks. +1.500 USD en premios.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero. Elegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween. Incluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
   },
   en: {
     alt: "Hackathon EDU HUB",
@@ -67,7 +67,7 @@ const T = {
     masInfo: "More info",
     pending: "Rules to be confirmed",
     premio: "+ USD 1500 in prizes",
-    body: "An innovation hackathon where the EDU HUB community works during the two days of the event, to build solutions to real challenges and present their projects to a jury.",
+    body: "2 days. 4 tracks. +1,500 USD in prizes.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero. Pick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party. Includes a 4-session Bootcamp in October to get you ready.",
   },
 } as const;
 
@@ -170,6 +170,7 @@ export default function HackathonPage() {
                 fontSize: "clamp(14px, 1.4vw, 17px)",
                 lineHeight: 1.6,
                 marginTop: 16,
+                whiteSpace: "pre-line",
               }}
             >
               {t.body}

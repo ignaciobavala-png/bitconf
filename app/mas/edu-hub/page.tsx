@@ -117,7 +117,7 @@ const T = {
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 en premios",
     cardHackathonBody:
-      "Un hackathon de innovación donde la comunidad EDU HUB trabaja durante los dos días del evento, para crear soluciones a desafíos reales y presentar sus proyectos ante un jurado.",
+      "2 días. 4 tracks. +1.500 USD en premios.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero.\n\nElegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween.\n\nIncluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
     cardHackathonParticipa: "participá",
     cardHackathonMasInfo: "más info",
     cardBootcampPrefix: "Bootcamp -",
@@ -126,7 +126,7 @@ const T = {
     cardWhatsappTitle: "Comunidad de WhatsApp",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
-      "LABITCONF Bitcoin College es una experiencia formativa inmersiva en el ecosistema Bitcoin, que se desarrolla en el marco de LABITCONF 2026.",
+      "Un día. Certificación real. Antes de LABITCONF.\n\nUn día completo, IRL, de formación intensiva en Bitcoin, con certificación conjunta de la Universidad Champagnat y la Escuelita Bitcoin. Jueves 29 de octubre, en la Universidad del Salvador (USAL), Buenos Aires. Abierto a toda la comunidad universitaria de Argentina y países vecinos: estudiantes, alumni y profesores. ¿Sos de una universidad del interior? Podés postularte a una beca de movilidad de hasta USD 1.000 por delegación.",
     cardCollegeUnite: "UNITE",
     cardCertificadoTitle: "Certificado oficial",
     cardNetworkingTitle: "Networking",
@@ -169,7 +169,7 @@ const T = {
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 in prizes",
     cardHackathonBody:
-      "An innovation hackathon where the EDU HUB community works during the two days of the event, to build solutions to real challenges and present their projects to a jury.",
+      "2 days. 4 tracks. +1,500 USD in prizes.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero.\n\nPick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party.\n\nIncludes a 4-session Bootcamp in October to get you ready.",
     cardHackathonParticipa: "join in",
     cardHackathonMasInfo: "more info",
     cardBootcampPrefix: "Bootcamp -",
@@ -178,7 +178,7 @@ const T = {
     cardWhatsappTitle: "WhatsApp community",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
-      "LABITCONF Bitcoin College is an immersive learning experience in the Bitcoin ecosystem, held within LABITCONF 2026.",
+      "One day. Real certification. Before LABITCONF.\n\nA full day, IRL, of intensive Bitcoin training, with joint certification from Universidad Champagnat and Escuelita Bitcoin. Thursday, October 29, at Universidad del Salvador (USAL), Buenos Aires. Open to the entire university community of Argentina and neighboring countries: students, alumni and professors. Are you from a university outside Buenos Aires? You can apply for a mobility scholarship of up to USD 1,000 per delegation.",
     cardCollegeUnite: "JOIN IN",
     cardCertificadoTitle: "Official certificate",
     cardNetworkingTitle: "Networking",
@@ -491,6 +491,7 @@ export default function MasPage() {
                         fontSize: "clamp(14px, 1.3vw, 16px)",
                         lineHeight: 1.5,
                         marginTop: 16,
+                        whiteSpace: "pre-line",
                       }}
                     >
                       {t.cardHackathonBody}
@@ -585,6 +586,7 @@ export default function MasPage() {
                         fontSize: "clamp(14px, 1.3vw, 16px)",
                         lineHeight: 1.5,
                         marginTop: 16,
+                        whiteSpace: "pre-line",
                       }}
                     >
                       {t.cardCollegeBody}
