@@ -140,6 +140,13 @@ const HERO_VIDEO_SRC =
 const BENEFICIOS_BG_VIDEO_SRC =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/beneficios-bg.mp4";
 
+// Fondo de "¿Querés estar dentro?": reemplaza lluvia.png (ParallaxBg,
+// estático) por fondo1.mp4 (25/09/2026, mismo clip que se usó en
+// embajadores "Los seis universos") — mismo patrón bespoke <video> que
+// BENEFICIOS_BG_VIDEO_SRC porque ParallaxBg no soporta video.
+const QUERES_BG_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/queres-estar-dentro-bg.mp4";
+
 const T = {
   es: {
     headline: "LA PRÓXIMA GENERACIÓN YA ESTÁ DENTRO.",
@@ -777,12 +784,29 @@ export default function MasPage() {
           externo: "Ver si mi uni está acreditada" scrollea a la sección
           siguiente (ancla #universidades-acreditadas). */}
       <section id="queres-estar-dentro" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        {/* Antes pixel-grid-2.png invertido: mismo patrón de cuadrados que
-            fondo-iconos.jpg de la sección "beneficios" de arriba (son el
-            mismo asset, uno con invert), quedaban dos fondos idénticos
-            seguidos. Lluvia de dígitos para que la página no se sienta
-            repetida acá. */}
-        <ParallaxBg src="/assets/home/lluvia.png" opacity={0.22} drift={10} fadeEdges={SECTION_FADE} />
+        {/* Antes lluvia.png (ParallaxBg estático) — ahora fondo1.mp4 en loop,
+            mismo mask fadeEdges que el resto de la página. */}
+        <div
+          className="absolute inset-0 overflow-hidden pointer-events-none select-none"
+          style={{
+            zIndex: 0,
+            opacity: 0.35,
+            maskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
+            WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
+          }}
+        >
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+          >
+            <source src={QUERES_BG_VIDEO_SRC} type="video/mp4" />
+          </video>
+        </div>
 
         <div className="relative mx-auto w-full max-w-5xl text-center" style={{ zIndex: 1 }}>
           <Reveal>
@@ -1071,7 +1095,7 @@ function LogoLane({ unis, reverse, duration }: { unis: UniLogo[]; reverse?: bool
               key={uni.name}
               src={uni.logo_url}
               alt={uni.name}
-              style={{ height: "clamp(28px, 3.4vw, 44px)", width: "auto", maxWidth: 160, objectFit: "contain" }}
+              style={{ height: "clamp(36px, 4.4vw, 58px)", width: "auto", maxWidth: 200, objectFit: "contain" }}
             />
           ))}
         </motion.div>

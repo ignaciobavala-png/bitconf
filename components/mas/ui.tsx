@@ -297,24 +297,33 @@ export function FeatureGrid({
   items,
   cols = "sm:grid-cols-2 lg:grid-cols-4",
   delay = 0.1,
+  accentColors,
 }: {
   items: readonly { title: string; detail?: string }[];
   cols?: string;
   delay?: number;
+  /** Paleta a rotar por índice de card (borde + título). Sin esto, todas quedan verdes (default). */
+  accentColors?: readonly string[];
 }) {
   return (
     <div className={`mt-8 grid grid-cols-1 ${cols} gap-5`}>
-      {items.map((item, i) => (
+      {items.map((item, i) => {
+        const accent = accentColors?.[i % accentColors.length];
+        return (
         <Reveal
           key={item.title}
           delay={delay + i * 0.08}
           className="rounded-2xl h-full transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_-12px_rgba(171,247,96,0.35)]"
-          style={{ ...CARD, padding: "clamp(20px, 2.4vw, 28px)" }}
+          style={{
+            ...CARD,
+            ...(accent ? { border: `1px solid ${accent}` } : null),
+            padding: "clamp(20px, 2.4vw, 28px)",
+          }}
         >
           <h3
             style={{
               ...labelStyle,
-              color: "#ABF760",
+              color: accent ?? "#ABF760",
               fontSize: "clamp(13px, 1.3vw, 16px)",
               lineHeight: 1.25,
             }}
@@ -335,7 +344,8 @@ export function FeatureGrid({
             </p>
           )}
         </Reveal>
-      ))}
+        );
+      })}
     </div>
   );
 }

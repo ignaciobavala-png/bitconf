@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
 import { labelStyle, lightStyle } from "@/components/mas/ui";
@@ -81,14 +82,17 @@ export default function MasNav() {
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {others.map((item, i) => (
             <Reveal key={item.href} delay={i * 0.08}>
-              <a
+              <motion.a
                 href={item.href}
-                className="block h-full rounded-2xl transition-colors duration-200 hover:bg-[rgba(171,247,96,0.08)]"
+                className="block h-full rounded-2xl"
                 style={{
                   border: "1px solid rgba(171,247,96,0.35)",
                   background: "rgba(13,13,11,0.45)",
                   padding: "clamp(18px, 2.2vw, 26px)",
                 }}
+                whileHover={{ scale: 1.03, background: "rgba(171,247,96,0.08)" }}
+                whileTap={{ scale: 0.97, background: "rgba(171,247,96,0.08)" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
               >
                 <span
                   className="block"
@@ -107,7 +111,7 @@ export default function MasNav() {
                 >
                   {item.blurb[lang]}
                 </span>
-              </a>
+              </motion.a>
             </Reveal>
           ))}
         </div>

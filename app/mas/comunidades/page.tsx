@@ -128,7 +128,15 @@ export default function ComunidadesPage() {
           ya está cerrada. */}
       <MasSection bg="/assets/home/lluvia.png" bgOpacity={0.3}>
         <BlockTitle>{t.beneficiosTitle}</BlockTitle>
-        <FeatureGrid items={t.beneficios} cols="sm:grid-cols-2 lg:grid-cols-3" />
+        <FeatureGrid
+          items={t.beneficios}
+          cols="sm:grid-cols-2 lg:grid-cols-3"
+          // Sin naranja: es el color del título de este bloque (BlockTitle
+          // default #FF4E01) y una card en ese mismo tono se perdía contra él.
+          // Orden pensado para que ninguna columna repita color entre la
+          // fila 1 y la fila 2 (grid de 3 columnas).
+          accentColors={["#ABF760", "#FFAB0B", "#1311FC", "#FFAB0B", "#1311FC", "#ABF760"]}
+        />
       </MasSection>
 
       <MasNav />
@@ -168,7 +176,7 @@ function ComunidadesLogoLane({
               key={comu.name}
               src={comu.logo_url}
               alt={comu.name}
-              style={{ height: "clamp(28px, 3.4vw, 44px)", width: "auto", maxWidth: 160, objectFit: "contain" }}
+              style={{ height: "clamp(36px, 4.4vw, 58px)", width: "auto", maxWidth: 200, objectFit: "contain" }}
             />
           ))}
         </motion.div>
