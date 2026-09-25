@@ -17,6 +17,7 @@ export default function ParallaxBg({
   priority = false,
   drift = 10,
   zIndex = 0,
+  fadeEdges,
 }: {
   src: string;
   opacity?: number;
@@ -25,6 +26,10 @@ export default function ParallaxBg({
   priority?: boolean;
   drift?: number; // % de desplazamiento vertical por parallax
   zIndex?: number;
+  // Largo (ej. "180px") del desvanecido del fondo en el borde superior e
+  // inferior de la sección: así no queda una línea recta donde termina la
+  // imagen y empieza la sección siguiente. Opt-in: sin prop, recorte seco.
+  fadeEdges?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -37,7 +42,14 @@ export default function ParallaxBg({
     <div
       ref={ref}
       className="absolute inset-0 overflow-hidden pointer-events-none select-none"
-      style={{ zIndex, opacity }}
+      style={{
+        zIndex,
+        opacity,
+        ...(fadeEdges && {
+          maskImage: `linear-gradient(to bottom, transparent 0, #000 ${fadeEdges}, #000 calc(100% - ${fadeEdges}), transparent 100%)`,
+          WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${fadeEdges}, #000 calc(100% - ${fadeEdges}), transparent 100%)`,
+        }),
+      }}
     >
       <motion.div
         className="absolute"

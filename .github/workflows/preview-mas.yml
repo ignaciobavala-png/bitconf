@@ -1,0 +1,47 @@
+# Deploy de PREVIEW de la rama MAS, para que la organización pueda mirar el
+# avance sin que salga a producción. Mismo patrón que preview.yml (fase-2).
+#
+# Por qué es un archivo aparte y no un job más en deploy.yml: así deploy.yml
+# queda byte por byte igual al de main y no hay ninguna chance de que un cambio
+# acá termine tocando www.labitconf.com. Al mergear MAS a main, este archivo
+# se borra y no hay conflicto que resolver.
+#
+# El comando NO lleva --prod: eso es lo único que separa este deploy del de
+# producción. La rama no entra en la ecuación (el proyecto de Vercel no tiene
+# repo de Git conectado, así que decide el flag). No agregar --prod acá nunca.
+name: Deploy preview (MAS)
+
+on:
+  push:
+    branches:
+      - MAS
+
+jobs:
+  preview:
+    # Redundante con el trigger de arriba, a propósito: si algún día alguien
+    # agrega una rama al `on:`, este `if` la frena en vez de deployarla.
+    if: github.ref == 'refs/heads/MAS'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy preview
+        id: deploy
+        # La CLI escribe la URL del deployment en stdout y el progreso en
+        # stderr, así que $(...) captura solo la URL.
+        run: |
+          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Preview de MAS"
+            echo ""
+            echo "$URL"
+            echo ""
+            echo "Commit: \`${{ github.sha }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

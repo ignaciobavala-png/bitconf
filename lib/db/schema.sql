@@ -60,3 +60,21 @@ create table public.rate_limit (
 );
 
 create index rate_limit_ip_window_idx on public.rate_limit (ip_hash, window_start desc);
+
+
+-- =============================================================
+-- MAS (EDU HUB) — /mas, scroll "Universidades acreditadas"
+-- =============================================================
+-- Espejo consultable del Google Sheet que administra el cliente con la
+-- lista de universidades acreditadas + sus logos. Se re-carga por completo
+-- cada vez que el cliente actualiza el sheet (no hay sync automático).
+create table public.edu_hub_universities (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  logo_url    text,
+  accredited  boolean not null default true,
+  created_at  timestamptz not null default now()
+);
+
+create unique index edu_hub_universities_name_idx
+  on public.edu_hub_universities (lower(name));
