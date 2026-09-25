@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import QaChatWidget from "@/components/home/QaChatWidget";
@@ -86,6 +87,40 @@ function PillLink({
   );
 }
 
+// Chips de datos (fecha / lugar / cupo) debajo del flyer de Hackathon y
+// Bitcoin College — llenan el espacio que el flyer deja libre cuando la
+// card se estira para igualar la altura de su vecina, con info real en vez
+// de relleno decorativo. No tocan el flyer ni su aspect-ratio.
+function InfoChips({ items }: { items: readonly string[] }) {
+  return (
+    <div className="flex flex-col gap-2 mt-3 w-full sm:w-[220px]">
+      {items.map((item, i) => (
+        <div
+          key={item}
+          className="flex items-center gap-2"
+          style={{
+            background: "rgba(230,238,242,0.06)",
+            border: "1px solid rgba(230,238,242,0.12)",
+            borderRadius: 12,
+            padding: "8px 12px",
+          }}
+        >
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 999,
+              background: i === 1 ? "#ABF760" : "#FF4E01",
+              flexShrink: 0,
+            }}
+          />
+          <span style={{ ...lightStyle, color: "#E6EEF2", fontSize: 12, fontWeight: 700 }}>{item}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Video de fondo del hero: pieza literal que mandaron los diseñadores
 // (`~/Descargas/MAS-BITCONF/DISEÑO WEB.mp4`), un reel de 16s con 4 escenas de
 // campaña OOH/print de EDUHUB en loop. Recomprimido (h264 crf 34, sin audio —
@@ -95,6 +130,15 @@ function PillLink({
 // no se trackea en git.
 const HERO_VIDEO_SRC =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/hero-bg.mp4";
+
+// Fondo de "Beneficios y experiencias": reemplaza fondo-iconos.jpg (estático,
+// "cuadrados grises", marcado como el más aburrido de la página) por uno de
+// los 3 clips que mandó la organización — probado primero con fondo3.mp4,
+// reemplazado por fondo2.mp4 a pedido (25/09/2026, mismo path en el bucket,
+// upsert). Original 4K/20MB → 1920px/24fps/crf30 sin audio (1,8MB) y subido
+// al mismo bucket público que HERO_VIDEO_SRC; no se trackea en git.
+const BENEFICIOS_BG_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/beneficios-bg.mp4";
 
 const T = {
   es: {
@@ -112,13 +156,15 @@ const T = {
     queEsAudiencia: ["ESTUDIANTES", "PROFESORES", "ALUMNI", "UNIVERSIDADES"],
 
     beneficiosTitle: "Beneficios y experiencias",
-    cardEspacioTitle: "Espacio físico exclusivo en el evento",
+    cardEspacioTitlePrefix: "Espacio físico exclusivo",
+    cardEspacioTitleTail: "en el evento",
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 en premios",
     cardHackathonBody:
       "2 días. 4 tracks.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero.\n\nElegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween.\n\nIncluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
     cardHackathonParticipa: "participá",
     cardHackathonMasInfo: "más info",
+    cardHackathonChips: ["30–31 oct", "Costa Salguero", "Equipos de 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops y charlas",
     cardBootcampMasInfo: "más info",
@@ -127,6 +173,7 @@ const T = {
     cardCollegeBody:
       "Un día. Certificación real. Antes de LABITCONF.\n\nUn día completo, IRL, de formación intensiva en Bitcoin, con certificación conjunta de la Universidad Champagnat y la Escuelita Bitcoin. Jueves 29 de octubre, en la Universidad del Salvador (USAL), Buenos Aires. Abierto a toda la comunidad universitaria de Argentina y países vecinos: estudiantes, alumni y profesores. ¿Sos de una universidad del interior? Podés postularte a una beca de movilidad de hasta USD 1.000 por delegación.",
     cardCollegeUnite: "UNITE",
+    cardCollegeChips: ["29 oct", "USAL, Buenos Aires", "Día completo"],
     cardCertificadoTitle: "Certificado oficial",
     cardNetworkingTitle: "Networking",
 
@@ -165,13 +212,15 @@ const T = {
     queEsAudiencia: ["STUDENTS", "PROFESSORS", "ALUMNI", "UNIVERSITIES"],
 
     beneficiosTitle: "Benefits and experiences",
-    cardEspacioTitle: "Exclusive physical space at the event",
+    cardEspacioTitlePrefix: "Exclusive physical space",
+    cardEspacioTitleTail: "at the event",
     cardHackathonTitle: "Hackathon EDU HUB",
     cardHackathonPremio: "+ USD 1500 in prizes",
     cardHackathonBody:
       "2 days. 4 tracks.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero.\n\nPick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party.\n\nIncludes a 4-session Bootcamp in October to get you ready.",
     cardHackathonParticipa: "join in",
     cardHackathonMasInfo: "more info",
+    cardHackathonChips: ["Oct 30–31", "Costa Salguero", "Teams of 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops and talks",
     cardBootcampMasInfo: "more info",
@@ -180,6 +229,7 @@ const T = {
     cardCollegeBody:
       "One day. Real certification. Before LABITCONF.\n\nA full day, IRL, of intensive Bitcoin training, with joint certification from Universidad Champagnat and Escuelita Bitcoin. Thursday, October 29, at Universidad del Salvador (USAL), Buenos Aires. Open to the entire university community of Argentina and neighboring countries: students, alumni and professors. Are you from a university outside Buenos Aires? You can apply for a mobility scholarship of up to USD 1,000 per delegation.",
     cardCollegeUnite: "JOIN IN",
+    cardCollegeChips: ["Oct 29", "USAL, Buenos Aires", "Full day"],
     cardCertificadoTitle: "Official certificate",
     cardNetworkingTitle: "Networking",
 
@@ -353,7 +403,10 @@ export default function MasPage() {
       <section id="que-es" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
         <ParallaxBg src="/assets/home/hashes.jpg" opacity={0.25} drift={10} fadeEdges={SECTION_FADE} />
 
-        <div className="relative mx-auto w-full max-w-5xl" style={{ zIndex: 1 }}>
+        {/* max-w-6xl — mismo ancho que la caja de "Beneficios y experiencias"
+            (25/09/2026, feedback: los dos títulos quedaban desalineados
+            porque este contenedor usaba max-w-5xl). */}
+        <div className="relative mx-auto w-full max-w-6xl" style={{ zIndex: 1 }}>
           <Reveal>
             <h2
               style={{
@@ -387,24 +440,59 @@ export default function MasPage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.18}>
-            {/* text-align-last justifica el renglón (el único, en desktop; cada
-                uno si wrappea en mobile) para que llegue exacto al borde derecho
-                de la caja de arriba — mismo ancho, sin tocar el tamaño de fuente
-                a mano por breakpoint. */}
-            <p
-              style={{
-                ...labelStyle,
-                color: "#E6EEF2",
-                fontSize: "clamp(16px, 2.6vw, 29px)",
-                marginTop: 40,
-                textAlign: "justify",
-                textAlignLast: "justify",
-              }}
-            >
-              {t.queEsAudiencia.join(" • ")}
-            </p>
-          </Reveal>
+          {/* Texto y layout iguales a antes (mismo join con "•", mismo
+              text-align-last justify) — la única diferencia es la entrada:
+              en vez de un solo fade de bloque (Reveal), cada palabra hace su
+              propia entrada escalonada con blur-in, más elegante que el
+              fade plano. Reemplaza el Reveal envolvente porque acá el
+              trigger de scroll ya lo maneja whileInView del motion.p. */}
+          <motion.p
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.1, delayChildren: 0.18 } },
+            }}
+            style={{
+              ...labelStyle,
+              color: "#E6EEF2",
+              fontSize: "clamp(16px, 2.6vw, 29px)",
+              marginTop: 40,
+              textAlign: "justify",
+              textAlignLast: "justify",
+            }}
+          >
+            {t.queEsAudiencia.map((word, i) => (
+              <Fragment key={word}>
+                <motion.span
+                  style={{ display: "inline-block" }}
+                  variants={{
+                    hidden: { opacity: 0, y: 16, filter: "blur(8px)" },
+                    show: { opacity: 1, y: 0, filter: "blur(0px)" },
+                  }}
+                  transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+                >
+                  {word}
+                </motion.span>
+                {i < t.queEsAudiencia.length - 1 && (
+                  <>
+                    {" "}
+                    <motion.span
+                      style={{ display: "inline-block", color: "#FF4E01" }}
+                      variants={{
+                        hidden: { opacity: 0 },
+                        show: { opacity: 1 },
+                      }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      •
+                    </motion.span>{" "}
+                  </>
+                )}
+              </Fragment>
+            ))}
+          </motion.p>
         </div>
       </section>
 
@@ -416,9 +504,31 @@ export default function MasPage() {
           fila propia nueva debajo de las columnas (no reubicadas dentro de
           la columna derecha), y Bootcamp cierra ocupando todo el ancho. */}
       <section id="beneficios" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        {/* Íconos wireframe: mismo fondo y degradé que en /comunidad; no se
-            repite con los vecinos (pixel-grid arriba y abajo) */}
-        <ParallaxBg src="/assets/home/fondo-iconos.jpg" opacity={0.22} drift={12} fadeEdges={SECTION_FADE} />
+        {/* Antes fondo-iconos.jpg estático (cuadrados grises, marcado por el
+            cliente como el más aburrido de la página) — ahora el clip de
+            campaña que mandó la organización, en loop, mismo fadeEdges que
+            el resto para fundirse con pixel-grid arriba y abajo. */}
+        <div
+          className="absolute inset-0 overflow-hidden pointer-events-none select-none"
+          style={{
+            zIndex: 0,
+            opacity: 0.35,
+            maskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
+            WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
+          }}
+        >
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+          >
+            <source src={BENEFICIOS_BG_VIDEO_SRC} type="video/mp4" />
+          </video>
+        </div>
 
         <div
           className="absolute inset-0 pointer-events-none"
@@ -450,7 +560,8 @@ export default function MasPage() {
               <Reveal delay={0.05}>
                 <div style={cardStyle({ padding: "24px 28px" })}>
                   <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(16px, 1.8vw, 20px)" }}>
-                    {t.cardEspacioTitle}
+                    {t.cardEspacioTitlePrefix}{" "}
+                    <span style={{ whiteSpace: "nowrap" }}>{t.cardEspacioTitleTail}</span>
                   </h3>
                 </div>
               </Reveal>
@@ -528,23 +639,28 @@ export default function MasPage() {
                 style={cardStyle({ padding: "16px", overflow: "hidden" })}
                 className="flex flex-col sm:flex-row sm:items-start gap-5 h-full sm:min-h-[410px]"
               >
-                <div
-                  className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
-                  style={{ aspectRatio: "4 / 5" }}
-                >
-                  <Image
-                    src={HACKATHON_FLYER_SRC}
-                    alt={t.cardHackathonTitle}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 220px"
-                    style={{ objectFit: "cover" }}
-                  />
+                <div className="flex flex-col shrink-0 w-full sm:w-[220px]">
+                  <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
+                    <Image
+                      src={HACKATHON_FLYER_SRC}
+                      alt={t.cardHackathonTitle}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 220px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  <InfoChips items={t.cardHackathonChips} />
                 </div>
                 <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
                   <div className="flex flex-wrap items-start justify-between gap-4">
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                      {t.cardHackathonTitle}
-                    </h3>
+                    <Link
+                      href="/mas/hackathon"
+                      className="transition-opacity duration-200 hover:opacity-80"
+                    >
+                      <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                        {t.cardHackathonTitle}
+                      </h3>
+                    </Link>
                     <span
                       style={{
                         ...labelStyle,
@@ -593,22 +709,27 @@ export default function MasPage() {
                 style={cardStyle({ padding: "16px", overflow: "hidden" })}
                 className="flex flex-col sm:flex-row gap-5 h-full sm:min-h-[410px]"
               >
-                <div
-                  className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
-                  style={{ aspectRatio: "4 / 5" }}
-                >
-                  <Image
-                    src={BITCOIN_COLLEGE_FLYER_SRC}
-                    alt={t.cardCollegeTitle}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 220px"
-                    style={{ objectFit: "contain", objectPosition: "top" }}
-                  />
+                <div className="flex flex-col shrink-0 w-full sm:w-[220px]">
+                  <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
+                    <Image
+                      src={BITCOIN_COLLEGE_FLYER_SRC}
+                      alt={t.cardCollegeTitle}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 220px"
+                      style={{ objectFit: "contain", objectPosition: "top" }}
+                    />
+                  </div>
+                  <InfoChips items={t.cardCollegeChips} />
                 </div>
                 <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                    {t.cardCollegeTitle}
-                  </h3>
+                  <Link
+                    href="/mas/labc-bitcoin-college"
+                    className="transition-opacity duration-200 hover:opacity-80"
+                  >
+                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                      {t.cardCollegeTitle}
+                    </h3>
+                  </Link>
                   <p
                     style={{
                       ...lightStyle,

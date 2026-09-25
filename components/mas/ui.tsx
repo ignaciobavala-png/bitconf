@@ -382,7 +382,7 @@ export function CtaButton({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
+      className="inline-block rounded-full transition-all duration-200 border-2 hover:scale-105 hover:bg-[#ABF760] hover:text-[#171616]"
       style={{
         ...labelStyle,
         color: "#E6EEF2",

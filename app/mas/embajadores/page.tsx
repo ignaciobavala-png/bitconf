@@ -9,6 +9,13 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
 import MasNav from "@/components/mas/MasNav";
+
+// Fondo de "Los seis universos": reemplaza lluvia-naranja.png estático por
+// uno de los clips que mandó la organización (`~/Descargas/fondo1.mp4`,
+// 25/09/2026). Original 4K/21,7MB → 1920px/24fps/crf30 sin audio (1MB) y
+// subido al bucket público de Supabase; no se trackea en git.
+const UNIVERSOS_BG_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/embajadores/universos-bg.mp4";
 import {
   MasSection,
   BlockTitle,
@@ -214,7 +221,7 @@ export default function EmbajadoresPage() {
 
       {/* 2 — Las seis fichas: teaser siempre visible, bio completa + red al
           tocar la foto (dropdown por ficha, no un modal). */}
-      <MasSection bg="/assets/home/lluvia-naranja.png" bgOpacity={0.22} compactTop>
+      <MasSection bgVideo={UNIVERSOS_BG_VIDEO_SRC} bgOpacity={0.28} compactTop>
         <BlockTitle>{t.universoTitle}</BlockTitle>
 
         {/* Sin borde ni card de fondo — la gráfica ya trae su propio marco
