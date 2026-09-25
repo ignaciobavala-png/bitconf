@@ -26,6 +26,12 @@ const TITLE = {
   en: "/assets/home/titulos/embajadores-en-trim.png",
 } as const;
 
+// Video de fondo del hero (Descargas/BALLENA_FINAL_PIVOT.mp4, 25/09/2026),
+// recomprimido (h264 crf 30, sin audio) y subido al bucket público de
+// Supabase — mismo patrón que HERO_VIDEO_SRC en app/mas/edu-hub/page.tsx.
+const HERO_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/embajadores/hero.mp4";
+
 // Dimensiones intrínsecas del PNG -trim, para poder poner el badge al lado.
 const TITLE_DIMS = { es: { w: 973, h: 92 }, en: { w: 976, h: 86 } } as const;
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
@@ -92,8 +98,8 @@ export default function EmbajadoresPage() {
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
       <Navbar />
 
-      {/* 1 — Hero editorial */}
-      <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)" first tall>
+      {/* 1 — Hero editorial — video de campaña de la organización de fondo */}
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall>
         <div className="flex items-end gap-4 flex-wrap">
           <Reveal style={{ height: TITLE_H }}>
             <Image
@@ -116,17 +122,16 @@ export default function EmbajadoresPage() {
         <BlockTitle>{t.universoTitle}</BlockTitle>
         <CopyCard paragraphs={[t.universoNote]} delay={0.1} className="mt-6" />
 
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+        {/* Sin borde ni card de fondo — la gráfica ya trae su propio marco
+            horneado, la foto va suelta. Dos filas de 3 (grid-cols-3 fijo,
+            no 6 columnas en desktop) para que se vean más grandes. */}
+        <div className="mt-8 mx-auto grid max-w-3xl grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
           {AMBASSADORS.map((amb, i) => (
             <Reveal
               key={amb.name}
               delay={0.1 + i * 0.1}
-              className="relative rounded-2xl overflow-hidden w-full"
-              style={{
-                aspectRatio: "1892 / 2130",
-                border: "1px solid #ABF760",
-                background: "rgba(13,13,11,0.4)",
-              }}
+              className="relative w-full"
+              style={{ aspectRatio: "1892 / 2130" }}
             >
               <Image src={amb.src} alt={amb.name} fill style={{ objectFit: "cover" }} />
             </Reveal>

@@ -220,8 +220,11 @@ const BOOTCAMP_WHATSAPP_HREF = SOY_ALUMNO_HREF;
 // Flyers de la organización (Descargas/EDU HUB - Flyers, 23/09/2026),
 // recomprimidos (BITCOIN COLLEGE.png pesaba 11,8MB a 4320x5760) y subidos
 // al mismo bucket que el resto de los assets de esta página.
+// Flyer de Hackathon reemplazado el 25/09/2026 por el nuevo que mandó la
+// organización — nombre de archivo nuevo (-v2) por el caché de imágenes de
+// Next/browser en la misma URL (ver "Cosas a tener en cuenta" en CLAUDE.md).
 const HACKATHON_FLYER_SRC =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon.jpg";
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon-v2.jpg";
 // Flyer completo (foto + título + calendario + footer), no el recorte del
 // calendario — a 3:4, el aspect ratio real del flyer original.
 const BITCOIN_COLLEGE_FLYER_SRC =
@@ -641,7 +644,12 @@ export default function MasPage() {
           externo: "Ver si mi uni está acreditada" scrollea a la sección
           siguiente (ancla #universidades-acreditadas). */}
       <section id="queres-estar-dentro" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
-        <ParallaxBg src="/assets/home/pixel-grid-2.png" opacity={0.15} filter="invert(1)" drift={10} fadeEdges={SECTION_FADE} />
+        {/* Antes pixel-grid-2.png invertido: mismo patrón de cuadrados que
+            fondo-iconos.jpg de la sección "beneficios" de arriba (son el
+            mismo asset, uno con invert), quedaban dos fondos idénticos
+            seguidos. Lluvia de dígitos para que la página no se sienta
+            repetida acá. */}
+        <ParallaxBg src="/assets/home/lluvia.png" opacity={0.22} drift={10} fadeEdges={SECTION_FADE} />
 
         <div className="relative mx-auto w-full max-w-5xl text-center" style={{ zIndex: 1 }}>
           <Reveal>

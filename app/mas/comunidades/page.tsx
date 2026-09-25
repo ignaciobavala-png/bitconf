@@ -6,7 +6,6 @@ import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import { useLangStore } from "@/lib/store/lang";
-import { MAS_FORMS } from "@/lib/mas/links";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import MasNav from "@/components/mas/MasNav";
 import {
@@ -17,7 +16,6 @@ import {
   CopyCard,
   Chips,
   FeatureGrid,
-  InlineCta,
 } from "@/components/mas/ui";
 
 // MÁS → COMUNIDADES (bloque 06 del PDF "FASE 2 - WEB 15.08").
@@ -31,6 +29,12 @@ const TITLE = {
   es: "/assets/home/titulos/comunidades-es-trim.png",
   en: "/assets/home/titulos/comunidades-en-trim.png",
 } as const;
+
+// Video de fondo del hero (Descargas/PASTILLA_FINAL_PIVOT.mp4, 25/09/2026),
+// recomprimido (h264 crf 30, sin audio) y subido al bucket público de
+// Supabase — mismo patrón que HERO_VIDEO_SRC en app/mas/edu-hub/page.tsx.
+const HERO_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/comunidades/hero.mp4";
 
 const T = {
   es: {
@@ -56,9 +60,6 @@ const T = {
       { title: "Contenido", detail: "Difusión conjunta antes, durante y después de la conferencia." },
       { title: "Acceso al ecosistema", detail: "Puerta de entrada a la red que sostiene LABITCONF." },
     ],
-    ctaTitle: "¿Querés sumar tu comunidad?",
-    ctaLabel: "Sumar mi comunidad",
-    pending: "Formulario a confirmar",
   },
   en: {
     alt: "Communities",
@@ -83,9 +84,6 @@ const T = {
       { title: "Content", detail: "Joint promotion before, during and after the conference." },
       { title: "Ecosystem access", detail: "A way into the network that holds LABITCONF together." },
     ],
-    ctaTitle: "Want to add your community?",
-    ctaLabel: "Add my community",
-    pending: "Form to be confirmed",
   },
 } as const;
 
@@ -97,8 +95,8 @@ export default function ComunidadesPage() {
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
       <Navbar />
 
-      {/* 1 — Hero */}
-      <MasSection bg="/assets/home/fondo-hexmap.jpg" bgOpacity={0.22} bgPosition="center bottom" first tall>
+      {/* 1 — Hero — video de campaña de la organización de fondo */}
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall>
         <TitleImage src={TITLE[lang]} alt={t.alt} />
         <Lead>
           {t.leadIntro} <span style={{ whiteSpace: "nowrap" }}>{t.leadEmphasis}</span>
@@ -118,22 +116,19 @@ export default function ComunidadesPage() {
       <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
         <BlockTitle>{t.asociadasTitle}</BlockTitle>
         <CopyCard paragraphs={[t.asociadasNote]} delay={0.1} className="mt-6" />
-        <div className="mt-16">
+        {/* Sangría horizontal para que el cinturón no vaya de punta a punta
+            del contenedor — mismo padding que el borde de la CopyCard de
+            arriba, en vez de ir a ras del borde de la sección. */}
+        <div className="mt-16" style={{ padding: "0 clamp(24px, 4vw, 40px)" }}>
           <ComunidadesLogoMarquee />
         </div>
       </MasSection>
 
-      {/* 3 — Beneficios + CTA */}
+      {/* 3 — Beneficios. El CTA "sumar tu comunidad" se sacó: la inscripción
+          ya está cerrada. */}
       <MasSection bg="/assets/home/lluvia.png" bgOpacity={0.3}>
         <BlockTitle>{t.beneficiosTitle}</BlockTitle>
         <FeatureGrid items={t.beneficios} cols="sm:grid-cols-2 lg:grid-cols-3" />
-        <InlineCta
-          title={t.ctaTitle}
-          label={t.ctaLabel}
-          href={MAS_FORMS.comunidades}
-          pendingLabel={t.pending}
-          delay={0.3}
-        />
       </MasSection>
 
       <MasNav />

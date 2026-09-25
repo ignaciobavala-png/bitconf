@@ -38,6 +38,7 @@ const CARD: React.CSSProperties = {
 export function MasSection({
   id,
   bg,
+  bgVideo,
   bgOpacity = 0.22,
   bgFilter,
   bgPosition = "center",
@@ -49,7 +50,9 @@ export function MasSection({
   children,
 }: {
   id?: string;
-  bg: string;
+  bg?: string;
+  /** Fondo en video (autoplay/loop/muted) en vez de imagen — pisa `bg` cuando está. */
+  bgVideo?: string;
   bgOpacity?: number;
   bgFilter?: string;
   bgPosition?: string;
@@ -88,14 +91,29 @@ export function MasSection({
         paddingBottom: "clamp(72px, 10vh, 120px)",
       }}
     >
-      <ParallaxBg
-        src={bg}
-        opacity={bgOpacity}
-        filter={bgFilter}
-        objectPosition={bgPosition}
-        priority={first}
-        drift={10}
-      />
+      {bgVideo ? (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ zIndex: 0, opacity: bgOpacity, objectPosition: bgPosition }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden
+        >
+          <source src={bgVideo} type="video/mp4" />
+        </video>
+      ) : (
+        <ParallaxBg
+          src={bg!}
+          opacity={bgOpacity}
+          filter={bgFilter}
+          objectPosition={bgPosition}
+          priority={first}
+          drift={10}
+        />
+      )}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{

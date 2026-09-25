@@ -45,8 +45,10 @@ import { MasSection, CtaButton, labelStyle } from "@/components/mas/ui";
 const HACKATHON_LUMA_HREF = "https://luma.com/cwhw1uls";
 const HACKATHON_BASES_HREF =
   "https://docs.google.com/document/d/1h6GlcaLcnSlQdjanoidrk7rA0T6Q1Jwe1ttdXHUoUvk/edit?tab=t.0#heading=h.ty347pwluepb";
+// Reemplazado el 25/09/2026 por el nuevo flyer que mandó la organización —
+// nombre de archivo nuevo (-v2) por el caché de imágenes de Next/browser.
 const HACKATHON_FLYER_SRC =
-  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon.jpg";
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon-v2.jpg";
 
 const T = {
   es: {
@@ -122,15 +124,18 @@ export default function HackathonPage() {
           className="flex flex-col sm:flex-row sm:items-start gap-6 rounded-3xl overflow-hidden"
           style={{ border: "1px solid #ABF760", background: "rgba(13,13,11,0.55)", padding: "16px" }}
         >
+          {/* Flyer nuevo (25/09/2026) más grande que antes — esta es la
+              página donde tiene que resaltar. 3:4, el aspect ratio real del
+              archivo (4320x5760), no el 4:5 aproximado de antes. */}
           <div
-            className="relative shrink-0 w-full sm:w-[260px] rounded-2xl overflow-hidden"
-            style={{ aspectRatio: "4 / 5" }}
+            className="relative shrink-0 w-full sm:w-[420px] rounded-2xl overflow-hidden"
+            style={{ aspectRatio: "3 / 4" }}
           >
             <Image
               src={HACKATHON_FLYER_SRC}
               alt={t.alt}
               fill
-              sizes="(max-width: 640px) 100vw, 260px"
+              sizes="(max-width: 640px) 100vw, 420px"
               style={{ objectFit: "cover" }}
             />
           </div>
