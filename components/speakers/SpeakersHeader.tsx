@@ -13,18 +13,16 @@ const T = {
   es: {
     title: "Speakers",
     lede: "Conocé a las personas que están construyendo el futuro en la edición HODL LABITCONF 26.",
-    // El total sale de la base y no de un número escrito a mano: la planilla se
-    // sigue cargando, así que cualquier cifra fija quedaría vieja en días.
-    count: (n: number) => `${n} confirmados hasta ahora`,
   },
   en: {
     title: "Speakers",
     lede: "Meet the people building the future at the HODL edition of LABITCONF 26.",
-    count: (n: number) => `${n} confirmed so far`,
   },
 } as const;
 
-export default function SpeakersHeader({ total }: { total: number }) {
+// Sin conteo de "N confirmados hasta ahora" — a quien visita la página no le
+// importa cuántos confirmamos nosotros, le importa quiénes son.
+export default function SpeakersHeader() {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -45,12 +43,6 @@ export default function SpeakersHeader({ total }: { total: number }) {
         }}
       >
         {t.lede}
-      </p>
-      <p
-        className="mt-3"
-        style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(11px, 1.05vw, 13px)" }}
-      >
-        {t.count(total)}
       </p>
     </>
   );

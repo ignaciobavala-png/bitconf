@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLangStore } from "@/lib/store/lang";
 import LangToggle from "@/components/LangToggle";
+import { SHOW_SPEAKERS } from "@/lib/flags";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -16,9 +17,20 @@ const labelStyle: React.CSSProperties = {
 // "Comunidades" (/mas/comunidades) y quedaba duplicada.
 // "¿Por qué hodleás?" (lleva al final de la página) + selector de idioma van
 // a la derecha.
+//
+// Speakers se agrega al lado de Tickets detrás de SHOW_SPEAKERS (25/09/2026):
+// antes el único acceso era la burbuja de #accesos en la home, que Ignacio
+// pidió reforzar con un link directo en el navbar. Mismo flag que ya prende
+// esa burbuja — se apaga solo, sin tocar este archivo.
 const LEFT_LINKS = {
-  es: [{ label: "Tickets", href: "/#tickets" }],
-  en: [{ label: "Tickets", href: "/#tickets" }],
+  es: [
+    { label: "Tickets", href: "/#tickets" },
+    ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+  ],
+  en: [
+    { label: "Tickets", href: "/#tickets" },
+    ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+  ],
 } as const;
 
 // MÁS = las 5 secciones del slide del cliente "DISEÑO WEB" (22/09/2026).

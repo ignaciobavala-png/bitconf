@@ -26,7 +26,7 @@ export default async function SpeakersPage() {
 
       <section className="relative px-6 sm:px-10 pt-32 sm:pt-40 pb-20 sm:pb-28">
         <div className="relative w-full max-w-6xl">
-          <SpeakersHeader total={speakers.length} />
+          <SpeakersHeader />
           <div className="mt-10 sm:mt-14">
             <SpeakersBrowser speakers={speakers} />
           </div>
