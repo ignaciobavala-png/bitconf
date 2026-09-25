@@ -49,6 +49,10 @@ const HACKATHON_BASES_HREF =
 // nombre de archivo nuevo (-v2) por el caché de imágenes de Next/browser.
 const HACKATHON_FLYER_SRC =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/hackathon-v2.jpg";
+// Video de fondo del hero (Descargas/BALLENA_FINAL_PIVOT.mp4, 25/09/2026) —
+// mismo asset ya subido para el hero de /mas/embajadores.
+const HERO_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/embajadores/hero.mp4";
 
 const T = {
   es: {
@@ -81,10 +85,9 @@ export default function HackathonPage() {
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
       <Navbar />
 
-      {/* Hero — la organización lo diseñó en Canva con fondo negro liso (no
-          el cartel/foto): bgOpacity 0 deja el negro de MasSection sin la
-          imagen de fondo, wordmark + fecha + CTA arriba. */}
-      <MasSection bg="/assets/home/hackathon-cartel-legs2.jpg" bgOpacity={0} first tall centered>
+      {/* Hero — video de la ballena (mismo reel que /mas/embajadores) de
+          fondo en vez del negro liso original. */}
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall centered>
         <div className="flex flex-col items-center text-center gap-6">
           <Reveal className="relative w-full max-w-xl" style={{ aspectRatio: "698 / 307" }}>
             <Image

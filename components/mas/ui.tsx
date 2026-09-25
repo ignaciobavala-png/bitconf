@@ -308,7 +308,7 @@ export function FeatureGrid({
         <Reveal
           key={item.title}
           delay={delay + i * 0.08}
-          className="rounded-2xl h-full"
+          className="rounded-2xl h-full transition-transform duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_16px_32px_-12px_rgba(171,247,96,0.35)]"
           style={{ ...CARD, padding: "clamp(20px, 2.4vw, 28px)" }}
         >
           <h3

@@ -28,9 +28,8 @@ const lightStyle: React.CSSProperties = {
 // fondo de un scroll se funde con el del siguiente en vez de cortar en seco.
 const SECTION_FADE = "180px";
 
-// Altura compartida por la card de Bootcamp y el par Certificado/Networking:
-// están en columnas de flex distintas (no se alinean solas por grid), así que
-// sin este mínimo común las dos chicas quedan bastante más bajas que Bootcamp.
+// Altura mínima de la card de Bootcamp (ancho completo al final de la
+// sección).
 const BOOTCAMP_ROW_MIN_H = "132px";
 
 // Estilo compartido de las cards con borde de sección (todas las de
@@ -408,9 +407,12 @@ export default function MasPage() {
       </section>
 
       {/* Beneficios y experiencias — MAS-BITCONF/29.png + 30.png (un solo
-          scroll partido en dos capturas por el diseñador). Grid de 2
-          columnas: izquierda espacio físico + hackathon + bootcamp,
-          derecha whatsapp + bitcoin college + certificado/networking. */}
+          scroll partido en dos capturas por el diseñador). Reordenado
+          (25/09/2026, feedback sobre lalala.png): las 2 columnas originales
+          (espacio físico+hackathon / whatsapp+bitcoin college) quedan
+          igual que antes. Certificado oficial + Networking bajan a una
+          fila propia nueva debajo de las columnas (no reubicadas dentro de
+          la columna derecha), y Bootcamp cierra ocupando todo el ancho. */}
       <section id="beneficios" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
         {/* Íconos wireframe: mismo fondo y degradé que en /comunidad; no se
             repite con los vecinos (pixel-grid arriba y abajo) */}
@@ -451,82 +453,38 @@ export default function MasPage() {
                 </div>
               </Reveal>
 
-              <Reveal delay={0.1}>
-                <div
-                  style={cardStyle({ padding: "16px", overflow: "hidden" })}
-                  className="flex flex-col sm:flex-row sm:items-start gap-5 sm:min-h-[410px]"
-                >
+              {/* Certificado oficial + Networking — dos pills chicas y
+                  separadas debajo de "Espacio físico", no una fila propia
+                  a todo el ancho del componente. */}
+              <div className="grid grid-cols-2 gap-4">
+                <Reveal delay={0.07}>
                   <div
-                    className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
-                    style={{ aspectRatio: "4 / 5" }}
+                    style={cardStyle({
+                      padding: "16px",
+                      borderRadius: 999,
+                      textAlign: "center",
+                    })}
                   >
-                    <Image
-                      src={HACKATHON_FLYER_SRC}
-                      alt={t.cardHackathonTitle}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 220px"
-                      style={{ objectFit: "cover" }}
-                    />
+                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
+                      {t.cardCertificadoTitle}
+                    </h3>
                   </div>
-                  <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                        {t.cardHackathonTitle}
-                      </h3>
-                      <span
-                        style={{
-                          ...labelStyle,
-                          color: "#171616",
-                          background: "#FF4E01",
-                          borderRadius: 999,
-                          fontSize: "clamp(11px, 0.9vw, 13px)",
-                          padding: "6px 14px",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {t.cardHackathonPremio}
-                      </span>
-                    </div>
-                    <p
-                      style={{
-                        ...lightStyle,
-                        color: "#E6EEF2",
-                        fontSize: "clamp(14px, 1.3vw, 16px)",
-                        lineHeight: 1.5,
-                        marginTop: 16,
-                        whiteSpace: "pre-line",
-                      }}
-                    >
-                      {t.cardHackathonBody}
-                    </p>
-                    <div className="flex items-center gap-3 mt-6">
-                      <PillLink href={HACKATHON_LUMA_HREF}>{t.cardHackathonParticipa}</PillLink>
-                      <PillLink href={HACKATHON_BASES_HREF} disabled={!HACKATHON_BASES_HREF}>
-                        {t.cardHackathonMasInfo}
-                      </PillLink>
-                    </div>
+                </Reveal>
+                <Reveal delay={0.09}>
+                  <div
+                    style={cardStyle({
+                      padding: "16px",
+                      borderRadius: 999,
+                      textAlign: "center",
+                    })}
+                  >
+                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
+                      {t.cardNetworkingTitle}
+                    </h3>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
 
-              <Reveal delay={0.15}>
-                <div
-                  style={cardStyle({
-                    padding: "28px",
-                    minHeight: BOOTCAMP_ROW_MIN_H,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  })}
-                >
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.3 }}>
-                    {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
-                  </h3>
-                  <div className="mt-6">
-                    <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
-                  </div>
-                </div>
-              </Reveal>
             </div>
 
             {/* Columna derecha */}
@@ -546,97 +504,149 @@ export default function MasPage() {
                     >
                       <svg width="28" height="28" viewBox="0 0 24 24" fill="#ABF760" aria-hidden>
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </Reveal>
-
-              <Reveal delay={0.1}>
-                {/* sm:min-h-[410px] es el mismo valor que la card del
-                    hackathon (medido en pantalla, con el título de esa card
-                    en 2 líneas) — así las dos cajas quedan igual de altas.
-                    Ancho fijo (220px) en vez de derivarlo del stretch del
-                    flex porque el <Image fill> queda position:absolute y no
-                    le da al contenedor un tamaño intrínseco del que
-                    aspect-ratio pueda tirar (el width le quedaba en 0). Con
-                    este tamaño se ve el flyer completo (foto + título +
-                    calendario + footer) sin recortar. */}
-                <div
-                  style={cardStyle({ padding: "16px", overflow: "hidden" })}
-                  className="flex flex-col sm:flex-row gap-5 sm:min-h-[410px]"
-                >
-                  <div
-                    className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
-                    style={{ aspectRatio: "3 / 4" }}
-                  >
-                    <Image
-                      src={BITCOIN_COLLEGE_FLYER_SRC}
-                      alt={t.cardCollegeTitle}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 220px"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                  <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
-                      {t.cardCollegeTitle}
-                    </h3>
-                    <p
-                      style={{
-                        ...lightStyle,
-                        color: "#E6EEF2",
-                        fontSize: "clamp(14px, 1.3vw, 16px)",
-                        lineHeight: 1.5,
-                        marginTop: 16,
-                        whiteSpace: "pre-line",
-                      }}
-                    >
-                      {t.cardCollegeBody}
-                    </p>
-                    <div className="mt-6">
-                      <PillLink href={BITCOIN_COLLEGE_UNITE_HREF}>{t.cardCollegeUnite}</PillLink>
+                        </svg>
+                      </a>
                     </div>
                   </div>
-                </div>
-              </Reveal>
-
-              <div className="grid grid-cols-2 gap-6">
-                <Reveal delay={0.15}>
-                  <div
-                    style={cardStyle({
-                      padding: "24px",
-                      textAlign: "center",
-                      minHeight: BOOTCAMP_ROW_MIN_H,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    })}
-                  >
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 17px)" }}>
-                      {t.cardCertificadoTitle}
-                    </h3>
-                  </div>
                 </Reveal>
-                <Reveal delay={0.18}>
-                  <div
-                    style={cardStyle({
-                      padding: "24px",
-                      textAlign: "center",
-                      minHeight: BOOTCAMP_ROW_MIN_H,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    })}
-                  >
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.4vw, 17px)" }}>
-                      {t.cardNetworkingTitle}
-                    </h3>
-                  </div>
-                </Reveal>
-              </div>
             </div>
           </div>
+
+          {/* Hackathon + Bitcoin College — fila propia con items-stretch:
+              antes cada card vivía en su columna de flex independiente, con
+              solo un min-height compartido (410px) que no alcanzaba porque
+              el copy de Hackathon es más largo y la empuja más alta que la
+              de Bitcoin College (jjjjj.png, 25/09/2026 — las cajas no
+              quedaban simétricas). Grid con items-stretch + h-full en las
+              dos cards: la más alta manda y la otra se estira para
+              igualarla en vez de quedarse en su mínimo. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 items-stretch">
+            <Reveal delay={0.1} className="h-full">
+              <div
+                style={cardStyle({ padding: "16px", overflow: "hidden" })}
+                className="flex flex-col sm:flex-row sm:items-start gap-5 h-full sm:min-h-[410px]"
+              >
+                <div
+                  className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
+                  style={{ aspectRatio: "4 / 5" }}
+                >
+                  <Image
+                    src={HACKATHON_FLYER_SRC}
+                    alt={t.cardHackathonTitle}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 220px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                      {t.cardHackathonTitle}
+                    </h3>
+                    <span
+                      style={{
+                        ...labelStyle,
+                        color: "#171616",
+                        background: "#FF4E01",
+                        borderRadius: 999,
+                        fontSize: "clamp(11px, 0.9vw, 13px)",
+                        padding: "6px 14px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {t.cardHackathonPremio}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      ...lightStyle,
+                      color: "#E6EEF2",
+                      fontSize: "clamp(14px, 1.3vw, 16px)",
+                      lineHeight: 1.5,
+                      marginTop: 16,
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {t.cardHackathonBody}
+                  </p>
+                  <div className="flex items-center gap-3 mt-6">
+                    <PillLink href={HACKATHON_LUMA_HREF}>{t.cardHackathonParticipa}</PillLink>
+                    <PillLink href={HACKATHON_BASES_HREF} disabled={!HACKATHON_BASES_HREF}>
+                      {t.cardHackathonMasInfo}
+                    </PillLink>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.12} className="h-full">
+              {/* Contenedor del flyer con el mismo tamaño que el de
+                  Hackathon (w-220px, aspect-ratio 4/5) en vez del 3/4 real
+                  del archivo — así las dos cajas miden exactamente igual.
+                  objectFit "contain" en vez de "cover" para que el flyer se
+                  vea completo (foto + título + calendario + footer) sin
+                  recortar, aunque quede con aire arriba/abajo por la
+                  diferencia de aspect ratio. */}
+              <div
+                style={cardStyle({ padding: "16px", overflow: "hidden" })}
+                className="flex flex-col sm:flex-row gap-5 h-full sm:min-h-[410px]"
+              >
+                <div
+                  className="relative shrink-0 w-full sm:w-[220px] rounded-2xl overflow-hidden"
+                  style={{ aspectRatio: "4 / 5" }}
+                >
+                  <Image
+                    src={BITCOIN_COLLEGE_FLYER_SRC}
+                    alt={t.cardCollegeTitle}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 220px"
+                    style={{ objectFit: "contain", objectPosition: "top" }}
+                  />
+                </div>
+                <div style={{ padding: "12px 12px 12px 0" }} className="flex-1">
+                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                    {t.cardCollegeTitle}
+                  </h3>
+                  <p
+                    style={{
+                      ...lightStyle,
+                      color: "#E6EEF2",
+                      fontSize: "clamp(14px, 1.3vw, 16px)",
+                      lineHeight: 1.5,
+                      marginTop: 16,
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {t.cardCollegeBody}
+                  </p>
+                  <div className="mt-6">
+                    <PillLink href={BITCOIN_COLLEGE_UNITE_HREF}>{t.cardCollegeUnite}</PillLink>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Bootcamp — ocupa todo el ancho del componente, ya no metida en
+              la columna izquierda al lado de Hackathon. */}
+          <Reveal delay={0.22} className="mt-6">
+            <div
+              style={cardStyle({
+                padding: "28px",
+                minHeight: BOOTCAMP_ROW_MIN_H,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              })}
+            >
+              <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.3 }}>
+                {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
+              </h3>
+              <div className="mt-6">
+                <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -767,7 +777,7 @@ export default function MasPage() {
           importe la lista real. */}
       <section
         id="universidades-acreditadas"
-        className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden"
+        className="relative px-6 sm:px-10 pt-12 sm:pt-16 pb-24 sm:pb-32 overflow-hidden"
       >
         {/* Mapa de puntos: afinidad con "universidades de toda la región",
             mismo fondo y degradé que Comunidades en /comunidad */}
