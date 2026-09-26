@@ -73,7 +73,7 @@ export default function MasNav() {
       className="relative px-6 sm:px-10"
       style={{ zIndex: 3, paddingBottom: "clamp(56px, 8vh, 90px)" }}
     >
-      <div className="w-full max-w-6xl">
+      <div className="w-full max-w-6xl mx-auto">
         <Reveal>
           <h2 style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
             {T[lang].title}

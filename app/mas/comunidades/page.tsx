@@ -108,8 +108,12 @@ export default function ComunidadesPage() {
       {/* 2 — Comunidades asociadas — logos reales cargados desde /admin
           (tabla mas_comunidades, mismo patrón que EDU HUB). Categorías vive
           acá (no en el hero): la nota de abajo dice "estas categorías pasan
-          a funcionar como filtro", así que tienen que estar a la vista. */}
-      <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
+          a funcionar como filtro", así que tienen que estar a la vista.
+          `centered` (mismo patrón que /mas/hackathon "sobre-hackathon"): sin
+          esto el bloque queda pegado al borde izquierdo en pantallas anchas
+          y el cinturón de logos, aunque internamente simétrico, se ve
+          descentrado contra el viewport completo. */}
+      <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)" centered>
         <BlockTitle>{t.asociadasTitle}</BlockTitle>
         <CopyCard paragraphs={t.copy} delay={0.1} className="mt-6" justify />
 
@@ -130,8 +134,8 @@ export default function ComunidadesPage() {
       </MasSection>
 
       {/* 3 — Beneficios. El CTA "sumar tu comunidad" se sacó: la inscripción
-          ya está cerrada. */}
-      <MasSection bg="/assets/home/lluvia.png" bgOpacity={0.3}>
+          ya está cerrada. `centered` por la misma razón que la sección 2. */}
+      <MasSection bg="/assets/home/lluvia.png" bgOpacity={0.3} centered>
         <BlockTitle>{t.beneficiosTitle}</BlockTitle>
         <FeatureGrid
           items={t.beneficios}
