@@ -1058,7 +1058,14 @@ export default function HomePage() {
               con caja más alta (pedido de la organización 23/09: "más
               presencia"), no solo primeros en el orden de la grilla de abajo. */}
           <Reveal delay={0.12} className={TITLE_GAP}>
-            <div className="flex items-center justify-center gap-10 sm:gap-16 pb-8 sm:pb-10 mb-2 border-b border-white/10">
+            {/* flex-wrap: CriptoNoticias es un wordmark muy ancho (900x133,
+                ratio ~6.8:1) — con los dos logos en una sola fila sin wrap,
+                el ancho combinado (cada uno topeado a FEATURED_MEDIA_LOGO_H*4.5)
+                superaba el viewport en celulares chicos y el borde derecho de
+                CriptoNoticias quedaba cortado fuera de pantalla. Con wrap, si
+                no entran los dos en una línea, el segundo baja en vez de
+                desbordar (reporte 25/09). */}
+            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 sm:gap-x-16 pb-8 sm:pb-10 mb-2 border-b border-white/10">
               {FEATURED_MEDIA_PARTNERS.map((logo) => (
                 <div
                   key={logo.src}
