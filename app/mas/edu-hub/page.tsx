@@ -244,14 +244,15 @@ const T = {
     step2Cta: "Ver si mi uni está acreditada →",
     closingLine: "Tu universidad → tu código → tu entrada → EDU Hub → la comunidad.",
 
-    acreditadasTitle: "Universidades acreditadas",
-    searchLabel: "¿Tu universidad forma parte del EDU HUB?",
-    searchPlaceholder: "Buscá el nombre de tu universidad",
-    searchIdle: "Escribí el nombre de tu universidad para verificar.",
+    acreditadasTitle: "Instituciones acreditadas",
+    searchLabel: "¿Tu institución forma parte del EDU HUB?",
+    searchPlaceholder: "Buscá el nombre de tu institución",
+    searchIdle: "Escribí el nombre de tu institución para verificar.",
     searchYes: "✓ Está acreditada.",
     searchNo: "Todavía no está acreditada — pedile que complete el formulario de arriba.",
-    searchAmbiguous: "Hay más de una universidad que coincide — escribí el nombre completo.",
+    searchAmbiguous: "Hay más de una institución que coincide — elegí la tuya de la lista.",
     searchLoading: "Buscando…",
+    searchNoMatches: "No encontramos ninguna institución con ese nombre.",
   },
   en: {
     headline: "THE NEXT GENERATION IS ALREADY IN.",
@@ -300,14 +301,15 @@ const T = {
     step2Cta: "Check if my university is accredited →",
     closingLine: "Your university → your code → your ticket → EDU Hub → the community.",
 
-    acreditadasTitle: "Accredited universities",
-    searchLabel: "Is your university part of the EDU HUB?",
-    searchPlaceholder: "Search your university's name",
-    searchIdle: "Type your university's name to check.",
+    acreditadasTitle: "Accredited institutions",
+    searchLabel: "Is your institution part of the EDU HUB?",
+    searchPlaceholder: "Search your institution's name",
+    searchIdle: "Type your institution's name to check.",
     searchYes: "✓ It's accredited.",
     searchNo: "Not accredited yet — ask it to fill out the form above.",
-    searchAmbiguous: "More than one university matches — type the full name.",
+    searchAmbiguous: "More than one institution matches — pick yours from the list.",
     searchLoading: "Searching…",
+    searchNoMatches: "We couldn't find any institution with that name.",
   },
 } as const;
 
@@ -831,7 +833,7 @@ export default function MasPage() {
 
       {/* ¿Querés estar dentro? — MAS-BITCONF/31.png. El paso 2 no es un link
           externo: "Ver si mi uni está acreditada" scrollea a la sección
-          siguiente (ancla #universidades-acreditadas). */}
+          siguiente (ancla #instituciones-acreditadas). */}
       <section id="queres-estar-dentro" className="relative px-6 sm:px-10 py-24 sm:py-32 overflow-hidden">
         {/* Antes lluvia.png (ParallaxBg estático) — ahora fondo1.mp4 en loop,
             mismo mask fadeEdges que el resto de la página. */}
@@ -940,7 +942,7 @@ export default function MasPage() {
                   {t.step2Body}
                 </p>
                 <a
-                  href="#universidades-acreditadas"
+                  href="#instituciones-acreditadas"
                   className="inline-block mt-auto pt-5 transition-opacity duration-200 hover:opacity-70"
                   style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(12px, 1vw, 14px)" }}
                 >
@@ -965,13 +967,15 @@ export default function MasPage() {
         </div>
       </section>
 
-      {/* Universidades acreditadas — MAS-BITCONF/32.png. Buscador real
-          contra la tabla edu_hub_universities (espejo del Google Sheet del
-          cliente) + marquee de logos en loop. Sin datos cargados todavía:
-          el buscador funciona pero no va a encontrar nada hasta que se
-          importe la lista real. */}
+      {/* Instituciones acreditadas — MAS-BITCONF/32.png. Renombrada de
+          "Universidades acreditadas" a pedido del cliente (ya no son solo
+          universidades). La tabla sigue siendo edu_hub_universities —
+          renombrarla es una migración aparte, no un cambio de copy.
+          Buscador predictivo real contra esa tabla + marquee de logos en
+          loop. Sin datos cargados todavía: el buscador funciona pero no va
+          a encontrar nada hasta que se importe la lista real. */}
       <section
-        id="universidades-acreditadas"
+        id="instituciones-acreditadas"
         className="relative px-6 sm:px-10 pt-12 sm:pt-16 pb-24 sm:pb-32 overflow-hidden"
       >
         {/* Mapa de puntos: afinidad con "universidades de toda la región",
@@ -1035,12 +1039,18 @@ function normalizeSearch(value: string): string {
     .trim();
 }
 
-// Buscador contra edu_hub_universities. Carga la tabla entera una sola vez
-// (la lista de universidades acreditadas es chica, no hace falta paginar ni
-// pegarle a Supabase en cada tecla) y filtra en el cliente.
+// Buscador predictivo contra edu_hub_universities. Carga la tabla entera una
+// sola vez (la lista es chica, no hace falta paginar ni pegarle a Supabase en
+// cada tecla) y filtra en el cliente. A partir de 2 caracteres muestra un
+// dropdown con las instituciones que coinciden — elegís una de la lista en
+// vez de tener que escribir el nombre exacto para que el buscador conteste.
+const MAX_SUGGESTIONS = 8;
+
 function UniversitySearch({ t }: { t: MasCopy }) {
   const [query, setQuery] = useState("");
   const [unis, setUnis] = useState<Uni[] | null>(null);
+  const [selected, setSelected] = useState<Uni | null>(null);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -1055,56 +1065,118 @@ function UniversitySearch({ t }: { t: MasCopy }) {
     };
   }, []);
 
-  // Antes: unis.find(...) se quedaba con el PRIMER nombre que contuviera el
-  // substring y contestaba por él — con términos genéricos ("universidad",
-  // "de", una sola letra) eso significaba confirmar "acreditada" para
-  // cualquier cosa que se escribiera, si la primera coincidencia al azar
-  // resultaba estar acreditada. Ahora: normaliza acentos, exige mínimo 3
-  // caracteres, y si hay más de una coincidencia no arriesga una respuesta —
-  // pide el nombre completo en vez de contestar por la que encontró primero.
   const q = normalizeSearch(query);
-  const matches = q.length >= 3 && unis ? unis.filter((u) => normalizeSearch(u.name).includes(q)) : [];
-  const match = matches.length === 1 ? matches[0] : undefined;
+  const matches = q.length >= 2 && unis ? unis.filter((u) => normalizeSearch(u.name).includes(q)) : [];
+  const showDropdown = focused && !selected && q.length >= 2;
+
+  function handleChange(value: string) {
+    setQuery(value);
+    if (selected) setSelected(null);
+  }
+
+  function handleSelect(uni: Uni) {
+    setQuery(uni.name);
+    setSelected(uni);
+    setFocused(false);
+  }
 
   let feedback: string | null = null;
-  if (q.length >= 3) {
+  if (selected) {
+    feedback = selected.accredited ? t.searchYes : t.searchNo;
+  } else if (q.length >= 2) {
     if (unis === null) feedback = t.searchLoading;
-    else if (matches.length > 1) feedback = t.searchAmbiguous;
-    else feedback = match?.accredited ? t.searchYes : t.searchNo;
+    else if (matches.length === 0) feedback = t.searchNoMatches;
+    else feedback = t.searchAmbiguous;
   }
 
   return (
-    <div style={cardStyle({ padding: "clamp(20px, 3vw, 32px)" })}>
+    <div style={{ ...cardStyle({ padding: "clamp(20px, 3vw, 32px)" }), position: "relative" }}>
       <label
         htmlFor="uni-search"
         style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(15px, 1.6vw, 19px)" }}
       >
         {t.searchLabel}
       </label>
-      <input
-        id="uni-search"
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={t.searchPlaceholder}
-        style={{
-          ...lightStyle,
-          display: "block",
-          width: "100%",
-          marginTop: 16,
-          background: "rgba(230,238,242,0.06)",
-          border: "1px solid rgba(230,238,242,0.2)",
-          borderRadius: 12,
-          color: "#E6EEF2",
-          fontSize: 16,
-          padding: "14px 18px",
-          outline: "none",
-        }}
-      />
+      <div style={{ position: "relative", marginTop: 16 }}>
+        <input
+          id="uni-search"
+          type="text"
+          autoComplete="off"
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          // Delay para que el click en una sugerencia llegue antes de que el
+          // blur cierre el dropdown.
+          onBlur={() => setTimeout(() => setFocused(false), 150)}
+          placeholder={t.searchPlaceholder}
+          role="combobox"
+          aria-expanded={showDropdown}
+          aria-autocomplete="list"
+          style={{
+            ...lightStyle,
+            display: "block",
+            width: "100%",
+            background: "rgba(230,238,242,0.06)",
+            border: "1px solid rgba(230,238,242,0.2)",
+            borderRadius: 12,
+            color: "#E6EEF2",
+            fontSize: 16,
+            padding: "14px 18px",
+            outline: "none",
+          }}
+        />
+        {showDropdown && matches.length > 0 && (
+          <ul
+            role="listbox"
+            style={{
+              ...cardStyle({ padding: 6 }),
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              left: 0,
+              right: 0,
+              zIndex: 10,
+              background: "#171616",
+              maxHeight: 260,
+              overflowY: "auto",
+              listStyle: "none",
+              margin: 0,
+            }}
+          >
+            {matches.slice(0, MAX_SUGGESTIONS).map((uni) => (
+              <li key={uni.name}>
+                <button
+                  type="button"
+                  // onMouseDown en vez de onClick: dispara antes del blur del
+                  // input, si no el blur cierra la lista antes de registrar
+                  // el click.
+                  onMouseDown={() => handleSelect(uni)}
+                  style={{
+                    ...lightStyle,
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    color: "#E6EEF2",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: 10,
+                    fontSize: 15,
+                    padding: "10px 12px",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(171,247,96,0.12)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  {uni.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <p
         style={{
           ...lightStyle,
-          color: match?.accredited ? "#ABF760" : "#A5A8B1",
+          color: selected?.accredited ? "#ABF760" : "#A5A8B1",
           fontSize: 14,
           marginTop: 12,
           minHeight: 20,

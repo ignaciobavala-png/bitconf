@@ -131,7 +131,17 @@ export function MasSection({
 }
 
 /** Título de sección con asset PNG (los que ya existen en /titulos). */
-export function TitleImage({ src, alt }: { src: string; alt: string }) {
+export function TitleImage({
+  src,
+  alt,
+  center = false,
+}: {
+  src: string;
+  alt: string;
+  /** Hero centrado (mismo patrón que MasSection `centered`): el wordmark
+   * crece desde el medio en vez de desde el borde izquierdo. */
+  center?: boolean;
+}) {
   return (
     <Reveal className="relative w-full" style={{ height: TITLE_H }}>
       <Image
@@ -139,7 +149,7 @@ export function TitleImage({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         fill
         priority
-        style={{ objectFit: "contain", objectPosition: "left center" }}
+        style={{ objectFit: "contain", objectPosition: center ? "center center" : "left center" }}
       />
     </Reveal>
   );

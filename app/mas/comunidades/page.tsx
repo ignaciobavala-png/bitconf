@@ -39,8 +39,8 @@ const HERO_VIDEO_SRC =
 const T = {
   es: {
     alt: "Comunidades",
-    leadIntro: "LABITCONF no es solamente un evento.",
-    leadEmphasis: "Es una red.",
+    leadIntro: "Descubrí las comunidades que son",
+    leadEmphasis: "el alma de LABITCONF.",
     copy: [
       "Las comunidades son el corazón del ecosistema. El programa de Comunidades Asociadas está abierto a comunidades crypto, tech, universitarias y de nicho que quieran ser parte de la edición 2026.",
       "Las comunidades adheridas acceden a beneficios exclusivos para sus miembros y tienen la posibilidad de tener presencia dentro del evento. Si tu comunidad forma parte del ecosistema, tiene un lugar acá.",
@@ -63,8 +63,8 @@ const T = {
   },
   en: {
     alt: "Communities",
-    leadIntro: "LABITCONF isn't just an event.",
-    leadEmphasis: "It's a network.",
+    leadIntro: "Discover the communities that are",
+    leadEmphasis: "the heart of LABITCONF.",
     copy: [
       "Communities are the heart of the ecosystem. The Associated Communities program is open to crypto, tech, university and niche communities that want to be part of the 2026 edition.",
       "Partner communities get exclusive benefits for their members and the chance to have a presence at the event. If your community is part of the ecosystem, it has a place here.",
@@ -96,12 +96,22 @@ export default function ComunidadesPage() {
       <Navbar />
 
       {/* 1 — Hero — video de campaña de la organización de fondo */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall>
-        <TitleImage src={TITLE[lang]} alt={t.alt} />
-        <Lead>
-          {t.leadIntro} <span style={{ whiteSpace: "nowrap" }}>{t.leadEmphasis}</span>
-        </Lead>
-        <CopyCard paragraphs={t.copy} justify />
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall centered>
+        <div className="flex flex-col items-center text-center gap-2">
+          <TitleImage src={TITLE[lang]} alt={t.alt} center />
+          <Lead>
+            {t.leadIntro} <span style={{ whiteSpace: "nowrap" }}>{t.leadEmphasis}</span>
+          </Lead>
+        </div>
+      </MasSection>
+
+      {/* 2 — Comunidades asociadas — logos reales cargados desde /admin
+          (tabla mas_comunidades, mismo patrón que EDU HUB). Categorías vive
+          acá (no en el hero): la nota de abajo dice "estas categorías pasan
+          a funcionar como filtro", así que tienen que estar a la vista. */}
+      <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
+        <BlockTitle>{t.asociadasTitle}</BlockTitle>
+        <CopyCard paragraphs={t.copy} delay={0.1} className="mt-6" justify />
 
         <div className="mt-10">
           <BlockTitle delay={0.2} color="#ABF760">
@@ -109,13 +119,8 @@ export default function ComunidadesPage() {
           </BlockTitle>
           <Chips items={t.categorias} delay={0.25} />
         </div>
-      </MasSection>
 
-      {/* 2 — Comunidades asociadas — logos reales cargados desde /admin
-          (tabla mas_comunidades, mismo patrón que EDU HUB). */}
-      <MasSection bg="/assets/home/pixel-grid-2.png" bgOpacity={0.15} bgFilter="invert(1)">
-        <BlockTitle>{t.asociadasTitle}</BlockTitle>
-        <CopyCard paragraphs={[t.asociadasNote]} delay={0.1} className="mt-6" />
+        <CopyCard paragraphs={[t.asociadasNote]} delay={0.3} className="mt-6" />
         {/* Sangría horizontal para que el cinturón no vaya de punta a punta
             del contenedor — mismo padding que el borde de la CopyCard de
             arriba, en vez de ir a ras del borde de la sección. */}
@@ -161,7 +166,12 @@ function ComunidadesLogoLane({
   duration: number;
 }) {
   return (
-    <div className="overflow-hidden flex" style={{ flexWrap: "nowrap" }}>
+    // width: 100% explícito: sin esto, este div depende de que el flexbox
+    // padre lo estire (stretch implícito) para no desbordar — y en la
+    // práctica no siempre pasa, dejando el overflow-hidden clippeando contra
+    // su propio ancho de contenido en vez del ancho del contenedor con
+    // padding, que es lo que causaba el margen asimétrico entre carriles.
+    <div className="overflow-hidden flex" style={{ flexWrap: "nowrap", width: "100%" }}>
       {[0, 1].map((track) => (
         <motion.div
           key={track}
@@ -209,7 +219,7 @@ function ComunidadesLogoMarquee() {
   const rowB = comunidades.filter((_, i) => i % 2 === 1);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" style={{ width: "100%" }}>
       <ComunidadesLogoLane comunidades={rowA} duration={38} />
       <ComunidadesLogoLane comunidades={rowB} duration={44} reverse />
     </div>
