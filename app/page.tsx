@@ -15,6 +15,7 @@ import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
+import { SPONSOR_TIERS } from "@/lib/sponsors";
 
 // Fondo de "Media Partners": reemplaza fondo-iconos.jpg (estático) por
 // fondo1.mp4 (25/09/2026, mismo clip que embajadores/edu-hub), pedido de
@@ -82,6 +83,7 @@ const T = {
     ticketsBuy: "Comprar",
     mediaTitle: "Media Partners",
     mediaSubtitle: "Los medios que cuentan LABITCONF.",
+    sponsorsTitle: "Sponsors",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -104,6 +106,7 @@ const T = {
     ticketsBuy: "Buy",
     mediaTitle: "Media Partners",
     mediaSubtitle: "The media covering LABITCONF.",
+    sponsorsTitle: "Sponsors",
   },
 } as const;
 
@@ -972,6 +975,68 @@ export default function HomePage() {
               style={{ objectFit: "contain" }}
             />
           </Floating>
+        </div>
+      </section>
+
+      {/* Sponsors — entre Tickets y Media Partners. Sigue la referencia de la
+          organización (Descargas/refe.jpeg, 28/09): rótulo chico con filete a
+          la izquierda, una fila por tier de mayor a menor, separadas por
+          líneas finas, logos en blanco monocromo. Sin fondo propio a
+          propósito: la refe es negro liso. */}
+      <section
+        id="sponsors"
+        className="relative flex flex-col px-6 sm:px-10 py-16 sm:pt-28 sm:pb-12 overflow-hidden"
+        style={{ zIndex: 3 }}
+      >
+        <div className="relative w-full">
+          <Reveal>
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="block h-px w-10" style={{ background: "#ABF760" }} />
+              <h2
+                style={{
+                  ...labelStyle,
+                  color: "#ABF760",
+                  fontSize: "clamp(12px, 1vw, 14px)",
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {t.sponsorsTitle}
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="mt-6 sm:mt-8">
+            {SPONSOR_TIERS.map((tier, i) => (
+              <Reveal key={tier.id} delay={0.1 + i * 0.08}>
+                <div
+                  className={`flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-16 py-8 sm:py-10 ${
+                    i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""
+                  }`}
+                >
+                  {tier.sponsors.map((logo) => (
+                    <div
+                      key={logo.src}
+                      className="flex items-center justify-center"
+                      style={{ height: tier.logoH }}
+                    >
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={1200}
+                        height={200}
+                        className="h-full w-auto object-contain"
+                        style={{
+                          maxHeight: `${logo.scale * 100}%`,
+                          maxWidth: `min(80vw, calc(${tier.logoH} * 4.5))`,
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
