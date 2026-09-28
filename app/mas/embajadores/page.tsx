@@ -197,11 +197,11 @@ export default function EmbajadoresPage() {
     });
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
       {/* 1 — Hero editorial — video de campaña de la organización de fondo */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall>
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} baseColor="#000" first tall>
         <div className="flex items-end gap-4 flex-wrap">
           <Reveal style={{ height: TITLE_H }}>
             <Image
@@ -221,7 +221,7 @@ export default function EmbajadoresPage() {
 
       {/* 2 — Las seis fichas: teaser siempre visible, bio completa + red al
           tocar la foto (dropdown por ficha, no un modal). */}
-      <MasSection bgVideo={UNIVERSOS_BG_VIDEO_SRC} bgOpacity={0.28} compactTop>
+      <MasSection bgVideo={UNIVERSOS_BG_VIDEO_SRC} bgOpacity={0.28} baseColor="#000" compactTop>
         <BlockTitle>{t.universoTitle}</BlockTitle>
 
         {/* Sin borde ni card de fondo — la gráfica ya trae su propio marco
@@ -307,7 +307,7 @@ export default function EmbajadoresPage() {
       </MasSection>
 
       {/* 3 — En qué te puede ayudar + redes */}
-      <MasSection bg="/assets/home/hashes.jpg" bgOpacity={0.25}>
+      <MasSection bg="/assets/home/hashes.jpg" bgOpacity={0.25} baseColor="#000">
         <BlockTitle>{t.ayudaTitle}</BlockTitle>
         <FeatureGrid items={t.ayuda} cols={t.ayudaCols} />
       </MasSection>

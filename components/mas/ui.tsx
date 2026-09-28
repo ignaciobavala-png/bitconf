@@ -46,6 +46,7 @@ export function MasSection({
   first = false,
   compactTop = false,
   centered = false,
+  baseColor = "#171616",
   decoration,
   children,
 }: {
@@ -70,6 +71,8 @@ export function MasSection({
    * que a la izquierda.
    */
   centered?: boolean;
+  /** Color de fondo al que funde el degradé de legibilidad arriba y abajo. */
+  baseColor?: string;
   /** Figura 3D u otro adorno, anclado a la sección y no al bloque de texto. */
   decoration?: React.ReactNode;
   children: React.ReactNode;
@@ -119,7 +122,7 @@ export function MasSection({
         style={{
           zIndex: 1,
           background:
-            "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, #171616 100%)",
+            `linear-gradient(to bottom, ${baseColor} 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, ${baseColor} 100%)`,
         }}
       />
       {decoration}
