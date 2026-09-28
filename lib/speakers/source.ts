@@ -252,11 +252,12 @@ export async function fetchSpeakersFromSource(): Promise<{
   const iNombre = col("nombre");
   const iApellido = col("apellido");
 
-  // El `# WEB` todavía no tiene columna confirmada en la planilla: la
-  // organización lo asigna en su tablero y lo exporta con ese encabezado, y
-  // `landing` apareció vacía en la hoja el 28/09. Se acepta cualquiera de los
-  // tres; si ninguno existe, todos quedan en null y el orden sigue alfabético.
-  const iWeb = [col("# web"), col("web"), col("landing")].find((i) => i >= 0) ?? -1;
+  // El orden todavía no tiene columna en la planilla (28/09): el tablero de la
+  // organización (LABITCONF-speakers/web.html) lo espera en `r[40]`, que no
+  // existe, y mientras tanto usa un mapa escrito a mano en su JS. Se busca por
+  // encabezado, nunca por índice. `landing` NO es esto: es el tilde de
+  // publicar (valor "si").
+  const iWeb = [col("web_order"), col("# web"), col("web")].find((i) => i >= 0) ?? -1;
 
   // MKT: num → publicado
   const mktPublished = new Set<number>();
