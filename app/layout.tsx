@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import MetaPixel from "@/components/analytics/MetaPixel";
 
 const neueMachina = localFont({
   src: [
@@ -51,7 +52,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={`${neueMachina.variable} h-full`}>
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        {children}
+        <MetaPixel />
+      </body>
     </html>
   );
 }
