@@ -73,16 +73,18 @@ function toCard(r: CardRow): SpeakerCard {
 }
 
 /**
- * Todos los speakers publicables.
+ * Todos los speakers publicables, en el orden `# WEB` de la organización.
  *
- * Se ordena por nombre y no por relevancia: cualquier otro criterio (por tags,
- * por cantidad de charlas) implica una jerarquía entre personas que la
- * organización no definió. Alfabético es el único orden que no dice nada.
+ * `web_order` y después nombre: los principales (1..199) salen en su número, y
+ * las categorías 200/300/400 comparten número, así que el nombre las ordena
+ * alfabéticamente por dentro. Los que no tienen número van al final, también
+ * alfabéticos — mientras nadie tenga número, es el mismo orden de siempre.
  */
 export async function getSpeakers(): Promise<SpeakerCard[]> {
   const { data, error } = await publicClient()
     .from("speakers")
     .select(CARD_COLUMNS)
+    .order("web_order", { ascending: true, nullsFirst: false })
     .order("name", { ascending: true });
 
   if (error) {

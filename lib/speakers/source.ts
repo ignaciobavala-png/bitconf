@@ -56,6 +56,8 @@ export type SourceSpeaker = {
   github: string | null;
   status: string;
   mktPublished: boolean;
+  /** `# WEB` de la organización. null si la planilla no lo trae. */
+  webOrder: number | null;
   tags: CanonicalTag[];
   talks: SourceTalk[];
 };
@@ -105,6 +107,16 @@ function cell(row: unknown[], idx: number): string {
 function text(row: unknown[], idx: number): string | null {
   const v = cell(row, idx);
   return v || null;
+}
+
+/**
+ * `# WEB` → entero positivo, o null. Cualquier otra cosa (vacío, "si", texto)
+ * se toma como "sin asignar" en vez de romper el sync: si `landing` termina
+ * siendo otro dato, lo peor que pasa es que no ordena.
+ */
+function webOrder(raw: string): number | null {
+  const n = Number(raw.replace(",", "."));
+  return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
 }
 
 /** "@nacho" y "https://x.com/nacho" y "x.com/nacho" → "nacho". */
@@ -240,6 +252,12 @@ export async function fetchSpeakersFromSource(): Promise<{
   const iNombre = col("nombre");
   const iApellido = col("apellido");
 
+  // El `# WEB` todavía no tiene columna confirmada en la planilla: la
+  // organización lo asigna en su tablero y lo exporta con ese encabezado, y
+  // `landing` apareció vacía en la hoja el 28/09. Se acepta cualquiera de los
+  // tres; si ninguno existe, todos quedan en null y el orden sigue alfabético.
+  const iWeb = [col("# web"), col("web"), col("landing")].find((i) => i >= 0) ?? -1;
+
   // MKT: num → publicado
   const mktPublished = new Set<number>();
   for (const row of (mkt.data ?? []).slice(1)) {
@@ -288,6 +306,7 @@ export async function fetchSpeakersFromSource(): Promise<{
       github: handle(text(row, col("github"))),
       status: (text(row, col("estado")) ?? "revision").toLowerCase(),
       mktPublished: mktPublished.has(sourceNum),
+      webOrder: webOrder(cell(row, iWeb)),
       tags,
       talks,
     });

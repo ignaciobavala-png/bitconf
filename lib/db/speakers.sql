@@ -84,6 +84,13 @@ create table if not exists public.speakers (
   updated_at    timestamptz not null default now()
 );
 
+-- `# WEB` de la organización: el orden con que la página de speakers
+-- los muestra. 1..199 = principal, cada uno con su número y en ese
+-- orden; 200 / 300 / 400 = categorías 2, 3 y 4, todos con el mismo
+-- número y alfabéticos dentro de cada una. null = sin asignar (van al
+-- final). Agregada el 28/09/2026 sobre la tabla ya existente.
+alter table public.speakers add column if not exists web_order integer;
+
 create index if not exists speakers_status_idx  on public.speakers (status) where present;
 create index if not exists speakers_tags_idx    on public.speakers using gin (tags);
 create index if not exists speakers_country_idx on public.speakers (country);

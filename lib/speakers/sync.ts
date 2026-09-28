@@ -155,6 +155,7 @@ export async function syncSpeakers(): Promise<SyncReport> {
       github: s.github,
       status: s.status,
       mkt_published: s.mktPublished,
+      web_order: s.webOrder,
       tags: s.tags,
       present: true,
       synced_at: new Date().toISOString(),
