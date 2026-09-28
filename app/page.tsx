@@ -293,6 +293,8 @@ const TICKETS = [
   },
 ] as const;
 
+const SIDE_EVENTS_FORM_URL = "https://forms.gle/2S71ctQnTw6XSjWt6";
+
 const SE_PARTE_CARDS = {
   es: [
     {
@@ -312,6 +314,12 @@ const SE_PARTE_CARDS = {
       description: "¿Sos periodista, medio o agencia? ¿Querés contar lo que pasa en LABITCONF 26? Acreditate como prensa y sé parte de la cobertura.",
       cta: "Acreditate",
       href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
+    },
+    {
+      title: "Side Events LABC 26",
+      description: "¿Tu comunidad organiza un evento alrededor de LABITCONF? Queremos sumarlo al mapa.",
+      cta: "Uní tu evento",
+      href: SIDE_EVENTS_FORM_URL,
     },
   ],
   en: [
@@ -333,6 +341,12 @@ const SE_PARTE_CARDS = {
       cta: "Get accredited",
       href: "https://forms.gle/2mWY9C8kBRyjwt5u9",
     },
+    {
+      title: "Side Events LABC 26",
+      description: "Is your community hosting an event around LABITCONF? We want to put it on the map.",
+      cta: "Add your event",
+      href: SIDE_EVENTS_FORM_URL,
+    },
   ],
 } as const;
 
@@ -340,7 +354,8 @@ const SE_PARTE_CARDS = {
    mismo. El color se asigna por significado, siguiendo los roles que la
    paleta oficial le da a cada uno: Orange = fuerza/BTC (el pitch comercial),
    Almico = calidez/hogar (los aliados), Electric Ekko = seguridad (la
-   credencial de prensa). Lactica no entra como relleno: la paleta ya le
+   credencial de prensa), Brote = futuro (los side events de la comunidad).
+   Lactica no entra como relleno: la paleta ya le
    asigna el rol de texto.
    El orden es el mismo que `SE_PARTE_CARDS` en los dos idiomas.
    `dark` marca el único relleno oscuro, que invierte el color del texto. */
@@ -348,6 +363,7 @@ const SE_PARTE_ACCENTS = [
   { color: "#FF4E01", dark: false },
   { color: "#FFAB0B", dark: false },
   { color: "#1311FC", dark: true },
+  { color: "#ABF760", dark: false },
 ] as const;
 
 /* Las placas del carrusel de la home. Viven en el bucket público de Supabase,
@@ -1233,9 +1249,9 @@ export default function HomePage() {
             />
           </Reveal>
 
-          {/* 3 cards: 1 columna en mobile, fila de 3 desde tablet — sin quedar
-              nunca una sola en una segunda fila. */}
-          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-sm sm:max-w-4xl items-stretch`}>
+          {/* 4 cards: 1 columna en mobile, 2x2 en tablet y fila de 4 en desktop —
+              sin quedar nunca una sola en una segunda fila. */}
+          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-sm sm:max-w-4xl lg:max-w-6xl items-stretch`}>
             {seParteCards.map((card, i) => {
               const accent = SE_PARTE_ACCENTS[i] ?? SE_PARTE_ACCENTS[0];
               const ink = accent.dark ? "#E6EEF2" : "#171616";
