@@ -57,6 +57,11 @@ function slugify(value: string): string {
  * (2) los homónimos nuevos se desempatan con el número de postulación, que es
  * estable, en vez de con un contador que dependería del orden de las filas.
  */
+/** Lo que llega de la planilla, salvo que venga vacío y la base ya tuviera algo. */
+function keepIfEmpty<T>(incoming: T[], previous: T[] | null | undefined): T[] {
+  return incoming.length ? incoming : (previous ?? []);
+}
+
 function assignSlugs(
   speakers: SourceSpeaker[],
   existing: Map<string, string>
@@ -96,11 +101,11 @@ export async function syncSpeakers(): Promise<SyncReport> {
 
   const { speakers, version } = await fetchSpeakersFromSource();
 
-  // Estado actual: hace falta el slug (para no reasignarlo) y el hash de foto
-  // (para no volver a bajar lo que no cambió).
+  // Estado actual: hace falta el slug (para no reasignarlo), el hash de foto
+  // (para no volver a bajar lo que no cambió) y los tags (ver `keepIfEmpty`).
   const { data: current, error: readErr } = await supabase
     .from("speakers")
-    .select("id, source_key, slug, photo_hash, photo_url");
+    .select("id, source_key, slug, photo_hash, photo_url, tags");
   if (readErr) throw new Error(`No se pudo leer speakers: ${readErr.message}`);
 
   // Adopción por nombre. La organización RENUMERA postulaciones (28/09/2026:
@@ -205,7 +210,7 @@ export async function syncSpeakers(): Promise<SyncReport> {
       mkt_published: s.mktPublished,
       landing: s.landing,
       web_order: s.webOrder,
-      tags: s.tags,
+      tags: keepIfEmpty(s.tags, bySourceKey.get(s.sourceKey)?.tags as string[] | null),
       present: true,
       synced_at: new Date().toISOString(),
     });
@@ -225,27 +230,52 @@ export async function syncSpeakers(): Promise<SyncReport> {
   if (idErr) throw new Error(`No se pudieron releer los ids: ${idErr.message}`);
   const idBySourceKey = new Map((saved ?? []).map((r) => [r.source_key as string, r.id as string]));
 
+  // 28/09/2026: el tablero de la organización reescribió la columna `temas`
+  // sin `abstract` ni `tags`, y el sync los borró de la base en silencio. Si la
+  // planilla trae vacío algo que la base ya tenía, se conserva lo de la base y
+  // se avisa. El costo: borrar a propósito un abstract en la planilla no se
+  // propaga — mal menor que perder los 22 de golpe sin enterarse.
+  const { data: prevTalks, error: prevErr } = await supabase
+    .from("talks")
+    .select("source_key, abstract, tags, raw_tags");
+  if (prevErr) throw new Error(`No se pudieron leer las charlas: ${prevErr.message}`);
+  const prevByKey = new Map((prevTalks ?? []).map((t) => [t.source_key as string, t]));
+  let keptAbstracts = 0;
+  let keptTags = 0;
+
   const talkRows = speakers.flatMap((s) => {
     const speakerId = idBySourceKey.get(s.sourceKey);
     if (!speakerId) return [];
-    return s.talks.map((t) => ({
-      speaker_id: speakerId,
-      source_key: t.sourceKey,
-      title: t.title,
-      abstract: t.abstract,
-      description: t.description,
-      tags: t.tags,
-      raw_tags: t.rawTags,
-      level: t.level,
-      formats: t.formats,
-      duration_min: t.durationMin,
-      is_panel: t.isPanel,
-      status: t.status,
-      stage: t.stage,
-      day: t.day,
-      synced_at: new Date().toISOString(),
-    }));
+    return s.talks.map((t) => {
+      const prev = prevByKey.get(t.sourceKey);
+      const abstract = t.abstract || (prev?.abstract as string | null) || null;
+      if (!t.abstract && abstract) keptAbstracts++;
+      const tags = keepIfEmpty(t.tags, prev?.tags as string[] | null);
+      if (!t.tags.length && tags.length) keptTags++;
+      return {
+        speaker_id: speakerId,
+        source_key: t.sourceKey,
+        title: t.title,
+        abstract,
+        description: t.description,
+        tags,
+        raw_tags: keepIfEmpty(t.rawTags, prev?.raw_tags as string[] | null),
+        level: t.level,
+        formats: t.formats,
+        duration_min: t.durationMin,
+        is_panel: t.isPanel,
+        status: t.status,
+        stage: t.stage,
+        day: t.day,
+        synced_at: new Date().toISOString(),
+      };
+    });
   });
+  if (keptAbstracts || keptTags) {
+    warnings.push(
+      `La planilla trajo vacíos ${keptAbstracts} abstracts y ${keptTags} tags que la base ya tenía: se conservaron`
+    );
+  }
 
   if (talkRows.length) {
     const { error } = await supabase
