@@ -62,21 +62,26 @@ function assignSlugs(
   existing: Map<string, string>
 ): Map<string, string> {
   const out = new Map<string, string>();
-  const taken = new Set<string>();
+  // Reservados: TODOS los slugs que ya están en la base, no solo los de filas
+  // que siguen viniendo. Un speaker que dejó de venir (present=false) o al que
+  // le corrigieron el nombre (cambia su source_key) conserva su fila y su slug,
+  // y el unique de la tabla rechaza al nuevo que lo repita — rompía el sync
+  // entero con "speakers_slug_key".
+  const taken = new Set<string>(existing.values());
 
   // Primero los que ya tienen slug: conservan el suyo pase lo que pase.
   for (const s of speakers) {
     const current = existing.get(s.sourceKey);
-    if (current) {
-      out.set(s.sourceKey, current);
-      taken.add(current);
-    }
+    if (current) out.set(s.sourceKey, current);
   }
 
   for (const s of speakers) {
     if (out.has(s.sourceKey)) continue;
     const base = slugify(s.name) || `speaker-${s.sourceNum}`;
-    const slug = taken.has(base) ? `${base}-${s.sourceNum}` : base;
+    let slug = taken.has(base) ? `${base}-${s.sourceNum}` : base;
+    // El número de postulación no es único (ver source.ts): dos homónimos con
+    // el mismo número todavía chocan, y ahí sí no queda otra que un contador.
+    for (let n = 2; taken.has(slug); n++) slug = `${base}-${s.sourceNum}-${n}`;
     out.set(s.sourceKey, slug);
     taken.add(slug);
   }
@@ -97,6 +102,49 @@ export async function syncSpeakers(): Promise<SyncReport> {
     .from("speakers")
     .select("id, source_key, slug, photo_hash, photo_url");
   if (readErr) throw new Error(`No se pudo leer speakers: ${readErr.message}`);
+
+  // Adopción por nombre. La organización RENUMERA postulaciones (28/09/2026:
+  // Gaku pasó de la #6 a la #4, casi todas se corrieron), y como la clave es
+  // `num|nombre`, cada renumeración creaba una fila nueva para la misma persona:
+  // la vieja quedaba ausente reteniendo el slug y la nueva salía como
+  // `gaku-4`, con el link publicado en 404. Si una fila que llega no tiene
+  // clave conocida y hay EXACTAMENTE una fila de la base con el mismo nombre
+  // normalizado que ya no llega, es la misma persona: se le reescribe la clave
+  // y conserva id, slug y foto. Con cualquier ambigüedad no se adopta nada.
+  const incoming = new Set(speakers.map((s) => s.sourceKey));
+  const nameOf = (key: string) => key.slice(key.indexOf("|") + 1);
+  const orphansByName = new Map<string, NonNullable<typeof current>>();
+  for (const r of current ?? []) {
+    if (incoming.has(r.source_key as string)) continue;
+    const name = nameOf(r.source_key as string);
+    orphansByName.set(name, [...(orphansByName.get(name) ?? []), r]);
+  }
+  const known = new Set((current ?? []).map((r) => r.source_key as string));
+  const newByName = new Map<string, number>();
+  for (const sp of speakers) {
+    if (known.has(sp.sourceKey)) continue;
+    const name = nameOf(sp.sourceKey);
+    newByName.set(name, (newByName.get(name) ?? 0) + 1);
+  }
+  let adopted = 0;
+  for (const sp of speakers) {
+    if (known.has(sp.sourceKey)) continue;
+    const name = nameOf(sp.sourceKey);
+    const orphans = orphansByName.get(name);
+    if (orphans?.length !== 1 || newByName.get(name) !== 1) continue;
+    const row = orphans[0];
+    const { error } = await supabase
+      .from("speakers")
+      .update({ source_key: sp.sourceKey })
+      .eq("id", row.id);
+    if (error) {
+      warnings.push(`${sp.name}: no se pudo adoptar la fila anterior — ${error.message}`);
+      continue;
+    }
+    row.source_key = sp.sourceKey;
+    adopted++;
+  }
+  if (adopted) warnings.push(`${adopted} speakers renumerados en la planilla: se conservó su fila y su slug`);
 
   const bySourceKey = new Map((current ?? []).map((r) => [r.source_key as string, r]));
   const slugs = assignSlugs(
@@ -155,6 +203,7 @@ export async function syncSpeakers(): Promise<SyncReport> {
       github: s.github,
       status: s.status,
       mkt_published: s.mktPublished,
+      landing: s.landing,
       web_order: s.webOrder,
       tags: s.tags,
       present: true,

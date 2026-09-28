@@ -56,6 +56,8 @@ export type SourceSpeaker = {
   github: string | null;
   status: string;
   mktPublished: boolean;
+  /** Tilde "Publicar" del tablero de la organización: decide si sale en la web. */
+  landing: boolean;
   /** `# WEB` de la organización. null si la planilla no lo trae. */
   webOrder: number | null;
   tags: CanonicalTag[];
@@ -111,8 +113,8 @@ function text(row: unknown[], idx: number): string | null {
 
 /**
  * `# WEB` → entero positivo, o null. Cualquier otra cosa (vacío, "si", texto)
- * se toma como "sin asignar" en vez de romper el sync: si `landing` termina
- * siendo otro dato, lo peor que pasa es que no ordena.
+ * se toma como "sin asignar" en vez de romper el sync: lo peor que pasa con un
+ * valor raro es que ese speaker no ordena.
  */
 function webOrder(raw: string): number | null {
   const n = Number(raw.replace(",", "."));
@@ -307,6 +309,9 @@ export async function fetchSpeakersFromSource(): Promise<{
       github: handle(text(row, col("github"))),
       status: (text(row, col("estado")) ?? "revision").toLowerCase(),
       mktPublished: mktPublished.has(sourceNum),
+      // Criterio de publicación confirmado por la organización (28/09/2026):
+      // `landing === "si"`, sin mirar `estado`, que es de uso interno de ellos.
+      landing: cell(row, col("landing")).toLowerCase() === "si",
       webOrder: webOrder(cell(row, iWeb)),
       tags,
       talks,

@@ -4,7 +4,7 @@ import type { CanonicalTag } from "./tags";
 // Lectura pública de speakers y charlas.
 //
 // Usa la anon key a propósito, incluso corriendo en el servidor: así la RLS
-// sigue siendo la que decide qué se publica (present + status = 'confirmado') y
+// sigue siendo la que decide qué se publica (present + landing) y
 // no hay forma de que un error de este archivo filtre una postulación en
 // revisión o rechazada. El service_role queda solo para el sync.
 
