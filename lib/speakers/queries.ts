@@ -73,19 +73,28 @@ function toCard(r: CardRow): SpeakerCard {
 }
 
 /**
- * Todos los speakers publicables, en el orden `# WEB` de la organización.
- *
- * `web_order` y después nombre: los principales (1..199) salen en su número, y
- * las categorías 200/300/400 comparten número, así que el nombre las ordena
- * alfabéticamente por dentro. Los que no tienen número van al final, también
- * alfabéticos — mientras nadie tenga número, es el mismo orden de siempre.
+ * Categoría de un speaker según su `web_order`, con los cortes de la guía de
+ * la organización (app-labitconf.github.io/LABITCONF-speakers/web.html,
+ * confirmada por WhatsApp el 29/09/2026: "n1 es prioridad"):
+ * 1 = destacados (1-48), 2 = 49-84, 3 = 85+ o sin número.
+ */
+function categoryOf(webOrder: number | null): 1 | 2 | 3 {
+  if (!webOrder) return 3;
+  if (webOrder <= 48) return 1;
+  if (webOrder <= 84) return 2;
+  return 3;
+}
+
+/**
+ * Todos los speakers publicables, en el orden de la organización: primero los
+ * destacados (N1) en su número, después la categoría 2 y la 3, cada una en
+ * orden alfabético. El número solo manda dentro de N1; en las otras dos es
+ * únicamente el corte de categoría.
  */
 export async function getSpeakers(): Promise<SpeakerCard[]> {
   const { data, error } = await publicClient()
     .from("speakers")
-    .select(CARD_COLUMNS)
-    .order("web_order", { ascending: true, nullsFirst: false })
-    .order("name", { ascending: true });
+    .select(`${CARD_COLUMNS}, web_order`);
 
   if (error) {
     // La grilla vacía es preferible a romper la página entera: el resto del
@@ -93,7 +102,16 @@ export async function getSpeakers(): Promise<SpeakerCard[]> {
     console.error("[speakers] no se pudieron leer:", error.message);
     return [];
   }
-  return ((data ?? []) as CardRow[]).map(toCard);
+  const rows = (data ?? []) as (CardRow & { web_order: number | null })[];
+  return rows
+    .sort((a, b) => {
+      const ca = categoryOf(a.web_order);
+      const cb = categoryOf(b.web_order);
+      if (ca !== cb) return ca - cb;
+      if (ca === 1 && a.web_order !== b.web_order) return a.web_order! - b.web_order!;
+      return a.name.localeCompare(b.name, "es");
+    })
+    .map(toCard);
 }
 
 export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | null> {

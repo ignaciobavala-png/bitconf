@@ -6,6 +6,7 @@ import { useLangStore } from "@/lib/store/lang";
 import { TAG_LABELS } from "@/lib/speakers/tags";
 import { DAY_LABELS, isDay, stageLabel } from "@/lib/speakers/schedule";
 import type { SpeakerProfile } from "@/lib/speakers/queries";
+import { SHOW_TALKS } from "@/lib/flags";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -178,7 +179,7 @@ export default function SpeakerProfileView({ speaker }: { speaker: SpeakerProfil
           </div>
         )}
 
-        {speaker.talks.length > 0 && (
+        {SHOW_TALKS && speaker.talks.length > 0 && (
           <div className="mt-14">
             <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(14px, 1.5vw, 19px)" }}>
               {speaker.talks.length === 1 ? t.talk : t.talks}

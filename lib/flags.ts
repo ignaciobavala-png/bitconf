@@ -9,3 +9,10 @@
 export const SHOW_SPEAKERS = false;
 export const SHOW_AGENDA = false;
 export const SHOW_MI_AGENDA = false;
+
+/**
+ * Charlas en el perfil de cada speaker. La organización (29/09/2026): "Rodo
+ * quiere dar prioridad al speaker, no a su charla; eso falta mucho por
+ * definir, solo comunicar speaker". Los datos siguen sincronizándose.
+ */
+export const SHOW_TALKS = false;
