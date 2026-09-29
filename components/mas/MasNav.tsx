@@ -73,7 +73,17 @@ export default function MasNav() {
       className="relative px-6 sm:px-10"
       style={{ zIndex: 3, paddingBottom: "clamp(56px, 8vh, 90px)" }}
     >
-      <div className="w-full max-w-6xl mx-auto">
+      {/* Funde el fondo de la página al del footer (#171616). En Embajadores la
+          página es #000 y sin esto el paso al footer era una línea cortante;
+          en el resto de MÁS la página ya es #171616 y no se nota. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 pointer-events-none"
+        style={{ height: "min(100%, 220px)", background: "linear-gradient(to bottom, transparent, #171616)" }}
+      />
+      {/* Sin mx-auto, igual que MasSection: arranca en el mismo borde que el
+          logo del navbar y que los títulos de sección de arriba. */}
+      <div className="relative w-full max-w-6xl">
         <Reveal>
           <h2 style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
             {T[lang].title}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
@@ -9,6 +9,8 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import Reveal from "@/components/home/Reveal";
 import { useLangStore } from "@/lib/store/lang";
 import MasNav from "@/components/mas/MasNav";
+import ScrambleText from "@/components/mas/ScrambleText";
+import DetectionTracker from "@/components/mas/DetectionTracker";
 
 // Fondo de "Los seis universos": reemplaza lluvia-naranja.png estático por
 // uno de los clips que mandó la organización (`~/Descargas/fondo1.mp4`,
@@ -33,24 +35,31 @@ import {
 //
 // Mini bio + red social de cada uno llegaron el 25/09/2026 por WhatsApp (texto
 // suelto, sin columna "en"/"es" — la traducción al inglés es nuestra). No es
-// un modal/popup: es un dropdown por ficha — teaser siempre visible, al
-// tocar la foto se despliega hacia abajo la bio completa + el link a la red,
-// empujando el resto de la grilla (altura auto de CSS grid).
+// un modal/popup: teaser siempre visible y, al tocar la foto, la bio completa
+// + el link a la red se despliegan en un panel a todo el ancho debajo de la
+// fila de esa ficha (una bio abierta por vez). Hasta el 29/09 se desplegaba
+// dentro de cada celda y dejaba huecos negros bajo las fichas vecinas.
 
-const TITLE = {
-  es: "/assets/home/titulos/embajadores-es-trim.png",
-  en: "/assets/home/titulos/embajadores-en-trim.png",
-} as const;
+// Hero según el banner de Canva que mandó la organización (29/09/2026,
+// `~/Descargas/embajadores.png`): fondo negro liso, título naranja en texto
+// sobre la tira de íconos punteados con recuadros de "detección" verdes
+// (`ICONOS_FONDO_NEGRO_BIT.png` del manual de marca: el fondo #171616 pasado
+// a transparente con -fuzz y recortado con -trim), bajada en
+// mayúsculas y "scroll para descubrir" abajo. El video de la ballena, que
+// antes era el fondo del hero, pasó a la sección del copy.
+const STRIP = { src: "/assets/home/iconos-fondo-bit.png", w: 1626, h: 230 } as const;
 
-// Video de fondo del hero (Descargas/BALLENA_FINAL_PIVOT.mp4, 25/09/2026),
+// El Canva del 29/09/2026 no trae el bloque "Seis voces. Seis universos…" +
+// los tres párrafos del programa: se sacó de la página pero queda el texto
+// (T.lead / T.copy) y la sección entera detrás de este flag, por si la
+// organización lo vuelve a pedir. Poner en true para restaurarlo tal cual.
+const SHOW_INTRO = false;
+
+// Video de la ballena (Descargas/BALLENA_FINAL_PIVOT.mp4, 25/09/2026),
 // recomprimido (h264 crf 30, sin audio) y subido al bucket público de
 // Supabase — mismo patrón que HERO_VIDEO_SRC en app/mas/edu-hub/page.tsx.
 const HERO_VIDEO_SRC =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/embajadores/hero.mp4";
-
-// Dimensiones intrínsecas del PNG -trim, para poder poner el badge al lado.
-const TITLE_DIMS = { es: { w: 973, h: 92 }, en: { w: 976, h: 86 } } as const;
-const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
 // Label del link según la red — "Ver" para LinkedIn porque "Seguir" no es el
 // verbo que usa esa red.
@@ -144,6 +153,8 @@ const AMBASSADORS = [
 const T = {
   es: {
     alt: "Embajadores",
+    heroSub: "Descubrí las 6 voces referentes de LABITCONF 2026",
+    scrollHint: "scroll para descubrir",
     lead: "Seis voces. Seis universos. Una misma convicción.",
     copy: [
       "El programa reúne referentes con comunidades estratégicas para representar, activar y amplificar LABITCONF desde sus propios territorios.",
@@ -163,6 +174,8 @@ const T = {
   },
   en: {
     alt: "Ambassadors",
+    heroSub: "Discover the 6 leading voices of LABITCONF 2026",
+    scrollHint: "scroll to discover",
     lead: "Six voices. Six universes. One conviction.",
     copy: [
       "The program brings together referents with strategic communities to represent, activate and amplify LABITCONF from their own territories.",
@@ -182,45 +195,109 @@ const T = {
   },
 } as const;
 
+// Columnas de la grilla de fichas: 2 en mobile, 3 desde `sm` (640px). Tiene
+// que coincidir con `grid-cols-2 sm:grid-cols-3` para saber dónde termina cada
+// fila. En el server se asume 3; no importa porque el panel solo existe
+// después de un click.
+const SM_QUERY = "(min-width: 640px)";
+function useGridCols() {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(SM_QUERY);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => (window.matchMedia(SM_QUERY).matches ? 3 : 2),
+    () => 3,
+  );
+}
+
 export default function EmbajadoresPage() {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
-  // Set y no un solo índice: cada ficha se despliega de forma independiente,
-  // no es un acordeón que cierra las demás al abrir una.
-  const [openSet, setOpenSet] = useState<Set<number>>(new Set());
-  const toggle = (i: number) =>
-    setOpenSet((prev) => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
-      return next;
-    });
+  // Una sola bio abierta por vez: se muestra en un panel a todo el ancho debajo
+  // de la fila de la ficha. Antes cada ficha se desplegaba dentro de su celda,
+  // estiraba la fila entera y dejaba un hueco negro bajo las vecinas.
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const toggle = (i: number) => setOpenIdx((prev) => (prev === i ? null : i));
+  const cols = useGridCols();
+  const openRow = openIdx === null ? -1 : Math.floor(openIdx / cols);
+  // Última ficha de la fila abierta: el panel se inserta justo después, así la
+  // grilla lo ubica solo en una fila propia (col-span completo).
+  const panelAfter = openRow < 0 ? -1 : Math.min((openRow + 1) * cols, AMBASSADORS.length) - 1;
+  const openAmb = openIdx === null ? null : AMBASSADORS[openIdx];
 
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
-      {/* 1 — Hero editorial — video de campaña de la organización de fondo */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} baseColor="#000" first tall>
-        <div className="flex items-end gap-4 flex-wrap">
-          <Reveal style={{ height: TITLE_H }}>
-            <Image
-              src={TITLE[lang]}
-              alt={t.alt}
-              width={TITLE_DIMS[lang].w}
-              height={TITLE_DIMS[lang].h}
-              priority
-              style={{ height: TITLE_H, width: "auto" }}
-            />
-          </Reveal>
-        </div>
+      {/* 1 — Hero (banner de Canva): pantalla completa, todo centrado. */}
+      <section
+        className="relative flex flex-col items-center justify-center px-6 sm:px-10 text-center"
+        style={{
+          zIndex: 3,
+          minHeight: "100svh",
+          paddingTop: "clamp(96px, 12vh, 140px)",
+          paddingBottom: "clamp(72px, 10vh, 120px)",
+        }}
+      >
+        {/* Tira ≈ 75% del ancho en desktop, como en el banner. El contenedor es
+            `inline-size` para que el título se mida en `cqw` contra la tira y
+            no contra la pantalla: así ocupa la misma proporción a cualquier ancho. */}
+        <Reveal className="relative w-full" style={{ maxWidth: 1440, containerType: "inline-size" }}>
+          <Image
+            src={STRIP.src}
+            alt=""
+            aria-hidden
+            width={STRIP.w}
+            height={STRIP.h}
+            priority
+            className="w-full h-auto"
+          />
+          <DetectionTracker />
+          <h1
+            className="absolute inset-0 flex items-center justify-center"
+            style={{
+              ...labelStyle,
+              color: "#FF4E01",
+              letterSpacing: "0.01em",
+              lineHeight: 1,
+              // Ancho del título ≈ 80% de la tira, igual que en el banner.
+              fontSize: "9.4cqw",
+            }}
+          >
+            {t.alt}
+          </h1>
+        </Reveal>
 
-        <Lead>{t.lead}</Lead>
-        <CopyCard paragraphs={t.copy} justify />
-      </MasSection>
+        {/* Entra "descifrándose" cuando la tira ya terminó de aparecer. */}
+        <p
+          className="mt-8 sm:mt-10 uppercase"
+          style={{ ...lightStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2.6vw, 40px)", lineHeight: 1.2, textWrap: "balance" }}
+        >
+          <ScrambleText text={t.heroSub} delay={700} duration={2000} />
+        </p>
+
+        <p
+          // En el celular el botón del chat (fijo, abajo a la derecha) lo tapaba.
+          className="absolute left-0 right-0 bottom-28 sm:bottom-8"
+          style={{ ...lightStyle, color: "#A5A8B1", fontSize: "clamp(14px, 1.3vw, 20px)" }}
+        >
+          ↓ {t.scrollHint}
+        </p>
+      </section>
+
+      {/* Presentación del programa (lead + copy, video de la ballena de fondo).
+          Oculta: no está en el Canva del 29/09. Ver SHOW_INTRO. */}
+      {SHOW_INTRO && (
+        <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} baseColor="#000">
+          <Lead>{t.lead}</Lead>
+          <CopyCard paragraphs={t.copy} justify />
+        </MasSection>
+      )}
 
       {/* 2 — Las seis fichas: teaser siempre visible, bio completa + red al
-          tocar la foto (dropdown por ficha, no un modal). */}
+          tocar la foto, en un panel a todo el ancho debajo de la fila. */}
       <MasSection bgVideo={UNIVERSOS_BG_VIDEO_SRC} bgOpacity={0.28} baseColor="#000" compactTop>
         <BlockTitle>{t.universoTitle}</BlockTitle>
 
@@ -229,79 +306,130 @@ export default function EmbajadoresPage() {
             no 6 columnas en desktop) para que se vean más grandes. */}
         <div className="mt-8 mx-auto grid max-w-3xl grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-x-8 sm:gap-y-6">
           {AMBASSADORS.map((amb, i) => (
-            <Reveal key={amb.name} delay={0.1 + i * 0.1} className="flex flex-col">
-              <button
-                type="button"
-                onClick={() => toggle(i)}
-                aria-expanded={openSet.has(i)}
-                className="relative w-full transition-transform duration-200 hover:scale-[1.02]"
-                style={{ aspectRatio: "1892 / 2130" }}
-              >
-                <Image src={amb.src} alt={amb.name} fill style={{ objectFit: "cover" }} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => toggle(i)}
-                aria-expanded={openSet.has(i)}
-                className="mt-3 flex items-start gap-2 text-left"
-              >
-                <p
-                  className="flex-1"
-                  style={{ ...lightStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)", lineHeight: 1.4 }}
+            <Fragment key={amb.name}>
+              <Reveal delay={0.1 + i * 0.1} className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  aria-expanded={openIdx === i}
+                  aria-controls="embajador-bio"
+                  className="relative w-full transition-[transform,opacity] duration-200 hover:scale-[1.02]"
+                  // Con una bio abierta, las otras fichas se apagan un poco.
+                  style={{ aspectRatio: "1892 / 2130", opacity: openIdx === null || openIdx === i ? 1 : 0.5 }}
                 >
-                  {amb.teaser[lang]}
-                </p>
-                <span
-                  aria-hidden
-                  style={{
-                    color: "#ABF760",
-                    fontSize: 12,
-                    lineHeight: 1,
-                    marginTop: 3,
-                    flexShrink: 0,
-                    transition: "transform 0.2s",
-                    transform: openSet.has(i) ? "rotate(180deg)" : "none",
-                  }}
-                >
-                  ▾
-                </span>
-              </button>
+                  <Image src={amb.src} alt={amb.name} fill style={{ objectFit: "cover" }} />
+                </button>
 
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  aria-expanded={openIdx === i}
+                  aria-controls="embajador-bio"
+                  className="mt-3 flex items-start gap-2 text-left"
+                >
+                  <p
+                    className="flex-1"
+                    style={{ ...lightStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)", lineHeight: 1.4 }}
+                  >
+                    {amb.teaser[lang]}
+                  </p>
+                  <span
+                    aria-hidden
+                    style={{
+                      color: "#ABF760",
+                      fontSize: 12,
+                      lineHeight: 1,
+                      marginTop: 3,
+                      flexShrink: 0,
+                      transition: "transform 0.2s",
+                      transform: openIdx === i ? "rotate(180deg)" : "none",
+                    }}
+                  >
+                    ▾
+                  </span>
+                </button>
+              </Reveal>
+
+              {/* Panel de la bio: fila propia a todo el ancho, debajo de la fila
+                  de la ficha abierta. Si se abre otra ficha de la misma fila,
+                  solo cambia el contenido y la flecha se corre; si es de otra
+                  fila, el panel se cierra acá y se abre allá. */}
               <AnimatePresence initial={false}>
-                {openSet.has(i) && (
+                {i === panelAfter && openAmb && (
                   <motion.div
+                    key={`bio-row-${openRow}`}
+                    id="embajador-bio"
+                    className="col-span-full"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                     style={{ overflow: "hidden" }}
                   >
-                    <div style={{ paddingTop: 12 }}>
-                      <p
+                    <div className="relative pt-3">
+                      {/* Flecha que apunta a la ficha abierta. */}
+                      <motion.span
+                        aria-hidden
+                        className="absolute top-0 block"
+                        initial={false}
+                        animate={{ left: `${(((openIdx ?? 0) % cols) + 0.5) * (100 / cols)}%` }}
+                        transition={{ type: "spring", stiffness: 260, damping: 26 }}
                         style={{
-                          ...lightStyle,
-                          color: "#E6EEF2",
-                          fontSize: "clamp(13px, 1.2vw, 15px)",
-                          lineHeight: 1.55,
+                          width: 0,
+                          height: 0,
+                          marginLeft: -9,
+                          borderLeft: "9px solid transparent",
+                          borderRight: "9px solid transparent",
+                          borderBottom: "12px solid rgba(171,247,96,0.55)",
+                        }}
+                      />
+                      <div
+                        className="rounded-2xl"
+                        style={{
+                          border: "1px solid rgba(171,247,96,0.55)",
+                          background: "rgba(13,13,11,0.85)",
+                          padding: "clamp(18px, 2.4vw, 28px)",
                         }}
                       >
-                        {amb.bio[lang]}
-                      </p>
-                      <a
-                        href={amb.social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-block transition-opacity duration-200 hover:opacity-70"
-                        style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(11px, 1vw, 13px)" }}
-                      >
-                        {SOCIAL_LABEL[amb.social.platform][lang]} →
-                      </a>
+                        <AnimatePresence mode="wait" initial={false}>
+                          <motion.div
+                            key={openAmb.name}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <h3 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(14px, 1.4vw, 18px)" }}>
+                              {openAmb.name}
+                            </h3>
+                            <p
+                              className="mt-3"
+                              style={{
+                                ...lightStyle,
+                                color: "#E6EEF2",
+                                fontSize: "clamp(13px, 1.2vw, 15px)",
+                                lineHeight: 1.6,
+                              }}
+                            >
+                              {openAmb.bio[lang]}
+                            </p>
+                            <a
+                              href={openAmb.social.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-4 inline-block transition-opacity duration-200 hover:opacity-70"
+                              style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(11px, 1vw, 13px)" }}
+                            >
+                              {SOCIAL_LABEL[openAmb.social.platform][lang]} →
+                            </a>
+                          </motion.div>
+                        </AnimatePresence>
+                      </div>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </Reveal>
+            </Fragment>
           ))}
         </div>
       </MasSection>
