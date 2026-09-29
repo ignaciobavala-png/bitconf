@@ -33,6 +33,18 @@ const SECTION_FADE = "180px";
 // sección).
 const BOOTCAMP_ROW_MIN_H = "132px";
 
+// Título de card de "Beneficios y experiencias": mismo peso y tamaño para
+// todas (las 4 chicas, Hackathon, College y Bootcamp).
+const CARD_TITLE_STYLE: React.CSSProperties = {
+  ...labelStyle,
+  color: "#E6EEF2",
+  fontSize: "clamp(18px, 2vw, 24px)",
+  lineHeight: 1.3,
+  // Si parte en dos renglones, que queden parejos y no una palabra sola
+  // abajo ("...EN EL / EVENTO").
+  textWrap: "balance",
+};
+
 // Estilo compartido de las cards con borde de sección (todas las de
 // "Beneficios", los 2 pasos de "¿Querés estar dentro?" y el buscador de
 // universidades) — el machete las dibuja todas con el mismo borde
@@ -45,6 +57,15 @@ function cardStyle(extra?: React.CSSProperties): React.CSSProperties {
     ...extra,
   };
 }
+
+// Las 4 cards chicas de "Beneficios": h-full para estirarse al alto de la
+// fila (la grilla usa auto-rows-fr) y texto centrado en vertical.
+const SMALL_CARD_STYLE = cardStyle({
+  padding: "24px 28px",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+});
 
 // Pill de acción (participá / más info / UNITE) — fondo Brote, texto oscuro.
 function PillLink({
@@ -64,6 +85,9 @@ function PillLink({
     borderRadius: 999,
     fontSize: "clamp(12px, 1vw, 14px)",
     padding: "10px 24px",
+    // Una sola línea siempre: si una pill parte en dos renglones queda más
+    // alta que su vecina (feedback tester 29/09/2026).
+    whiteSpace: "nowrap",
     cursor: disabled ? "default" : "pointer",
     opacity: disabled ? 0.7 : 1,
   };
@@ -219,11 +243,11 @@ const T = {
     cardHackathonBody:
       "2 días. 4 tracks.\n\nEl corazón del EDU HUB. Equipos de estudiantes de universidades acreditadas detectan un problema real y construyen una solución funcional en 48 horas, dentro de LABITCONF, en Costa Salguero.\n\nElegís uno de 4 tracks (Inclusión Financiera, Nueva Educación, Creator Economy, Impacto y Comunidad), tenés mentores todo el camino, y cerrás con premiación en el stage de LABITCONF y la fiesta de Halloween.\n\nIncluye Bootcamp previo de 4 encuentros en octubre para llegar afilado.",
     cardHackathonParticipa: "participá",
-    cardHackathonMasInfo: "más info",
+    cardHackathonMasInfo: "+ info",
     cardHackathonChips: ["30–31 oct", "Costa Salguero", "Equipos de 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops y charlas",
-    cardBootcampMasInfo: "más info",
+    cardBootcampMasInfo: "+ info",
     cardWhatsappTitle: "Comunidad de WhatsApp",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
@@ -276,11 +300,11 @@ const T = {
     cardHackathonBody:
       "2 days. 4 tracks.\n\nThe heart of EDU HUB. Teams of students from accredited universities identify a real problem and build a working solution in 48 hours, inside LABITCONF, at Costa Salguero.\n\nPick one of 4 tracks (Financial Inclusion, New Education, Creator Economy, Impact and Community), get mentors along the way, and wrap up with an awards ceremony on the LABITCONF stage and the Halloween party.\n\nIncludes a 4-session Bootcamp in October to get you ready.",
     cardHackathonParticipa: "join in",
-    cardHackathonMasInfo: "more info",
+    cardHackathonMasInfo: "+ info",
     cardHackathonChips: ["Oct 30–31", "Costa Salguero", "Teams of 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops and talks",
-    cardBootcampMasInfo: "more info",
+    cardBootcampMasInfo: "+ info",
     cardWhatsappTitle: "WhatsApp community",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
@@ -381,12 +405,13 @@ export default function MasPage() {
           }}
         />
 
-        {/* CTAs — flanquean la línea central del hero, a la altura media
-            (posición y ancho del boceto: no son pills chicas centradas, son
-            dos placas anchas una a cada lado del eje vertical) */}
+        {/* CTAs — dos placas anchas una a cada lado del eje vertical. Antes
+            iban centradas a media altura del hero y tapaban la parte linda
+            del video (feedback tester 29/09/2026): ahora van en el flujo,
+            justo arriba de la headline, contra el borde inferior. */}
         <Reveal
           delay={0.1}
-          className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-6 sm:px-10"
+          className="relative w-full mb-10 sm:mb-14"
           style={{ zIndex: 2 }}
         >
           {/* Botones al 80% del tamaño original + más separados entre sí
@@ -612,101 +637,69 @@ export default function MasPage() {
             </h2>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Columna izquierda */}
-            <div className="flex flex-col gap-6">
-              <Reveal delay={0.05}>
-                <div style={cardStyle({ padding: "24px 28px", containerType: "inline-size" } as React.CSSProperties)}>
-                  <h3
+          {/* Las 4 cards chicas (Espacio físico / WhatsApp / Certificado /
+              Networking) en una sola grilla 2x2 con auto-rows-fr: todas
+              miden lo mismo de alto (manda la más alta). Antes eran dos
+              columnas flex independientes con 3 tamaños de letra distintos
+              y pills más bajas que las cards — feedback tester 29/09/2026:
+              "ensalada de tamaños". Ahora todas usan CARD_TITLE_STYLE, el
+              mismo peso y tamaño que los títulos de Hackathon / College. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-fr gap-6">
+            <Reveal delay={0.05} className="h-full">
+              <div style={SMALL_CARD_STYLE}>
+                <h3 style={CARD_TITLE_STYLE}>
+                  {t.cardEspacioTitlePrefix} {t.cardEspacioTitleTail}
+                </h3>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.05} className="h-full">
+              <div style={SMALL_CARD_STYLE}>
+                <div className="flex w-full items-center justify-between gap-4">
+                  <h3 style={CARD_TITLE_STYLE}>{t.cardWhatsappTitle}</h3>
+                  <a
+                    href={SOY_ALUMNO_HREF}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative transition-transform duration-200 hover:scale-110 flex items-center justify-center shrink-0"
+                    aria-label={t.cardWhatsappTitle}
                     style={{
-                      ...labelStyle,
-                      color: "#E6EEF2",
-                      fontSize: "clamp(9px, 3.5cqw, 20px)",
-                      whiteSpace: "nowrap",
+                      width: 44,
+                      height: 44,
+                      borderRadius: 999,
+                      background: "#ABF760",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.35)",
                     }}
                   >
-                    {t.cardEspacioTitlePrefix} {t.cardEspacioTitleTail}
-                  </h3>
+                    {/* Sonar: mismo anillo que expande/desvanece de Qubit
+                        (components/home/QaChatWidget.tsx) para que el
+                        botón se lea como interactivo, no como ícono plano. */}
+                    <motion.span
+                      aria-hidden
+                      className="absolute inset-0 rounded-full pointer-events-none"
+                      style={{ border: "2px solid #ABF760" }}
+                      animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+                    />
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#171616" aria-hidden style={{ position: "relative" }}>
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
+                    </svg>
+                  </a>
                 </div>
-              </Reveal>
+              </div>
+            </Reveal>
 
-              {/* Certificado oficial — pill suelta debajo de "Espacio
-                  físico"; Networking bajó a la columna derecha, debajo de
-                  "Comunidad de WhatsApp", para que ambas columnas cierren
-                  con el mismo número de filas (simetría pedida por el
-                  cliente, 25/09/2026). */}
-              <Reveal delay={0.07}>
-                <div
-                  style={cardStyle({
-                    padding: "16px",
-                    borderRadius: 999,
-                    textAlign: "center",
-                  })}
-                >
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                    {t.cardCertificadoTitle}
-                  </h3>
-                </div>
-              </Reveal>
-            </div>
+            <Reveal delay={0.07} className="h-full">
+              <div style={SMALL_CARD_STYLE}>
+                <h3 style={CARD_TITLE_STYLE}>{t.cardCertificadoTitle}</h3>
+              </div>
+            </Reveal>
 
-            {/* Columna derecha */}
-            <div className="flex flex-col gap-6">
-              <Reveal delay={0.05}>
-                <div style={cardStyle({ padding: "24px 28px" })}>
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(16px, 1.8vw, 20px)" }}>
-                      {t.cardWhatsappTitle}
-                    </h3>
-                    <a
-                      href={SOY_ALUMNO_HREF}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative transition-transform duration-200 hover:scale-110 flex items-center justify-center shrink-0"
-                      aria-label={t.cardWhatsappTitle}
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 999,
-                        background: "#ABF760",
-                        boxShadow: "0 2px 10px rgba(0,0,0,0.35)",
-                      }}
-                    >
-                      {/* Sonar: mismo anillo que expande/desvanece de Qubit
-                          (components/home/QaChatWidget.tsx) para que el
-                          botón se lea como interactivo, no como ícono plano. */}
-                      <motion.span
-                        aria-hidden
-                        className="absolute inset-0 rounded-full pointer-events-none"
-                        style={{ border: "2px solid #ABF760" }}
-                        animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
-                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-                      />
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#171616" aria-hidden style={{ position: "relative" }}>
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
-                      </svg>
-                    </a>
-                    </div>
-                  </div>
-                </Reveal>
-
-              {/* Networking baja acá, debajo de "Comunidad de WhatsApp",
-                  para que la columna derecha cierre con el mismo número de
-                  filas que la izquierda (Espacio físico + Certificado). */}
-              <Reveal delay={0.09}>
-                <div
-                  style={cardStyle({
-                    padding: "16px",
-                    borderRadius: 999,
-                    textAlign: "center",
-                  })}
-                >
-                  <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
-                    {t.cardNetworkingTitle}
-                  </h3>
-                </div>
-              </Reveal>
-            </div>
+            <Reveal delay={0.09} className="h-full">
+              <div style={SMALL_CARD_STYLE}>
+                <h3 style={CARD_TITLE_STYLE}>{t.cardNetworkingTitle}</h3>
+              </div>
+            </Reveal>
           </div>
 
           {/* Hackathon + Bitcoin College — fila propia con items-stretch:
@@ -741,7 +734,7 @@ export default function MasPage() {
                       href="/mas/hackathon"
                       className="transition-opacity duration-200 hover:opacity-80"
                     >
-                      <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                      <h3 style={CARD_TITLE_STYLE}>
                         {t.cardHackathonTitle}
                       </h3>
                     </Link>
@@ -810,7 +803,7 @@ export default function MasPage() {
                     href="/mas/labc-bitcoin-college"
                     className="transition-opacity duration-200 hover:opacity-80"
                   >
-                    <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)" }}>
+                    <h3 style={CARD_TITLE_STYLE}>
                       {t.cardCollegeTitle}
                     </h3>
                   </Link>
@@ -834,24 +827,19 @@ export default function MasPage() {
             </Reveal>
           </div>
 
-          {/* Bootcamp — ocupa todo el ancho del componente, ya no metida en
-              la columna izquierda al lado de Hackathon. */}
+          {/* Bootcamp — ocupa todo el ancho del componente. Título y "+ info"
+              en la misma línea mientras entren; flex-wrap baja el botón
+              abajo del título en mobile / ventanas angostas (feedback
+              tester 29/09/2026). */}
           <Reveal delay={0.22} className="mt-6">
             <div
-              style={cardStyle({
-                padding: "28px",
-                minHeight: BOOTCAMP_ROW_MIN_H,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              })}
+              className="flex flex-wrap items-center justify-between gap-x-6 gap-y-5"
+              style={cardStyle({ padding: "28px", minHeight: BOOTCAMP_ROW_MIN_H })}
             >
-              <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(18px, 2vw, 24px)", lineHeight: 1.3 }}>
+              <h3 style={CARD_TITLE_STYLE}>
                 {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
               </h3>
-              <div className="mt-6">
-                <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
-              </div>
+              <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
             </div>
           </Reveal>
         </div>

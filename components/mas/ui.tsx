@@ -389,6 +389,7 @@ export function CtaButton({
           background: "rgba(13,13,11,0.5)",
           fontSize: "clamp(13px, 1.2vw, 16px)",
           padding: "14px 40px",
+          whiteSpace: "nowrap",
           cursor: "not-allowed",
         }}
       >
@@ -413,6 +414,7 @@ export function CtaButton({
         background: "rgba(13,13,11,0.6)",
         fontSize: "clamp(13px, 1.2vw, 16px)",
         padding: "14px 40px",
+        whiteSpace: "nowrap",
       }}
     >
       {label}

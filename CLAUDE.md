@@ -97,6 +97,14 @@ Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-c
 - `components/home/Floating.tsx` — flotación idle infinita para decoraciones 3D: `y` + rotación leve en loop `mirror` easeInOut. Aplicado a honeybadger (5s), astronauta (7s), ballena naranja (6s), píldora de presentación (6s) y las 3 píldoras de comunidad (5-6.5s) — duraciones distintas a propósito para que no se sincronicen. La rotación fija de cada píldora va en el `transform` de la `<Image>` interna; el wrapper solo oscila.
 - **Cuidado con `overflow-hidden` + decoraciones con `bottom` negativo**: cortaba las piernas del honeybadger y el astronauta. Las decoraciones 3D van como hijas directas de la `<section>` ancladas con offsets positivos (`bottom: 1.5-2rem`), no colgando fuera del contenedor de contenido.
 
+### Reglas estrictas de diseño — LEER ANTES DE MAQUETAR
+
+Lista numerada y obligatoria en **`docs/reglas-de-diseno.md`** (CTA del hero
+abajo, un solo tamaño de título por grilla de cards, cards de igual altura,
+`+ info`, botones sin wrap, título + botón en la misma línea, títulos sin palabra
+huérfana). Toda sección nueva o retocada tiene que cumplirlas; las reglas nuevas
+se agregan al final de esa lista, sin renumerar.
+
 ### Títulos de sección — tamaño uniforme
 
 - Los títulos son PNG (texto con estilo horneado) en `public/assets/home/titulos/`, versiones `-trim` **recortadas al texto** con `convert -trim +repage`. Los originales (lienzo 1000x500 con alturas de texto dispares: TICKETS 155px vs STUDENT HUB 67px) se **borraron del repo** — cada título se veía de un tamaño distinto.
