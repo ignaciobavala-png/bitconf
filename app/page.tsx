@@ -134,9 +134,9 @@ const QUICK_ACCESS = [
   { key: "ticket", action: "checkout" as const, href: undefined, show: true },
   { key: "agenda", action: "link" as const, href: "/agenda", show: SHOW_AGENDA },
   { key: "speakers", action: "link" as const, href: "/speakers", show: SHOW_SPEAKERS },
-  { key: "embajadores", action: "link" as const, href: "/comunidad#embajadores", show: true },
-  { key: "hub", action: "link" as const, href: "/comunidad#student-hub", show: true },
-  { key: "comunidades", action: "link" as const, href: "/comunidad#comunidades", show: true },
+  { key: "embajadores", action: "link" as const, href: "/mas/embajadores", show: true },
+  { key: "hub", action: "link" as const, href: "/mas/edu-hub", show: true },
+  { key: "comunidades", action: "link" as const, href: "/mas/comunidades", show: true },
   { key: "separte", action: "link" as const, href: "/#se-parte", show: true },
   { key: "qubit", action: "qubit" as const, href: undefined, show: true },
 ] as const;
