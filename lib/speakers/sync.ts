@@ -152,6 +152,49 @@ export async function syncSpeakers(): Promise<SyncReport> {
   }
   if (adopted) warnings.push(`${adopted} speakers renumerados en la planilla: se conservó su fila y su slug`);
 
+  // Segunda pasada: mismo número, nombre corregido. El 29/09/2026 la
+  // organización empezó a normalizar nombres ("MAURICIO CASTILLO" pasó a
+  // "Maurcio Castillo", "Catrya Catrya" perdió el apellido), y con la clave
+  // `num|nombre` cada corrección salía como persona nueva con slug nuevo. Se
+  // adopta si hay una sola fila ausente y una sola nueva con ese número, y
+  // además comparten nombre o apellido: el número solo no alcanza, porque lo
+  // renumeran.
+  const firstLast = (name: string) => {
+    const parts = name.split(" ").filter(Boolean);
+    return [parts[0], parts.length > 1 ? parts[parts.length - 1] : null];
+  };
+  const numOf = (key: string) => key.slice(0, key.indexOf("|"));
+  const orphansByNum = new Map<string, NonNullable<typeof current>>();
+  for (const r of current ?? []) {
+    if (incoming.has(r.source_key as string)) continue;
+    const num = numOf(r.source_key as string);
+    orphansByNum.set(num, [...(orphansByNum.get(num) ?? []), r]);
+  }
+  const knownNow = new Set((current ?? []).map((r) => r.source_key as string));
+  const unknown = speakers.filter((sp) => !knownNow.has(sp.sourceKey));
+  let renamed = 0;
+  for (const sp of unknown) {
+    const num = String(sp.sourceNum);
+    const orphans = orphansByNum.get(num);
+    if (orphans?.length !== 1) continue;
+    if (unknown.filter((u) => String(u.sourceNum) === num).length !== 1) continue;
+    const row = orphans[0];
+    const [f1, l1] = firstLast(nameOf(sp.sourceKey));
+    const [f2, l2] = firstLast(nameOf(row.source_key as string));
+    if (f1 !== f2 && (!l1 || l1 !== l2)) continue;
+    const { error } = await supabase
+      .from("speakers")
+      .update({ source_key: sp.sourceKey })
+      .eq("id", row.id);
+    if (error) {
+      warnings.push(`${sp.name}: no se pudo adoptar la fila anterior — ${error.message}`);
+      continue;
+    }
+    row.source_key = sp.sourceKey;
+    renamed++;
+  }
+  if (renamed) warnings.push(`${renamed} speakers con el nombre corregido en la planilla: se conservó su fila y su slug`);
+
   const bySourceKey = new Map((current ?? []).map((r) => [r.source_key as string, r]));
   const slugs = assignSlugs(
     speakers,
