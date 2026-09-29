@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { CanonicalTag } from "./tags";
+import { onlyCanonical, type CanonicalTag } from "./tags";
 
 // Lectura pública de speakers y charlas.
 //
@@ -68,7 +68,7 @@ function toCard(r: CardRow): SpeakerCard {
     company: r.company,
     country: r.country,
     photoUrl: r.photo_url,
-    tags: (r.tags ?? []) as CanonicalTag[],
+    tags: onlyCanonical(r.tags),
   };
 }
 
@@ -162,7 +162,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
     talks: (row.talks ?? []).map((t) => ({
       title: t.title,
       abstract: t.abstract,
-      tags: (t.tags ?? []) as CanonicalTag[],
+      tags: onlyCanonical(t.tags),
       level: t.level,
       durationMin: t.duration_min,
       isPanel: t.is_panel,
@@ -246,7 +246,7 @@ export async function getAgenda(): Promise<AgendaTalk[]> {
       id: r.id,
       title: r.title,
       abstract: r.abstract,
-      tags: (r.tags ?? []) as CanonicalTag[],
+      tags: onlyCanonical(r.tags),
       level: r.level,
       durationMin: r.duration_min,
       isPanel: r.is_panel,

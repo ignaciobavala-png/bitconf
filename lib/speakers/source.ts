@@ -1,3 +1,4 @@
+import { ORG_TAGS_SNAPSHOT } from "./org-tags.snapshot";
 import { splitRawTags, toCanonicalTags, type CanonicalTag } from "./tags";
 
 // Lectura de la planilla de la organización.
@@ -261,6 +262,11 @@ export async function fetchSpeakersFromSource(): Promise<{
   // publicar (valor "si").
   const iWeb = [col("web_order"), col("# web"), col("web")].find((i) => i >= 0) ?? -1;
 
+  // Tags por speaker (los 12 clusters de la organización). Al 29/09 no están en
+  // la planilla sino en el JS de su tablero, que los espera en una columna
+  // `tags` (AP) que todavía no existe. Mismos encabezados que busca su página.
+  const iTags = [col("tags"), col("tag"), col("cluster")].find((i) => i >= 0) ?? -1;
+
   // MKT: num → publicado
   const mktPublished = new Set<number>();
   for (const row of (mkt.data ?? []).slice(1)) {
@@ -286,9 +292,15 @@ export async function fetchSpeakersFromSource(): Promise<{
     const sourceKey = `${sourceNum}|${normalizeName([first, last].filter(Boolean).join(" "))}`;
     const talks = parseTalks(cell(row, col("temas")), sourceKey);
 
-    // Los tags del speaker son la unión de los de sus charlas: la planilla no
-    // tiene un campo de temas a nivel persona.
-    const tags = toCanonicalTags(talks.flatMap((t) => t.rawTags));
+    // Los tags del speaker los decide la organización por persona, no salen de
+    // sus charlas ("prioridad al speaker, no a su charla"). Gana la columna de
+    // la planilla; si no existe, el snapshot copiado de su tablero. No se cae a
+    // la unión de las charlas: sería inventar una clasificación que ellos no
+    // hicieron, y mezclarla con la suya sin que se note.
+    const name = normalizeName([first, last].filter(Boolean).join(" "));
+    const tags = toCanonicalTags(
+      splitRawTags(iTags >= 0 ? cell(row, iTags) : ORG_TAGS_SNAPSHOT[name])
+    );
 
     speakers.push({
       sourceKey,

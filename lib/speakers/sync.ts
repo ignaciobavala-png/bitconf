@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { fetchSpeakersFromSource, type SourceSpeaker } from "./source";
 import { mirrorPhoto } from "./photos";
+import { onlyCanonical } from "./tags";
 
 // Sincronización planilla → base.
 //
@@ -210,7 +211,7 @@ export async function syncSpeakers(): Promise<SyncReport> {
       mkt_published: s.mktPublished,
       landing: s.landing,
       web_order: s.webOrder,
-      tags: keepIfEmpty(s.tags, bySourceKey.get(s.sourceKey)?.tags as string[] | null),
+      tags: keepIfEmpty<string>(s.tags, onlyCanonical(bySourceKey.get(s.sourceKey)?.tags)),
       present: true,
       synced_at: new Date().toISOString(),
     });
@@ -250,7 +251,7 @@ export async function syncSpeakers(): Promise<SyncReport> {
       const prev = prevByKey.get(t.sourceKey);
       const abstract = t.abstract || (prev?.abstract as string | null) || null;
       if (!t.abstract && abstract) keptAbstracts++;
-      const tags = keepIfEmpty(t.tags, prev?.tags as string[] | null);
+      const tags = keepIfEmpty<string>(t.tags, onlyCanonical(prev?.tags));
       if (!t.tags.length && tags.length) keptTags++;
       return {
         speaker_id: speakerId,
