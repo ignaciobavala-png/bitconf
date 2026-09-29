@@ -46,11 +46,28 @@ Origen de cada regla entre paréntesis (fecha + dónde apareció el problema).
    (Pedido recurrente de la organización; reaplicado el 29/09/2026 en "Espacio
    físico exclusivo / en el evento")
 
+8. **El negro del sitio es `#000` (negro puro), en todas las páginas.** Fondo
+   de página, secciones, degradés de transición, navbar, footer, modales y
+   dropdowns. No usar `#171616` (Alamo del Ser) ni `#0D0D0B` como fondo.
+   Excepciones: los degradés decorativos de los placeholders de speakers y el
+   trazo de la cara de Qubit.
+   (29/09/2026 — pedido de la organización, tomando `/mas/embajadores` como
+   referencia)
+
+9. **Los fondos de imagen y video no se ven apagados.** Toda opacidad de un
+   fondo pasa por `bgOpacity()` de `lib/ui/bg.ts` (lo hacen solos
+   `ParallaxBg` y `MasSection`), que la multiplica por `BG_BOOST` (1.35). Para
+   aclarar u oscurecer todos los fondos a la vez se toca solo ese factor, nunca
+   sección por sección. Un fondo nuevo con opacidad escrita a mano rompe esta
+   regla.
+   (29/09/2026 — con el fondo en `#000` el sitio quedaba demasiado oscuro)
+
 ## Dónde está implementado
 
 - Estilo de título de card: `CARD_TITLE_STYLE` en `app/mas/edu-hub/page.tsx`.
 - Botones: `PillLink` (`app/mas/edu-hub/page.tsx`) y `CtaButton`
   (`components/mas/ui.tsx`), ambos con `nowrap`.
+- Brillo de fondos: `BG_BOOST` / `bgOpacity()` en `lib/ui/bg.ts`.
 
 ## Cómo sumar una regla
 

@@ -16,6 +16,7 @@ import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerLanes, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 import { SPONSOR_TIERS } from "@/lib/sponsors";
+import { bgOpacity } from "@/lib/ui/bg";
 
 // Fondo de "Media Partners": reemplaza fondo-iconos.jpg (estático) por
 // fondo1.mp4 (25/09/2026, mismo clip que embajadores/edu-hub), pedido de
@@ -258,7 +259,7 @@ const TICKETS = [
     dark: true,
     warm: false,
     // Negro sobre la card grafito: sin el borde acero el botón se pierde contra el fondo.
-    cta: { bg: "#171616", fg: "#E6EEF2", border: "1px solid rgba(199,203,209,0.45)" },
+    cta: { bg: "#000", fg: "#E6EEF2", border: "1px solid rgba(199,203,209,0.45)" },
     background:
       "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
     prices: [{ es: "Second Chance", en: "Second Chance", value: "AR$ 65.000" }],
@@ -282,10 +283,10 @@ const TICKETS = [
   {
     tier: "Experience",
     tagline: "HODL Full LABITCONF",
-    accent: "#171616", // sobre naranja, acento oscuro
+    accent: "#000", // sobre naranja, acento oscuro
     dark: true,
     warm: true,
-    cta: { bg: "#ABF760", fg: "#171616", border: "none" },
+    cta: { bg: "#ABF760", fg: "#000", border: "none" },
     background:
       "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
     prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 450" }],
@@ -441,7 +442,7 @@ export default function HomePage() {
   return (
     <main
       className="relative min-h-screen overflow-hidden"
-      style={{ background: "#171616" }}
+      style={{ background: "#000" }}
     >
       {headlineProbe}
 
@@ -475,7 +476,7 @@ export default function HomePage() {
             className="inline-block rounded-full border-2"
             style={{
               ...labelStyle,
-              color: "#171616",
+              color: "#000",
               background: "#ABF760",
               borderColor: "#ABF760",
               fontSize: "clamp(13px, 1.2vw, 17px)",
@@ -555,7 +556,7 @@ export default function HomePage() {
                 ["--accent" as string]: accent,
               };
               const className =
-                "rounded-full transition-colors duration-200 text-[#E6EEF2] hover:bg-[var(--accent)] hover:text-[#171616]";
+                "rounded-full transition-colors duration-200 text-[#E6EEF2] hover:bg-[var(--accent)] hover:text-[#000]";
 
               if (item.action === "link") {
                 return (
@@ -593,7 +594,7 @@ export default function HomePage() {
         {/* Fondo: hashes cripto (complementa la textura pixel del título) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.3 }}
+          style={{ zIndex: 0, opacity: bgOpacity(0.3) }}
         >
           <Image
             src="/assets/home/hashes.jpg"
@@ -611,7 +612,7 @@ export default function HomePage() {
             // negro→gris a lo largo de más recorrido para que la unión con
             // el banner y con la sección siguiente sea gradual, no un corte.
             background:
-              "linear-gradient(to bottom, #000 0%, rgba(13,13,11,0.35) 35%, rgba(13,13,11,0.35) 65%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.35) 65%, #000 100%)",
           }}
         />
 
@@ -705,7 +706,7 @@ export default function HomePage() {
       <section
         id="speakers"
         className="relative flex flex-col justify-center pb-10 sm:pb-12 overflow-hidden"
-        style={{ zIndex: 3, background: "#171616" }}
+        style={{ zIndex: 3, background: "#000" }}
       >
         <Reveal>
           <PhotoCarousel slides={CAROUSEL_SLIDES} lang={lang} />
@@ -733,7 +734,7 @@ export default function HomePage() {
         {/* Fondo: lluvia de dígitos */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.5 }}
+          style={{ zIndex: 0, opacity: bgOpacity(0.5) }}
         >
           <Image
             src="/assets/home/lluvia.png"
@@ -748,7 +749,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.4) 70%, #000 100%)",
           }}
         />
 
@@ -768,14 +769,14 @@ export default function HomePage() {
           >
             {TICKETS.map((ticket) => {
               const light = ticket.dark === false; // Business: fondo claro → texto oscuro
-              const cText = light ? "#171616" : "#E6EEF2";
+              const cText = light ? "#000" : "#E6EEF2";
               // Card naranja: "Incluye" pasa a oscuro para más contraste (pedido cliente 21/7)
               const cMuted = ticket.warm
-                ? "#171616"
+                ? "#000"
                 : light
-                  ? "rgba(23,22,22,0.6)"
+                  ? "rgba(0,0,0,0.6)"
                   : "#A5A8B1";
-              const cDivider = light ? "rgba(23,22,22,0.15)" : "rgba(255,255,255,0.15)";
+              const cDivider = light ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.15)";
               // Línea-resumen ("Todo lo del Ticket X"): usa el acento del tier — naranja
               // sobre la card plateada, oscuro sobre la naranja (ahí el naranja no se vería).
               const cSummary = ticket.accent;
@@ -1074,7 +1075,7 @@ export default function HomePage() {
         {/* Fondo: fondo1.mp4 en loop (antes fondo-iconos.jpg estático) */}
         <div
           className="absolute inset-0 pointer-events-none select-none overflow-hidden"
-          style={{ zIndex: 0, opacity: 0.18 }}
+          style={{ zIndex: 0, opacity: bgOpacity(0.18) }}
         >
           <video
             className="absolute inset-0 h-full w-full object-cover"
@@ -1094,7 +1095,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.4) 70%, #000 100%)",
           }}
         />
 
@@ -1220,7 +1221,7 @@ export default function HomePage() {
             en naranja de lluvia.png (Tickets) para que tampoco repita esa. */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.25 }}
+          style={{ zIndex: 0, opacity: bgOpacity(0.25) }}
         >
           <Image
             src="/assets/home/lluvia-naranja.png"
@@ -1235,7 +1236,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 30%, rgba(13,13,11,0.4) 70%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.4) 70%, #000 100%)",
           }}
         />
 
@@ -1254,7 +1255,7 @@ export default function HomePage() {
           <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-sm sm:max-w-4xl lg:max-w-6xl items-stretch`}>
             {seParteCards.map((card, i) => {
               const accent = SE_PARTE_ACCENTS[i] ?? SE_PARTE_ACCENTS[0];
-              const ink = accent.dark ? "#E6EEF2" : "#171616";
+              const ink = accent.dark ? "#E6EEF2" : "#000";
               return (
               <Reveal
                 key={card.title}
@@ -1269,7 +1270,7 @@ export default function HomePage() {
                    borde visible (la oscura) no mida 2px menos que sus hermanas. */
                 className="group relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_22px_45px_-20px_rgba(0,0,0,0.9)]"
                 style={{
-                  background: `linear-gradient(155deg, ${accent.color} 0%, color-mix(in srgb, ${accent.color} 90%, #171616) 100%)`,
+                  background: `linear-gradient(155deg, ${accent.color} 0%, color-mix(in srgb, ${accent.color} 90%, #000) 100%)`,
                   border: `1px solid ${accent.dark ? "rgba(230,238,242,0.45)" : "transparent"}`,
                   padding: "22px 22px",
                 }}
@@ -1310,7 +1311,7 @@ export default function HomePage() {
                   className="mt-auto pt-6 block"
                 >
                   <span
-                    className="flex w-full items-center justify-center gap-2 rounded-full transition-colors duration-300 bg-[#171616] text-[#E6EEF2] group-hover:bg-[#E6EEF2] group-hover:text-[#171616]"
+                    className="flex w-full items-center justify-center gap-2 rounded-full transition-colors duration-300 bg-[#000] text-[#E6EEF2] group-hover:bg-[#E6EEF2] group-hover:text-[#000]"
                     style={{
                       ...labelStyle,
                       fontSize: BUTTON_FS,
@@ -1366,7 +1367,7 @@ export default function HomePage() {
         {/* Fondo: hexmap (puntos tipo mapa) */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.55 }}
+          style={{ zIndex: 0, opacity: bgOpacity(0.55) }}
         >
           <Image
             src="/assets/home/hexmap.jpg"
@@ -1381,7 +1382,7 @@ export default function HomePage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 30%, rgba(13,13,11,0.35) 70%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.35) 70%, #000 100%)",
           }}
         />
 
@@ -1443,7 +1444,7 @@ export default function HomePage() {
               href="https://www.google.com/maps/search/?api=1&query=Costa+Salguero+Buenos+Aires+Argentina"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
+              className="mt-4 inline-block rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#000]"
               style={{
                 ...labelStyle,
                 color: "#ABF760",

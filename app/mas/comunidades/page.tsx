@@ -92,7 +92,7 @@ export default function ComunidadesPage() {
   const t = T[lang];
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
       {/* 1 — Hero — video de campaña de la organización de fondo */}

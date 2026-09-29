@@ -71,7 +71,7 @@ export default function PhotoCarousel({
     <div className="relative w-full select-none">
       <div
         className="relative w-full overflow-hidden"
-        style={{ aspectRatio: SLIDE_RATIO, background: "#171616" }}
+        style={{ aspectRatio: SLIDE_RATIO, background: "#000" }}
         aria-roledescription="carousel"
       >
         <AnimatePresence initial={false}>

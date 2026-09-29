@@ -73,13 +73,13 @@ export default function MasNav() {
       className="relative px-6 sm:px-10"
       style={{ zIndex: 3, paddingBottom: "clamp(56px, 8vh, 90px)" }}
     >
-      {/* Funde el fondo de la página al del footer (#171616). En Embajadores la
-          página es #000 y sin esto el paso al footer era una línea cortante;
-          en el resto de MÁS la página ya es #171616 y no se nota. */}
+      {/* Funde el fondo de la página al del footer. Desde el 29/09/2026 los
+          dos son #000 (regla 8 de docs/reglas-de-diseno.md), así que hoy no
+          se nota; queda por si alguna página vuelve a tener otro fondo. */}
       <div
         aria-hidden
         className="absolute inset-x-0 bottom-0 pointer-events-none"
-        style={{ height: "min(100%, 220px)", background: "linear-gradient(to bottom, transparent, #171616)" }}
+        style={{ height: "min(100%, 220px)", background: "linear-gradient(to bottom, transparent, #000)" }}
       />
       {/* Sin mx-auto, igual que MasSection: arranca en el mismo borde que el
           logo del navbar y que los títulos de sección de arriba. */}
@@ -97,7 +97,7 @@ export default function MasNav() {
                 className="block h-full rounded-2xl"
                 style={{
                   border: "1px solid rgba(171,247,96,0.35)",
-                  background: "rgba(13,13,11,0.45)",
+                  background: "rgba(0,0,0,0.45)",
                   padding: "clamp(18px, 2.2vw, 26px)",
                 }}
                 whileHover={{ scale: 1.03, background: "rgba(171,247,96,0.08)" }}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import WatermarkLayer from "@/components/WatermarkLayer";
 import LangToggle from "@/components/LangToggle";
 import type { Lang } from "@/lib/store/lang";
+import { bgOpacity } from "@/lib/ui/bg";
 
 type SubmitState = "idle" | "loading" | "success" | "error" | "ratelimit";
 
@@ -57,7 +58,7 @@ const pillStyle: React.CSSProperties = {
   textDecoration: "none",
   padding: "8px 17px",
   whiteSpace: "nowrap",
-  background: "rgba(13,13,11,0.72)",
+  background: "rgba(0,0,0,0.72)",
   backdropFilter: "blur(6px)",
 };
 
@@ -217,7 +218,7 @@ export default function HodlReasonsSection({
     <div
       id={id}
       className="relative w-full h-full overflow-hidden"
-      style={{ background: "#171616" }}
+      style={{ background: "#000" }}
     >
       {/* Capa 1: Globo terráqueo */}
       {variant === "full" && (
@@ -234,7 +235,7 @@ export default function HodlReasonsSection({
             style={{
               objectFit: "cover",
               objectPosition: "top center",
-              opacity: 0.5,
+              opacity: bgOpacity(0.5),
             }}
           />
         </div>
@@ -257,10 +258,10 @@ export default function HodlReasonsSection({
           zIndex: 1,
           background:
             variant === "compact"
-              ? "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(13,13,11,0.85) 0%, rgba(13,13,11,0.55) 45%, transparent 75%)"
+              ? "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 45%, transparent 75%)"
               : isMobile
-              ? "radial-gradient(ellipse 88% 26% at 50% 35%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)"
-              : "radial-gradient(ellipse 36% 28% at 50% 33%, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.6) 45%, transparent 72%)",
+              ? "radial-gradient(ellipse 88% 26% at 50% 35%, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 45%, transparent 72%)"
+              : "radial-gradient(ellipse 36% 28% at 50% 33%, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 45%, transparent 72%)",
         }}
       />
 
@@ -291,7 +292,7 @@ export default function HodlReasonsSection({
             style={{
               zIndex: 3,
               height: "35%",
-              background: "linear-gradient(to top, rgba(13,13,11,0.92) 0%, rgba(13,13,11,0.5) 50%, transparent 100%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)",
             }}
           />
         </>
@@ -337,7 +338,7 @@ export default function HodlReasonsSection({
                 boxShadow: `0 0 20px rgba(154,206,106,0.18)`,
                 gap: "8px",
                 transition: "border-color 0.3s",
-                background: "rgba(13,13,11,0.72)",
+                background: "rgba(0,0,0,0.72)",
                 backdropFilter: "blur(6px)",
               }}
             >
@@ -388,7 +389,7 @@ export default function HodlReasonsSection({
                   background: "#ABF760",
                   border: "none",
                   borderRadius: "9999px",
-                  color: "#171616",
+                  color: "#000",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 900,
                   fontSize: "clamp(11px, 1vw, 14px)",

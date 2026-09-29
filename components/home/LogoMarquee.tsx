@@ -122,7 +122,7 @@ function LogoSlot({ item, maxWidth }: { item: LogoItem; maxWidth: string }) {
       className="flex h-full items-center justify-center rounded-2xl px-8"
       style={{
         border: "1px dashed rgba(171,247,96,0.35)",
-        background: "rgba(13,13,11,0.35)",
+        background: "rgba(0,0,0,0.35)",
         fontFamily: "var(--font-neue-machina), sans-serif",
         fontWeight: 900,
         letterSpacing: "0.04em",

@@ -130,12 +130,12 @@ function CtaButton({ label, href = "#" }: { label: string; href?: string }) {
       href={href}
       target={href !== "#" ? "_blank" : undefined}
       rel={href !== "#" ? "noopener noreferrer" : undefined}
-      className="rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#171616]"
+      className="rounded-full transition-colors duration-200 border-2 hover:bg-[#ABF760] hover:text-[#000]"
       style={{
         ...labelStyle,
         color: "#E6EEF2",
         borderColor: "#ABF760",
-        background: "rgba(13,13,11,0.6)",
+        background: "rgba(0,0,0,0.6)",
         fontSize: "clamp(13px, 1.2vw, 16px)",
         padding: "14px 40px",
       }}
@@ -164,7 +164,7 @@ function InlineCta({
       className="mt-10 w-full flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-6 rounded-3xl"
       style={{
         border: "1px solid #ABF760",
-        background: "rgba(13,13,11,0.55)",
+        background: "rgba(0,0,0,0.55)",
         padding: "clamp(22px, 3vw, 36px) clamp(24px, 4vw, 48px)",
       }}
     >
@@ -194,7 +194,7 @@ export default function ComunidadPage() {
   return (
     <main
       className="relative min-h-screen overflow-hidden"
-      style={{ background: "#171616" }}
+      style={{ background: "#000" }}
     >
       {headlineProbe}
       <Navbar />
@@ -211,7 +211,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.45) 32%, rgba(13,13,11,0.45) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.45) 32%, rgba(0,0,0,0.45) 68%, #000 100%)",
           }}
         />
 
@@ -231,7 +231,7 @@ export default function ComunidadPage() {
               className="rounded-3xl"
               style={{
                 border: "1px solid #ABF760",
-                background: "rgba(13,13,11,0.55)",
+                background: "rgba(0,0,0,0.55)",
                 padding: "clamp(24px, 4vw, 48px)",
               }}
             >
@@ -295,7 +295,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 32%, rgba(0,0,0,0.4) 68%, #000 100%)",
           }}
         />
 
@@ -311,7 +311,7 @@ export default function ComunidadPage() {
                 style={{
                   aspectRatio: "1 / 1.15",
                   border: "1px solid #ABF760",
-                  background: "rgba(13,13,11,0.4)",
+                  background: "rgba(0,0,0,0.4)",
                 }}
               >
                 <div
@@ -358,7 +358,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 32%, rgba(0,0,0,0.4) 68%, #000 100%)",
           }}
         />
 
@@ -391,7 +391,7 @@ export default function ComunidadPage() {
             className="mt-8 rounded-3xl w-full"
             style={{
               border: "1px solid #ABF760",
-              background: "rgba(13,13,11,0.55)",
+              background: "rgba(0,0,0,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
           >
@@ -421,7 +421,7 @@ export default function ComunidadPage() {
                   style={{
                     aspectRatio: "3 / 4",
                     border: "1px solid #ABF760",
-                    background: "rgba(13,13,11,0.4)",
+                    background: "rgba(0,0,0,0.4)",
                   }}
                 >
                   {/* Ícono placeholder (transparente) — se reemplaza por foto real */}
@@ -464,7 +464,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 32%, rgba(0,0,0,0.35) 68%, #000 100%)",
           }}
         />
 
@@ -483,7 +483,7 @@ export default function ComunidadPage() {
             className="mt-8 rounded-3xl w-full"
             style={{
               border: "1px solid #ABF760",
-              background: "rgba(13,13,11,0.55)",
+              background: "rgba(0,0,0,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
           >
@@ -520,7 +520,7 @@ export default function ComunidadPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 32%, rgba(0,0,0,0.35) 68%, #000 100%)",
           }}
         />
 
@@ -561,7 +561,7 @@ export default function ComunidadPage() {
             className="mt-8 rounded-3xl w-full"
             style={{
               border: "1px solid #ABF760",
-              background: "rgba(13,13,11,0.55)",
+              background: "rgba(0,0,0,0.55)",
               padding: "clamp(24px, 4vw, 40px)",
             }}
           >

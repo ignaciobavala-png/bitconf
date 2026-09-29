@@ -268,7 +268,7 @@ export default function QaChatWidget() {
                   alignSelf: m.role === "user" ? "flex-end" : "flex-start",
                   maxWidth: "85%",
                   background: m.role === "user" ? "#ABF760" : "rgba(255,255,255,0.06)",
-                  color: m.role === "user" ? "#171616" : "#E5E5E0",
+                  color: m.role === "user" ? "#000" : "#E5E5E0",
                   fontFamily: "var(--font-neue-machina), sans-serif",
                   fontWeight: 300,
                   fontSize: "13px",
@@ -313,7 +313,7 @@ export default function QaChatWidget() {
               className="rounded-lg px-3 py-2 disabled:opacity-40 hover:opacity-90 transition-opacity"
               style={{
                 background: "#ABF760",
-                color: "#171616",
+                color: "#000",
                 fontFamily: "var(--font-neue-machina), sans-serif",
                 fontWeight: 900,
                 fontSize: "11px",
@@ -346,7 +346,7 @@ export default function QaChatWidget() {
               className="relative"
               style={{
                 background: "#E6EEF2",
-                color: "#171616",
+                color: "#000",
                 borderRadius: "16px",
                 padding: "9px 14px",
                 fontFamily: "var(--font-neue-machina), sans-serif",

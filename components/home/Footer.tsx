@@ -73,8 +73,8 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
           style={{
             zIndex: 6,
             background:
-              "linear-gradient(115deg, rgba(23,22,22,0.92) 0%, rgba(23,22,22,0.6) 24%, transparent 46%), " +
-              "linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(23,22,22,0.4) 55%, rgba(23,22,22,0.62) 100%)",
+              "linear-gradient(115deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 24%, transparent 46%), " +
+              "linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.62) 100%)",
           }}
         />
 
@@ -170,7 +170,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
                 className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
                 style={{ width: "34px", height: "34px", background: "#FF4E01" }}
               >
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="#171616">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#000">
                   <path d={social.path} />
                 </svg>
               </a>
@@ -261,7 +261,7 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
               className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
               style={{ width: "38px", height: "38px", background: "#FF4E01" }}
             >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="#171616">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="#000">
                 <path d={social.path} />
               </svg>
             </a>

@@ -10,6 +10,7 @@ import Footer from "@/components/home/Footer";
 import MasNav from "@/components/mas/MasNav";
 import Reveal from "@/components/home/Reveal";
 import ParallaxBg from "@/components/home/ParallaxBg";
+import { bgOpacity } from "@/lib/ui/bg";
 import { useLangStore } from "@/lib/store/lang";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
@@ -53,7 +54,7 @@ function cardStyle(extra?: React.CSSProperties): React.CSSProperties {
   return {
     border: "2px solid #ABF760",
     borderRadius: 24,
-    background: "rgba(23,22,22,0.55)",
+    background: "rgba(0,0,0,0.55)",
     ...extra,
   };
 }
@@ -80,7 +81,7 @@ function PillLink({
   const style: React.CSSProperties = {
     ...labelStyle,
     display: "inline-block",
-    color: "#171616",
+    color: "#000",
     background: disabled ? "rgba(171,247,96,0.35)" : "#ABF760",
     borderRadius: 999,
     fontSize: "clamp(12px, 1vw, 14px)",
@@ -372,7 +373,7 @@ export default function MasPage() {
   const t = T[lang];
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
       {/* Hero — video de campaña full-bleed (1:1 screen), overlay oscuro para
@@ -394,14 +395,17 @@ export default function MasPage() {
           <source src={HERO_VIDEO_SRC} type="video/mp4" />
         </video>
 
-        {/* Overlay: oscurece todo el video (el reel trae texto propio en
-            varias escenas) para que el copy y los CTA de la UI no compitan */}
+        {/* Overlay: oscurece el video (el reel trae texto propio en varias
+            escenas) para que el copy y los CTA de la UI no compitan. Aclarado
+            el 29/09/2026 junto con BG_BOOST (lib/ui/bg.ts): más liviano
+            arriba, sigue cerrando a #000 abajo por la legibilidad de la
+            headline. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, rgba(23,22,22,0.55) 0%, rgba(23,22,22,0.35) 45%, rgba(23,22,22,0.85) 80%, #171616 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.75) 80%, #000 100%)",
           }}
         />
 
@@ -595,7 +599,7 @@ export default function MasPage() {
           className="absolute inset-0 overflow-hidden pointer-events-none select-none"
           style={{
             zIndex: 0,
-            opacity: 0.35,
+            opacity: bgOpacity(0.35),
             maskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
             WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
           }}
@@ -618,7 +622,7 @@ export default function MasPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 32%, rgba(0,0,0,0.35) 68%, #000 100%)",
           }}
         />
 
@@ -681,7 +685,7 @@ export default function MasPage() {
                       animate={{ scale: [1, 1.5], opacity: [0.55, 0] }}
                       transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
                     />
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#171616" aria-hidden style={{ position: "relative" }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#000" aria-hidden style={{ position: "relative" }}>
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
                     </svg>
                   </a>
@@ -741,7 +745,7 @@ export default function MasPage() {
                     <span
                       style={{
                         ...labelStyle,
-                        color: "#171616",
+                        color: "#000",
                         background: "#FF4E01",
                         borderRadius: 999,
                         fontSize: "clamp(11px, 0.9vw, 13px)",
@@ -855,7 +859,7 @@ export default function MasPage() {
           className="absolute inset-0 overflow-hidden pointer-events-none select-none"
           style={{
             zIndex: 0,
-            opacity: 0.35,
+            opacity: bgOpacity(0.35),
             maskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
             WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${SECTION_FADE}, #000 calc(100% - ${SECTION_FADE}), transparent 100%)`,
           }}
@@ -1001,7 +1005,7 @@ export default function MasPage() {
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(13,13,11,0.35) 32%, rgba(13,13,11,0.35) 68%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.35) 32%, rgba(0,0,0,0.35) 68%, #000 100%)",
           }}
         />
 
@@ -1149,7 +1153,7 @@ function UniversitySearch({ t }: { t: MasCopy }) {
               left: 0,
               right: 0,
               zIndex: 10,
-              background: "#171616",
+              background: "#000",
               maxHeight: 260,
               overflowY: "auto",
               listStyle: "none",

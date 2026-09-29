@@ -21,7 +21,7 @@ export default async function SpeakersPage() {
   const speakers = await getSpeakers();
 
   return (
-    <main className="relative min-h-screen" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
 
       <section className="relative px-6 sm:px-10 pt-32 sm:pt-40 pb-20 sm:pb-28">

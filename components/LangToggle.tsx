@@ -11,7 +11,7 @@ const pillStyle: React.CSSProperties = {
   textDecoration: "none",
   padding: "8px 17px",
   whiteSpace: "nowrap",
-  background: "rgba(13,13,11,0.72)",
+  background: "rgba(0,0,0,0.72)",
   backdropFilter: "blur(6px)",
 };
 

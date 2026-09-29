@@ -387,7 +387,7 @@ export default function EmbajadoresPage() {
                         className="rounded-2xl"
                         style={{
                           border: "1px solid rgba(171,247,96,0.55)",
-                          background: "rgba(13,13,11,0.85)",
+                          background: "rgba(0,0,0,0.85)",
                           padding: "clamp(18px, 2.4vw, 28px)",
                         }}
                       >

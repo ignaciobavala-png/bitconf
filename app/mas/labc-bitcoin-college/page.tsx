@@ -70,7 +70,7 @@ export default function LabcBitcoinCollegePage() {
   const t = T[lang];
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
       {/* Hero — foto de fondo (aula/estudiantes) tal como en el machete,
@@ -109,7 +109,7 @@ export default function LabcBitcoinCollegePage() {
       <MasSection id="sobre-college" bg="/assets/home/hashes.jpg" bgOpacity={0.25} centered>
         <div
           className="flex flex-col sm:flex-row sm:items-start gap-6 rounded-3xl overflow-hidden"
-          style={{ border: "1px solid #ABF760", background: "rgba(13,13,11,0.55)", padding: "16px" }}
+          style={{ border: "1px solid #ABF760", background: "rgba(0,0,0,0.55)", padding: "16px" }}
         >
           <div
             className="relative shrink-0 w-full sm:w-[360px] rounded-2xl overflow-hidden"

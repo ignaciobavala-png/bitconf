@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Reveal from "@/components/home/Reveal";
 import ParallaxBg from "@/components/home/ParallaxBg";
+import { bgOpacity as boostBg } from "@/lib/ui/bg";
 import LogoMarquee, { type LogoItem } from "@/components/home/LogoMarquee";
 
 // Piezas compartidas por las páginas de /mas. Salen de la vieja /comunidad
@@ -26,7 +27,7 @@ export const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
 const CARD: React.CSSProperties = {
   border: "1px solid #ABF760",
-  background: "rgba(13,13,11,0.55)",
+  background: "rgba(0,0,0,0.55)",
 };
 
 /**
@@ -46,7 +47,7 @@ export function MasSection({
   first = false,
   compactTop = false,
   centered = false,
-  baseColor = "#171616",
+  baseColor = "#000",
   decoration,
   children,
 }: {
@@ -97,7 +98,7 @@ export function MasSection({
       {bgVideo ? (
         <video
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ zIndex: 0, opacity: bgOpacity, objectPosition: bgPosition }}
+          style={{ zIndex: 0, opacity: boostBg(bgOpacity), objectPosition: bgPosition }}
           autoPlay
           muted
           loop
@@ -122,7 +123,7 @@ export function MasSection({
         style={{
           zIndex: 1,
           background:
-            `linear-gradient(to bottom, ${baseColor} 0%, rgba(13,13,11,0.4) 32%, rgba(13,13,11,0.4) 68%, ${baseColor} 100%)`,
+            `linear-gradient(to bottom, ${baseColor} 0%, rgba(0,0,0,0.4) 32%, rgba(0,0,0,0.4) 68%, ${baseColor} 100%)`,
         }}
       />
       {decoration}
@@ -292,7 +293,7 @@ export function Chips({
               ...labelStyle,
               color,
               border: `1px solid ${border}`,
-              background: "rgba(13,13,11,0.5)",
+              background: "rgba(0,0,0,0.5)",
               fontSize: "clamp(11px, 1vw, 13px)",
               padding: "9px 18px",
             }}
@@ -386,7 +387,7 @@ export function CtaButton({
           ...labelStyle,
           color: "#A5A8B1",
           border: "2px solid rgba(165,168,177,0.4)",
-          background: "rgba(13,13,11,0.5)",
+          background: "rgba(0,0,0,0.5)",
           fontSize: "clamp(13px, 1.2vw, 16px)",
           padding: "14px 40px",
           whiteSpace: "nowrap",
@@ -406,12 +407,12 @@ export function CtaButton({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block rounded-full transition-all duration-200 border-2 hover:scale-105 hover:bg-[#ABF760] hover:text-[#171616]"
+      className="inline-block rounded-full transition-all duration-200 border-2 hover:scale-105 hover:bg-[#ABF760] hover:text-[#000]"
       style={{
         ...labelStyle,
         color: "#E6EEF2",
         borderColor: "#ABF760",
-        background: "rgba(13,13,11,0.6)",
+        background: "rgba(0,0,0,0.6)",
         fontSize: "clamp(13px, 1.2vw, 16px)",
         padding: "14px 40px",
         whiteSpace: "nowrap",

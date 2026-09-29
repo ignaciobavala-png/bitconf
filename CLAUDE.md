@@ -29,12 +29,13 @@ Definida por el cliente (`~/Descargas/paleta.jpeg`). Estos son los hex **exactos
 | Nombre | HEX | Rol | Uso en la landing |
 |---|---|---|---|
 | Orange 021 C | `#FF4E01` | Principal — Energía \| Fuerza \| BTC \| Carácter | Naranja de marca: acentos, tinte de figuras punteadas, "Bitcoin"/"Blockchain", badges |
-| Alamo del Ser | `#171616` | Principal — Misterio \| Tecnología | Fondo base de todas las secciones |
+| Alamo del Ser | `#171616` | Principal — Misterio \| Tecnología | **Ya no es el fondo** (29/09/2026): el fondo del sitio es `#000`, ver regla 8 de `docs/reglas-de-diseno.md` |
 | Brote | `#ABF760` | Acento — Naturaleza \| Futuro | Verde de CTAs, bordes de botones/cards, hover |
 | Lactica | `#E6EEF2` | Acompañamiento — Alma \| Transparencia | Texto claro / blanco de marca |
 | Almico | `#FFAB0B` | Acento — Energía \| Calidez \| Hogar | Ámbar secundario — **aún sin uso** en la landing |
 | Electric Ekko | `#1311FC` | Acento — Seguridad \| Dinamismo | Azul — **aún sin uso** en la landing |
 
+- **Fondo = `#000`** (29/09/2026, pedido de la organización): reemplazó a Alamo del Ser en fondos de página, secciones, navbar, footer y modales. Los fondos de imagen/video se aclaran con `BG_BOOST` de `lib/ui/bg.ts` (regla 9).
 - La paleta vieja se reemplazó por la exacta (commit de esta rama): `#F7931A → #FF4E01`, `#0D0D0B → #171616`, `#9ACE6A → #ABF760`, `#FCFCFC → #E6EEF2`.
 - **No agregar colores fuera de esta tabla.** Almico y Electric Ekko están definidos pero no se usan todavía; introducirlos solo si un elemento nuevo del diseño los pide.
 - Excepciones que **no** son colores de paleta y quedan como están: `#A5A8B1` (gris de texto secundario, da jerarquía sobre Lactica) y `#4A6E2D` (verde oscuro de frases estáticas del watermark, variante funcional para diferenciarlas de las de usuario). Los gradientes decorativos de las tarjetas de tickets y placeholders de speakers tampoco son colores de paleta.
@@ -102,7 +103,7 @@ Hero, Presentación y Tickets usan `minHeight: 100vh` + `flex flex-col justify-c
 Lista numerada y obligatoria en **`docs/reglas-de-diseno.md`** (CTA del hero
 abajo, un solo tamaño de título por grilla de cards, cards de igual altura,
 `+ info`, botones sin wrap, título + botón en la misma línea, títulos sin palabra
-huérfana). Toda sección nueva o retocada tiene que cumplirlas; las reglas nuevas
+huérfana, fondo `#000`, brillo de fondos vía `BG_BOOST`). Toda sección nueva o retocada tiene que cumplirlas; las reglas nuevas
 se agregan al final de esa lista, sin renumerar.
 
 ### Títulos de sección — tamaño uniforme

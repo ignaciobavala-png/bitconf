@@ -107,8 +107,8 @@ export default function Navbar() {
       style={{
         zIndex: 50,
         background: menuOpen
-          ? "#171616"
-          : "linear-gradient(to bottom, rgba(23,22,22,0.85) 0%, rgba(23,22,22,0) 100%)",
+          ? "#000"
+          : "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)",
       }}
     >
       <div className="flex items-center gap-8">
@@ -178,7 +178,7 @@ export default function Navbar() {
                   className="flex flex-col rounded-2xl overflow-hidden"
                   style={{
                     minWidth: 210,
-                    background: "#171616",
+                    background: "#000",
                     border: "1px solid #ABF760",
                     boxShadow: "0 18px 40px rgba(0,0,0,0.55)",
                   }}
@@ -188,7 +188,7 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setMasOpen(false)}
-                      className="text-[#E6EEF2] transition-colors duration-200 hover:bg-[#ABF760] hover:text-[#171616]"
+                      className="text-[#E6EEF2] transition-colors duration-200 hover:bg-[#ABF760] hover:text-[#000]"
                       style={{
                         ...labelStyle,
                         fontSize: "12px",
@@ -259,7 +259,7 @@ export default function Navbar() {
         <nav
           className="md:hidden absolute left-0 right-0 top-full flex flex-col overflow-y-auto"
           style={{
-            background: "#171616",
+            background: "#000",
             borderTop: "1px solid rgba(230,238,242,0.08)",
             padding: "8px 24px 28px",
             maxHeight: "calc(100vh - 100%)",

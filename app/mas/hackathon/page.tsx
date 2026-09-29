@@ -82,7 +82,7 @@ export default function HackathonPage() {
   const t = T[lang];
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
       {/* Hero — video de la ballena (mismo reel que /mas/embajadores) de
@@ -125,7 +125,7 @@ export default function HackathonPage() {
       <MasSection id="sobre-hackathon" bg="/assets/home/hashes.jpg" bgOpacity={0.25} centered>
         <div
           className="flex flex-col sm:flex-row sm:items-start gap-6 rounded-3xl overflow-hidden"
-          style={{ border: "1px solid #ABF760", background: "rgba(13,13,11,0.55)", padding: "16px" }}
+          style={{ border: "1px solid #ABF760", background: "rgba(0,0,0,0.55)", padding: "16px" }}
         >
           {/* Flyer nuevo (25/09/2026) más grande que antes — esta es la
               página donde tiene que resaltar. 3:4, el aspect ratio real del
@@ -160,7 +160,7 @@ export default function HackathonPage() {
               className="mt-5"
               style={{
                 ...labelStyle,
-                color: "#171616",
+                color: "#000",
                 background: "#FF4E01",
                 borderRadius: 999,
                 fontSize: "clamp(11px, 0.9vw, 13px)",

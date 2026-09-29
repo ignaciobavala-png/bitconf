@@ -116,7 +116,7 @@ export default function CheckoutModal({
             <div
               className="flex items-center justify-between shrink-0"
               style={{
-                background: "#171616",
+                background: "#000",
                 // Barra angosta a propósito: cada píxel de cromo propio se le
                 // resta al iframe, y el alto disponible es justamente lo que
                 // determina cuánto tapa el resumen fijo del checkout de Hallos.

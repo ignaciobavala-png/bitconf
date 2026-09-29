@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { bgOpacity } from "@/lib/ui/bg";
 
 // Fondo full-bleed con parallax: se desplaza a distinto ritmo que el contenido
 // al scrollear (scroll-linked) + un leve zoom idle infinito. La imagen se
@@ -44,7 +45,7 @@ export default function ParallaxBg({
       className="absolute inset-0 overflow-hidden pointer-events-none select-none"
       style={{
         zIndex,
-        opacity,
+        opacity: bgOpacity(opacity),
         ...(fadeEdges && {
           maskImage: `linear-gradient(to bottom, transparent 0, #000 ${fadeEdges}, #000 calc(100% - ${fadeEdges}), transparent 100%)`,
           WebkitMaskImage: `linear-gradient(to bottom, transparent 0, #000 ${fadeEdges}, #000 calc(100% - ${fadeEdges}), transparent 100%)`,
