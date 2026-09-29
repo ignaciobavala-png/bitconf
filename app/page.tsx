@@ -549,14 +549,15 @@ export default function HomePage() {
               // que el elemento cambia de <a> a <button> según el caso.
               const bubbleStyle: React.CSSProperties = {
                 ...labelStyle,
-                background: "rgba(230,238,242,0.04)",
                 border: `1px solid ${accent}`,
                 fontSize: BUTTON_FS,
                 padding: "14px 26px",
                 ["--accent" as string]: accent,
               };
+              // El fondo en reposo va como clase, no en `style`: el inline le gana
+              // al `hover:bg-*` y el hover quedaba en texto negro sobre fondo negro.
               const className =
-                "rounded-full transition-colors duration-200 text-[#E6EEF2] hover:bg-[var(--accent)] hover:text-[#000]";
+                "rounded-full transition-colors duration-200 text-[#E6EEF2] bg-[rgba(230,238,242,0.04)] hover:bg-[var(--accent)] hover:text-[#000]";
 
               if (item.action === "link") {
                 return (
