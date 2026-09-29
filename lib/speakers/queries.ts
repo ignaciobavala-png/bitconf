@@ -1,5 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
-import type { CanonicalTag } from "./tags";
+import { CANONICAL_TAGS, type CanonicalTag } from "./tags";
+
+// La base la comparten ramas con juegos de tags distintos (fase-2 reescribió
+// los tags con los clusters de la organización el 29/09). Un tag que este
+// código no conoce se descarta acá: si llega a la UI, `TAG_LABELS[tag]` es
+// undefined y el prerender de /speakers/[slug] rompe el build entero.
+const KNOWN_TAGS = new Set<string>(CANONICAL_TAGS);
+const knownTags = (tags: string[] | null): CanonicalTag[] =>
+  (tags ?? []).filter((t): t is CanonicalTag => KNOWN_TAGS.has(t));
 
 // Lectura pública de speakers y charlas.
 //
@@ -68,7 +76,7 @@ function toCard(r: CardRow): SpeakerCard {
     company: r.company,
     country: r.country,
     photoUrl: r.photo_url,
-    tags: (r.tags ?? []) as CanonicalTag[],
+    tags: knownTags(r.tags),
   };
 }
 
@@ -142,7 +150,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
     talks: (row.talks ?? []).map((t) => ({
       title: t.title,
       abstract: t.abstract,
-      tags: (t.tags ?? []) as CanonicalTag[],
+      tags: knownTags(t.tags),
       level: t.level,
       durationMin: t.duration_min,
       isPanel: t.is_panel,
@@ -226,7 +234,7 @@ export async function getAgenda(): Promise<AgendaTalk[]> {
       id: r.id,
       title: r.title,
       abstract: r.abstract,
-      tags: (r.tags ?? []) as CanonicalTag[],
+      tags: knownTags(r.tags),
       level: r.level,
       durationMin: r.duration_min,
       isPanel: r.is_panel,
