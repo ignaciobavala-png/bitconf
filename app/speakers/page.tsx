@@ -5,6 +5,7 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import SpeakersBrowser from "@/components/speakers/SpeakersBrowser";
 import SpeakersHeader from "@/components/speakers/SpeakersHeader";
+import { MasSection } from "@/components/mas/ui";
 import { getSpeakers } from "@/lib/speakers/queries";
 
 export const metadata: Metadata = {
@@ -25,12 +26,18 @@ export default async function SpeakersPage() {
     <main className="relative min-h-screen" style={{ background: "#171616" }}>
       <Navbar />
 
-      <section className="relative px-6 sm:px-10 pt-32 sm:pt-40 pb-20 sm:pb-28">
+      {/* Cabecera con el fondo de hashes de la presentación, y sin 100vh: se
+          viene a ver las caras, no a scrollear un hero. */}
+      <MasSection bg="/assets/home/hashes.jpg" bgOpacity={0.25} first>
+        <SpeakersHeader total={speakers.length} />
+      </MasSection>
+
+      {/* La grilla va sobre fondo liso: el degradé de la cabecera termina en
+          Alamo, y con textura detrás las fotos (400px, de fondos dispares) se
+          ensucian. */}
+      <section className="relative px-6 sm:px-10 pb-20 sm:pb-28">
         <div className="relative w-full max-w-6xl">
-          <SpeakersHeader total={speakers.length} />
-          <div className="mt-10 sm:mt-14">
-            <SpeakersBrowser speakers={speakers} />
-          </div>
+          <SpeakersBrowser speakers={speakers} />
         </div>
       </section>
 
