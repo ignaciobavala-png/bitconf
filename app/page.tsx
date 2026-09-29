@@ -1027,7 +1027,9 @@ export default function HomePage() {
             {SPONSOR_TIERS.map((tier, i) => (
               <Reveal key={tier.id} delay={0.1 + i * 0.08}>
                 <div
-                  className={`flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-16 py-8 sm:py-10 ${
+                  className={`flex flex-wrap items-center justify-start gap-x-10 gap-y-6 py-8 sm:py-10 ${
+                    tier.oneLine ? "lg:flex-nowrap lg:gap-x-[3vw]" : "sm:gap-x-16"
+                  } ${
                     i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""
                   }`}
                 >

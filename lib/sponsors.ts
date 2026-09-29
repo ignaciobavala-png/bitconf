@@ -25,6 +25,11 @@ export type SponsorTier = {
   id: string;
   /** Alto de la caja de cada logo en este tier. */
   logoH: string;
+  /**
+   * Toda la fila en una sola línea desde `lg`: el alto de los logos sale del
+   * ancho disponible y no al revés (pedido de la organización, 29/09).
+   */
+  oneLine?: boolean;
   sponsors: Sponsor[];
 };
 
@@ -34,12 +39,13 @@ const s = (slug: string, alt: string, scale = 0.72): Sponsor => ({
   scale,
 });
 
-export const SPONSOR_TIERS: SponsorTier[] = [
+export const SPONSOR_TIERS: SponsorTier[] = ([
   {
     id: "whale",
-    logoH: "clamp(52px, 6.4vw, 84px)",
-    // FBI vino suelta, sin carpeta de tier, al mismo nivel que "T1 - WHALE".
-    sponsors: [s("exness", "Exness", 0.68), s("fbi", "Fundación Bitcoin Iberoamérica", 1)],
+    logoH: "clamp(56px, 7vw, 96px)",
+    // FBI salió de la primera fila a pedido de la organización (29/09): Exness
+    // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
+    sponsors: [s("exness", "Exness", 0.68)],
   },
   {
     id: "bitcoin",
@@ -48,12 +54,18 @@ export const SPONSOR_TIERS: SponsorTier[] = [
   },
   {
     id: "full-node",
-    logoH: "clamp(40px, 4.6vw, 60px)",
+    // Más grande que la fila de Node, que va apretada en una línea.
+    logoH: "clamp(46px, 5.4vw, 72px)",
     sponsors: [s("cake-wallet", "Cake Wallet"), s("paystand", "Paystand")],
   },
   {
     id: "node",
-    logoH: "clamp(32px, 3.6vw, 48px)",
+    // Los seis en una línea: la suma de anchos de los logos a su `scale` da
+    // ~20.5 veces el alto de la caja, y quedan cinco huecos de 3vw. 80px es el
+    // padding lateral de la sección. Con el piso de 28px entra desde ~770px de
+    // ancho, así que el `nowrap` desde lg (1024) no desborda.
+    logoH: "clamp(28px, calc((100vw - 80px - 15vw) / 20.5), 48px)",
+    oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
       s("jxlabs", "JXLabs", 0.66),
@@ -65,7 +77,8 @@ export const SPONSOR_TIERS: SponsorTier[] = [
   },
   {
     id: "satoshi",
-    logoH: "clamp(28px, 3vw, 40px)",
-    sponsors: [s("belo", "Belo", 1), s("pala", "Pala Blockchain", 1)],
+    // La fila más chica: por debajo del alto visible de los logos de Node.
+    logoH: "clamp(18px, 2.2vw, 30px)",
+    sponsors: [s("belo", "Belo", 0.9), s("pala", "Pala Blockchain", 0.9)],
   },
-].filter((tier) => tier.sponsors.length > 0);
+] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);
