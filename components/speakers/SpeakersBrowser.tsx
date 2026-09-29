@@ -77,8 +77,8 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
         style={{
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 300,
-          background: "rgba(230,238,242,0.04)",
-          border: "1px solid rgba(230,238,242,0.18)",
+          background: "#1A1A1A",
+          border: "1px solid rgba(230,238,242,0.22)",
           color: "#E6EEF2",
           fontSize: "clamp(14px, 1.4vw, 17px)",
           padding: "16px 26px",
@@ -95,7 +95,7 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
             ...labelStyle,
             fontSize: "clamp(10px, 1vw, 12px)",
             padding: "9px 18px",
-            color: tag === null ? "#171616" : "#A5A8B1",
+            color: tag === null ? "#000" : "#A5A8B1",
             background: tag === null ? "#ABF760" : "transparent",
             border: `1px solid ${tag === null ? "#ABF760" : "rgba(230,238,242,0.18)"}`,
           }}
@@ -115,7 +115,7 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
                 ...labelStyle,
                 fontSize: "clamp(10px, 1vw, 12px)",
                 padding: "9px 18px",
-                color: on ? "#171616" : "#A5A8B1",
+                color: on ? "#000" : "#A5A8B1",
                 background: on ? "#ABF760" : "transparent",
                 border: `1px solid ${on ? "#ABF760" : "rgba(230,238,242,0.18)"}`,
               }}
@@ -159,7 +159,7 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
             className="rounded-full transition-opacity duration-200 hover:opacity-80"
             style={{
               ...labelStyle,
-              color: "#171616",
+              color: "#000",
               background: "#ABF760",
               fontSize: "clamp(11px, 1.05vw, 13px)",
               padding: "11px 22px",

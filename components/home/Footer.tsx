@@ -77,8 +77,8 @@ export default function Footer({ lang: langProp }: { lang?: "es" | "en" }) {
           style={{
             zIndex: 6,
             background:
-              "linear-gradient(115deg, rgba(23,22,22,0.92) 0%, rgba(23,22,22,0.6) 24%, transparent 46%), " +
-              "linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(23,22,22,0.4) 55%, rgba(23,22,22,0.62) 100%)",
+              "linear-gradient(115deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 24%, transparent 46%), " +
+              "linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.62) 100%)",
           }}
         />
 
@@ -196,7 +196,7 @@ function SocialLinks({ size, icon }: { size: number; icon: number }) {
             className="flex items-center justify-center rounded-lg transition-opacity duration-200 hover:opacity-80"
             style={{ width: size, height: size, background: "#FF4E01" }}
           >
-            <svg viewBox="0 0 24 24" width={icon} height={icon} fill="#171616">
+            <svg viewBox="0 0 24 24" width={icon} height={icon} fill="#000">
               <path d={social.path} />
             </svg>
           </a>

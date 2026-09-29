@@ -23,7 +23,7 @@ export default async function SpeakersPage() {
   const speakers = await getSpeakers();
 
   return (
-    <main className="relative min-h-screen" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
 
       {/* Cabecera con el fondo de hashes de la presentación, y sin 100vh: se

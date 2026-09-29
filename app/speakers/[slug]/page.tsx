@@ -47,7 +47,7 @@ export default async function SpeakerPage({
   if (!speaker) notFound();
 
   return (
-    <main className="relative min-h-screen" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
       <SpeakerProfileView speaker={speaker} />
       <Footer />
