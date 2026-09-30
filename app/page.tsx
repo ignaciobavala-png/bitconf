@@ -32,6 +32,7 @@ const TITLE_IMAGES = {
   tickets: "/assets/home/titulos/tickets-trim.png",
   seParte: { es: "/assets/home/titulos/se-parte-es-trim.png", en: "/assets/home/titulos/se-parte-en-trim.png" },
   costaSalguero: "/assets/home/titulos/costa-salguero-trim.png",
+  sponsors: "/assets/home/titulos/sponsors-caps-trim.png",
 } as const;
 
 // Altura uniforme de los títulos de sección
@@ -997,9 +998,8 @@ export default function HomePage() {
       </section>
 
       {/* Sponsors — entre Tickets y Media Partners. Sigue la referencia de la
-          organización (Descargas/refe.jpeg, 28/09): rótulo chico con filete a
-          la izquierda, una fila por tier de mayor a menor, separadas por
-          líneas finas, logos en blanco monocromo. Sin fondo propio a
+          organización (Descargas/refe.jpeg, 28/09): una fila por tier de
+          mayor a menor, separadas por líneas finas, logos en blanco monocromo. Sin fondo propio a
           propósito: la refe es negro liso. */}
       <section
         id="sponsors"
@@ -1007,24 +1007,16 @@ export default function HomePage() {
         style={{ zIndex: 3 }}
       >
         <div className="relative w-full">
-          <Reveal>
-            <div className="flex items-center gap-3">
-              <span aria-hidden className="block h-px w-10" style={{ background: "#ABF760" }} />
-              <h2
-                style={{
-                  ...labelStyle,
-                  color: "#ABF760",
-                  fontSize: "clamp(12px, 1vw, 14px)",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {t.sponsorsTitle}
-              </h2>
-            </div>
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
+            <Image
+              src={TITLE_IMAGES.sponsors}
+              alt={t.sponsorsTitle}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
+            />
           </Reveal>
 
-          <div className="mt-6 sm:mt-8">
+          <div className={TITLE_GAP}>
             {SPONSOR_TIERS.map((tier, i) => (
               <Reveal key={tier.id} delay={0.1 + i * 0.08}>
                 <div
