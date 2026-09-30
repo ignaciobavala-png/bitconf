@@ -137,6 +137,20 @@ function handle(value: string | null): string | null {
   return cleaned || null;
 }
 
+/**
+ * Fotos que la organización no carga en la planilla sino a mano en el
+ * `FOTO_OVERRIDE` del JS de su tablero (web.html), y que por eso el sync nunca
+ * veía: el link de la columna `foto` de estas dos personas apunta a un Drive
+ * privado (30/09/2026). Mandan sobre la columna, igual que en su tablero.
+ * Clave: nombre + apellido normalizados — no el `postulacion_num`, que
+ * renumeran seguido. Si algún día pegan estos links en la planilla, esto se
+ * borra.
+ */
+const PHOTO_OVERRIDE: Record<string, string> = {
+  "saifedean ammous": "https://drive.google.com/thumbnail?id=1RyIiH_JsFBqDP7MPtjNzBoEVOi7DOkGF&sz=w400",
+  "giacomo zucco": "https://drive.google.com/thumbnail?id=1l6Nbs_zhArGMIddA8VIdnEJRmM6D5hR9&sz=w400",
+};
+
 /** "Nacho  Bávala" → "nacho bavala". Solo para construir la clave de upsert. */
 function normalizeName(value: string): string {
   return value
@@ -322,7 +336,9 @@ export async function fetchSpeakersFromSource(): Promise<{
       country: text(row, col("pais")),
       languages: splitRawTags(cell(row, col("idioma"))).map((l) => l.toLowerCase()),
       bio: text(row, col("bio")),
-      photoSourceUrl: text(row, col("foto")),
+      photoSourceUrl:
+        PHOTO_OVERRIDE[normalizeName([first, last].filter(Boolean).join(" "))] ??
+        text(row, col("foto")),
       website: absoluteUrl(text(row, col("website"))),
       linkedin: absoluteUrl(text(row, col("linkedin"))),
       xHandle: handle(text(row, col("x"))),
