@@ -140,7 +140,7 @@ function handle(value: string | null): string | null {
 /**
  * Fotos que la organización no carga en la planilla sino a mano en el
  * `FOTO_OVERRIDE` del JS de su tablero (web.html), y que por eso el sync nunca
- * veía: el link de la columna `foto` de estas dos personas apunta a un Drive
+ * veía: el link de la columna `foto` de estas personas apunta a un Drive
  * privado (30/09/2026). Mandan sobre la columna, igual que en su tablero.
  * Clave: nombre + apellido normalizados — no el `postulacion_num`, que
  * renumeran seguido. Si algún día pegan estos links en la planilla, esto se
@@ -149,6 +149,10 @@ function handle(value: string | null): string | null {
 const PHOTO_OVERRIDE: Record<string, string> = {
   "saifedean ammous": "https://drive.google.com/thumbnail?id=1RyIiH_JsFBqDP7MPtjNzBoEVOi7DOkGF&sz=w400",
   "giacomo zucco": "https://drive.google.com/thumbnail?id=1l6Nbs_zhArGMIddA8VIdnEJRmM6D5hR9&sz=w400",
+  // La org la mandó por fuera (30/09): el link de la planilla es un Drive
+  // privado. Subida a mano al bucket, recortada a 400x400.
+  "lorena ortiz":
+    "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/speakers/1a73663fcdd972e9bef407f3b65e5c70b351f690bde52ae403ef52dabfe1d8de.jpg",
 };
 
 /** "Nacho  Bávala" → "nacho bavala". Solo para construir la clave de upsert. */
