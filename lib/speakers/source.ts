@@ -1,4 +1,3 @@
-import { ORG_TAGS_SNAPSHOT } from "./org-tags.snapshot";
 import { splitRawTags, toCanonicalTags, type CanonicalTag } from "./tags";
 
 // Lectura de la planilla de la organización.
@@ -262,9 +261,8 @@ export async function fetchSpeakersFromSource(): Promise<{
   // publicar (valor "si").
   const iWeb = [col("web_order"), col("# web"), col("web")].find((i) => i >= 0) ?? -1;
 
-  // Tags por speaker (los 12 clusters de la organización). Al 29/09 no están en
-  // la planilla sino en el JS de su tablero, que los espera en una columna
-  // `tags` (AP) que todavía no existe. Mismos encabezados que busca su página.
+  // Tags por speaker (los 12 clusters de la organización), columna `tags` (AP)
+  // desde el 30/09. Mismos encabezados que busca su página.
   const iTags = [col("tags"), col("tag"), col("cluster")].find((i) => i >= 0) ?? -1;
 
   // MKT: num → publicado
@@ -293,17 +291,14 @@ export async function fetchSpeakersFromSource(): Promise<{
     const talks = parseTalks(cell(row, col("temas")), sourceKey);
 
     // Los tags del speaker los decide la organización por persona, no salen de
-    // sus charlas ("prioridad al speaker, no a su charla"). Gana la columna de
-    // la planilla fila por fila; donde está vacía, el snapshot copiado de su
-    // tablero. Por fila y no por columna: la organización carga AP de a poco, y
-    // tomar la columna entera en cuanto aparezca el encabezado dejaría sin tag
-    // a todos los que todavía no pasaron. No se cae a
-    // la unión de las charlas: sería inventar una clasificación que ellos no
-    // hicieron, y mezclarla con la suya sin que se note.
-    const name = normalizeName([first, last].filter(Boolean).join(" "));
-    const tags = toCanonicalTags(
-      splitRawTags((iTags >= 0 ? text(row, iTags) : undefined) ?? ORG_TAGS_SNAPSHOT[name])
-    );
+    // sus charlas ("prioridad al speaker, no a su charla"). Sale solo de la
+    // columna `tags`: sin valor, el speaker queda sin tag. No se cae a la unión
+    // de las charlas (sería inventar una clasificación que ellos no hicieron) ni
+    // al mapa que tenían escrito en el JS de su tablero: ese mapa iba por
+    // `postulacion_num` y quedó corrido una fila cuando renumeraron (Rodo con el
+    // tag de visionario_btc, un abogado en "Mining"). Un chip equivocado es peor
+    // que ninguno.
+    const tags = toCanonicalTags(splitRawTags(iTags >= 0 ? text(row, iTags) : undefined));
 
     speakers.push({
       sourceKey,
