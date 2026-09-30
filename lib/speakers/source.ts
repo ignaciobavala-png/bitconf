@@ -294,12 +294,15 @@ export async function fetchSpeakersFromSource(): Promise<{
 
     // Los tags del speaker los decide la organización por persona, no salen de
     // sus charlas ("prioridad al speaker, no a su charla"). Gana la columna de
-    // la planilla; si no existe, el snapshot copiado de su tablero. No se cae a
+    // la planilla fila por fila; donde está vacía, el snapshot copiado de su
+    // tablero. Por fila y no por columna: la organización carga AP de a poco, y
+    // tomar la columna entera en cuanto aparezca el encabezado dejaría sin tag
+    // a todos los que todavía no pasaron. No se cae a
     // la unión de las charlas: sería inventar una clasificación que ellos no
     // hicieron, y mezclarla con la suya sin que se note.
     const name = normalizeName([first, last].filter(Boolean).join(" "));
     const tags = toCanonicalTags(
-      splitRawTags(iTags >= 0 ? cell(row, iTags) : ORG_TAGS_SNAPSHOT[name])
+      splitRawTags((iTags >= 0 ? text(row, iTags) : undefined) ?? ORG_TAGS_SNAPSHOT[name])
     );
 
     speakers.push({
