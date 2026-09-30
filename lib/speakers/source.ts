@@ -60,7 +60,11 @@ export type SourceSpeaker = {
   landing: boolean;
   /** `# WEB` de la organización. null si la planilla no lo trae. */
   webOrder: number | null;
-  tags: CanonicalTag[];
+  /**
+   * Columna `tags` de la planilla. `[]` = la columna existe y esta fila está
+   * vacía (el speaker queda sin tag). `null` = la planilla no trajo la columna.
+   */
+  tags: CanonicalTag[] | null;
   talks: SourceTalk[];
 };
 
@@ -298,7 +302,7 @@ export async function fetchSpeakersFromSource(): Promise<{
     // `postulacion_num` y quedó corrido una fila cuando renumeraron (Rodo con el
     // tag de visionario_btc, un abogado en "Mining"). Un chip equivocado es peor
     // que ninguno.
-    const tags = toCanonicalTags(splitRawTags(iTags >= 0 ? text(row, iTags) : undefined));
+    const tags = iTags >= 0 ? toCanonicalTags(splitRawTags(text(row, iTags) ?? undefined)) : null;
 
     speakers.push({
       sourceKey,

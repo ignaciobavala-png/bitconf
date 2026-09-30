@@ -254,7 +254,11 @@ export async function syncSpeakers(): Promise<SyncReport> {
       mkt_published: s.mktPublished,
       landing: s.landing,
       web_order: s.webOrder,
-      tags: keepIfEmpty<string>(s.tags, onlyCanonical(bySourceKey.get(s.sourceKey)?.tags)),
+      // Vacío en la columna `tags` es una decisión de la organización y se
+      // respeta: conservar el anterior dejó 36 speakers con el tag del mapa
+      // viejo, que estaba corrido una fila. Solo si la planilla no trae la
+      // columna (se la borraron, la renombraron) se mantiene lo que había.
+      tags: s.tags ?? onlyCanonical(bySourceKey.get(s.sourceKey)?.tags),
       present: true,
       synced_at: new Date().toISOString(),
     });
