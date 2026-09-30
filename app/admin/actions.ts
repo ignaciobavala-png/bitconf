@@ -87,6 +87,10 @@ export async function syncSpeakersNow() {
   const startedAt = Date.now();
   try {
     await recordRun(await syncSpeakers(), "manual");
+    // Mismo motivo que en /api/sync-speakers: sin esto el sitio sigue con la
+    // copia prerenderizada hasta una hora después.
+    revalidatePath("/speakers");
+    revalidatePath("/speakers/[slug]", "page");
   } catch (err) {
     console.error("[admin] sync manual falló:", err);
     await recordFailure(err, "manual", Date.now() - startedAt);
