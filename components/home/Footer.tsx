@@ -59,9 +59,13 @@ const T = {
 // pueden leer el store de zustand para pasárselo, así que el footer lo resuelve
 // solo. Las páginas cliente que ya lo pasaban siguen funcionando igual.
 //
-// `fadeFrom`: fondo de la página cuando no es Alamo. El footer arranca en
-// #171616, y sobre una página #000 (speakers) el cambio se ve como una línea
-// tajante; con esto la franja de arriba degrada de un color al otro.
+// `fadeFrom`: fondo de la página cuando no es Alamo (speakers usa #000). Va
+// como capa ENCIMA del borde superior, del color de la página a transparente,
+// y no como franja previa que degrade a #171616: el footer no arranca en
+// Alamo sino con la máscara oscura de la franja de contacto encima, así que
+// una franja que termina en Alamo deja un escalón de luz y la línea sigue ahí.
+// De paso las frases del watermark aparecen de a poco en vez de cortadas.
+// El alto no llega a la cápsula del input (pt-28 / sm:pt-32).
 export default function Footer({
   lang: langProp,
   fadeFrom,
@@ -78,8 +82,8 @@ export default function Footer({
       {fadeFrom && (
         <div
           aria-hidden
-          className="h-24 sm:h-32"
-          style={{ background: `linear-gradient(to bottom, ${fadeFrom}, #171616)` }}
+          className="absolute inset-x-0 top-0 h-24 sm:h-28 pointer-events-none"
+          style={{ zIndex: 7, background: `linear-gradient(to bottom, ${fadeFrom}, transparent)` }}
         />
       )}
       {/* Fila principal: watermark full-bleed + cápsula arriba + contactos debajo (desktop) */}
