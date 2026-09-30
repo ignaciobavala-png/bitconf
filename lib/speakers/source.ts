@@ -263,7 +263,14 @@ export async function fetchSpeakersFromSource(): Promise<{
   // existe, y mientras tanto usa un mapa escrito a mano en su JS. Se busca por
   // encabezado, nunca por índice. `landing` NO es esto: es el tilde de
   // publicar (valor "si").
-  const iWeb = [col("web_order"), col("# web"), col("web")].find((i) => i >= 0) ?? -1;
+  //
+  // 30/09: la org suma una columna `orden web` con el orden nuevo de su
+  // tablero. Si existe, manda entera sobre `web_order`: no se completa fila
+  // por fila con la vieja, porque mezclaría dos numeraciones distintas.
+  const iWeb =
+    [col("orden web"), col("orden_web"), col("web_order"), col("# web"), col("web")].find(
+      (i) => i >= 0
+    ) ?? -1;
 
   // Tags por speaker (los 12 clusters de la organización), columna `tags` (AP)
   // desde el 30/09. Mismos encabezados que busca su página.
