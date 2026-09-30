@@ -58,13 +58,30 @@ const T = {
 // `lang` es opcional: las páginas que son Server Component (ej. /speakers) no
 // pueden leer el store de zustand para pasárselo, así que el footer lo resuelve
 // solo. Las páginas cliente que ya lo pasaban siguen funcionando igual.
-export default function Footer({ lang: langProp }: { lang?: "es" | "en" }) {
+//
+// `fadeFrom`: fondo de la página cuando no es Alamo. El footer arranca en
+// #171616, y sobre una página #000 (speakers) el cambio se ve como una línea
+// tajante; con esto la franja de arriba degrada de un color al otro.
+export default function Footer({
+  lang: langProp,
+  fadeFrom,
+}: {
+  lang?: "es" | "en";
+  fadeFrom?: string;
+}) {
   const langFromStore = useLangStore((s) => s.lang);
   const lang = langProp ?? langFromStore;
   const t = T[lang];
 
   return (
     <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
+      {fadeFrom && (
+        <div
+          aria-hidden
+          className="h-24 sm:h-32"
+          style={{ background: `linear-gradient(to bottom, ${fadeFrom}, #171616)` }}
+        />
+      )}
       {/* Fila principal: watermark full-bleed + cápsula arriba + contactos debajo (desktop) */}
       <div className="relative h-[400px] lg:h-[420px]">
         <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} compactAlign="top" />

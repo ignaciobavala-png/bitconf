@@ -50,7 +50,7 @@ export default async function SpeakerPage({
     <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
       <SpeakerProfileView speaker={speaker} />
-      <Footer />
+      <Footer fadeFrom="#000" />
       <QaChatWidget />
       <MyAgendaButton />
     </main>

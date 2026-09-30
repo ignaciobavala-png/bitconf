@@ -41,7 +41,7 @@ export default async function SpeakersPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer fadeFrom="#000" />
       <QaChatWidget />
       <MyAgendaButton />
     </main>
