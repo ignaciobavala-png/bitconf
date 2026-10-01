@@ -43,6 +43,7 @@ export function MasSection({
   bgOpacity = 0.22,
   bgFilter,
   bgPosition = "center",
+  bgContainMobile = false,
   tall = false,
   first = false,
   compactTop = false,
@@ -58,6 +59,13 @@ export function MasSection({
   bgOpacity?: number;
   bgFilter?: string;
   bgPosition?: string;
+  /**
+   * En mobile el video entra entero (`object-contain`) en vez de recortarse.
+   * Para videos 16:9 donde la figura ocupa todo el ancho (la ballena): en
+   * vertical, `cover` muestra una franja del medio y la figura no se entiende
+   * (feedback de la organización, 01/10/2026). Desde `sm` vuelve a `cover`.
+   */
+  bgContainMobile?: boolean;
   tall?: boolean;
   first?: boolean;
   /** Menos aire arriba, para pegarla al contenedor anterior. */
@@ -97,7 +105,9 @@ export function MasSection({
     >
       {bgVideo ? (
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full ${
+            bgContainMobile ? "object-contain sm:object-cover" : "object-cover"
+          }`}
           style={{ zIndex: 0, opacity: boostBg(bgOpacity), objectPosition: bgPosition }}
           autoPlay
           muted

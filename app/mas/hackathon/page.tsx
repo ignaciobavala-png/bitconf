@@ -87,7 +87,7 @@ export default function HackathonPage() {
 
       {/* Hero — video de la ballena (mismo reel que /mas/embajadores) de
           fondo en vez del negro liso original. */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} first tall centered>
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.4} bgContainMobile first tall centered>
         <div className="flex flex-col items-center text-center gap-6">
           <Reveal className="relative w-full max-w-xl" style={{ aspectRatio: "698 / 307" }}>
             <Image

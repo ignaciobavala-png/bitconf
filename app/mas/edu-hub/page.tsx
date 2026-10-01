@@ -377,9 +377,15 @@ export default function MasPage() {
       <Navbar />
 
       {/* Hero — video de campaña full-bleed (1:1 screen), overlay oscuro para
-          legibilidad del copy + CTAs encima */}
+          legibilidad del copy + CTAs encima.
+          Mobile (feedback de la organización, 01/10/2026): botones y frase
+          suben hasta la altura del pupitre del video, arriba de "EN
+          LABITCONF" — contra el borde inferior quedaban debajo de la barra
+          del navegador y no se entendían. `svh` y no `vh`: en el celular 100vh
+          es más alto que lo visible y empujaba la frase fuera de pantalla.
+          El pb va en svh porque el video escala con el alto de la sección. */}
       <section
-        className="relative flex min-h-screen flex-col items-center justify-end overflow-hidden px-6 pb-16 sm:pb-20"
+        className="relative flex min-h-[100svh] flex-col items-center justify-end overflow-hidden px-6 pb-[24svh] sm:pb-20"
         style={{ zIndex: 1, background: "#000" }}
       >
         <video
