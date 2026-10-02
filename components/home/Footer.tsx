@@ -10,6 +10,9 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase",
 };
 
+// El sello de la FBI linkea al sitio de la fundación (pedido de la org, 02/10/2026).
+const FBI_HREF = "https://bitcoiniberoamerica.org/";
+
 const SOCIALS = [
   {
     label: "Instagram",
@@ -121,13 +124,21 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
             className="relative pointer-events-auto"
             style={{ height: "clamp(56px, 7vw, 80px)", width: "clamp(56px, 7vw, 80px)" }}
           >
-            <Image
-              src="/assets/home/fbi-iberoamerica.png"
-              alt="Fundación Bitcoin Iberoamérica"
-              fill
-              sizes="80px"
-              style={{ objectFit: "contain" }}
-            />
+            <a
+              href={FBI_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Fundación Bitcoin Iberoamérica"
+              className="absolute inset-0"
+            >
+              <Image
+                src="/assets/home/fbi-iberoamerica.png"
+                alt="Fundación Bitcoin Iberoamérica"
+                fill
+                sizes="80px"
+                style={{ objectFit: "contain" }}
+              />
+            </a>
           </div>
           <p
             className="pointer-events-auto max-w-[260px] text-right"
@@ -218,13 +229,21 @@ export default function Footer({ lang }: { lang: "es" | "en" }) {
             (contacto / redes / sello) se apila en una sola columna. */}
         <div className="mt-6 flex items-center gap-3">
           <div className="relative shrink-0" style={{ height: "56px", width: "56px" }}>
-            <Image
-              src="/assets/home/fbi-iberoamerica.png"
-              alt="Fundación Bitcoin Iberoamérica"
-              fill
-              sizes="56px"
-              style={{ objectFit: "contain" }}
-            />
+            <a
+              href={FBI_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Fundación Bitcoin Iberoamérica"
+              className="absolute inset-0"
+            >
+              <Image
+                src="/assets/home/fbi-iberoamerica.png"
+                alt="Fundación Bitcoin Iberoamérica"
+                fill
+                sizes="56px"
+                style={{ objectFit: "contain" }}
+              />
+            </a>
           </div>
           <p
             className="max-w-[240px]"

@@ -363,10 +363,10 @@ const HACKATHON_FLYER_SRC =
 // calendario — a 3:4, el aspect ratio real del flyer original.
 const BITCOIN_COLLEGE_FLYER_SRC =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/bitcoin-college.jpg";
-// "UNITE" del Bitcoin College: carpeta de Drive con la info del college,
-// confirmada por Ignacio (22/09/2026).
-const BITCOIN_COLLEGE_UNITE_HREF =
-  "https://drive.google.com/drive/folders/1TsUOt_p5JIfabuPbLo_WMkD_Rvr1Plza?usp=drive_link";
+// "UNITE" del Bitcoin College: inscripción en Luma, el mismo link que el
+// "Participá" de /mas/labc-bitcoin-college (02/10/2026, antes iba a una
+// carpeta de Drive).
+const BITCOIN_COLLEGE_UNITE_HREF = "https://luma.com/cqk6i6vd";
 
 export default function MasPage() {
   const lang = useLangStore((s) => s.lang);
