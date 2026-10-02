@@ -52,6 +52,10 @@ const BUTTON_FS = "clamp(12px, 1.1vw, 14px)";
 // Nombre nuevo (no sobrescribir) porque el objeto viejo ya está cacheado un año.
 const HERO_VIDEO_URL =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero-v2.mp4";
+// Versión vertical 3:4 para mobile (02/10/2026): master 1080x1440 de los
+// diseñadores, recomprimido igual (22MB → 1.56MB, crf 36, sin audio).
+const HERO_VIDEO_MOBILE_URL =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/hero-mobile-v1.mp4";
 // Foto de Costa Salguero (sección Ubicación): mismo patrón, bucket público de Supabase.
 const COSTA_SALGUERO_PHOTO_URL =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/costa-salguero-v2.jpg";
@@ -456,17 +460,15 @@ export default function HomePage() {
         style={{ zIndex: 4, background: "#000" }}
       >
         {/* Video: en mobile banner full-bleed que rompe el px-6 de la sección
-            (bloque 4:5 al ancho completo de pantalla, sin negro sobrante ni
-            achicarse por el padding); en desktop full-bleed que llena el
-            hero, letterbox fundido con el negro */}
+            (bloque 3:4 al ancho completo de pantalla, con su propio video
+            vertical); en desktop full-bleed que llena el hero, letterbox
+            fundido con el negro. El fondo del bloque es el poster de cada
+            breakpoint, visible hasta que el video pinta el primer frame. */}
         <div
-          className="relative -mx-6 w-[calc(100%+3rem)] aspect-[4/5] sm:absolute sm:inset-0 sm:mx-0 sm:w-full sm:aspect-auto"
+          className="relative -mx-6 w-[calc(100%+3rem)] aspect-[3/4] sm:absolute sm:inset-0 sm:mx-0 sm:w-full sm:aspect-auto bg-contain bg-center bg-no-repeat bg-[url(/assets/home/hero-poster-mobile.jpg)] sm:bg-[url(/assets/home/hero-poster.jpg)]"
           style={{ zIndex: 0 }}
         >
-          <HeroVideo
-            src={HERO_VIDEO_URL}
-            poster="/assets/home/hero-poster.jpg"
-          />
+          <HeroVideo src={HERO_VIDEO_URL} mobileSrc={HERO_VIDEO_MOBILE_URL} />
         </div>
 
         <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
