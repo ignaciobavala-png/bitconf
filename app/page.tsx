@@ -1042,7 +1042,7 @@ export default function HomePage() {
                         className="h-full w-auto object-contain"
                         style={{
                           maxHeight: `${logo.scale * 100}%`,
-                          maxWidth: `min(80vw, calc(${tier.logoH} * 4.5))`,
+                          maxWidth: `min(80vw, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
                         }}
                       />
                     </div>
