@@ -66,14 +66,16 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
 
   return (
     <div className="w-full">
-      {/* Buscador */}
+      {/* Buscador. Con tope de ancho desde sm: a todo el contenido (~1150px)
+          era una barra larguísima para un nombre de dos palabras (feedback de
+          la organización, 05/10/2026). En mobile sigue a todo el ancho. */}
       <input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.search}
         aria-label={t.search}
-        className="w-full rounded-full outline-none transition-colors duration-200 focus:border-[#ABF760]"
+        className="w-full sm:max-w-[440px] rounded-full outline-none transition-colors duration-200 focus:border-[#ABF760]"
         style={{
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 300,
