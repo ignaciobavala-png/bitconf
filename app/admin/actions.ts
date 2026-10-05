@@ -192,6 +192,10 @@ export async function syncSpeakersNow() {
   const startedAt = Date.now();
   try {
     await recordRun(await syncSpeakers(), "manual");
+    // Sin esto /speakers sigue sirviendo la copia prerenderizada hasta que
+    // venza su revalidate (1 h).
+    revalidatePath("/speakers");
+    revalidatePath("/speakers/[slug]", "page");
   } catch (err) {
     console.error("[admin] sync manual falló:", err);
     await recordFailure(err, "manual", Date.now() - startedAt);

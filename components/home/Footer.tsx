@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import HodlReasonsSection from "@/components/HodlReasonsSection";
+import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -59,11 +60,34 @@ const T = {
   },
 } as const;
 
-export default function Footer({ lang }: { lang: "es" | "en" }) {
+// `lang` es opcional: las páginas que son Server Component (ej. /speakers) no
+// pueden leer el store de zustand para pasárselo, así que el footer lo resuelve
+// solo. Las páginas cliente que ya lo pasaban siguen funcionando igual.
+//
+// `fadeFrom`: fondo de la página cuando el footer arranca sobre otro tono
+// (speakers). Va como capa ENCIMA del borde superior, del color de la página a
+// transparente: así no queda una línea de corte y las frases del watermark
+// aparecen de a poco en vez de cortadas.
+export default function Footer({
+  lang: langProp,
+  fadeFrom,
+}: {
+  lang?: "es" | "en";
+  fadeFrom?: string;
+}) {
+  const langFromStore = useLangStore((s) => s.lang);
+  const lang = langProp ?? langFromStore;
   const t = T[lang];
 
   return (
     <footer id="contacto" className="relative overflow-hidden" style={{ zIndex: 3 }}>
+      {fadeFrom && (
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-24 sm:h-28 pointer-events-none"
+          style={{ zIndex: 7, background: `linear-gradient(to bottom, ${fadeFrom}, transparent)` }}
+        />
+      )}
       {/* Fila principal: watermark full-bleed + cápsula arriba + contactos debajo (desktop) */}
       <div className="relative h-[400px] lg:h-[420px]">
         <HodlReasonsSection variant="compact" showLangToggle={false} lang={lang} compactAlign="top" />

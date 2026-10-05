@@ -84,7 +84,21 @@ create table if not exists public.speakers (
   updated_at    timestamptz not null default now()
 );
 
+-- `# WEB` de la organización: el orden con que la página de speakers
+-- los muestra. 1..199 = principal, cada uno con su número y en ese
+-- orden; 200 / 300 / 400 = categorías 2, 3 y 4, todos con el mismo
+-- número y alfabéticos dentro de cada una. null = sin asignar (van al
+-- final). Agregada el 28/09/2026 sobre la tabla ya existente.
+alter table public.speakers add column if not exists web_order integer;
+
+-- Tilde "Publicar" del tablero de la organización (columna `landing`
+-- de la planilla, valor "si"). Es EL criterio de publicación desde el
+-- 28/09/2026, confirmado por la organización: `status` es de uso
+-- interno de ellos y no se usa para filtrar.
+alter table public.speakers add column if not exists landing boolean not null default false;
+
 create index if not exists speakers_status_idx  on public.speakers (status) where present;
+create index if not exists speakers_landing_idx on public.speakers (landing) where present;
 create index if not exists speakers_tags_idx    on public.speakers using gin (tags);
 create index if not exists speakers_country_idx on public.speakers (country);
 
@@ -158,18 +172,18 @@ create trigger talks_touch before update on public.talks
 alter table public.speakers enable row level security;
 alter table public.talks    enable row level security;
 
--- Qué es "publicado" para el sitio: estado = 'confirmado'.
--- La hoja MKT tiene su propio flag `publicado`, pero hoy marca
--- un solo speaker porque lleva el calendario de anuncios en
--- redes, no la publicación en la web. Pendiente de confirmar
--- con la organización; si cambia el criterio, se reemplaza esta
--- policy y no hace falta re-sincronizar (mkt_published ya está
--- guardado).
+-- Qué es "publicado" para el sitio: el tilde `landing` (ver arriba).
+-- Hasta el 28/09/2026 era `status = 'confirmado'`, pero la organización
+-- pasó casi todos a "disponible" y aclaró que el estado es interno.
+-- `mkt_published` (hoja MKT) es el calendario de redes, no la web.
 drop policy if exists "speakers_public_read" on public.speakers;
 create policy "speakers_public_read"
   on public.speakers for select to anon, authenticated
-  using (present and status = 'confirmado');
+  using (present and landing);
 
+-- Las charlas siguen filtrando por SU estado (el de cada propuesta
+-- dentro de `temas`): un speaker publicado puede tener varias
+-- propuestas y solo las confirmadas son charlas del programa.
 drop policy if exists "talks_public_read" on public.talks;
 create policy "talks_public_read"
   on public.talks for select to anon, authenticated
@@ -177,7 +191,7 @@ create policy "talks_public_read"
     status = 'confirmado'
     and exists (
       select 1 from public.speakers s
-      where s.id = talks.speaker_id and s.present and s.status = 'confirmado'
+      where s.id = talks.speaker_id and s.present and s.landing
     )
   );
 

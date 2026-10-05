@@ -49,10 +49,7 @@ export default async function SpeakerPage({
     <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
       <SpeakerProfileView speaker={speaker} />
-      {/* Página server component: sin acceso al store de lang del cliente,
-          se fija en "es" (default del store) en vez de prop-drillear el
-          toggle hasta acá. */}
-      <Footer lang="es" />
+      <Footer fadeFrom="#000" />
       <QaChatWidget />
     </main>
   );

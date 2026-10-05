@@ -47,6 +47,19 @@ async function sha256(bytes: ArrayBuffer): Promise<string> {
 }
 
 /**
+ * Cualquier link de Drive → `thumbnail?id=<ID>&sz=w400`, el único formato que
+ * devuelve la imagen y no una página de Google. La org pega a mano lo que le
+ * da Drive al compartir: `file/d/<ID>/view?usp=sharing`, `open?id=<ID>`, o
+ * mezclas como `file/d/<ID>&sz=w400` (Lore Ortiz, 30/09/2026). Todos llevan el
+ * mismo id; lo que no es Drive pasa sin tocar.
+ */
+export function drivePhotoUrl(url: string): string {
+  if (!/(^|\.)drive\.google\.com\//i.test(url.replace(/^https?:\/\//i, ""))) return url;
+  const id = url.match(/\/d\/([\w-]{10,})/)?.[1] ?? url.match(/[?&]id=([\w-]{10,})/)?.[1];
+  return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w400` : url;
+}
+
+/**
  * Baja la foto de origen y la sube al bucket si cambió.
  *
  * El archivo se nombra por HASH DEL CONTENIDO, no por el id del speaker. Es
@@ -65,7 +78,7 @@ export async function mirrorPhoto(
   let bytes: ArrayBuffer;
   let contentType: string;
   try {
-    const res = await fetch(sourceUrl, {
+    const res = await fetch(drivePhotoUrl(sourceUrl), {
       cache: "no-store",
       signal: AbortSignal.timeout(30_000),
     });

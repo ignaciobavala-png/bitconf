@@ -55,8 +55,17 @@ export type SourceSpeaker = {
   instagram: string | null;
   github: string | null;
   status: string;
-  mktPublished: boolean;
-  tags: CanonicalTag[];
+  /** null = no se pudo leer la hoja MKT; el sync conserva lo que había. */
+  mktPublished: boolean | null;
+  /** Tilde "Publicar" del tablero de la organización: decide si sale en la web. */
+  landing: boolean;
+  /** `# WEB` de la organización. null si la planilla no lo trae. */
+  webOrder: number | null;
+  /**
+   * Columna `tags` de la planilla. `[]` = la columna existe y esta fila está
+   * vacía (el speaker queda sin tag). `null` = la planilla no trajo la columna.
+   */
+  tags: CanonicalTag[] | null;
   talks: SourceTalk[];
 };
 
@@ -107,6 +116,16 @@ function text(row: unknown[], idx: number): string | null {
   return v || null;
 }
 
+/**
+ * `# WEB` → entero positivo, o null. Cualquier otra cosa (vacío, "si", texto)
+ * se toma como "sin asignar" en vez de romper el sync: lo peor que pasa con un
+ * valor raro es que ese speaker no ordena.
+ */
+function webOrder(raw: string): number | null {
+  const n = Number(raw.replace(",", "."));
+  return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+}
+
 /** "@nacho" y "https://x.com/nacho" y "x.com/nacho" → "nacho". */
 function handle(value: string | null): string | null {
   if (!value) return null;
@@ -118,6 +137,24 @@ function handle(value: string | null): string | null {
     .trim();
   return cleaned || null;
 }
+
+/**
+ * Fotos que la organización no carga en la planilla sino a mano en el
+ * `FOTO_OVERRIDE` del JS de su tablero (web.html), y que por eso el sync nunca
+ * veía: el link de la columna `foto` de estas personas apunta a un Drive
+ * privado (30/09/2026). Mandan sobre la columna, igual que en su tablero.
+ * Clave: nombre + apellido normalizados — no el `postulacion_num`, que
+ * renumeran seguido. Si algún día pegan estos links en la planilla, esto se
+ * borra.
+ */
+const PHOTO_OVERRIDE: Record<string, string> = {
+  "saifedean ammous": "https://drive.google.com/thumbnail?id=1RyIiH_JsFBqDP7MPtjNzBoEVOi7DOkGF&sz=w400",
+  "giacomo zucco": "https://drive.google.com/thumbnail?id=1l6Nbs_zhArGMIddA8VIdnEJRmM6D5hR9&sz=w400",
+  // La org la mandó por fuera (30/09): el link de la planilla es un Drive
+  // privado. Subida a mano al bucket, recortada a 400x400.
+  "lorena ortiz":
+    "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/speakers/1a73663fcdd972e9bef407f3b65e5c70b351f690bde52ae403ef52dabfe1d8de.jpg",
+};
 
 /** "Nacho  Bávala" → "nacho bavala". Solo para construir la clave de upsert. */
 function normalizeName(value: string): string {
@@ -229,7 +266,16 @@ export async function fetchSpeakersFromSource(): Promise<{
   speakers: SourceSpeaker[];
   version: string | null;
 }> {
-  const [sp, mkt] = await Promise.all([readSheet("Speakers"), readSheet("MKT")]);
+  // MKT es opcional: desde que publica el tilde `landing` (28/09) su flag solo
+  // se guarda como dato, y el 05/10 la organización borró la hoja ("hoja no
+  // encontrada: MKT"). Que falte no puede frenar el sync entero.
+  const [sp, mkt] = await Promise.all([
+    readSheet("Speakers"),
+    readSheet("MKT").catch((e: Error) => {
+      console.warn("[speakers] hoja MKT no disponible:", e.message);
+      return null;
+    }),
+  ]);
 
   const spRows = sp.data ?? [];
   if (spRows.length < 2) return { speakers: [], version: sp.version ?? null };
@@ -240,9 +286,27 @@ export async function fetchSpeakersFromSource(): Promise<{
   const iNombre = col("nombre");
   const iApellido = col("apellido");
 
+  // El orden todavía no tiene columna en la planilla (28/09): el tablero de la
+  // organización (LABITCONF-speakers/web.html) lo espera en `r[40]`, que no
+  // existe, y mientras tanto usa un mapa escrito a mano en su JS. Se busca por
+  // encabezado, nunca por índice. `landing` NO es esto: es el tilde de
+  // publicar (valor "si").
+  //
+  // 30/09: la org suma una columna `orden web` con el orden nuevo de su
+  // tablero. Si existe, manda entera sobre `web_order`: no se completa fila
+  // por fila con la vieja, porque mezclaría dos numeraciones distintas.
+  const iWeb =
+    [col("orden web"), col("orden_web"), col("web_order"), col("# web"), col("web")].find(
+      (i) => i >= 0
+    ) ?? -1;
+
+  // Tags por speaker (los 12 clusters de la organización), columna `tags` (AP)
+  // desde el 30/09. Mismos encabezados que busca su página.
+  const iTags = [col("tags"), col("tag"), col("cluster")].find((i) => i >= 0) ?? -1;
+
   // MKT: num → publicado
   const mktPublished = new Set<number>();
-  for (const row of (mkt.data ?? []).slice(1)) {
+  for (const row of (mkt?.data ?? []).slice(1)) {
     const num = Number.parseInt(String(row?.[0] ?? ""), 10);
     if (Number.isFinite(num) && String(row?.[1] ?? "").trim().toLowerCase() === "si") {
       mktPublished.add(num);
@@ -265,9 +329,15 @@ export async function fetchSpeakersFromSource(): Promise<{
     const sourceKey = `${sourceNum}|${normalizeName([first, last].filter(Boolean).join(" "))}`;
     const talks = parseTalks(cell(row, col("temas")), sourceKey);
 
-    // Los tags del speaker son la unión de los de sus charlas: la planilla no
-    // tiene un campo de temas a nivel persona.
-    const tags = toCanonicalTags(talks.flatMap((t) => t.rawTags));
+    // Los tags del speaker los decide la organización por persona, no salen de
+    // sus charlas ("prioridad al speaker, no a su charla"). Sale solo de la
+    // columna `tags`: sin valor, el speaker queda sin tag. No se cae a la unión
+    // de las charlas (sería inventar una clasificación que ellos no hicieron) ni
+    // al mapa que tenían escrito en el JS de su tablero: ese mapa iba por
+    // `postulacion_num` y quedó corrido una fila cuando renumeraron (Rodo con el
+    // tag de visionario_btc, un abogado en "Mining"). Un chip equivocado es peor
+    // que ninguno.
+    const tags = iTags >= 0 ? toCanonicalTags(splitRawTags(text(row, iTags) ?? undefined)) : null;
 
     speakers.push({
       sourceKey,
@@ -280,14 +350,20 @@ export async function fetchSpeakersFromSource(): Promise<{
       country: text(row, col("pais")),
       languages: splitRawTags(cell(row, col("idioma"))).map((l) => l.toLowerCase()),
       bio: text(row, col("bio")),
-      photoSourceUrl: text(row, col("foto")),
+      photoSourceUrl:
+        PHOTO_OVERRIDE[normalizeName([first, last].filter(Boolean).join(" "))] ??
+        text(row, col("foto")),
       website: absoluteUrl(text(row, col("website"))),
       linkedin: absoluteUrl(text(row, col("linkedin"))),
       xHandle: handle(text(row, col("x"))),
       instagram: handle(text(row, col("instagram"))),
       github: handle(text(row, col("github"))),
       status: (text(row, col("estado")) ?? "revision").toLowerCase(),
-      mktPublished: mktPublished.has(sourceNum),
+      mktPublished: mkt ? mktPublished.has(sourceNum) : null,
+      // Criterio de publicación confirmado por la organización (28/09/2026):
+      // `landing === "si"`, sin mirar `estado`, que es de uso interno de ellos.
+      landing: cell(row, col("landing")).toLowerCase() === "si",
+      webOrder: webOrder(cell(row, iWeb)),
       tags,
       talks,
     });

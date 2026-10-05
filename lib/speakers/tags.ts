@@ -1,73 +1,106 @@
-// Los tags de la planilla son texto libre: 77 valores distintos para 93
-// charlas, con mayúsculas inconsistentes ("BITCOIN" y "Bitcoin"), sinónimos
-// ("INTELIGENCIA ARTIFICIAL", "IA", "AI") y muchísimos que aparecen una sola
-// vez. El mapa web pide en cambio un puñado de filtros estables.
+// Los filtros públicos son los 12 clusters que definió la organización
+// (29/09/2026) en su tablero LABITCONF-speakers/web.html. Van por speaker, no
+// por charla: "Rodo quiere dar prioridad al speaker, no a su charla".
 //
-// Este archivo es esa traducción: tag crudo → filtro público. Es una decisión
-// editorial, no técnica, así que vive en el repo (versionada, revisable) en vez
-// de en la base. Un tag sin mapear no rompe nada: la charla queda sin filtro
-// canónico pero se sigue encontrando por el buscador de texto.
+// Las charlas siguen trayendo sus propios tags en texto libre (77 valores para
+// 93 charlas, con sinónimos como "INTELIGENCIA ARTIFICIAL"/"IA"/"AI"). Ese
+// texto se traduce acá a los mismos 12 clusters, así speakers y agenda filtran
+// con el mismo vocabulario. Es una decisión editorial, no técnica, y por eso
+// vive en el repo. Un tag sin mapear no rompe nada: queda sin filtro pero se
+// sigue encontrando por el buscador de texto.
 
 export const CANONICAL_TAGS = [
   "bitcoin",
+  "custodia",
   "ia",
-  "blockchain",
+  "legal",
   "finanzas",
-  "tecnologia",
-  "startups",
-  "regulacion",
-  "comunidad",
-  "cultura",
+  "adopcion",
+  "mining",
+  "tecnico",
+  "privacidad",
+  "educacion",
+  "institucional",
+  "emprendimiento",
 ] as const;
 
 export type CanonicalTag = (typeof CANONICAL_TAGS)[number];
 
 export const TAG_LABELS: Record<CanonicalTag, { es: string; en: string }> = {
-  bitcoin:    { es: "Bitcoin",     en: "Bitcoin" },
-  ia:         { es: "IA",          en: "AI" },
-  blockchain: { es: "Blockchain",  en: "Blockchain" },
-  finanzas:   { es: "Finanzas",    en: "Finance" },
-  tecnologia: { es: "Tecnología",  en: "Technology" },
-  startups:   { es: "Startups",    en: "Startups" },
-  regulacion: { es: "Regulación",  en: "Regulation" },
-  comunidad:  { es: "Comunidad",   en: "Community" },
-  cultura:    { es: "Cultura",     en: "Culture" },
+  bitcoin:        { es: "Bitcoin",        en: "Bitcoin" },
+  custodia:       { es: "Custodia",       en: "Custody" },
+  ia:             { es: "IA",             en: "AI" },
+  legal:          { es: "Legal",          en: "Legal" },
+  finanzas:       { es: "Finanzas",       en: "Finance" },
+  adopcion:       { es: "Adopción",       en: "Adoption" },
+  mining:         { es: "Mining",         en: "Mining" },
+  tecnico:        { es: "Técnico",        en: "Technical" },
+  privacidad:     { es: "Privacidad",     en: "Privacy" },
+  educacion:      { es: "Educación",      en: "Education" },
+  institucional:  { es: "Institucional",  en: "Institutional" },
+  emprendimiento: { es: "Emprendimiento", en: "Entrepreneurship" },
 };
 
-// Cada tag crudo cae en exactamente un filtro. Se eligió 1:1 en vez de permitir
-// varios para que la lista siga siendo legible y la organización pueda
-// revisarla de un vistazo — algunos casos son discutibles a propósito
-// (CUSTODIA podría ser tecnología o finanzas; quedó en tecnología porque las
-// charlas que lo usan hablan de cómo guardar, no de cuánto rinde).
+/** true si el valor es uno de los 12 clusters vigentes. */
+export function isCanonicalTag(value: unknown): value is CanonicalTag {
+  return typeof value === "string" && (CANONICAL_TAGS as readonly string[]).includes(value);
+}
+
+/**
+ * Descarta lo que no sea un cluster vigente. La base puede traer valores del
+ * vocabulario anterior (los 9 filtros previos al 29/09: "tecnologia",
+ * "regulacion"...) y `TAG_LABELS[c]` de un valor desconocido rompe el render.
+ */
+export function onlyCanonical(values: readonly unknown[] | null | undefined): CanonicalTag[] {
+  return (values ?? []).filter(isCanonicalTag);
+}
+
+// Tag crudo (sin tildes, en mayúsculas) → cluster. Cada tag cae en uno solo,
+// para que la lista siga siendo revisable de un vistazo. Incluye los nombres
+// de los propios clusters, así el día que la organización cargue la columna
+// `tags` ("IA,Tecnico") se lee con esta misma función.
 const RAW_TO_CANONICAL: Record<string, CanonicalTag> = {
-  // Bitcoin
+  // Los 12 clusters tal como los escribe la organización
   BITCOIN: "bitcoin",
+  CUSTODIA: "custodia",
+  IA: "ia",
+  LEGAL: "legal",
+  FINANZAS: "finanzas",
+  ADOPCION: "adopcion",
+  MINING: "mining",
+  TECNICO: "tecnico",
+  PRIVACIDAD: "privacidad",
+  EDUCACION: "educacion",
+  INSTITUCIONAL: "institucional",
+  EMPRENDIMIENTO: "emprendimiento",
+
+  // Bitcoin
   HODL: "bitcoin",
   HALVING: "bitcoin",
   "CICLOS DE BITCOIN": "bitcoin",
-  "MÉTRICAS ON-CHAIN": "bitcoin",
-  MINERÍA: "bitcoin",
+  "METRICAS ON-CHAIN": "bitcoin",
   "RABBIT HOLE": "bitcoin",
+  FILOSOFIA: "bitcoin",
+  LIBERTAD: "bitcoin",
+  HISTORIA: "bitcoin",
+
+  // Custodia
+  BILLETERA: "custodia",
+  SEGURIDAD: "custodia",
+  HACKS: "custodia",
 
   // IA
   "INTELIGENCIA ARTIFICIAL": "ia",
-  IA: "ia",
   AI: "ia",
   INTELIGENCIA: "ia",
+  "FUTURE OF WORK": "ia",
 
-  // Blockchain
-  BLOCKCHAIN: "blockchain",
-  WEB3: "blockchain",
-  DEFI: "blockchain",
-  NFT: "blockchain",
-  RWAT: "blockchain",
-  "UTILITY TOKEN": "blockchain",
-  TRAZABILIDAD: "blockchain",
-  IDENTIDAD: "blockchain",
-  CRYPTO: "blockchain",
+  // Legal
+  REGULACION: "legal",
+  POLITICA: "legal",
 
   // Finanzas
-  ECONOMÍA: "finanzas",
+  ECONOMIA: "finanzas",
   TRADING: "finanzas",
   STABLECOINS: "finanzas",
   PAGOS: "finanzas",
@@ -76,68 +109,74 @@ const RAW_TO_CANONICAL: Record<string, CanonicalTag> = {
   INVERSION: "finanzas",
   PIGNORACION: "finanzas",
   EXCHANGE: "finanzas",
-  BILLETERA: "finanzas",
+  DEFI: "finanzas",
+  RWAT: "finanzas",
 
-  // Tecnología
-  DEV: "tecnologia",
-  CRYPTOGRAFIA: "tecnologia",
-  SEGURIDAD: "tecnologia",
-  PRIVACIDAD: "tecnologia",
-  CUSTODIA: "tecnologia",
-  ESCALABILIDAD: "tecnologia",
-  "LAYER-2": "tecnologia",
-  QUANTUM: "tecnologia",
-  HACKS: "tecnologia",
-  ENERGY: "tecnologia",
-  ENERGIA: "tecnologia",
-  NOSTR: "tecnologia",
+  // Adopción
+  COMUNIDADES: "adopcion",
+  LATAM: "adopcion",
+  ARGENTINA: "adopcion",
+  GLOBAL: "adopcion",
+  CREADORES: "adopcion",
+  INFLUENCER: "adopcion",
+  "REDES SOCIALES": "adopcion",
+  COMUNICACION: "adopcion",
+  ARTE: "adopcion",
+  CINE: "adopcion",
+  "CULTURA POP": "adopcion",
 
-  // Startups
-  STARTUPS: "startups",
-  EMPRESA: "startups",
-  MARKETING: "startups",
-  "FUTURE OF WORK": "startups",
+  // Mining
+  MINERIA: "mining",
+  ENERGY: "mining",
+  ENERGIA: "mining",
 
-  // Regulación
-  REGULACIÓN: "regulacion",
-  LEGAL: "regulacion",
-  POLÍTICA: "regulacion",
-  GOBIERNO: "regulacion",
+  // Técnico
+  DEV: "tecnico",
+  CRYPTOGRAFIA: "tecnico",
+  ESCALABILIDAD: "tecnico",
+  "LAYER-2": "tecnico",
+  QUANTUM: "tecnico",
+  NOSTR: "tecnico",
+  BLOCKCHAIN: "tecnico",
+  WEB3: "tecnico",
+  NFT: "tecnico",
+  "UTILITY TOKEN": "tecnico",
+  TRAZABILIDAD: "tecnico",
+  CRYPTO: "tecnico",
+  CIENCIA: "tecnico",
 
-  // Comunidad
-  COMUNIDADES: "comunidad",
-  ADOPCIÓN: "comunidad",
-  EDUCACIÓN: "comunidad",
-  LATAM: "comunidad",
-  ARGENTINA: "comunidad",
-  GLOBAL: "comunidad",
-  "PRIMEROS PASOS": "comunidad",
-  NIÑOS: "comunidad",
-  CREADORES: "comunidad",
-  INFLUENCER: "comunidad",
-  "REDES SOCIALES": "comunidad",
-  COMUNICACIÓN: "comunidad",
-  DEBATE: "comunidad",
+  // Privacidad
+  IDENTIDAD: "privacidad",
 
-  // Cultura
-  FILOSOFÍA: "cultura",
-  LIBERTAD: "cultura",
-  ARTE: "cultura",
-  CIENCIA: "cultura",
-  HISTORIA: "cultura",
-  CINE: "cultura",
-  "CULTURA POP": "cultura",
-  LIBRO: "cultura",
-  CREATIVIDAD: "cultura",
-  HUMANO: "cultura",
-  "SESGOS COGNITIVOS": "cultura",
-  FUTURO: "cultura",
-  IMPERDIBLE: "cultura",
+  // Educación
+  "PRIMEROS PASOS": "educacion",
+  NINOS: "educacion",
+  LIBRO: "educacion",
+  DEBATE: "educacion",
+  "SESGOS COGNITIVOS": "educacion",
+
+  // Institucional
+  GOBIERNO: "institucional",
+
+  // Emprendimiento
+  STARTUPS: "emprendimiento",
+  EMPRESA: "emprendimiento",
+  MARKETING: "emprendimiento",
+  CREATIVIDAD: "emprendimiento",
 };
 
-/** Normaliza un tag crudo para buscarlo en el mapa: sin espacios de más y en mayúsculas. */
+/**
+ * Normaliza un tag crudo para buscarlo en el mapa: sin tildes, sin espacios de
+ * más y en mayúsculas. La organización escribe "Adopcion" y "Tecnico" sin
+ * tilde y las charlas "ADOPCIÓN"; las dos formas tienen que caer igual.
+ */
 function normalize(raw: string): string {
-  return raw.trim().toUpperCase().replace(/\s+/g, " ");
+  return raw
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, " ");
 }
 
 /** Traduce una lista de tags crudos a filtros canónicos, sin repetidos. */

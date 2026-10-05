@@ -77,8 +77,8 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
         style={{
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 300,
-          background: "rgba(230,238,242,0.04)",
-          border: "1px solid rgba(230,238,242,0.18)",
+          background: "#1A1A1A",
+          border: "1px solid rgba(230,238,242,0.22)",
           color: "#E6EEF2",
           fontSize: "clamp(14px, 1.4vw, 17px)",
           padding: "16px 26px",

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { syncSpeakers } from "@/lib/speakers/sync";
 import { recordFailure, recordRun } from "@/lib/speakers/runs";
@@ -29,6 +30,11 @@ function authorized(req: Request): boolean {
   return provided === adminSecret;
 }
 
+function revalidateSpeakers() {
+  revalidatePath("/speakers");
+  revalidatePath("/speakers/[slug]", "page");
+}
+
 async function run(req: Request) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "no autorizado" }, { status: 401 });
@@ -43,6 +49,10 @@ async function run(req: Request) {
     // El reporte se persiste ANTES de devolverlo: quien llama es el cron, que
     // no lee la respuesta. Sin esta línea el JSON se genera y se tira.
     await recordRun(report, trigger);
+    // Sin esto, /speakers y las fichas siguen sirviendo la copia prerenderizada
+    // hasta que venza su `revalidate` (1 h): la org corregía algo en la
+    // planilla, se sincronizaba, y el sitio seguía mostrando lo viejo.
+    revalidateSpeakers();
     return NextResponse.json(report);
   } catch (err) {
     // El detalle importa: si falla, casi siempre es la planilla (cuota de Apps
