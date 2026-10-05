@@ -19,6 +19,12 @@ export type Sponsor = {
    * caja, así que los wordmarks van más bajos.
    */
   scale: number;
+  /**
+   * Tope de ancho en múltiplos del alto de la caja (default 4.5). Solo se
+   * sube para wordmarks muy apaisados: Oracle Numeris es 10.7:1 y con el tope
+   * general quedaba a menos de la mitad del alto que los demás.
+   */
+  maxAspect?: number;
 };
 
 export type SponsorTier = {
@@ -33,10 +39,11 @@ export type SponsorTier = {
   sponsors: Sponsor[];
 };
 
-const s = (slug: string, alt: string, scale = 0.72): Sponsor => ({
+const s = (slug: string, alt: string, scale = 0.72, maxAspect?: number): Sponsor => ({
   src: `/assets/home/sponsors/${slug}.png`,
   alt,
   scale,
+  maxAspect,
 });
 
 export const SPONSOR_TIERS: SponsorTier[] = ([
@@ -60,11 +67,13 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   },
   {
     id: "node",
-    // Los seis en una línea: la suma de anchos de los logos a su `scale` da
-    // ~20.5 veces el alto de la caja, y quedan cinco huecos de 3vw. 80px es el
-    // padding lateral de la sección. Con el piso de 28px entra desde ~770px de
-    // ancho, así que el `nowrap` desde lg (1024) no desborda.
-    logoH: "clamp(28px, calc((100vw - 80px - 15vw) / 20.5), 48px)",
+    // Los siete en una línea: la suma de anchos de los logos a su `scale` da
+    // ~23.1 veces el alto de la caja (20.5 de los seis originales + 2.6 de
+    // Coinbox, sumado el 05/10), y quedan seis huecos de 3vw. 80px es el
+    // padding lateral de la sección. Con el piso de 28px entra desde ~890px de
+    // ancho, así que el `nowrap` desde lg (1024) no desborda. Si se suma otro
+    // logo, recalcular el divisor.
+    logoH: "clamp(28px, calc((100vw - 80px - 18vw) / 23.1), 48px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -73,12 +82,22 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("nonco", "Nonco", 0.6),
       s("roxom", "Roxom"),
       s("vantage", "Vantage", 0.8),
+      // Isologo + wordmark apilado con "MINING" abajo: compacto, va más alto.
+      s("coinbox", "Coin Box Mining", 0.9),
     ],
   },
   {
     id: "satoshi",
     // La fila más chica: por debajo del alto visible de los logos de Node.
     logoH: "clamp(18px, 2.2vw, 30px)",
-    sponsors: [s("belo", "Belo", 0.9), s("pala", "Pala Blockchain", 0.9)],
+    // Metamind, Money On Chain y Oracle Numeris sumados el 05/10/2026
+    // (referencia de la organización: ~/Descargas/REFE.jpeg).
+    sponsors: [
+      s("belo", "Belo", 0.9),
+      s("pala", "Pala Blockchain", 0.9),
+      s("metamind", "Metamind", 0.66),
+      s("money-on-chain", "Money On Chain", 0.9),
+      s("oracle-numeris", "Oracle Numeris", 0.6, 7),
+    ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);

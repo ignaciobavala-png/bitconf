@@ -267,7 +267,8 @@ const TICKETS = [
     cta: { bg: "#000", fg: "#E6EEF2", border: "1px solid rgba(199,203,209,0.45)" },
     background:
       "linear-gradient(155deg, #3A3D42 0%, #24272C 45%, #2E3137 70%, #131417 100%)",
-    prices: [{ es: "Second Chance", en: "Second Chance", value: "AR$ 65.000" }],
+    // Last Call desde el 05/10/2026 (antes Second Chance, AR$ 65.000).
+    prices: [{ es: "Last Call", en: "Last Call", value: "AR$ 90.000" }],
     note: {
       es: "*precio final reflejado en dólares",
       en: "*final price charged in dollars",
@@ -1042,7 +1043,7 @@ export default function HomePage() {
                         className="h-full w-auto object-contain"
                         style={{
                           maxHeight: `${logo.scale * 100}%`,
-                          maxWidth: `min(80vw, calc(${tier.logoH} * 4.5))`,
+                          maxWidth: `min(80vw, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
                         }}
                       />
                     </div>
