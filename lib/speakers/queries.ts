@@ -1,18 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
-import { CANONICAL_TAGS, type CanonicalTag } from "./tags";
-
-// La base la comparten ramas con juegos de tags distintos (fase-2 reescribió
-// los tags con los clusters de la organización el 29/09). Un tag que este
-// código no conoce se descarta acá: si llega a la UI, `TAG_LABELS[tag]` es
-// undefined y el prerender de /speakers/[slug] rompe el build entero.
-const KNOWN_TAGS = new Set<string>(CANONICAL_TAGS);
-const knownTags = (tags: string[] | null): CanonicalTag[] =>
-  (tags ?? []).filter((t): t is CanonicalTag => KNOWN_TAGS.has(t));
+import { onlyCanonical, type CanonicalTag } from "./tags";
 
 // Lectura pública de speakers y charlas.
 //
 // Usa la anon key a propósito, incluso corriendo en el servidor: así la RLS
-// sigue siendo la que decide qué se publica (present + status = 'confirmado') y
+// sigue siendo la que decide qué se publica (present + landing) y
 // no hay forma de que un error de este archivo filtre una postulación en
 // revisión o rechazada. El service_role queda solo para el sync.
 
@@ -58,6 +50,14 @@ export type SpeakerProfile = SpeakerCard & {
 
 const CARD_COLUMNS = "slug, name, role, company, country, photo_url, tags";
 
+/**
+ * Sin foto no se publica. La organización (05/10/2026) pidió esconder a
+ * Ciberfeminismo "hasta que aparezca la foto": como regla y no como lista a
+ * mano, el speaker vuelve solo con el sync que traiga la foto. Se aplica en
+ * la grilla, el perfil y los slugs, así la URL directa también da 404.
+ */
+const HAS_PHOTO = ["photo_url", "is", null] as const;
+
 type CardRow = {
   slug: string;
   name: string;
@@ -76,22 +76,34 @@ function toCard(r: CardRow): SpeakerCard {
     company: r.company,
     country: r.country,
     photoUrl: r.photo_url,
-    tags: knownTags(r.tags),
+    tags: onlyCanonical(r.tags),
   };
 }
 
 /**
- * Todos los speakers publicables.
- *
- * Se ordena por nombre y no por relevancia: cualquier otro criterio (por tags,
- * por cantidad de charlas) implica una jerarquía entre personas que la
- * organización no definió. Alfabético es el único orden que no dice nada.
+ * Categoría de un speaker según su `web_order`, con los cortes de la guía de
+ * la organización (app-labitconf.github.io/LABITCONF-speakers/web.html,
+ * confirmada por WhatsApp el 29/09/2026: "n1 es prioridad"):
+ * 1 = destacados (1-48), 2 = 49-84, 3 = 85+ o sin número.
+ */
+function categoryOf(webOrder: number | null): 1 | 2 | 3 {
+  if (!webOrder) return 3;
+  if (webOrder <= 48) return 1;
+  if (webOrder <= 84) return 2;
+  return 3;
+}
+
+/**
+ * Todos los speakers publicables, en el orden de la organización: primero los
+ * destacados (N1) en su número, después la categoría 2 y la 3, cada una en
+ * orden alfabético. El número solo manda dentro de N1; en las otras dos es
+ * únicamente el corte de categoría.
  */
 export async function getSpeakers(): Promise<SpeakerCard[]> {
   const { data, error } = await publicClient()
     .from("speakers")
-    .select(CARD_COLUMNS)
-    .order("name", { ascending: true });
+    .select(`${CARD_COLUMNS}, web_order`)
+    .not(...HAS_PHOTO);
 
   if (error) {
     // La grilla vacía es preferible a romper la página entera: el resto del
@@ -99,7 +111,16 @@ export async function getSpeakers(): Promise<SpeakerCard[]> {
     console.error("[speakers] no se pudieron leer:", error.message);
     return [];
   }
-  return ((data ?? []) as CardRow[]).map(toCard);
+  const rows = (data ?? []) as (CardRow & { web_order: number | null })[];
+  return rows
+    .sort((a, b) => {
+      const ca = categoryOf(a.web_order);
+      const cb = categoryOf(b.web_order);
+      if (ca !== cb) return ca - cb;
+      if (ca === 1 && a.web_order !== b.web_order) return a.web_order! - b.web_order!;
+      return a.name.localeCompare(b.name, "es");
+    })
+    .map(toCard);
 }
 
 export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | null> {
@@ -112,6 +133,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
        talks ( title, abstract, tags, level, duration_min, is_panel, stage, day )`
     )
     .eq("slug", slug)
+    .not(...HAS_PHOTO)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -150,7 +172,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
     talks: (row.talks ?? []).map((t) => ({
       title: t.title,
       abstract: t.abstract,
-      tags: knownTags(t.tags),
+      tags: onlyCanonical(t.tags),
       level: t.level,
       durationMin: t.duration_min,
       isPanel: t.is_panel,
@@ -162,7 +184,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
 
 /** Slugs publicables — para generar las rutas estáticas de los perfiles. */
 export async function getSpeakerSlugs(): Promise<string[]> {
-  const { data } = await publicClient().from("speakers").select("slug");
+  const { data } = await publicClient().from("speakers").select("slug").not(...HAS_PHOTO);
   return (data ?? []).map((r) => r.slug as string);
 }
 
@@ -234,7 +256,7 @@ export async function getAgenda(): Promise<AgendaTalk[]> {
       id: r.id,
       title: r.title,
       abstract: r.abstract,
-      tags: knownTags(r.tags),
+      tags: onlyCanonical(r.tags),
       level: r.level,
       durationMin: r.duration_min,
       isPanel: r.is_panel,
