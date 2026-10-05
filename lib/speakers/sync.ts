@@ -251,7 +251,9 @@ export async function syncSpeakers(): Promise<SyncReport> {
       instagram: s.instagram,
       github: s.github,
       status: s.status,
-      mkt_published: s.mktPublished,
+      // Sin hoja MKT la clave se omite (en todas las filas a la vez) y queda
+      // el valor guardado.
+      ...(s.mktPublished !== null && { mkt_published: s.mktPublished }),
       landing: s.landing,
       web_order: s.webOrder,
       // Vacío en la columna `tags` es una decisión de la organización y se

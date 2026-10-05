@@ -50,6 +50,14 @@ export type SpeakerProfile = SpeakerCard & {
 
 const CARD_COLUMNS = "slug, name, role, company, country, photo_url, tags";
 
+/**
+ * Sin foto no se publica. La organización (05/10/2026) pidió esconder a
+ * Ciberfeminismo "hasta que aparezca la foto": como regla y no como lista a
+ * mano, el speaker vuelve solo con el sync que traiga la foto. Se aplica en
+ * la grilla, el perfil y los slugs, así la URL directa también da 404.
+ */
+const HAS_PHOTO = ["photo_url", "is", null] as const;
+
 type CardRow = {
   slug: string;
   name: string;
@@ -94,7 +102,8 @@ function categoryOf(webOrder: number | null): 1 | 2 | 3 {
 export async function getSpeakers(): Promise<SpeakerCard[]> {
   const { data, error } = await publicClient()
     .from("speakers")
-    .select(`${CARD_COLUMNS}, web_order`);
+    .select(`${CARD_COLUMNS}, web_order`)
+    .not(...HAS_PHOTO);
 
   if (error) {
     // La grilla vacía es preferible a romper la página entera: el resto del
@@ -124,6 +133,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
        talks ( title, abstract, tags, level, duration_min, is_panel, stage, day )`
     )
     .eq("slug", slug)
+    .not(...HAS_PHOTO)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -174,7 +184,7 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
 
 /** Slugs publicables — para generar las rutas estáticas de los perfiles. */
 export async function getSpeakerSlugs(): Promise<string[]> {
-  const { data } = await publicClient().from("speakers").select("slug");
+  const { data } = await publicClient().from("speakers").select("slug").not(...HAS_PHOTO);
   return (data ?? []).map((r) => r.slug as string);
 }
 

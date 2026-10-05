@@ -55,7 +55,8 @@ export type SourceSpeaker = {
   instagram: string | null;
   github: string | null;
   status: string;
-  mktPublished: boolean;
+  /** null = no se pudo leer la hoja MKT; el sync conserva lo que había. */
+  mktPublished: boolean | null;
   /** Tilde "Publicar" del tablero de la organización: decide si sale en la web. */
   landing: boolean;
   /** `# WEB` de la organización. null si la planilla no lo trae. */
@@ -265,7 +266,16 @@ export async function fetchSpeakersFromSource(): Promise<{
   speakers: SourceSpeaker[];
   version: string | null;
 }> {
-  const [sp, mkt] = await Promise.all([readSheet("Speakers"), readSheet("MKT")]);
+  // MKT es opcional: desde que publica el tilde `landing` (28/09) su flag solo
+  // se guarda como dato, y el 05/10 la organización borró la hoja ("hoja no
+  // encontrada: MKT"). Que falte no puede frenar el sync entero.
+  const [sp, mkt] = await Promise.all([
+    readSheet("Speakers"),
+    readSheet("MKT").catch((e: Error) => {
+      console.warn("[speakers] hoja MKT no disponible:", e.message);
+      return null;
+    }),
+  ]);
 
   const spRows = sp.data ?? [];
   if (spRows.length < 2) return { speakers: [], version: sp.version ?? null };
@@ -296,7 +306,7 @@ export async function fetchSpeakersFromSource(): Promise<{
 
   // MKT: num → publicado
   const mktPublished = new Set<number>();
-  for (const row of (mkt.data ?? []).slice(1)) {
+  for (const row of (mkt?.data ?? []).slice(1)) {
     const num = Number.parseInt(String(row?.[0] ?? ""), 10);
     if (Number.isFinite(num) && String(row?.[1] ?? "").trim().toLowerCase() === "si") {
       mktPublished.add(num);
@@ -349,7 +359,7 @@ export async function fetchSpeakersFromSource(): Promise<{
       instagram: handle(text(row, col("instagram"))),
       github: handle(text(row, col("github"))),
       status: (text(row, col("estado")) ?? "revision").toLowerCase(),
-      mktPublished: mktPublished.has(sourceNum),
+      mktPublished: mkt ? mktPublished.has(sourceNum) : null,
       // Criterio de publicación confirmado por la organización (28/09/2026):
       // `landing === "si"`, sin mirar `estado`, que es de uso interno de ellos.
       landing: cell(row, col("landing")).toLowerCase() === "si",
