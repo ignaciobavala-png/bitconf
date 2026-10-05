@@ -33,9 +33,12 @@ export default async function SpeakersPage() {
 
       {/* La grilla va sobre fondo liso: el degradé de la cabecera termina en
           Alamo, y con textura detrás las fotos (400px, de fondos dispares) se
-          ensucian. */}
+          ensucian.
+          Sin `max-w-6xl`: la grilla llega al mismo margen derecho que el
+          navbar, así la sangría es igual a los dos lados (pedido de la
+          organización, 05/10/2026). */}
       <section className="relative px-6 sm:px-10 pb-20 sm:pb-28">
-        <div className="relative w-full max-w-6xl">
+        <div className="relative w-full">
           <SpeakersBrowser speakers={speakers} />
         </div>
       </section>

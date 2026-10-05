@@ -6,6 +6,10 @@ import { useLangStore } from "@/lib/store/lang";
 // Misma altura de letra que el resto de los títulos PNG del sitio.
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
+// Tamaño del párrafo de la cabecera. Exportado porque el buscador
+// (SpeakersBrowser) se mide contra él: termina donde termina "HODL".
+export const LEDE_FS = "clamp(15px, 1.5vw, 20px)";
+
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
   fontWeight: 900,
@@ -49,7 +53,7 @@ export default function SpeakersHeader({ total }: { total: number }) {
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 300,
           color: "#E6EEF2",
-          fontSize: "clamp(15px, 1.5vw, 20px)",
+          fontSize: LEDE_FS,
           lineHeight: 1.6,
           maxWidth: "58ch",
         }}

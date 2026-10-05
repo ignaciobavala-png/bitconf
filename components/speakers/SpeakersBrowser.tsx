@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
 import { CANONICAL_TAGS, TAG_LABELS, type CanonicalTag } from "@/lib/speakers/tags";
 import type { SpeakerCard } from "@/lib/speakers/queries";
+import { LEDE_FS } from "./SpeakersHeader";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -66,16 +67,19 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
 
   return (
     <div className="w-full">
-      {/* Buscador. Con tope de ancho desde sm: a todo el contenido (~1150px)
-          era una barra larguísima para un nombre de dos palabras (feedback de
-          la organización, 05/10/2026). En mobile sigue a todo el ancho. */}
+      {/* Buscador. A todo el contenido (~1150px) era una barra larguísima
+          (feedback de la organización, 05/10/2026): termina donde termina
+          "HODL", el final del primer renglón del párrafo de arriba. Medido en
+          el navegador: 38.4 veces el tamaño de ese párrafo, constante desde
+          ~900px de ancho (768px en desktop). En mobile la pantalla es más
+          angosta que eso y queda a todo el ancho. */}
       <input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.search}
         aria-label={t.search}
-        className="w-full sm:max-w-[440px] rounded-full outline-none transition-colors duration-200 focus:border-[#ABF760]"
+        className="w-full rounded-full outline-none transition-colors duration-200 focus:border-[#ABF760]"
         style={{
           fontFamily: "var(--font-neue-machina), sans-serif",
           fontWeight: 300,
@@ -84,6 +88,7 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
           color: "#E6EEF2",
           fontSize: "clamp(14px, 1.4vw, 17px)",
           padding: "16px 26px",
+          maxWidth: `calc(${LEDE_FS} * 38.4)`,
         }}
       />
 
@@ -171,7 +176,7 @@ export default function SpeakersBrowser({ speakers }: { speakers: SpeakerCard[] 
           </button>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
           {filtered.map((s, i) => (
             <SpeakerTile key={s.slug} speaker={s} index={i} lang={lang} />
           ))}
