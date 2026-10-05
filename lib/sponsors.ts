@@ -63,7 +63,14 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     id: "full-node",
     // Más grande que la fila de Node, que va apretada en una línea.
     logoH: "clamp(46px, 5.4vw, 72px)",
-    sponsors: [s("cake-wallet", "Cake Wallet"), s("paystand", "Paystand")],
+    // Bull Market sumado el 05/10/2026 (refe de la organización:
+    // ~/Descargas/refe.jpeg). Wordmark 6.3:1 con isologo: va más bajo que
+    // los otros dos para no pasar del tope de ancho y pesar lo mismo.
+    sponsors: [
+      s("cake-wallet", "Cake Wallet"),
+      s("paystand", "Paystand"),
+      s("bull-market", "Bull Market", 0.6),
+    ],
   },
   {
     id: "node",
