@@ -30,7 +30,9 @@ const MEDIA_PARTNERS_BG_VIDEO_SRC =
 const TITLE_IMAGES = {
   labitconf: "/assets/home/titulos/labitconf-trim.png",
   tickets: "/assets/home/titulos/tickets-trim.png",
-  seParte: { es: "/assets/home/titulos/se-parte-es-trim.png", en: "/assets/home/titulos/se-parte-en-trim.png" },
+  // ES con tilde en la É (PNG nuevo de la org, 05/10/2026; el anterior decía "SE").
+  seParte: { es: "/assets/home/titulos/se-parte-tilde-es-trim.png", en: "/assets/home/titulos/se-parte-en-trim.png" },
+  mediaPartners: "/assets/home/titulos/media-partners-trim.png",
   costaSalguero: "/assets/home/titulos/costa-salguero-trim.png",
   sponsors: "/assets/home/titulos/sponsors-caps-trim.png",
 } as const;
@@ -39,6 +41,12 @@ const TITLE_IMAGES = {
 const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 // Distancia uniforme entre el título de sección y el contenido que sigue
 const TITLE_GAP = "mt-10 sm:mt-14";
+
+// "SÉ PARTE": la tilde ocupa el 26.6% de arriba del PNG recortado (las letras
+// van de la fila 92 a la 348 de 350). Con la misma caja que el resto, las
+// letras saldrían más chicas que las de TICKETS; la caja crece hacia arriba
+// lo que ocupa la tilde (margen negativo) y las letras quedan iguales.
+const SE_PARTE_ES_ACCENT = 350 / 258;
 // Tamaño uniforme de cuerpo de texto (párrafos) entre secciones
 const BODY_FS = "clamp(13px, 1.2vw, 16px)";
 // Tamaño uniforme de los CTA secundarios (tickets, sé parte, ubicación —
@@ -1102,12 +1110,15 @@ export default function HomePage() {
             sección, así el borde derecho de los carriles coincide con el del
             navbar en vez de cortarse antes. */}
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          {/* Título como texto: no hay PNG "Media Partners" en la tanda de
-              títulos. Se reemplaza por <Image> cuando diseño lo mande. */}
-          <Reveal>
-            <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(28px, 4.6vw, 56px)", lineHeight: 1.05 }}>
-              {t.mediaTitle}
-            </h2>
+          {/* Título PNG, misma altura que el resto (llegó de la org el 05/10/2026;
+              hasta entonces era texto). Igual en ES y EN. */}
+          <Reveal className="relative w-full" style={{ height: TITLE_H }}>
+            <Image
+              src={TITLE_IMAGES.mediaPartners}
+              alt={t.mediaTitle}
+              fill
+              style={{ objectFit: "contain", objectPosition: "left center" }}
+            />
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -1239,7 +1250,17 @@ export default function HomePage() {
         />
 
         <div className="relative w-full" style={{ zIndex: 2 }}>
-          <Reveal className="relative w-full max-w-6xl" style={{ height: TITLE_H }}>
+          <Reveal
+            className="relative w-full max-w-6xl"
+            style={
+              lang === "es"
+                ? {
+                    height: `calc(${TITLE_H} * ${SE_PARTE_ES_ACCENT})`,
+                    marginTop: `calc(${TITLE_H} * ${1 - SE_PARTE_ES_ACCENT})`,
+                  }
+                : { height: TITLE_H }
+            }
+          >
             <Image
               src={TITLE_IMAGES.seParte[lang]}
               alt={lang === "es" ? "Sé parte" : "Be part"}
