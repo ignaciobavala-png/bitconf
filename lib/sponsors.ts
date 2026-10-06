@@ -70,6 +70,9 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("cake-wallet", "Cake Wallet"),
       s("paystand", "Paystand"),
       s("bull-market", "Bull Market", 0.6),
+      // Bitcoin.ar sumado el 06/10/2026: wordmark 6.1:1, mismo trato que Bull
+      // Market. El naranja del isologo pasa a blanco como el resto.
+      s("bitcoin-ar", "Bitcoin.ar", 0.6),
     ],
   },
   {
@@ -105,6 +108,9 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("metamind", "Metamind", 0.66),
       s("money-on-chain", "Money On Chain", 0.9),
       s("oracle-numeris", "Oracle Numeris", 0.6, 7),
+      // BitJem MAX sumado el 06/10/2026: la píldora azul de "MAX" va en blanco
+      // con las letras caladas (transparentes), para no perder el texto.
+      s("bitjem", "BitJem MAX", 0.8),
     ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);
