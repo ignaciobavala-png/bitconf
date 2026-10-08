@@ -25,6 +25,12 @@ export type Sponsor = {
    * general quedaba a menos de la mitad del alto que los demás.
    */
   maxAspect?: number;
+  /**
+   * Multiplica el alto de la caja de este logo sobre el del tier. Solo para
+   * isologos casi cuadrados con texto adentro (VnishCom): con `scale` no
+   * alcanza, porque el logo nunca pasa del alto de su caja.
+   */
+  boxScale?: number;
 };
 
 export type SponsorTier = {
@@ -111,6 +117,13 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // BitJem MAX sumado el 06/10/2026: la píldora azul de "MAX" va en blanco
       // con las letras caladas (transparentes), para no perder el texto.
       s("bitjem", "BitJem MAX", 0.8),
+      // JusToken y VnishCom sumados el 08/10/2026 (refe: ~/Descargas/ejemplo.jpeg).
+      // JusToken es un wordmark 7.6:1: a 0.6 pide ~4.6 cajas de ancho, apenas
+      // arriba del tope general. VnishCom es un isologo casi cuadrado con el
+      // nombre adentro: con la caja de la fila el texto no se leía, así que
+      // su caja es 1.6 veces más alta (≈ el alto de la fila de Node).
+      s("justoken", "JusToken", 0.6, 5),
+      { ...s("vnish", "VnishCom", 1), boxScale: 1.6 },
     ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);

@@ -1039,7 +1039,11 @@ export default function HomePage() {
                     <div
                       key={logo.src}
                       className="flex items-center justify-center"
-                      style={{ height: tier.logoH }}
+                      style={{
+                        height: logo.boxScale
+                          ? `calc(${tier.logoH} * ${logo.boxScale})`
+                          : tier.logoH,
+                      }}
                     >
                       <Image
                         src={logo.src}
