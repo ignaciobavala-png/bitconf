@@ -43,8 +43,8 @@ const FAQ = `
 ¿Cuándo debo activar mi ticket? Cuando quieras, pero antes de la conferencia. Se recomienda activarlo antes del día del evento para evitar demoras en la puerta.
 ¿Qué incluye cada categoría de ticket?
 - General: acceso a los 2 días, 5 escenarios (VISIÓN, ORANGE PILL, ABC, CODERS y VIP-Business), Chill Area, Dinner Points y Closing Party: la fiesta de disfraces HODLWEEN.
-- Business: todo lo anterior más Área VIP, espacio preferencial en el Main Stage, all inclusive, open bar, coffee bar y Merch Bag.
-- Experience: todo lo anterior más Open Fest exclusivo (29 oct) y Closing Day (1 nov).
+- Business: todo lo del ticket General más TREZOR Hardware Wallet de regalo, B2B Stage by Ikigi, Networking VIP Área by Nexo y Coffee & Bites Station.
+- Experience: todo lo del ticket Business más Inauguración Monumento Satoshi (29 de octubre), Open Fest Network & show (29 de octubre), Closing Chill Out Full Day (1 de noviembre) y Exclusive HODL merch.
 ¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
 ¿Los menores de 16 pueden entrar solos? No, deben estar acompañados por un mayor de edad en todo momento dentro del predio.
 ¿Se pueden transferir o revender tickets? No, los tickets son personales e intransferibles. LABITCONF no se responsabiliza por compras fuera de la plataforma oficial.
@@ -63,7 +63,7 @@ const FAQ = `
 ¿Cómo llego? Transporte público: colectivos 45, 130, 160 y 37 tienen parada cercana. En auto: hay estacionamiento en el predio y zonas aledañas. Se recomienda llegar con tiempo extra los primeros días.
 ¿Puedo ingresar con bicicleta, scooter o monorueda? No, está prohibido ingresar con esos vehículos; deben dejarse en el estacionamiento fuera del predio.
 ¿Hay guardarropa? Sí, el evento cuenta con servicio de guardarropa. Se recomienda no llevar objetos de valor innecesarios.
-¿Hay comida y bebida disponible dentro del evento? Sí, hay Dinner Points y espacios gastronómicos. El ticket Business incluye all inclusive y coffee bar. El ticket Experience incluye además eventos exclusivos con servicio diferencial.
+¿Hay comida y bebida disponible dentro del evento? Sí, hay Dinner Points y espacios gastronómicos. El ticket Business incluye la Coffee & Bites Station. El ticket Experience suma además los eventos exclusivos del 29 de octubre y el 1 de noviembre.
 
 4. Comunidad y programas especiales
 ¿Qué es el Programa de Comunidades Asociadas? Vincula comunidades del ecosistema cripto, tech y blockchain con LABITCONF; reciben beneficios (descuentos, tickets gratuitos, visibilidad) a cambio de difundir el evento. Para sumarse: labitconf.com.
