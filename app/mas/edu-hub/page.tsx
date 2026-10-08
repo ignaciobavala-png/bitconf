@@ -248,7 +248,15 @@ const T = {
     cardHackathonChips: ["30–31 oct", "Costa Salguero", "Equipos de 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops y charlas",
-    cardBootcampMasInfo: "+ info",
+    cardBootcampCta: "Súmate acá",
+    cardBootcampLead: "3 días para sacarte la duda",
+    cardBootcampBody:
+      "3 conversaciones con el ecosistema, para que llegues a LABITCONF con toda la data.\n\n\"AI = Amigo Incondicional\" con Nico Seguro, \"WTF is BITCOIN\" con Diego Gurpegui y \"Cómo reconocer un problema y atacarlo\" con Martín Yeza.\n\nLa asistencia es gratuita y además, por asistir podrás disfrutar de regalos y experiencias exclusivas.",
+    cardBootcampFlyerAlts: [
+      "Bootcamp día 1: AI = Amigo Incondicional, con Nico Seguro",
+      "Bootcamp día 2: WTF is BITCOIN, con Diego Gurpegui",
+      "Bootcamp día 3: Cómo reconocer un problema y atacarlo, con Martín Yeza",
+    ],
     cardWhatsappTitle: "Comunidad de WhatsApp",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
@@ -305,7 +313,15 @@ const T = {
     cardHackathonChips: ["Oct 30–31", "Costa Salguero", "Teams of 4"],
     cardBootcampPrefix: "Bootcamp -",
     cardBootcampLocked: "Workshops and talks",
-    cardBootcampMasInfo: "+ info",
+    cardBootcampCta: "Join here",
+    cardBootcampLead: "3 days to clear your doubts",
+    cardBootcampBody:
+      "3 conversations with the ecosystem, so you get to LABITCONF with all the info.\n\n\"AI = Amigo Incondicional\" with Nico Seguro, \"WTF is BITCOIN\" with Diego Gurpegui and \"Cómo reconocer un problema y atacarlo\" with Martín Yeza.\n\nAttendance is free, and by attending you'll also get gifts and exclusive experiences.",
+    cardBootcampFlyerAlts: [
+      "Bootcamp day 1: AI = Amigo Incondicional, with Nico Seguro",
+      "Bootcamp day 2: WTF is BITCOIN, with Diego Gurpegui",
+      "Bootcamp day 3: Cómo reconocer un problema y atacarlo, with Martín Yeza",
+    ],
     cardWhatsappTitle: "WhatsApp community",
     cardCollegeTitle: "LABITCONF Bitcoin College",
     cardCollegeBody:
@@ -348,8 +364,15 @@ const HACKATHON_LUMA_HREF = "https://luma.com/cwhw1uls";
 // Bases del hackathon (Google Doc, 25/09/2026).
 const HACKATHON_BASES_HREF: string | undefined =
   "https://docs.google.com/document/d/1h6GlcaLcnSlQdjanoidrk7rA0T6Q1Jwe1ttdXHUoUvk/edit?tab=t.0#heading=h.ty347pwluepb";
-// Bootcamp/Workshops "más info" reusa el mismo grupo de WhatsApp de alumnos.
-const BOOTCAMP_WHATSAPP_HREF = SOY_ALUMNO_HREF;
+// Bootcamp: grupo de WhatsApp propio de las charlas (08/10/2026). Antes el
+// "+ info" reusaba el grupo de alumnos (SOY_ALUMNO_HREF).
+const BOOTCAMP_WHATSAPP_HREF = "https://chat.whatsapp.com/HadifSAJjJm1ANuMIG0fG0";
+// Flyers de las 3 charlas, en orden de día (13, 14 y 15 de octubre) — de
+// Descargas/CHARLAS bootcamp, recomprimidos a 720x900 (4:5, el ratio real).
+const BOOTCAMP_FLYER_SRCS = [1, 2, 3].map(
+  (n) =>
+    `https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/edu-hub/bootcamp-dia${n}.jpg`,
+);
 
 // Flyers de la organización (Descargas/EDU HUB - Flyers, 23/09/2026),
 // recomprimidos (BITCOIN COLLEGE.png pesaba 11,8MB a 4320x5760) y subidos
@@ -837,19 +860,60 @@ export default function MasPage() {
             </Reveal>
           </div>
 
-          {/* Bootcamp — ocupa todo el ancho del componente. Título y "+ info"
+          {/* Bootcamp — ocupa todo el ancho del componente. Título y botón
               en la misma línea mientras entren; flex-wrap baja el botón
               abajo del título en mobile / ventanas angostas (feedback
-              tester 29/09/2026). */}
+              tester 29/09/2026). Debajo, el copy de las 3 charlas y sus
+              flyers (08/10/2026), con padding propio y radio en cada flyer
+              para que no queden pegados al borde de la card. */}
           <Reveal delay={0.22} className="mt-6">
-            <div
-              className="flex flex-wrap items-center justify-between gap-x-6 gap-y-5"
-              style={cardStyle({ padding: "28px", minHeight: BOOTCAMP_ROW_MIN_H })}
-            >
-              <h3 style={CARD_TITLE_STYLE}>
-                {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
-              </h3>
-              <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampMasInfo}</PillLink>
+            <div style={cardStyle({ padding: "28px", minHeight: BOOTCAMP_ROW_MIN_H })}>
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-5">
+                <h3 style={CARD_TITLE_STYLE}>
+                  {t.cardBootcampPrefix} <span style={{ whiteSpace: "nowrap" }}>{t.cardBootcampLocked}</span>
+                </h3>
+                <PillLink href={BOOTCAMP_WHATSAPP_HREF}>{t.cardBootcampCta}</PillLink>
+              </div>
+              <p
+                style={{
+                  ...labelStyle,
+                  color: "#FF4E01",
+                  fontSize: "clamp(14px, 1.3vw, 16px)",
+                  marginTop: 20,
+                }}
+              >
+                {t.cardBootcampLead}
+              </p>
+              <p
+                style={{
+                  ...lightStyle,
+                  color: "#E6EEF2",
+                  fontSize: "clamp(14px, 1.3vw, 16px)",
+                  lineHeight: 1.5,
+                  marginTop: 12,
+                  maxWidth: 760,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {t.cardBootcampBody}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                {BOOTCAMP_FLYER_SRCS.map((src, i) => (
+                  <div
+                    key={src}
+                    className="relative w-full rounded-2xl overflow-hidden"
+                    style={{ aspectRatio: "4 / 5" }}
+                  >
+                    <Image
+                      src={src}
+                      alt={t.cardBootcampFlyerAlts[i]}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 360px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>
