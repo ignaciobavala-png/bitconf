@@ -43,8 +43,8 @@ const FAQ = `
 ¿Cuándo debo activar mi ticket? Cuando quieras, pero antes de la conferencia. Se recomienda activarlo antes del día del evento para evitar demoras en la puerta.
 ¿Qué incluye cada categoría de ticket?
 - General: acceso a los 2 días, 6 escenarios, Sector Expositores, Área de Descanso, Área de Comidas, Shows durante el evento y Fiesta de Disfraces HODLWEEN (31 de octubre).
-- Business: todo lo del ticket General más TREZOR Hardware Wallet de regalo, B2B Stage by Ikigi, Networking VIP Área by Nexo y Coffee & Bites Station.
-- Experience: todo lo del ticket Business más Inauguración Monumento Satoshi (29 de octubre), Open Fest Network & show (29 de octubre), Closing Chill Out Full Day (1 de noviembre) y Exclusive HODL merch.
+- Business: todo lo del ticket General más TREZOR Hardware Wallet de regalo, B2B Stage, Networking VIP Área y Coffee & Bites Station.
+- Experience: todo lo del ticket Business más Inauguración Monumento Satoshi (29 de octubre), Open Fest Network & Mayúmana show (29 de octubre), Closing Chill Out Full Day (1 de noviembre) y Exclusive HODL merch.
 ¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
 ¿Los menores de 16 pueden entrar solos? No, deben estar acompañados por un mayor de edad en todo momento dentro del predio.
 ¿Se pueden transferir o revender tickets? No, los tickets son personales e intransferibles. LABITCONF no se responsabiliza por compras fuera de la plataforma oficial.
