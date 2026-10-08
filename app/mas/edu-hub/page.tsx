@@ -891,7 +891,6 @@ export default function MasPage() {
                   fontSize: "clamp(14px, 1.3vw, 16px)",
                   lineHeight: 1.5,
                   marginTop: 12,
-                  maxWidth: 760,
                   whiteSpace: "pre-line",
                 }}
               >
