@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import MetaPixel from "@/components/analytics/MetaPixel";
+import { Analytics } from "@vercel/analytics/next";
 
 const neueMachina = localFont({
   src: [
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className="h-full">
         {children}
         <MetaPixel />
+        <Analytics />
       </body>
     </html>
   );
