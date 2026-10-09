@@ -45,6 +45,7 @@ const MAS_MENU = {
       { label: "LABC Bitcoin College", href: "/mas/labc-bitcoin-college" },
       { label: "Embajadores", href: "/mas/embajadores" },
       { label: "Comunidades", href: "/mas/comunidades" },
+      { label: "Monumento", href: "/mas/monumento" },
     ],
   },
   en: {
@@ -55,6 +56,7 @@ const MAS_MENU = {
       { label: "LABC Bitcoin College", href: "/mas/labc-bitcoin-college" },
       { label: "Ambassadors", href: "/mas/embajadores" },
       { label: "Communities", href: "/mas/comunidades" },
+      { label: "Monument", href: "/mas/monumento" },
     ],
   },
 } as const;

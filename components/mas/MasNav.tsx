@@ -49,6 +49,14 @@ export const MAS_ITEMS = [
       en: "Your community can join the network.",
     },
   },
+  {
+    href: "/mas/monumento",
+    label: { es: "Monumento", en: "Monument" },
+    blurb: {
+      es: "El Génesis de Satoshi Nakamoto.",
+      en: "The Genesis of Satoshi Nakamoto.",
+    },
+  },
 ] as const;
 
 const T = {
