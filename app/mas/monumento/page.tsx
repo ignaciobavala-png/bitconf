@@ -22,13 +22,19 @@ import { MasSection, labelStyle, lightStyle } from "@/components/mas/ui";
 // - logo-bitcoin-ar.png: isologo {(B)} color, recortado con -trim.
 // FBI Iberoamérica reusa public/assets/home/sponsors/fbi.png.
 //
-// PENDIENTES de la organización:
-// - Video de fondo del hero: la slide dice "link al video del fondo:" sin
-//   link. Mientras tanto el hero usa el render del cubo de fondo.
-// - "Este click lleva a la entrada Experience": el checkout de Hallos es una
-//   sola URL sin link por tipo de entrada, así que el botón abre el mismo
-//   modal de checkout que la home.
-const HERO_VIDEO_SRC: string | null = null;
+// "Este click lleva a la entrada Experience" (slides 1 y 4): el checkout de
+// Hallos es una sola URL sin link por tipo de entrada, así que el botón abre
+// el mismo modal de checkout que la home.
+
+// Video de fondo del hero (Descargas/LABITCONF_media_16x9_2x_30fps.mp4,
+// 09/10/2026): 4K/27.8MB → 1920x1080 crf 20 (2MB), sin audio. El original
+// viene en yuvj420p (rango full, transfer sRGB): se convirtió a rango tv +
+// bt709 explícito para que el navegador no lo levante a gris (ver el caso de
+// fondo1.mp4). Llegó también una versión 2:1 con la misma escena; no se usa.
+// No hay versión vertical: en mobile se recorta con la figura (que está a
+// ~70% del ancho) dentro del cuadro.
+const HERO_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/mas/monumento/hero-v1.mp4";
 
 const ORANGE = "#FF4E01";
 const GREEN = "#ABF760";
@@ -80,7 +86,7 @@ const T = {
         Una obra de Ricardo Alonso &amp; Celeste Difabio Videla.
       </>
     ),
-    ctaTop: "No te perdás la",
+    ctaTop: "No te pierdas la",
     ctaBottom: "Inauguración",
     heroDate: ["29 de octubre", "Open Fest LABITCONF 26"],
     origenTitle: "El origen de todo",
@@ -243,20 +249,19 @@ function RichCard({
 }
 
 /**
- * Botón "No te perdás la INAUGURACIÓN". Abre el checkout de Hallos (la
+ * Botón "No te pierdas la INAUGURACIÓN". Abre el checkout de Hallos (la
  * inauguración es exclusiva del ticket Experience). Las dos líneas son a
  * propósito del diseño: cada una va con nowrap, no se parte sola (regla 5).
- * En la slide 1 el texto es verde y en la 4 naranja — se respeta cada slide.
+ * En las slides venía verde (1) y naranja (4); Ignacio pidió unificarlos con
+ * el del hero (09/10/2026): verde siempre.
  */
 function InaugurationButton({
   top,
   bottom,
-  color,
   onClick,
 }: {
   top: string;
   bottom: string;
-  color: string;
   onClick: () => void;
 }) {
   return (
@@ -266,7 +271,7 @@ function InaugurationButton({
       className="inline-flex flex-col items-center rounded-[2.5rem]"
       style={{
         ...labelStyle,
-        color,
+        color: GREEN,
         border: `3px solid ${ORANGE}`,
         background: "rgba(0,0,0,0.7)",
         padding: "clamp(16px, 2vw, 24px) clamp(28px, 3.5vw, 44px)",
@@ -366,17 +371,11 @@ export default function MonumentoPage() {
     <main className="relative min-h-screen overflow-hidden" style={{ background: "#000" }}>
       <Navbar />
 
-      {/* 1 — Hero. Fondo: video pendiente; mientras tanto el render del cubo. */}
-      <MasSection
-        {...(HERO_VIDEO_SRC
-          ? { bgVideo: HERO_VIDEO_SRC }
-          : { bg: "/assets/home/monumento/cubo.jpg", bgPosition: "right center" })}
-        bgOpacity={0.35}
-        first
-        tall
-      >
+      {/* 1 — Hero con video. Opacidad más alta que otros heros de /mas: el
+          video está compuesto para ir de fondo, con aire a la izquierda. */}
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.6} bgPosition="70% center" first tall>
         <Reveal>
-          <h1 style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(38px, 6vw, 80px)" }}>
+          <h1 style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(32px, 4.6vw, 62px)" }}>
             {t.heroTitleTop}
             <br />
             <Highlight>{t.heroTitleName}</Highlight>
@@ -390,7 +389,7 @@ export default function MonumentoPage() {
         </Reveal>
 
         <Reveal delay={0.2} className="mt-12 flex justify-center">
-          <InaugurationButton top={t.ctaTop} bottom={t.ctaBottom} color={GREEN} onClick={openCheckout} />
+          <InaugurationButton top={t.ctaTop} bottom={t.ctaBottom} onClick={openCheckout} />
         </Reveal>
 
         <Reveal delay={0.28}>
@@ -455,7 +454,7 @@ export default function MonumentoPage() {
         <div className="mt-8 flex flex-col lg:flex-row lg:items-center gap-8">
           <RichCard paragraphs={t.comunidad} className="lg:flex-1" />
           <Reveal delay={0.25} className="flex justify-center lg:shrink-0">
-            <InaugurationButton top={t.ctaTop} bottom={t.ctaBottom} color={ORANGE} onClick={openCheckout} />
+            <InaugurationButton top={t.ctaTop} bottom={t.ctaBottom} onClick={openCheckout} />
           </Reveal>
         </div>
 
