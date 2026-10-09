@@ -10,7 +10,7 @@ import CheckoutModal from "@/components/home/CheckoutModal";
 import Reveal from "@/components/home/Reveal";
 import MasNav from "@/components/mas/MasNav";
 import { useLangStore } from "@/lib/store/lang";
-import { MasSection, LogoStrip, labelStyle, lightStyle } from "@/components/mas/ui";
+import { MasSection, labelStyle, lightStyle } from "@/components/mas/ui";
 
 // MÁS → MONUMENTO: "El Génesis de Satoshi Nakamoto", el monumento que se
 // inaugura en el Open Fest del 29/10. Maquetado a partir de 4 slides que la
@@ -25,9 +25,6 @@ import { MasSection, LogoStrip, labelStyle, lightStyle } from "@/components/mas/
 // PENDIENTES de la organización:
 // - Video de fondo del hero: la slide dice "link al video del fondo:" sin
 //   link. Mientras tanto el hero usa el render del cubo de fondo.
-// - Foto del medio de la tira de la slide 3 (cubo de noche con agua): solo
-//   está en el Drive, no vino en Descargas → hueco punteado.
-// - Logos de ABC y Premio B.Arte → huecos punteados en la tira de logos.
 // - "Este click lleva a la entrada Experience": el checkout de Hallos es una
 //   sola URL sin link por tipo de entrada, así que el botón abre el mismo
 //   modal de checkout que la home.
@@ -100,7 +97,6 @@ const T = {
       </>,
     ],
     cuboAlt: "Render del monumento: cubo de acero y vidrio con una figura dorada adentro",
-    scroll: "scroll para descubrir",
     proyectoTitle: "El proyecto",
     proyectoSub: "Del Premio B.Arte al monumento",
     proyecto: [
@@ -120,7 +116,13 @@ const T = {
         El proyecto se encuentra actualmente en proceso de realización para su presentación en <B>LABITCONF 2026.</B>
       </>,
     ],
-    fotos: ["Premiación del PremioB.Arte 2025", "El monumento de noche", "Ganadores del PremioB.Arte 2025"],
+    fotos: [
+      "Premiación del PremioB.Arte 2025",
+      "El monumento de noche",
+      "Ganadores del PremioB.Arte 2025",
+      "El monumento de día",
+      "Ganadores en el stand de Bitcoin.ar",
+    ],
     comunidadTitle: "Nace de la comunidad",
     comunidad: [
       <>
@@ -165,7 +167,6 @@ const T = {
       </>,
     ],
     cuboAlt: "Render of the monument: a steel and glass cube with a golden figure inside",
-    scroll: "scroll to discover",
     proyectoTitle: "The project",
     proyectoSub: "From the B.Arte Prize to the monument",
     proyecto: [
@@ -185,7 +186,13 @@ const T = {
         The project is currently being built for its unveiling at <B>LABITCONF 2026.</B>
       </>,
     ],
-    fotos: ["PremioB.Arte 2025 awards", "The monument at night", "PremioB.Arte 2025 winners"],
+    fotos: [
+      "PremioB.Arte 2025 awards",
+      "The monument at night",
+      "PremioB.Arte 2025 winners",
+      "The monument by day",
+      "Winners at the Bitcoin.ar stand",
+    ],
     comunidadTitle: "Born from the community",
     comunidad: [
       <>
@@ -283,10 +290,27 @@ function InaugurationButton({
  * "pueden ir pasando"). Mismo loop que LogoMarquee: el set se repite
  * REPEATS veces y se recorre 100/REPEATS % para que el reinicio no salte.
  */
-const PHOTOS: readonly { src?: string; aspect: number }[] = [
+// "Quienes lo hacen posible", en el orden de la slide 4. `scale` compensa
+// ópticamente: el {(B)} es apaisado y a la misma altura se ve enorme.
+// ABC y Premio B.Arte salen recortados de la propia slide (monumento4.png):
+// los archivos que mandaron (uuu.png / yyy.png) eran logos blancos aplanados
+// sobre fondo blanco. Reemplazar por los originales cuando lleguen.
+const LOGO_H = "clamp(72px, 8vw, 112px)";
+const LOGOS = [
+  { src: "/assets/home/monumento/logo-abc.png", alt: "ABC", aspect: 420 / 324, scale: 1 },
+  { src: "/assets/home/monumento/logo-bitcoin-ar.png", alt: "Bitcoin Argentina", aspect: 600 / 249, scale: 0.6 },
+  { src: "/assets/home/sponsors/fbi.png", alt: "Fundación Bitcoin Iberoamérica", aspect: 1, scale: 1 },
+  { src: "/assets/home/monumento/logo-barte.png", alt: "Premio B.Arte", aspect: 285 / 393, scale: 1.15 },
+] as const;
+
+// Orden de la slide 3 (premiación → cubo de noche → ganadores), más las
+// dos que llegaron después en Descargas/asd (09/10/2026).
+const PHOTOS: readonly { src: string; aspect: number }[] = [
   { src: "/assets/home/monumento/premiacion.jpg", aspect: 1400 / 933 },
-  { aspect: 1.6 }, // cubo de noche con agua — pendiente
+  { src: "/assets/home/monumento/bloque-noche.jpg", aspect: 1536 / 1024 },
   { src: "/assets/home/monumento/ganadores.jpg", aspect: 1600 / 753 },
+  { src: "/assets/home/monumento/bloque-dia.jpg", aspect: 1536 / 1024 },
+  { src: "/assets/home/monumento/ganadores-stand.jpg", aspect: 992 / 663 },
 ];
 const PHOTO_REPEATS = 6;
 
@@ -316,28 +340,14 @@ function PhotoStrip({ alts }: { alts: readonly string[] }) {
               className="relative shrink-0 overflow-hidden rounded-xl"
               style={{ height: h, aspectRatio: String(photo.aspect) }}
             >
-              {photo.src ? (
-                <Image
-                  src={photo.src}
-                  alt={i < PHOTOS.length ? alts[idx] : ""}
-                  aria-hidden={i >= PHOTOS.length}
-                  fill
-                  sizes="(max-width: 640px) 60vw, 520px"
-                  style={{ objectFit: "cover" }}
-                />
-              ) : (
-                <div
-                  className="absolute inset-0 flex items-center justify-center rounded-xl"
-                  style={{
-                    border: "1px dashed rgba(165,168,177,0.5)",
-                    ...lightStyle,
-                    color: "#A5A8B1",
-                    fontSize: 13,
-                  }}
-                >
-                  {alts[idx]}
-                </div>
-              )}
+              <Image
+                src={photo.src}
+                alt={i < PHOTOS.length ? alts[idx] : ""}
+                aria-hidden={i >= PHOTOS.length}
+                fill
+                sizes="(max-width: 640px) 60vw, 520px"
+                style={{ objectFit: "cover" }}
+              />
             </div>
           );
         })}
@@ -423,11 +433,6 @@ export default function MonumentoPage() {
             />
           </Reveal>
         </div>
-        <Reveal delay={0.3}>
-          <p className="mt-12 text-center" style={{ ...lightStyle, color: "#A5A8B1", fontSize: "clamp(14px, 1.3vw, 18px)" }}>
-            ↓ {t.scroll}
-          </p>
-        </Reveal>
       </MasSection>
 
       {/* 3 — El proyecto: card ancha + tira de fotos en movimiento. */}
@@ -468,15 +473,20 @@ export default function MonumentoPage() {
             {t.quienes}
           </h3>
         </Reveal>
-        <LogoStrip
-          label={t.quienes}
-          items={[
-            { alt: "ABC" },
-            { src: "/assets/home/monumento/logo-bitcoin-ar.png", alt: "Bitcoin Argentina", scale: 0.75 },
-            { src: "/assets/home/sponsors/fbi.png", alt: "Fundación Bitcoin Iberoamérica" },
-            { alt: "Premio B.Arte" },
-          ]}
-        />
+        {/* Fila fija, sin marquee: pedido de Ignacio (09/10/2026) para esta
+            sección, aunque el resto del sitio usa LogoMarquee. */}
+        <div className="mt-10 grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center items-center gap-x-10 gap-y-8 sm:gap-x-16">
+          {LOGOS.map((logo, i) => (
+            <Reveal
+              key={logo.src}
+              delay={0.15 + i * 0.08}
+              className="relative mx-auto sm:mx-0"
+              style={{ height: `calc(${LOGO_H} * ${logo.scale})`, aspectRatio: String(logo.aspect) }}
+            >
+              <Image src={logo.src} alt={logo.alt} fill sizes="220px" style={{ objectFit: "contain" }} />
+            </Reveal>
+          ))}
+        </div>
       </MasSection>
 
       <MasNav />
