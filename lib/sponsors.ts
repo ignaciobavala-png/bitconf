@@ -83,13 +83,14 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   },
   {
     id: "node",
-    // Los siete en una línea: la suma de anchos de los logos a su `scale` da
-    // ~23.1 veces el alto de la caja (20.5 de los seis originales + 2.6 de
-    // Coinbox, sumado el 05/10), y quedan seis huecos de 3vw. 80px es el
-    // padding lateral de la sección. Con el piso de 28px entra desde ~890px de
-    // ancho, así que el `nowrap` desde lg (1024) no desborda. Si se suma otro
-    // logo, recalcular el divisor.
-    logoH: "clamp(28px, calc((100vw - 80px - 18vw) / 23.1), 48px)",
+    // Los ocho en una línea: la suma de anchos de los logos a su `scale` da
+    // ~25.4 veces el alto de la caja (20.5 de los seis originales + 2.6 de
+    // Coinbox, sumado el 05/10, + 2.3 de Money On Chain, subido de Satoshi el
+    // 10/10), y quedan siete huecos de 3vw. 80px es el padding lateral de la
+    // sección. Con el piso de 28px entra desde ~1000px de ancho, así que el
+    // `nowrap` desde lg (1024) no desborda. Si se suma otro logo, recalcular
+    // el divisor.
+    logoH: "clamp(28px, calc((100vw - 80px - 21vw) / 25.4), 48px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -100,19 +101,21 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("vantage", "Vantage", 0.8),
       // Isologo + wordmark apilado con "MINING" abajo: compacto, va más alto.
       s("coinbox", "Coin Box Mining", 0.9),
+      // Subido de Satoshi a Node el 10/10/2026, a pedido de la organización.
+      s("money-on-chain", "Money On Chain", 0.9),
     ],
   },
   {
     id: "satoshi",
     // La fila más chica: por debajo del alto visible de los logos de Node.
     logoH: "clamp(18px, 2.2vw, 30px)",
-    // Metamind, Money On Chain y Oracle Numeris sumados el 05/10/2026
-    // (referencia de la organización: ~/Descargas/REFE.jpeg).
+    // Metamind y Oracle Numeris sumados el 05/10/2026 (referencia de la
+    // organización: ~/Descargas/REFE.jpeg). Money On Chain entró acá también y
+    // el 10/10 pasó a Node.
     sponsors: [
       s("belo", "Belo", 0.9),
       s("pala", "Pala Blockchain", 0.9),
       s("metamind", "Metamind", 0.66),
-      s("money-on-chain", "Money On Chain", 0.9),
       s("oracle-numeris", "Oracle Numeris", 0.6, 7),
       // BitJem MAX sumado el 06/10/2026: la píldora azul de "MAX" va en blanco
       // con las letras caladas (transparentes), para no perder el texto.

@@ -1026,41 +1026,58 @@ export default function HomePage() {
           </Reveal>
 
           <div className={TITLE_GAP}>
-            {SPONSOR_TIERS.map((tier, i) => (
-              <Reveal key={tier.id} delay={0.1 + i * 0.08}>
+            {SPONSOR_TIERS.map((tier, i) => {
+              const gapX = tier.oneLine ? "gap-x-10 lg:gap-x-[3vw]" : "gap-x-10 sm:gap-x-16";
+              const renderLogo = (logo: (typeof tier.sponsors)[number]) => (
                 <div
-                  className={`flex flex-wrap items-center justify-start gap-x-10 gap-y-6 py-8 sm:py-10 ${
-                    tier.oneLine ? "lg:flex-nowrap lg:gap-x-[3vw]" : "sm:gap-x-16"
-                  } ${
-                    i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""
-                  }`}
+                  key={logo.src}
+                  className="flex items-center justify-center"
+                  style={{
+                    height: logo.boxScale
+                      ? `calc(${tier.logoH} * ${logo.boxScale})`
+                      : tier.logoH,
+                  }}
                 >
-                  {tier.sponsors.map((logo) => (
-                    <div
-                      key={logo.src}
-                      className="flex items-center justify-center"
-                      style={{
-                        height: logo.boxScale
-                          ? `calc(${tier.logoH} * ${logo.boxScale})`
-                          : tier.logoH,
-                      }}
-                    >
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={1200}
-                        height={200}
-                        className="h-full w-auto object-contain"
-                        style={{
-                          maxHeight: `${logo.scale * 100}%`,
-                          maxWidth: `min(80vw, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
-                        }}
-                      />
-                    </div>
-                  ))}
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={1200}
+                    height={200}
+                    className="h-full w-auto object-contain"
+                    style={{
+                      maxHeight: `${logo.scale * 100}%`,
+                      maxWidth: `min(80vw, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
+                    }}
+                  />
                 </div>
-              </Reveal>
-            ))}
+              );
+              // Los dos últimos logos van juntos en un grupo: si la fila hace
+              // wrap, el grupo baja entero y el último nunca queda solo en su
+              // renglón (pedido de la organización, 10/10 — VnishCom quedaba
+              // huérfano). El grupo también hace wrap: si el par no entra ni
+              // en un renglón propio (Bull Market + Bitcoin.ar en mobile), se
+              // parte en vez de desbordar.
+              const tail = tier.sponsors.length > 2 ? 2 : 0;
+              const head = tier.sponsors.slice(0, tier.sponsors.length - tail);
+              return (
+                <Reveal key={tier.id} delay={0.1 + i * 0.08}>
+                  <div
+                    className={`flex flex-wrap items-center justify-start gap-y-6 py-8 sm:py-10 ${gapX} ${
+                      tier.oneLine ? "lg:flex-nowrap" : ""
+                    } ${
+                      i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""
+                    }`}
+                  >
+                    {head.map(renderLogo)}
+                    {tail > 0 && (
+                      <div className={`flex flex-wrap items-center gap-y-6 ${gapX}`}>
+                        {tier.sponsors.slice(-tail).map(renderLogo)}
+                      </div>
+                    )}
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
