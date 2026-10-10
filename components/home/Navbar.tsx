@@ -22,14 +22,19 @@ const labelStyle: React.CSSProperties = {
 // antes el único acceso era la burbuja de #accesos en la home, que Ignacio
 // pidió reforzar con un link directo en el navbar. Mismo flag que ya prende
 // esa burbuja — se apaga solo, sin tocar este archivo.
+//
+// Edu Hub salió del dropdown de Más y pasó a link propio (10/10/2026, pedido
+// de la organización).
 const LEFT_LINKS = {
   es: [
     { label: "Tickets", href: "/#tickets" },
     ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+    { label: "Edu Hub", href: "/mas/edu-hub" },
   ],
   en: [
     { label: "Tickets", href: "/#tickets" },
     ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+    { label: "Edu Hub", href: "/mas/edu-hub" },
   ],
 } as const;
 
@@ -40,23 +45,21 @@ const MAS_MENU = {
   es: {
     label: "Más",
     items: [
-      { label: "Edu Hub", href: "/mas/edu-hub" },
       { label: "Hackathon", href: "/mas/hackathon" },
       { label: "LABC Bitcoin College", href: "/mas/labc-bitcoin-college" },
       { label: "Embajadores", href: "/mas/embajadores" },
       { label: "Comunidades", href: "/mas/comunidades" },
-      { label: "Monumento", href: "/mas/monumento" },
+      { label: "Monumento 29OCT", href: "/mas/monumento" },
     ],
   },
   en: {
     label: "More",
     items: [
-      { label: "Edu Hub", href: "/mas/edu-hub" },
       { label: "Hackathon", href: "/mas/hackathon" },
       { label: "LABC Bitcoin College", href: "/mas/labc-bitcoin-college" },
       { label: "Ambassadors", href: "/mas/embajadores" },
       { label: "Communities", href: "/mas/comunidades" },
-      { label: "Monument", href: "/mas/monumento" },
+      { label: "Monument 29OCT", href: "/mas/monumento" },
     ],
   },
 } as const;

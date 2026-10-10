@@ -51,7 +51,7 @@ export const MAS_ITEMS = [
   },
   {
     href: "/mas/monumento",
-    label: { es: "Monumento", en: "Monument" },
+    label: { es: "Monumento a Satoshi", en: "Satoshi Monument" },
     blurb: {
       es: "El Génesis de Satoshi Nakamoto.",
       en: "The Genesis of Satoshi Nakamoto.",

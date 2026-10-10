@@ -52,23 +52,6 @@ const bodyStyle: React.CSSProperties = {
   lineHeight: 1.6,
 };
 
-/** Texto con fondo naranja (títulos de la slide 1 y 2, frase destacada de la 4). */
-function Highlight({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return (
-    <span
-      style={{
-        background: ORANGE,
-        padding: "0 0.18em",
-        boxDecorationBreak: "clone",
-        WebkitBoxDecorationBreak: "clone",
-        ...style,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
 const B = ({ children }: { children: React.ReactNode }) => (
   <strong style={{ fontWeight: 700, color: "#fff" }}>{children}</strong>
 );
@@ -77,15 +60,13 @@ const T = {
   es: {
     heroTitleTop: "El Génesis de",
     heroTitleName: "Satoshi Nakamoto",
-    heroCredits: (
+    heroCredits: [
       <>
         Monumento a <B>Satoshi Nakamoto</B> de Buenos Aires
-        <br />
-        Ganador del Gran Premio PremioB.Arte 2025 · 5ª edición
-        <br />
-        Una obra de Ricardo Alonso &amp; Celeste Difabio Videla.
-      </>
-    ),
+      </>,
+      <>Ganador del Gran Premio PremioB.Arte 2025 · 5ª edición</>,
+      <>Una obra de Ricardo Alonso &amp; Celeste Difabio Videla.</>,
+    ],
     ctaTop: "No te pierdas la",
     ctaBottom: "Inauguración",
     heroDate: ["29 de octubre", "Open Fest LABITCONF 26"],
@@ -137,9 +118,7 @@ const T = {
       </>,
       <>
         Con el apoyo de <B>Fundación Bitcoin Iberoamérica</B> y bajo la dirección de <B>Aída Pippo</B>,{" "}
-        <Highlight style={{ fontStyle: "italic", color: "#fff" }}>
-          el monumento busca convertirse en un nuevo ícono de Bitcoin en LATAM
-        </Highlight>
+        <em style={{ color: "#fff" }}>el monumento busca convertirse en un nuevo ícono de Bitcoin en LATAM</em>
       </>,
     ],
     quienes: "Quienes lo hacen posible",
@@ -147,15 +126,13 @@ const T = {
   en: {
     heroTitleTop: "The Genesis of",
     heroTitleName: "Satoshi Nakamoto",
-    heroCredits: (
+    heroCredits: [
       <>
         Buenos Aires&apos; Monument to <B>Satoshi Nakamoto</B>
-        <br />
-        Grand Prize winner, PremioB.Arte 2025 · 5th edition
-        <br />
-        A work by Ricardo Alonso &amp; Celeste Difabio Videla.
-      </>
-    ),
+      </>,
+      <>Grand Prize winner, PremioB.Arte 2025 · 5th edition</>,
+      <>A work by Ricardo Alonso &amp; Celeste Difabio Videla.</>,
+    ],
     ctaTop: "Don't miss the",
     ctaBottom: "Unveiling",
     heroDate: ["October 29", "Open Fest LABITCONF 26"],
@@ -207,9 +184,7 @@ const T = {
       </>,
       <>
         With the support of <B>Fundación Bitcoin Iberoamérica</B> and under the direction of <B>Aída Pippo</B>,{" "}
-        <Highlight style={{ fontStyle: "italic", color: "#fff" }}>
-          the monument aims to become a new Bitcoin icon in LATAM
-        </Highlight>
+        <em style={{ color: "#fff" }}>the monument aims to become a new Bitcoin icon in LATAM</em>
       </>,
     ],
     quienes: "The people making it possible",
@@ -253,7 +228,8 @@ function RichCard({
  * inauguración es exclusiva del ticket Experience). Las dos líneas son a
  * propósito del diseño: cada una va con nowrap, no se parte sola (regla 5).
  * En las slides venía verde (1) y naranja (4); Ignacio pidió unificarlos con
- * el del hero (09/10/2026): verde siempre.
+ * el del hero (09/10/2026): verde siempre. El 10/10 la organización lo pidió
+ * un 25% más chico (padding, letra, borde y radio escalados a 0.75).
  */
 function InaugurationButton({
   top,
@@ -268,13 +244,13 @@ function InaugurationButton({
     <motion.button
       type="button"
       onClick={onClick}
-      className="inline-flex flex-col items-center rounded-[2.5rem]"
+      className="inline-flex flex-col items-center rounded-[1.9rem]"
       style={{
         ...labelStyle,
         color: GREEN,
-        border: `3px solid ${ORANGE}`,
+        border: `2px solid ${ORANGE}`,
         background: "rgba(0,0,0,0.7)",
-        padding: "clamp(16px, 2vw, 24px) clamp(28px, 3.5vw, 44px)",
+        padding: "clamp(12px, 1.5vw, 18px) clamp(21px, 2.6vw, 33px)",
         lineHeight: 1.15,
         cursor: "pointer",
       }}
@@ -282,10 +258,10 @@ function InaugurationButton({
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(18px, 2.2vw, 30px)", textTransform: "none" }}>
+      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(14px, 1.65vw, 22px)", textTransform: "none" }}>
         {top}
       </span>
-      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(20px, 2.5vw, 34px)" }}>{bottom}</span>
+      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(15px, 1.9vw, 26px)" }}>{bottom}</span>
     </motion.button>
   );
 }
@@ -372,19 +348,28 @@ export default function MonumentoPage() {
       <Navbar />
 
       {/* 1 — Hero con video. Opacidad más alta que otros heros de /mas: el
-          video está compuesto para ir de fondo, con aire a la izquierda. */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.6} bgPosition="70% center" first tall>
+          video está compuesto para ir de fondo, con aire a la izquierda.
+          Todo centrado contra la pantalla (`centered`), pedido de la
+          organización del 10/10: antes el bloque iba alineado al navbar y el
+          botón y la fecha quedaban centrados en una caja corrida. */}
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.6} bgPosition="70% center" first tall centered>
         <Reveal>
-          <h1 style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(32px, 4.6vw, 62px)" }}>
+          <h1 className="text-center" style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(32px, 4.6vw, 62px)" }}>
             {t.heroTitleTop}
             <br />
-            <Highlight>{t.heroTitleName}</Highlight>
+            {t.heroTitleName}
           </h1>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p className="mt-8" style={{ ...bodyStyle, fontSize: "clamp(15px, 1.6vw, 22px)", lineHeight: 1.5 }}>
-            {t.heroCredits}
+          <p className="mt-8 text-center" style={{ ...bodyStyle, fontSize: "clamp(13px, 1.2vw, 17px)", lineHeight: 1.6 }}>
+            {/* Una línea por bloque, cada una balanceada: con <br> el balance
+                no actúa y en mobile quedaban "edición" y "Videla" solas. */}
+            {t.heroCredits.map((line, i) => (
+              <span key={i} className="block" style={{ textWrap: "balance" }}>
+                {line}
+              </span>
+            ))}
           </p>
         </Reveal>
 
@@ -417,7 +402,7 @@ export default function MonumentoPage() {
       <MasSection id="origen" bg="/assets/home/hashes.jpg" bgOpacity={0.15}>
         <Reveal>
           <h2 style={{ ...sectionTitleStyle, color: "#fff" }}>
-            <Highlight>{t.origenTitle}</Highlight>
+            {t.origenTitle}
           </h2>
         </Reveal>
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 items-center">
