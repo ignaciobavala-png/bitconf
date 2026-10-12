@@ -70,6 +70,7 @@ const T = {
     ctaTop: "No te pierdas la",
     ctaBottom: "Inauguración",
     heroDate: ["29 de octubre", "Open Fest LABITCONF 26"],
+    heroAccess: "Solo acceso con el ticket EXPERIENCE",
     origenTitle: "El origen de todo",
     origen: [
       <>Un monumento al momento en que comenzó una nueva era.</>,
@@ -136,6 +137,7 @@ const T = {
     ctaTop: "Don't miss the",
     ctaBottom: "Unveiling",
     heroDate: ["October 29", "Open Fest LABITCONF 26"],
+    heroAccess: "Access only with the EXPERIENCE ticket",
     origenTitle: "Where it all began",
     origen: [
       <>A monument to the moment a new era began.</>,
@@ -395,6 +397,20 @@ export default function MonumentoPage() {
             <span className="hidden sm:inline"> — </span>
             <br className="sm:hidden" />
             {t.heroDate[1]}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.34}>
+          <p
+            className="mt-4 text-left"
+            style={{
+              ...bodyStyle,
+              fontSize: "clamp(13px, 1.2vw, 17px)",
+              color: GREEN,
+              textWrap: "balance",
+            }}
+          >
+            {t.heroAccess}
           </p>
         </Reveal>
       </MasSection>
