@@ -58,7 +58,9 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     logoH: "clamp(56px, 7vw, 96px)",
     // FBI salió de la primera fila a pedido de la organización (29/09): Exness
     // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
-    sponsors: [s("exness", "Exness", 0.68)],
+    // NEXO sumado el 12/10/2026 (refe de la organización por WhatsApp):
+    // isologo + wordmark 5:1, mismo alto óptico que Exness.
+    sponsors: [s("exness", "Exness", 0.68), s("nexo", "NEXO", 0.68)],
   },
   {
     id: "bitcoin",
@@ -127,6 +129,11 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // su caja es 1.6 veces más alta (≈ el alto de la fila de Node).
       s("justoken", "JusToken", 0.6, 5),
       { ...s("vnish", "VnishCom", 1), boxScale: 1.6 },
+      // EOLAX y Tienda Cripto sumados el 12/10/2026. Tienda Cripto es el
+      // wordmark en dos renglones (2:1): con la caja de la fila cada renglón
+      // quedaba ilegible, así que va con caja alta como VnishCom.
+      s("eolax", "EOLAX", 0.8),
+      { ...s("tienda-cripto", "Tienda Cripto", 1), boxScale: 1.6 },
     ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);
