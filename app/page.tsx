@@ -289,7 +289,7 @@ const TICKETS = [
     cta: { bg: "#FF4E01", fg: "#E6EEF2", border: "none" },
     background:
       "linear-gradient(155deg, #f2f2f2 0%, #cfcfcf 30%, #8a8a8a 55%, #d8d8d8 75%, #a0a0a0 100%)",
-    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 150" }],
+    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 250" }],
     note: { es: "+ service charge", en: "+ service charge" },
   },
   {
@@ -301,7 +301,7 @@ const TICKETS = [
     cta: { bg: "#ABF760", fg: "#000", border: "none" },
     background:
       "linear-gradient(155deg, #FF7A38 0%, #FF4E01 42%, #C23A00 72%, #7A2400 100%)",
-    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 450" }],
+    prices: [{ es: "Early Bird", en: "Early Bird", value: "US$ 650" }],
     note: { es: "+ service charge", en: "+ service charge" },
   },
 ] as const;
