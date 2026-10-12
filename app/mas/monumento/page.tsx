@@ -229,7 +229,8 @@ function RichCard({
  * propósito del diseño: cada una va con nowrap, no se parte sola (regla 5).
  * En las slides venía verde (1) y naranja (4); Ignacio pidió unificarlos con
  * el del hero (09/10/2026): verde siempre. El 10/10 la organización lo pidió
- * un 25% más chico (padding, letra, borde y radio escalados a 0.75).
+ * un 25% más chico (escalados a 0.75) y el 12/10 otro ~40% (casi la mitad del
+ * original, pedido por la org; la letra no baja más para que se lea).
  */
 function InaugurationButton({
   top,
@@ -244,13 +245,13 @@ function InaugurationButton({
     <motion.button
       type="button"
       onClick={onClick}
-      className="inline-flex flex-col items-center rounded-[1.9rem]"
+      className="inline-flex flex-col items-center rounded-[1.2rem]"
       style={{
         ...labelStyle,
         color: GREEN,
-        border: `2px solid ${ORANGE}`,
+        border: `1.5px solid ${ORANGE}`,
         background: "rgba(0,0,0,0.7)",
-        padding: "clamp(12px, 1.5vw, 18px) clamp(21px, 2.6vw, 33px)",
+        padding: "clamp(7px, 0.9vw, 11px) clamp(13px, 1.5vw, 19px)",
         lineHeight: 1.15,
         cursor: "pointer",
       }}
@@ -258,10 +259,10 @@ function InaugurationButton({
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(14px, 1.65vw, 22px)", textTransform: "none" }}>
+      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(10px, 1vw, 13px)", textTransform: "none" }}>
         {top}
       </span>
-      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(15px, 1.9vw, 26px)" }}>{bottom}</span>
+      <span style={{ whiteSpace: "nowrap", fontSize: "clamp(11px, 1.15vw, 15px)" }}>{bottom}</span>
     </motion.button>
   );
 }
@@ -352,9 +353,9 @@ export default function MonumentoPage() {
           Todo centrado contra la pantalla (`centered`), pedido de la
           organización del 10/10: antes el bloque iba alineado al navbar y el
           botón y la fecha quedaban centrados en una caja corrida. */}
-      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.6} bgPosition="70% center" first tall centered>
+      <MasSection bgVideo={HERO_VIDEO_SRC} bgOpacity={0.6} bgPosition="70% center" first tall>
         <Reveal>
-          <h1 className="text-center" style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(32px, 4.6vw, 62px)" }}>
+          <h1 className="text-left" style={{ ...sectionTitleStyle, color: LIGHT, fontSize: "clamp(32px, 4.6vw, 62px)" }}>
             {t.heroTitleTop}
             <br />
             {t.heroTitleName}
@@ -362,7 +363,7 @@ export default function MonumentoPage() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p className="mt-8 text-center" style={{ ...bodyStyle, fontSize: "clamp(13px, 1.2vw, 17px)", lineHeight: 1.6 }}>
+          <p className="mt-8 text-left" style={{ ...bodyStyle, fontSize: "clamp(13px, 1.2vw, 17px)", lineHeight: 1.6 }}>
             {/* Una línea por bloque, cada una balanceada: con <br> el balance
                 no actúa y en mobile quedaban "edición" y "Videla" solas. */}
             {t.heroCredits.map((line, i) => (
@@ -373,13 +374,13 @@ export default function MonumentoPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.2} className="mt-12 flex justify-center">
+        <Reveal delay={0.2} className="mt-12 flex justify-start">
           <InaugurationButton top={t.ctaTop} bottom={t.ctaBottom} onClick={openCheckout} />
         </Reveal>
 
         <Reveal delay={0.28}>
           <p
-            className="mt-12 text-center"
+            className="mt-12 text-left"
             style={{
               fontFamily: "var(--font-neue-machina), sans-serif",
               fontWeight: 400,
@@ -407,12 +408,12 @@ export default function MonumentoPage() {
         </Reveal>
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-10 items-center">
           <RichCard paragraphs={t.origen} />
-          <Reveal delay={0.2} className="relative w-full max-w-[560px] mx-auto" style={{ aspectRatio: "1200 / 1177" }}>
+          <Reveal delay={0.2} className="relative w-full max-w-[400px] mx-auto" style={{ aspectRatio: "1200 / 1177" }}>
             <Image
               src="/assets/home/monumento/cubo.jpg"
               alt={t.cuboAlt}
               fill
-              sizes="(max-width: 1024px) 90vw, 560px"
+              sizes="(max-width: 1024px) 90vw, 400px"
               style={{ objectFit: "contain" }}
             />
           </Reveal>
