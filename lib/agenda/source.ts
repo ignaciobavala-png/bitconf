@@ -51,9 +51,29 @@ export async function getLatestSnapshot(
  * envío. Se activa con `TEMARIO_SOURCE_URL`; si el origen pide clave va en
  * `TEMARIO_SOURCE_KEY` como Bearer. Se revalida cada 5 minutos.
  *
+ * Si la URL es el documento `publico/temario` de Firestore
+ * (https://firestore.googleapis.com/v1/projects/labitconf-2026/databases/(default)/documents/publico/temario)
+ * funciona igual: son ~288 lecturas por día contra las 50.000 del plan gratuito,
+ * porque lee el servidor y cachea; nunca cada navegador.
+ *
  * Una respuesta que no valida NO se usa: se sigue con lo anterior.
  */
 const PULL_REVALIDATE_SECONDS = 300;
+
+/**
+ * La API REST de Firestore no devuelve el documento tal cual: lo envuelve en
+ * `{ fields: { json: { stringValue: "<temario v1 como texto>" } } }`. La
+ * organización publica en `publico/temario` (relevamiento del 13/10) con el
+ * temario entero en el campo `json`. Se desenvuelve acá para que el mismo
+ * `TEMARIO_SOURCE_URL` sirva para un archivo plano o para ese documento.
+ */
+export function unwrapFirestore(body: unknown): unknown {
+  const fields = (body as { fields?: { json?: { stringValue?: unknown } } } | null)?.fields;
+  if (!fields) return body;
+  const text = fields.json?.stringValue;
+  if (typeof text !== "string") throw new Error('el documento de Firestore no trae el campo "json"');
+  return JSON.parse(text);
+}
 
 async function getPulledPayload(): Promise<SnapshotPayload | null> {
   const url = process.env.TEMARIO_SOURCE_URL;
@@ -66,7 +86,7 @@ async function getPulledPayload(): Promise<SnapshotPayload | null> {
       signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const v = validateTemario(await res.json());
+    const v = validateTemario(unwrapFirestore(await res.json()));
     if (!v.ok) throw new Error(`no valida: ${v.errors[0]}`);
     return v.payload;
   } catch (e) {

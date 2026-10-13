@@ -77,7 +77,7 @@ Reglas que valida el servidor:
 
 ## Puesta en marcha
 
-**Si la organización publica un archivo (lectura):** cargar `TEMARIO_SOURCE_URL` en Vercel (Preview y Production), sin comillas. No requiere tabla ni clave nuestra.
+**Si la organización publica un archivo o el documento `publico/temario` de Firestore (lectura):** cargar `TEMARIO_SOURCE_URL` en Vercel (Preview y Production), sin comillas. No requiere tabla ni clave nuestra. Para Firestore la URL es `https://firestore.googleapis.com/v1/projects/labitconf-2026/databases/(default)/documents/publico/temario` (el documento tiene que tener lectura pública).
 
 **Si la organización envía (POST):**
 1. Correr `lib/db/temario.sql` en Supabase (tabla nueva, no toca nada existente).
