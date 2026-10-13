@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { hashIdentity } from "@/lib/itinerary/identity";
 import { isValidIdentity } from "@/lib/itinerary/rules";
+import { TEMARIO_IDS } from "@/lib/agenda/ids";
 
 // Respaldo y recuperación del itinerario.
 //
@@ -63,8 +64,13 @@ async function rateLimited(supabase: Supabase, ipHash: string): Promise<boolean>
  */
 async function keepLiveTalks(supabase: Supabase, ids: string[]): Promise<string[]> {
   if (ids.length === 0) return [];
-  const { data } = await supabase.from("talks").select("id").in("id", ids);
-  const live = new Set((data ?? []).map((r) => r.id as string));
+  // Las sesiones del temario no están en la base: se validan contra el archivo.
+  const fromDb = ids.filter((id) => !TEMARIO_IDS.has(id));
+  const live = new Set<string>(ids.filter((id) => TEMARIO_IDS.has(id)));
+  if (fromDb.length > 0) {
+    const { data } = await supabase.from("talks").select("id").in("id", fromDb);
+    for (const r of data ?? []) live.add(r.id as string);
+  }
   return ids.filter((id) => live.has(id));
 }
 

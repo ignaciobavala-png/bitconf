@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useAgendaStore } from "@/lib/store/agenda";
 import { useLangStore } from "@/lib/store/lang";
-import { DAYS, DAY_LABELS, compareStages, stageLabel, isDay } from "@/lib/speakers/schedule";
+import { DAYS, DAY_LABELS, compareStages, eventMinutes, formatMinutes, stageLabel, isDay } from "@/lib/speakers/schedule";
 import AgendaToggle from "@/components/agenda/AgendaToggle";
 import BackupPanel from "./BackupPanel";
 import type { AgendaTalk } from "@/lib/speakers/queries";
@@ -45,6 +45,13 @@ const T = {
     offline: "Works offline: if you've opened it once, you'll be able to see it on event day even with no signal.",
   },
 } as const;
+
+/** "10:30 – 11:00" si la sesión tiene hora; null si todavía no. */
+function whenOf(k: AgendaTalk): string | null {
+  const start = k.startsAt ? eventMinutes(k.startsAt) : null;
+  if (start == null) return null;
+  return `${formatMinutes(start)} – ${formatMinutes(start + (k.durationMin ?? 30))}`;
+}
 
 export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
   const lang = useLangStore((s) => s.lang);
@@ -137,7 +144,11 @@ export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
                             <h4 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.2vw, 15px)", lineHeight: 1.3 }}>
                               {k.title}
                             </h4>
-                            {k.speaker && (
+                            {k.whoText ? (
+                              <p className="mt-1.5" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(11px, 1.05vw, 13px)" }}>
+                                {k.whoText}
+                              </p>
+                            ) : k.speaker && (
                               <Link
                                 href={`/speakers/${k.speaker.slug}`}
                                 className="mt-1.5 inline-block transition-colors duration-200 hover:text-[#ABF760]"
@@ -147,7 +158,7 @@ export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
                               </Link>
                             )}
                             <p className="mt-1.5" style={{ ...labelStyle, color: "#6E7178", fontSize: "clamp(9px, 0.9vw, 10px)" }}>
-                              {[t.timeTba, k.durationMin ? `${k.durationMin} ${t.minutes}` : null].filter(Boolean).join(" · ")}
+                              {[whenOf(k) ?? t.timeTba, k.durationMin ? `${k.durationMin} ${t.minutes}` : null].filter(Boolean).join(" · ")}
                             </p>
                           </div>
                           <AgendaToggle talkId={k.id} />

@@ -213,8 +213,6 @@ export type AgendaTalk = {
   speakers?: { slug: string; name: string; photoUrl: string | null }[];
   /** Columnas que ocupa: 2 = plenaria entre este escenario y el siguiente. */
   span?: number;
-  /** false = sin botón de Mi Agenda (el id no existe en la base). */
-  pickable?: boolean;
 };
 
 type AgendaRow = {

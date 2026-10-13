@@ -718,7 +718,7 @@ function TalkCard({
             {talk.title}
           </h3>
         </div>
-        {talk.pickable !== false && <AgendaToggle talkId={talk.id} />}
+        <AgendaToggle talkId={talk.id} />
       </div>
 
       {/* El abstract solo cuando hay ancho para leerlo: en las columnas

@@ -8,6 +8,7 @@
 
 import type { AgendaTalk, SpeakerCard } from "@/lib/speakers/queries";
 import { TRACKS, type Session } from "./temario";
+import { sessionUuid } from "./ids";
 
 function norm(v: string): string {
   return v
@@ -68,10 +69,10 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     const mm = String(s.start % 60).padStart(2, "0");
 
     return {
-      id: s.id,
+      id: sessionUuid(s.id),
       title: s.title,
       abstract: null,
-      tags: [],
+      tags: s.tags,
       level: null,
       durationMin: s.dur,
       isPanel: false,
@@ -83,7 +84,6 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
       mod: s.mod,
       speakers: found,
       span: s.span,
-      pickable: false,
     };
   });
 }

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Navbar from "@/components/home/Navbar";
 import MyAgendaView from "@/components/mi-agenda/MyAgendaView";
 import ServiceWorker from "@/components/mi-agenda/ServiceWorker";
-import { getAgenda } from "@/lib/speakers/queries";
+import { SESSIONS } from "@/lib/agenda/temario";
+import { toAgendaTalks } from "@/lib/agenda/match";
+import { getSpeakers } from "@/lib/speakers/queries";
 
 export const metadata: Metadata = {
   title: "Mi Agenda — LABITCONF 2026",
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function MiAgendaPage() {
-  const talks = await getAgenda();
+  // Mismo temario que /agenda: los ids que guarda el "+" son los de ahí.
+  const talks = toAgendaTalks(SESSIONS, await getSpeakers());
 
   return (
     <main className="relative min-h-screen" style={{ background: "#171616" }}>

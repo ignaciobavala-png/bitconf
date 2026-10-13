@@ -278,7 +278,7 @@ function GridCard({
           {formatMinutes(talk.startMin)} – {formatMinutes(talk.startMin + dur)}
           {plenary && ` · ${t.plenary}`}
         </span>
-        {talk.pickable !== false && <AgendaToggle talkId={talk.id} />}
+        <AgendaToggle talkId={talk.id} />
       </div>
 
       {/* El texto de la organización se muestra tal cual: sin uppercase ni
