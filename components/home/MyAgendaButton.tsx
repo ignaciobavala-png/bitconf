@@ -33,7 +33,13 @@ export default function MyAgendaButton() {
 
   // Apagado mientras la organización no publique el programa (feedback 10/09).
   // El botón lo montan cinco páginas: el corte va acá y no en cada una.
-  if (!SHOW_MI_AGENDA) return null;
+  //
+  // Excepción: dentro de /agenda sí se muestra. Esa página solo se alcanza por
+  // URL directa mientras el flag esté apagado, y quien está ahí puede tocar el
+  // "+" de una charla: si el botón no aparece, no hay forma de ver lo elegido.
+  // En el resto del sitio sigue oculto.
+  const inAgenda = pathname === "/agenda" || pathname?.startsWith("/agenda/");
+  if (!SHOW_MI_AGENDA && !inAgenda) return null;
 
   // Dentro de /mi-agenda el botón no lleva a ningún lado.
   if (pathname?.startsWith("/mi-agenda")) return null;
