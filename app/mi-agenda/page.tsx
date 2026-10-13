@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/home/Navbar";
 import MyAgendaView from "@/components/mi-agenda/MyAgendaView";
 import ServiceWorker from "@/components/mi-agenda/ServiceWorker";
-import { SESSIONS } from "@/lib/agenda/temario";
+import { getSessions } from "@/lib/agenda/source";
 import { toAgendaTalks } from "@/lib/agenda/match";
 import { getSpeakers } from "@/lib/speakers/queries";
 
@@ -19,7 +19,7 @@ export const revalidate = 3600;
 
 export default async function MiAgendaPage() {
   // Mismo temario que /agenda: los ids que guarda el "+" son los de ahí.
-  const talks = toAgendaTalks(SESSIONS, await getSpeakers());
+  const talks = toAgendaTalks(await getSessions(), await getSpeakers());
 
   return (
     <main className="relative min-h-screen" style={{ background: "#171616" }}>

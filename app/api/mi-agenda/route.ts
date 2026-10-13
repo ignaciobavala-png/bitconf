@@ -3,7 +3,8 @@ import { createHash } from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { hashIdentity } from "@/lib/itinerary/identity";
 import { isValidIdentity } from "@/lib/itinerary/rules";
-import { TEMARIO_IDS } from "@/lib/agenda/ids";
+import { TEMARIO_IDS, sessionUuid } from "@/lib/agenda/ids";
+import { getLatestSnapshot } from "@/lib/agenda/source";
 
 // Respaldo y recuperación del itinerario.
 //
@@ -65,8 +66,13 @@ async function rateLimited(supabase: Supabase, ipHash: string): Promise<boolean>
 async function keepLiveTalks(supabase: Supabase, ids: string[]): Promise<string[]> {
   if (ids.length === 0) return [];
   // Las sesiones del temario no están en la base: se validan contra el archivo.
-  const fromDb = ids.filter((id) => !TEMARIO_IDS.has(id));
-  const live = new Set<string>(ids.filter((id) => TEMARIO_IDS.has(id)));
+  // Vale tanto el temario del repo como el último que publicó la organización.
+  const published = await getLatestSnapshot(supabase);
+  const known = new Set<string>(TEMARIO_IDS);
+  for (const s of published?.payload.sessions ?? []) known.add(sessionUuid(s.id));
+
+  const fromDb = ids.filter((id) => !known.has(id));
+  const live = new Set<string>(ids.filter((id) => known.has(id)));
   if (fromDb.length > 0) {
     const { data } = await supabase.from("talks").select("id").in("id", fromDb);
     for (const r of data ?? []) live.add(r.id as string);

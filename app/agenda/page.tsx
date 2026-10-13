@@ -5,7 +5,7 @@ import QaChatWidget from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import AgendaHeader from "@/components/agenda/AgendaHeader";
 import AgendaBrowser from "@/components/agenda/AgendaBrowser";
-import { SESSIONS } from "@/lib/agenda/temario";
+import { getSessions } from "@/lib/agenda/source";
 import { toAgendaTalks } from "@/lib/agenda/match";
 import { getSpeakers } from "@/lib/speakers/queries";
 
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function AgendaPage() {
-  const talks = toAgendaTalks(SESSIONS, await getSpeakers());
+  const talks = toAgendaTalks(await getSessions(), await getSpeakers());
   return (
     <main className="relative min-h-screen" style={{ background: "#171616" }}>
       <Navbar />

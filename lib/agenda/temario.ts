@@ -54,7 +54,7 @@ export type Session = {
   /** Columna donde arranca la celda. */
   track: TrackId;
   /** Cuántas columnas ocupa: 2 = plenaria entre `track` y la siguiente. */
-  span: 1 | 2;
+  span: number;
   /** Minutos desde medianoche. */
   start: number;
   /** Minutos. */
@@ -89,7 +89,7 @@ type Draft = {
 };
 
 /** "Cómo es vivir desde CUBA" → "como-es-vivir-desde-cuba". */
-function slug(title: string): string {
+export function slug(title: string): string {
   return title
     .toLowerCase()
     .normalize("NFD")
