@@ -201,7 +201,6 @@ const TICKET_FEATURES = {
     businessSummary: "Todo lo de Ticket General",
     businessExtra: [
       "TREZOR Hardware Wallet de Regalo",
-      "B2B Stage",
       "Ikigii Business Stage",
       "Nexo VIP Área",
       "Coffee & Bites Station",
@@ -226,7 +225,6 @@ const TICKET_FEATURES = {
     businessSummary: "Everything in the General Ticket",
     businessExtra: [
       "Free TREZOR Hardware Wallet",
-      "B2B Stage",
       "Ikigii Business Stage",
       "Nexo VIP Area",
       "Coffee & Bites Station",
