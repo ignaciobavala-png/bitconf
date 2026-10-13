@@ -37,7 +37,7 @@ const bodyStyle: React.CSSProperties = {
  * Eso es esperado: lo que el pedido descarta es el scroll HORIZONTAL, para que
  * los siete escenarios se vean de una sola mirada.
  */
-const PX_PER_MIN = 4;
+const PX_PER_MIN = 5;
 
 /**
  * Piso de altura para que una charla corta siga siendo legible. Con las
@@ -54,7 +54,7 @@ const CARD_GAP = 6;
 const PAD_Y = 9;
 const TIME_H = 20;
 const TITLE_MT = 6;
-const SPEAKER_H = 28;
+const SPEAKER_H = 38;
 const META_H = 19;
 const LINE_H = 16;
 
@@ -72,8 +72,8 @@ const TOP_PAD = 14;
 const NAV_OFFSET = 76;
 
 const T = {
-  es: { stage: "Escenario", minutes: "min", panel: "Panel", to: "a" },
-  en: { stage: "Stage", minutes: "min", panel: "Panel", to: "to" },
+  es: { stage: "Escenario", minutes: "min", panel: "Panel", plenary: "Plenaria", to: "a" },
+  en: { stage: "Stage", minutes: "min", panel: "Panel", plenary: "Plenary", to: "to" },
 } as const;
 
 /** Colchón antes de la primera charla y después de la última. */
@@ -145,7 +145,7 @@ export default function ScheduleGrid({
             <div key={stage} className="min-w-0">
               <h2
                 className="truncate"
-                style={{ ...labelStyle, color, fontSize: "clamp(10px, 0.95vw, 13px)" }}
+                style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(10px, 0.95vw, 13px)" }}
                 title={stageLabel(stage, lang)}
               >
                 {stageLabel(stage, lang)}
@@ -223,24 +223,28 @@ function GridCard({
   lang: "es" | "en";
 }) {
   const t = T[lang];
-  const color = stageColor(stage);
+  const plenary = (talk.span ?? 1) > 1;
+  // Las plenarias cruzan columnas, así que no tienen color de escenario.
+  const color = plenary ? "#E6EEF2" : stageColor(stage);
   const dur = talk.durationMin ?? 30;
   const height = Math.max(dur * PX_PER_MIN, MIN_CARD_H) - CARD_GAP;
 
-  // Qué entra depende del alto real del bloque, no del gusto: en una charla de
-  // 20 minutos el speaker con foto empuja el título fuera de la tarjeta.
-  // Qué entra en la tarjeta se decide midiendo, no con umbrales al ojo: en un
-  // bloque de 30 min (114px) el título a tres líneas empujaba el nombre del
-  // speaker fuera del borde. Se descuenta todo lo que ocupa lugar —padding,
-  // franja de hora, márgenes— y recién ahí se reparte lo que sobra.
-  const showMeta = height >= 150;
+  // Los speakers: el texto de la organización, literal, y si se pudo cruzar con
+  // alguien publicado, su foto y link. Las charlas que vienen de la base no
+  // traen `whoText` y caen al nombre del speaker.
+  const who = talk.whoText ?? talk.speaker?.name ?? null;
+  const people = talk.speakers ?? (talk.speaker ? [talk.speaker] : []);
 
+  // Qué entra en la tarjeta se decide midiendo, no con umbrales al ojo: se
+  // descuenta todo lo que ocupa lugar —padding, franja de hora, márgenes— y
+  // recién ahí se reparte lo que sobra.
+  const showMeta = height >= 190;
   let free = height - PAD_Y * 2 - TIME_H - TITLE_MT - (showMeta ? META_H : 0);
 
-  // El speaker solo si después de ponerlo quedan al menos dos líneas de
-  // título: un título de una línea con la cara del speaker no dice nada.
-  const showSpeaker = free - SPEAKER_H >= LINE_H * 2;
-  if (showSpeaker) free -= SPEAKER_H;
+  // Los nombres solo si después de ponerlos quedan al menos dos líneas de
+  // título: un título de una línea con los nombres no dice nada.
+  const showWho = !!who && free - SPEAKER_H >= LINE_H * 2;
+  if (showWho) free -= SPEAKER_H;
 
   const titleLines = Math.max(1, Math.floor(free / LINE_H));
 
@@ -249,16 +253,22 @@ function GridCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute inset-x-0 overflow-hidden rounded-xl"
+      className="absolute left-0 overflow-hidden rounded-xl"
       style={{
         top: (talk.startMin - opens) * PX_PER_MIN,
         height,
+        // Una plenaria ocupa su columna más las siguientes y los huecos entre
+        // ellas (gap-2 = 0.5rem). Pisa la columna vecina, que en esa franja
+        // está vacía por construcción del temario.
+        width: plenary
+          ? `calc(${(talk.span ?? 1) * 100}% + ${((talk.span ?? 1) - 1) * 0.5}rem)`
+          : "100%",
+        zIndex: plenary ? 2 : 1,
         border: "1px solid rgba(230,238,242,0.12)",
         borderLeftWidth: 3,
         borderLeftColor: color,
-        // Opaco a propósito: es el mismo valor que rgba(255,255,255,0.025)
-        // sobre Alamo, resuelto a un sólido. Con el translúcido, las líneas de
-        // media hora se veían A TRAVÉS de la tarjeta y parecían cortarla.
+        // Opaco a propósito: con el translúcido, las líneas de media hora se
+        // veían A TRAVÉS de la tarjeta y parecían cortarla.
         background: "#1D1C1C",
         padding: "9px 11px",
       }}
@@ -266,17 +276,21 @@ function GridCard({
       <div className="flex items-start justify-between gap-2">
         <span style={{ ...labelStyle, color, fontSize: 9.5, whiteSpace: "nowrap" }}>
           {formatMinutes(talk.startMin)} – {formatMinutes(talk.startMin + dur)}
+          {plenary && ` · ${t.plenary}`}
         </span>
-        <AgendaToggle talkId={talk.id} />
+        {talk.pickable !== false && <AgendaToggle talkId={talk.id} />}
       </div>
 
+      {/* El texto de la organización se muestra tal cual: sin uppercase ni
+          capitalize. `title` deja leer completo lo que el clamp recorta. */}
       <h3
         className="mt-1.5"
+        title={talk.title}
         style={{
-          ...labelStyle,
+          ...bodyStyle,
           color: "#E6EEF2",
-          fontSize: "clamp(10.5px, 0.82vw, 12.5px)",
-          lineHeight: 1.28,
+          fontSize: "clamp(11px, 0.85vw, 13px)",
+          lineHeight: `${LINE_H}px`,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: titleLines,
@@ -286,39 +300,59 @@ function GridCard({
         {talk.title}
       </h3>
 
-      {showSpeaker && talk.speaker && (
-        <Link
-          href={`/speakers/${talk.speaker.slug}`}
-          className="group mt-2 flex items-center gap-2"
-        >
+      {showWho && who && (
+        <div className="mt-2 flex items-start gap-2" title={who}>
+          {people.length > 0 && (
+            <span className="flex shrink-0 -space-x-1.5 pt-0.5">
+              {people.slice(0, 3).map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/speakers/${p.slug}`}
+                  aria-label={p.name}
+                  className="relative block overflow-hidden rounded-full"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    background: "#2A2929",
+                    border: "1.5px solid #1D1C1C",
+                  }}
+                >
+                  {p.photoUrl ? (
+                    <Image
+                      src={p.photoUrl}
+                      alt={p.name}
+                      fill
+                      sizes="20px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  ) : (
+                    <span
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ ...labelStyle, color: "rgba(230,238,242,0.3)", fontSize: 9 }}
+                    >
+                      {p.name.slice(0, 1)}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </span>
+          )}
           <span
-            className="relative shrink-0 overflow-hidden rounded-full"
-            style={{ width: 20, height: 20, background: "rgba(230,238,242,0.06)" }}
+            style={{
+              ...labelStyle,
+              textTransform: "none",
+              color: "#A5A8B1",
+              fontSize: 10.5,
+              lineHeight: 1.35,
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2,
+              overflow: "hidden",
+            }}
           >
-            {talk.speaker.photoUrl ? (
-              <Image
-                src={talk.speaker.photoUrl}
-                alt={talk.speaker.name}
-                fill
-                sizes="20px"
-                style={{ objectFit: "cover" }}
-              />
-            ) : (
-              <span
-                className="absolute inset-0 flex items-center justify-center"
-                style={{ ...labelStyle, color: "rgba(230,238,242,0.3)", fontSize: 9 }}
-              >
-                {talk.speaker.name.slice(0, 1)}
-              </span>
-            )}
+            {who}
           </span>
-          <span
-            className="truncate transition-colors duration-200 group-hover:text-[#ABF760]"
-            style={{ ...bodyStyle, color: "#A5A8B1", fontSize: 10.5 }}
-          >
-            {talk.speaker.name}
-          </span>
-        </Link>
+        </div>
       )}
 
       {showMeta && (
@@ -326,6 +360,11 @@ function GridCard({
           <span style={{ ...labelStyle, color: "#5C5F66", fontSize: 9 }}>
             {dur} {t.minutes}
           </span>
+          {talk.mod && (
+            <span style={{ ...labelStyle, textTransform: "none", color: "#5C5F66", fontSize: 9 }}>
+              MOD: {talk.mod}
+            </span>
+          )}
           {talk.isPanel && (
             <span style={{ ...labelStyle, color: "#5C5F66", fontSize: 9 }}>{t.panel}</span>
           )}

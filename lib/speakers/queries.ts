@@ -203,6 +203,18 @@ export type AgendaTalk = {
   /** null mientras la planilla no traiga hora — ver getAgenda(). */
   startsAt: string | null;
   speaker: { slug: string; name: string; photoUrl: string | null } | null;
+
+  // Solo las completa el temario estático (lib/agenda/match.ts); las charlas
+  // que vienen de la base no las tienen y la UI cae a `speaker`.
+  /** Speakers tal cual los escribió la organización. Se muestra literal. */
+  whoText?: string;
+  mod?: string;
+  /** Los que se pudieron cruzar con un speaker publicado (foto + ficha). */
+  speakers?: { slug: string; name: string; photoUrl: string | null }[];
+  /** Columnas que ocupa: 2 = plenaria entre este escenario y el siguiente. */
+  span?: number;
+  /** false = sin botón de Mi Agenda (el id no existe en la base). */
+  pickable?: boolean;
 };
 
 type AgendaRow = {

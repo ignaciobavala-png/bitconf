@@ -35,7 +35,15 @@ export function isDay(value: string | null): value is Day {
  * "Escenario N", que es correcto pero no ayuda a elegir — que es justamente
  * para lo que sirve filtrar por escenario.
  */
-export const STAGE_NAMES: Record<string, { es: string; en: string }> = {};
+export const STAGE_NAMES: Record<string, { es: string; en: string }> = {
+  // Columnas del Boceto de Temario 2026 (13/10/2026), en su orden.
+  s1: { es: "Pastilla", en: "Pastilla" },
+  s2: { es: "Visión", en: "Vision" },
+  s3: { es: "ABC", en: "ABC" },
+  s4: { es: "WorkShop", en: "WorkShop" },
+  s5: { es: "Business", en: "Business" },
+  s6: { es: "Autocustodia", en: "Self-custody" },
+};
 
 export function stageLabel(stage: string, lang: "es" | "en"): string {
   const named = STAGE_NAMES[stage];
@@ -108,12 +116,12 @@ export const PROGRAM: Record<ProgramDay, ProgramDayInfo> = {
   },
   oct30: {
     tag: { es: "Day 1", en: "Day 1" },
-    hours: { es: "09:30 — 18:00", en: "09:30 — 18:00" },
+    hours: { es: "09:30 — 19:00", en: "09:30 — 19:00" },
     access: { es: "General · Business · Experience", en: "General · Business · Experience" },
   },
   oct31: {
     tag: { es: "Day 2", en: "Day 2" },
-    hours: { es: "09:30 — 18:00", en: "09:30 — 18:00" },
+    hours: { es: "10:00 — 19:30", en: "10:00 — 19:30" },
     access: { es: "General · Business · Experience", en: "General · Business · Experience" },
   },
   nov1: {
@@ -171,12 +179,12 @@ export const EVENT_TZ = "America/Argentina/Buenos_Aires";
 export type DayWindow = { opens: number; closes: number };
 
 /**
- * De 09:30 a 18:00 según `PROGRAM`. Se guarda en minutos y no como texto
+ * Las horas de `PROGRAM`, según el Boceto de Temario (vie 09:30–19:00, sáb 10:00–19:30). Se guarda en minutos y no como texto
  * porque acá el dato se usa para calcular píxeles, no para mostrar.
  */
 export const DAY_WINDOW: Record<Day, DayWindow> = {
-  oct30: { opens: 9 * 60 + 30, closes: 18 * 60 },
-  oct31: { opens: 9 * 60 + 30, closes: 18 * 60 },
+  oct30: { opens: 9 * 60 + 30, closes: 19 * 60 },
+  oct31: { opens: 10 * 60, closes: 19 * 60 + 30 },
 };
 
 /**

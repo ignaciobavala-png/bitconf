@@ -13,6 +13,7 @@ import {
   PROGRAM,
   compareStages,
   eventMinutes,
+  formatMinutes,
   stageLabel,
   type Day,
 } from "@/lib/speakers/schedule";
@@ -124,6 +125,8 @@ function haystack(k: AgendaTalk, lang: "es" | "en"): string {
       k.title,
       k.abstract ?? "",
       k.speaker?.name ?? "",
+      k.whoText ?? "",
+      k.mod ?? "",
       stageLabel(k.stage, lang),
       ...k.tags.map((c) => TAG_LABELS[c][lang]),
     ].join(" ")
@@ -277,16 +280,24 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
     return CANONICAL_TAGS.filter((c) => present.has(c));
   }, [ofDay]);
 
-  const filtered = useMemo(
-    () =>
-      ofDay.filter((k) => {
-        if (stage && k.stage !== stage) return false;
-        if (tag && !k.tags.includes(tag)) return false;
-        if (needle && !(index.get(k.id) ?? "").includes(needle)) return false;
-        return true;
-      }),
-    [ofDay, stage, tag, needle, index]
-  );
+  const filtered = useMemo(() => {
+    const out: AgendaTalk[] = [];
+    for (const k of ofDay) {
+      if (tag && !k.tags.includes(tag)) continue;
+      if (needle && !(index.get(k.id) ?? "").includes(needle)) continue;
+      if (stage) {
+        // Una plenaria toca varias columnas: con un escenario elegido aparece
+        // en cada una de ellas, y ahí ocupa una sola (hay una columna).
+        const from = Number(k.stage.replace(/^s/i, ""));
+        const at = Number(stage.replace(/^s/i, ""));
+        if (!(at >= from && at < from + (k.span ?? 1))) continue;
+        out.push({ ...k, stage, span: 1 });
+      } else {
+        out.push(k);
+      }
+    }
+    return out;
+  }, [ofDay, stage, tag, needle, index]);
 
   // Buscar un speaker sin saber qué día habla es lo normal. En vez de mostrar
   // "no hay nada" cuando el match está en el otro día, se avisa y se ofrece
@@ -674,6 +685,11 @@ function TalkCard({
 }) {
   const t = T[lang];
 
+  const start = talk.startsAt ? eventMinutes(talk.startsAt) : null;
+  const when =
+    start != null ? `${formatMinutes(start)} – ${formatMinutes(start + (talk.durationMin ?? 30))}` : null;
+  const people = talk.speakers ?? (talk.speaker ? [talk.speaker] : []);
+
   const meta = [
     talk.durationMin ? `${talk.durationMin} ${t.minutes}` : null,
     talk.isPanel ? t.panel : null,
@@ -693,10 +709,16 @@ function TalkCard({
       }}
     >
       <div className="flex items-start justify-between gap-3">
-        <h3 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(13px, 1.3vw, 16px)", lineHeight: 1.3 }}>
-          {talk.title}
-        </h3>
-        <AgendaToggle talkId={talk.id} />
+        <div>
+          {when && (
+            <p style={{ ...labelStyle, color: "#FF4E01", fontSize: 10, marginBottom: 6 }}>{when}</p>
+          )}
+          {/* Texto de la organización: tal cual, sin uppercase. */}
+          <h3 style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.3vw, 16px)", lineHeight: 1.35 }}>
+            {talk.title}
+          </h3>
+        </div>
+        {talk.pickable !== false && <AgendaToggle talkId={talk.id} />}
       </div>
 
       {/* El abstract solo cuando hay ancho para leerlo: en las columnas
@@ -707,39 +729,50 @@ function TalkCard({
         </p>
       )}
 
-      {talk.speaker && (
-        <Link
-          href={`/speakers/${talk.speaker.slug}`}
-          className="group mt-4 flex items-center gap-3"
-        >
+      {(talk.whoText ?? talk.speaker?.name) && (
+        <div className="mt-4 flex items-start gap-3">
+          {people.length > 0 && (
+            <span className="flex shrink-0 -space-x-2">
+              {people.slice(0, 3).map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/speakers/${p.slug}`}
+                  aria-label={p.name}
+                  className="relative block overflow-hidden rounded-full"
+                  style={{ width: 34, height: 34, background: "#2A2929", border: "2px solid #171616" }}
+                >
+                  {p.photoUrl ? (
+                    <Image src={p.photoUrl} alt={p.name} fill sizes="34px" style={{ objectFit: "cover" }} />
+                  ) : (
+                    <span
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ ...labelStyle, color: "rgba(230,238,242,0.3)", fontSize: 13 }}
+                    >
+                      {p.name.slice(0, 1)}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </span>
+          )}
           <span
-            className="relative shrink-0 overflow-hidden rounded-full"
-            style={{ width: 34, height: 34, background: "rgba(230,238,242,0.06)" }}
+            style={{
+              ...labelStyle,
+              textTransform: "none",
+              color: "#E6EEF2",
+              fontSize: "clamp(11px, 1vw, 12px)",
+              lineHeight: 1.35,
+              alignSelf: "center",
+            }}
           >
-            {talk.speaker.photoUrl ? (
-              <Image
-                src={talk.speaker.photoUrl}
-                alt={talk.speaker.name}
-                fill
-                sizes="34px"
-                style={{ objectFit: "cover" }}
-              />
-            ) : (
-              <span
-                className="absolute inset-0 flex items-center justify-center"
-                style={{ ...labelStyle, color: "rgba(230,238,242,0.3)", fontSize: 13 }}
-              >
-                {talk.speaker.name.slice(0, 1)}
-              </span>
-            )}
+            {talk.whoText ?? talk.speaker?.name}
           </span>
-          <span
-            className="transition-colors duration-200 group-hover:text-[#ABF760]"
-            style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(10px, 1vw, 12px)", lineHeight: 1.25 }}
-          >
-            {talk.speaker.name}
-          </span>
-        </Link>
+        </div>
+      )}
+      {talk.mod && (
+        <p className="mt-2" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: 12, fontStyle: "italic" }}>
+          MOD: {talk.mod}
+        </p>
       )}
 
       {meta.length > 0 && (
