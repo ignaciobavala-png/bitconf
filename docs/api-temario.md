@@ -71,7 +71,7 @@ Reglas que valida el servidor:
 - `stages` de una sesión: uno o más escenarios **consecutivos** (una plenaria que cruza columnas).
 - `id` único en el envío, texto estable. **Es la clave de Mi Agenda**: si cambia al mover una charla, el asistente la pierde de su lista.
 - Dos sesiones no pueden pisarse en el mismo escenario y horario.
-- `kind`: `charla | panel | firetalk | plenaria | otro` (otro valor se guarda como `otro` con aviso).
+- `kind`: `charla | panel | firetalk | plenaria | taller | otro` (otro valor se guarda como `otro` con aviso).
 - `tags` opcional, de los 12 clusters de `lib/speakers/tags.ts`. Si una sesión no trae, conserva los provisorios del temario cargado a mano cuando el título coincide.
 - **Lo que se guarda se reconstruye desde los campos validados**, no es el body recibido: un campo de más (un mail, una nota interna) se descarta y nunca llega a la base ni a una página pública.
 

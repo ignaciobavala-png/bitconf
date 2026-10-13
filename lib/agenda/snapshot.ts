@@ -20,7 +20,7 @@ const DAY_BY_DATE: Record<string, TemarioDay> = {
   "2026-10-31": "oct31",
 };
 
-export const KINDS = ["charla", "panel", "firetalk", "plenaria", "otro"] as const;
+export const KINDS = ["charla", "panel", "firetalk", "plenaria", "taller", "otro"] as const;
 export type Kind = (typeof KINDS)[number];
 
 export type SnapshotSession = {
@@ -88,7 +88,7 @@ export function validateTemario(body: unknown): Validation {
       else if (stages.some((s) => s.key === key)) err(`stages[${i}]: "${key}" está repetido.`);
       else stages.push({ key, name });
     }
-    // La web tiene seis columnas con nombre propio. Un nombre distinto no
+    // La web tiene siete columnas con nombre propio. Un nombre distinto no
     // rompe nada, pero hoy la web sigue mostrando el suyo: se avisa.
     for (const s of stages) {
       const n = Number(s.key.slice(1));

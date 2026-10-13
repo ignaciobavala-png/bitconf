@@ -25,6 +25,7 @@ export const TRACKS = [
   "workshop",
   "business",
   "autocustodia",
+  "bitcoineta",
 ] as const;
 export type TrackId = (typeof TRACKS)[number];
 
@@ -35,7 +36,10 @@ export const TRACK_NAMES: Record<TrackId, string> = {
   abc: "ABC",
   workshop: "WorkShop",
   business: "Business",
-  autocustodia: "Autocustodia",
+  // s6: la org la renombró de "Autocustodia" a "BitcoinAR" (relevamiento 13/10).
+  // El id queda: las 76 sesiones del boceto y sus ids de Mi Agenda cuelgan de él.
+  autocustodia: "BitcoinAR",
+  bitcoineta: "La Bitcoineta",
 };
 
 export type TemarioDay = "oct30" | "oct31";
