@@ -14,13 +14,13 @@ const T = {
     title: "Agenda",
     lede:
       "Los dos días de conferencia, viernes 30 y sábado 31 de octubre. Elegí el día y mirá qué pasa en cada escenario.",
-    count: (n: number) => `${n} charlas confirmadas en los dos días de conferencia`,
+    count: (n: number) => `${n} sesiones en los dos días de conferencia`,
   },
   en: {
     title: "Agenda",
     lede:
       "The two conference days, Friday the 30th and Saturday the 31st of October. Pick a day and see what happens on each stage.",
-    count: (n: number) => `${n} confirmed talks across the two conference days`,
+    count: (n: number) => `${n} sessions across the two conference days`,
   },
 } as const;
 
