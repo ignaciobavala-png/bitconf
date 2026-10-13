@@ -7,7 +7,9 @@
  * organización confirme el programa, se pasan a `true` y vuelven solas.
  */
 export const SHOW_SPEAKERS = true;
-export const SHOW_AGENDA = false;
+// Agenda vuelve al navbar y a los accesos rápidos de la home (13/10/2026, a pedido
+// de Ignacio) ahora que hay temario de la organización cargado.
+export const SHOW_AGENDA = true;
 export const SHOW_MI_AGENDA = false;
 
 /**
