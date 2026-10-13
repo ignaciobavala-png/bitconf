@@ -46,12 +46,44 @@ export async function getLatestSnapshot(
 }
 
 /**
- * Las sesiones que muestra la web: el temario que publicó la organización y,
- * mientras no haya ninguno, el cargado a mano en `lib/agenda/temario.ts`.
+ * Modo lectura (opciones A y B del acuerdo con la organización): la web va a
+ * buscar el `temario.json` que la organización publica, en vez de esperar un
+ * envío. Se activa con `TEMARIO_SOURCE_URL`; si el origen pide clave va en
+ * `TEMARIO_SOURCE_KEY` como Bearer. Se revalida cada 5 minutos.
+ *
+ * Una respuesta que no valida NO se usa: se sigue con lo anterior.
+ */
+const PULL_REVALIDATE_SECONDS = 300;
+
+async function getPulledPayload(): Promise<SnapshotPayload | null> {
+  const url = process.env.TEMARIO_SOURCE_URL;
+  if (!url) return null;
+  try {
+    const key = process.env.TEMARIO_SOURCE_KEY;
+    const res = await fetch(url, {
+      headers: key ? { Authorization: `Bearer ${key}` } : undefined,
+      next: { revalidate: PULL_REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const v = validateTemario(await res.json());
+    if (!v.ok) throw new Error(`no valida: ${v.errors[0]}`);
+    return v.payload;
+  } catch (e) {
+    console.error("[temario] no se pudo leer el origen:", (e as Error).message);
+    return null;
+  }
+}
+
+/**
+ * Las sesiones que muestra la web, por orden de preferencia:
+ *   1. el temario que la organización publica y la web LEE (TEMARIO_SOURCE_URL),
+ *   2. el último que la organización ENVIÓ (POST /api/org/temario),
+ *   3. el cargado a mano en `lib/agenda/temario.ts`.
  */
 export async function getSessions(): Promise<Session[]> {
-  const latest = await getLatestSnapshot();
-  if (!latest) return SESSIONS;
-  const sessions = toSessions(latest.payload);
+  const payload = (await getPulledPayload()) ?? (await getLatestSnapshot())?.payload;
+  if (!payload) return SESSIONS;
+  const sessions = toSessions(payload);
   return sessions.length > 0 ? sessions : SESSIONS;
 }

@@ -13,7 +13,17 @@ Artefacto (Grilla) ──► su Claude arma el JSON ──► POST /api/org/tema
 - Si no valida, responde 4xx con los motivos y **no se toca lo publicado**.
 - Se guardan los últimos 20 envíos (volver atrás = reenviar uno viejo).
 
-## Autenticación
+## Dos formas de que llegue (se activa la que corresponda)
+
+La web toma el temario, por orden de preferencia, de:
+
+1. **Lectura** — `TEMARIO_SOURCE_URL` (+ `TEMARIO_SOURCE_KEY` si el origen pide clave, como Bearer): la web busca el `temario.json` que la organización publica (por ejemplo en GitHub Pages) cada 5 minutos. Una respuesta que no valida **se ignora** y se sigue con lo anterior.
+2. **Envío** — `POST /api/org/temario` (abajo).
+3. El temario cargado a mano en `lib/agenda/temario.ts`.
+
+Las tres usan el mismo formato y la misma validación.
+
+## Autenticación (solo para el envío)
 
 `Authorization: Bearer <ORG_API_KEY>`. La clave vive en las variables de entorno del servidor, nunca en el artefacto ni en el repo. Sin `ORG_API_KEY` configurada el endpoint responde **503** (apagado), nunca queda abierto.
 
@@ -67,6 +77,9 @@ Reglas que valida el servidor:
 
 ## Puesta en marcha
 
+**Si la organización publica un archivo (lectura):** cargar `TEMARIO_SOURCE_URL` en Vercel (Preview y Production), sin comillas. No requiere tabla ni clave nuestra.
+
+**Si la organización envía (POST):**
 1. Correr `lib/db/temario.sql` en Supabase (tabla nueva, no toca nada existente).
 2. Cargar `ORG_API_KEY` en Vercel (Preview y Production), sin comillas.
 3. Pasarle la clave a la organización **por privado**.
