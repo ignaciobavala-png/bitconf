@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -39,6 +39,7 @@ const T = {
     allStages: "Todos los escenarios",
     allTopics: "Todos los temas",
     stage: "Escenario",
+    topic: "Tema",
     minutes: "min",
     panel: "Panel",
     empty: "No hay charlas confirmadas con ese criterio todavía.",
@@ -63,6 +64,7 @@ const T = {
     allStages: "All stages",
     allTopics: "All topics",
     stage: "Stage",
+    topic: "Topic",
     minutes: "min",
     panel: "Panel",
     empty: "No confirmed talks match that filter yet.",
@@ -83,29 +85,6 @@ const T = {
     level: { general: "General", intermedio: "Intermediate", avanzado: "Advanced", todos: "All levels" } as Record<string, string>,
   },
 } as const;
-
-const CHIP_BASE: React.CSSProperties = {
-  ...labelStyle,
-  fontSize: "clamp(10px, 1vw, 12px)",
-  padding: "9px 18px",
-  // Dentro de la tira horizontal, sin esto el flex los aplasta en vez de
-  // dejarlos salir del viewport.
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-};
-
-/**
- * En mobile los filtros van en una tira que se desliza, no envueltos en varias
- * filas: con 7 escenarios + 9 temas eran diez renglones de chips antes de la
- * primera charla. De `sm` para arriba entran de sobra y se envuelven como
- * siempre.
- *
- * El scroll es del contenedor, no de la página: el ancho es 100% del padre, así
- * que no genera scroll horizontal en el body.
- */
-const FILTER_ROW =
-  "flex gap-2 sm:gap-3 overflow-x-auto sm:overflow-visible sm:flex-wrap " +
-  "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
 /**
  * Sin acentos y en minúsculas: nadie escribe "Regulación" con tilde en un
@@ -130,46 +109,6 @@ function haystack(k: AgendaTalk, lang: "es" | "en"): string {
       stageLabel(k.stage, lang),
       ...k.tags.map((c) => TAG_LABELS[c][lang]),
     ].join(" ")
-  );
-}
-
-/**
- * La tira de filtros en mobile se desliza, pero un chip cortado justo en el
- * borde no se lee como "hay más": se lee como que eso es todo. El degradé
- * aparece solo cuando queda algo a la derecha, así una fila que entra completa
- * (los dos tabs de día) no se ve recortada de gusto.
- */
-function ScrollRow({ className, children }: { className?: string; children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [more, setMore] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const check = () => setMore(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-    check();
-    el.addEventListener("scroll", check, { passive: true });
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener("scroll", check);
-      ro.disconnect();
-    };
-  }, [children]);
-
-  return (
-    <div className={`relative ${className ?? ""}`}>
-      <div ref={ref} className={FILTER_ROW}>
-        {children}
-      </div>
-      {more && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0"
-          style={{ width: 56, background: "linear-gradient(to right, rgba(23,22,22,0), #171616)" }}
-        />
-      )}
-    </div>
   );
 }
 
@@ -221,13 +160,75 @@ function useWideScreen(): boolean {
   );
 }
 
-function chipStyle(on: boolean, accent: string): React.CSSProperties {
-  return {
-    ...CHIP_BASE,
-    color: on ? "#171616" : "#A5A8B1",
-    background: on ? accent : "transparent",
-    border: `1px solid ${on ? accent : "rgba(230,238,242,0.18)"}`,
-  };
+/** Una plenaria toca varias columnas: cuenta en cada una de ellas. */
+function touchesStage(k: AgendaTalk, stage: string): boolean {
+  const from = Number(k.stage.replace(/^s/i, ""));
+  const at = Number(stage.replace(/^s/i, ""));
+  return at >= from && at < from + (k.span ?? 1);
+}
+
+/**
+ * Lista desplegable de filtro. Es un <select> nativo con la apariencia de la
+ * pill del sitio: en el teléfono abre el selector del sistema (la mejor
+ * interacción posible con el pulgar) y en escritorio el teclado y el lector de
+ * pantalla funcionan sin trabajo extra. Cada opción trae su cantidad, así no se
+ * ofrece un filtro que no devuelve nada.
+ */
+function FilterSelect({
+  label,
+  allLabel,
+  accent,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  allLabel: string;
+  accent: string;
+  value: string | null;
+  onChange: (v: string | null) => void;
+  options: { value: string; label: string; count: number }[];
+}) {
+  const on = value !== null;
+  return (
+    <label className="relative block">
+      <span className="sr-only">{label}</span>
+      <select
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value || null)}
+        className="cursor-pointer appearance-none rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#E6EEF2]"
+        style={{
+          ...labelStyle,
+          colorScheme: "dark",
+          fontSize: "clamp(10px, 1vw, 12px)",
+          padding: "11px 44px 11px 20px",
+          minWidth: 200,
+          color: on ? "#171616" : "#E6EEF2",
+          background: on ? accent : "transparent",
+          border: `1px solid ${on ? accent : "rgba(230,238,242,0.25)"}`,
+        }}
+      >
+        <option value="" style={{ background: "#171616", color: "#E6EEF2" }}>
+          {allLabel}
+        </option>
+        {options.map((o) => (
+          <option key={o.value} value={o.value} style={{ background: "#171616", color: "#E6EEF2" }}>
+            {o.label} ({o.count})
+          </option>
+        ))}
+      </select>
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2"
+      >
+        <path d="M5 9l7 7 7-7" stroke={on ? "#171616" : "#E6EEF2"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </label>
+  );
 }
 
 export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
@@ -288,9 +289,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
       if (stage) {
         // Una plenaria toca varias columnas: con un escenario elegido aparece
         // en cada una de ellas, y ahí ocupa una sola (hay una columna).
-        const from = Number(k.stage.replace(/^s/i, ""));
-        const at = Number(stage.replace(/^s/i, ""));
-        if (!(at >= from && at < from + (k.span ?? 1))) continue;
+        if (!touchesStage(k, stage)) continue;
         out.push({ ...k, stage, span: 1 });
       } else {
         out.push(k);
@@ -377,7 +376,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
   return (
     <div className="w-full">
       {/* Los dos días de conferencia. */}
-      <ScrollRow>
+      <div className="flex flex-wrap gap-2 sm:gap-3">
         {DAYS.map((d) => {
           const on = d === day;
           return (
@@ -401,7 +400,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
             </button>
           );
         })}
-      </ScrollRow>
+      </div>
 
       {/* Horario y acceso de la jornada elegida: contesta la primera pregunta
           antes de entrar a los escenarios. */}
@@ -454,53 +453,38 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
         )}
       </div>
 
-      {/* Escenarios */}
-      <ScrollRow className="mt-6">
-        <button
-          type="button"
-          onClick={() => setStage(null)}
-          className="rounded-full transition-colors duration-200"
-          style={chipStyle(stage === null, "#FF4E01")}
-        >
-          {t.allStages}
-        </button>
-        {stagesOfDay.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => setStage(stage === s ? null : s)}
-            className="rounded-full transition-colors duration-200"
-            style={chipStyle(stage === s, "#FF4E01")}
-          >
-            {stageLabel(s, lang)}
-          </button>
-        ))}
-      </ScrollRow>
-
-      {/* Temas */}
-      {tagsOfDay.length > 0 && (
-        <ScrollRow className="mt-3">
-          <button
-            type="button"
-            onClick={() => setTag(null)}
-            className="rounded-full transition-colors duration-200"
-            style={chipStyle(tag === null, "#ABF760")}
-          >
-            {t.allTopics}
-          </button>
-          {tagsOfDay.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setTag(tag === c ? null : c)}
-              className="rounded-full transition-colors duration-200"
-              style={chipStyle(tag === c, "#ABF760")}
-            >
-              {TAG_LABELS[c][lang]}
-            </button>
-          ))}
-        </ScrollRow>
-      )}
+      {/* Escenario y tema: dos listas desplegables y no filas de chips. Con 12
+          temas la fila se salía de la pantalla y nada indicaba que había más
+          hacia los costados; una lista desplegable muestra todo de una vez y
+          en mobile abre el selector nativo. */}
+      <div className="mt-6 flex flex-wrap gap-3">
+        <FilterSelect
+          label={t.stage}
+          allLabel={t.allStages}
+          accent="#FF4E01"
+          value={stage}
+          onChange={setStage}
+          options={stagesOfDay.map((s) => ({
+            value: s,
+            label: stageLabel(s, lang),
+            count: ofDay.filter((k) => touchesStage(k, s)).length,
+          }))}
+        />
+        {tagsOfDay.length > 0 && (
+          <FilterSelect
+            label={t.topic}
+            allLabel={t.allTopics}
+            accent="#ABF760"
+            value={tag}
+            onChange={(v) => setTag(v as CanonicalTag | null)}
+            options={tagsOfDay.map((c) => ({
+              value: c,
+              label: TAG_LABELS[c][lang],
+              count: ofDay.filter((k) => k.tags.includes(c)).length,
+            }))}
+          />
+        )}
+      </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <p style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.1vw, 14px)" }}>
