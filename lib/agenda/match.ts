@@ -40,7 +40,13 @@ function sameName(a: string[], b: string[]): boolean {
 }
 
 export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): AgendaTalk[] {
-  const index = speakers.map((s) => ({ card: s, words: norm(s.name).split(" ") }));
+  // Dos claves por speaker: el nombre publicado (alias) y el nombre real. Se
+  // prueba primero contra todos los alias y recién después contra los nombres
+  // reales, para que un alias exacto nunca pierda contra un parecido.
+  const byAlias = speakers.map((s) => ({ card: s, words: norm(s.name).split(" ") }));
+  const byReal = speakers
+    .filter((s) => s.fullName)
+    .map((s) => ({ card: s, words: norm(s.fullName as string).split(" ") }));
 
   const ordered = [...sessions].sort(
     (a, b) =>
@@ -56,7 +62,8 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     const found: NonNullable<AgendaTalk["speakers"]> = [];
     for (const n of names(source)) {
       const words = norm(n).split(" ");
-      const hit = index.find((x) => sameName(words, x.words));
+      const hit =
+        byAlias.find((x) => sameName(words, x.words)) ?? byReal.find((x) => sameName(words, x.words));
       if (hit && !seen.has(hit.card.slug)) {
         seen.add(hit.card.slug);
         found.push({ slug: hit.card.slug, name: hit.card.name, photoUrl: hit.card.photoUrl });
