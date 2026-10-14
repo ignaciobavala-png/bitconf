@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -20,6 +20,8 @@ import {
 import { demoStartTimes } from "@/lib/speakers/demo";
 import AgendaToggle from "./AgendaToggle";
 import ScheduleGrid, { type ScheduledTalk } from "./ScheduleGrid";
+import MobileTimeline from "./MobileTimeline";
+import TalkDetail from "./TalkDetail";
 import type { AgendaTalk } from "@/lib/speakers/queries";
 
 const labelStyle: React.CSSProperties = {
@@ -144,6 +146,43 @@ function useSampleTimesAllowed(): boolean {
   );
 }
 
+
+/** Lee un parámetro de la URL sin suscribirse: no cambia sin navegar. */
+function useQueryParam(name: string): string | null {
+  return useSyncExternalStore(
+    noSubscribe,
+    () => new URLSearchParams(window.location.search).get(name),
+    () => null
+  );
+}
+
+/**
+ * "Ahora" en ms, redondeado al minuto para que el snapshot sea estable entre
+ * renders. En el servidor y en el primer render del cliente es `null`: el HTML
+ * prerenderizado no depende de la hora de quien lo pidió.
+ *
+ * `?now=2026-10-30T11:07` fija la hora a mano, para poder ver cómo queda la
+ * agenda a mitad del evento (mismo espíritu que `?demo=`).
+ */
+function useNow(): number | null {
+  return useSyncExternalStore(
+    (onChange) => {
+      const id = window.setInterval(onChange, 20_000);
+      return () => window.clearInterval(id);
+    },
+    () => {
+      const forced = new URLSearchParams(window.location.search).get("now");
+      if (forced) {
+        // Sin zona se entiende hora de Buenos Aires, como el resto de la agenda.
+        const ms = Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(forced) ? forced : `${forced}-03:00`);
+        if (!Number.isNaN(ms)) return ms;
+      }
+      return Math.floor(Date.now() / 60_000) * 60_000;
+    },
+    () => null
+  );
+}
+
 const WIDE_QUERY = "(min-width: 1024px)";
 
 /**
@@ -264,6 +303,27 @@ export default function AgendaBrowser({
 
   const sampleAllowed = useSampleTimesAllowed();
   const wideScreen = useWideScreen();
+  const now = useNow();
+
+  // Ficha de charla abierta. `undefined` = el usuario todavía no tocó nada y
+  // manda el `?talk=` de la URL (link desde la ficha de un speaker); `null` =
+  // la cerró.
+  const talkParam = useQueryParam("talk");
+  const [openId, setOpenId] = useState<string | null | undefined>(undefined);
+  const selectedId = openId === undefined ? talkParam : openId;
+  const selected = useMemo(
+    () => (selectedId ? (talks.find((k) => k.id === selectedId) ?? null) : null),
+    [talks, selectedId]
+  );
+  const openTalk = useCallback((k: AgendaTalk) => setOpenId(k.id), []);
+  const closeTalk = useCallback(() => {
+    setOpenId(null);
+    if (new URLSearchParams(window.location.search).has("talk")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("talk");
+      window.history.replaceState(null, "", url);
+    }
+  }, []);
   const [view, setView] = useState<"grid" | "list">("grid");
 
   const needle = norm(query.trim());
@@ -374,6 +434,21 @@ export default function AgendaBrowser({
     scheduled.every(([, list], i) => list.length === columns[i][1].length);
 
   const showGrid = hasSchedule && wideScreen && view === "grid";
+  // Mobile: línea de tiempo del día en vez de una lista por escenario.
+  const showTimeline = hasSchedule && !wideScreen;
+
+  // Inicio de la próxima charla de TODO el programa (no solo de lo filtrado):
+  // que "próxima" no dependa de qué filtro tenga puesto la persona.
+  const nextStart = useMemo(() => {
+    if (now == null) return null;
+    let best: number | null = null;
+    for (const k of talks) {
+      const start = k.startsAt ? Date.parse(k.startsAt) : NaN;
+      if (Number.isNaN(start) || start <= now) continue;
+      if (best == null || start < best) best = start;
+    }
+    return best;
+  }, [talks, now]);
 
   // Si el día que estaba elegido se queda sin escenario seleccionado válido
   // (pasa al cambiar de día con un filtro puesto), se suelta el filtro.
@@ -621,8 +696,16 @@ export default function AgendaBrowser({
         </div>
       ) : showGrid ? (
         <div className="mt-8">
-          <ScheduleGrid day={day as Day} columns={scheduled} lang={lang} />
+          <ScheduleGrid day={day as Day} columns={scheduled} lang={lang} onOpen={openTalk} />
         </div>
+      ) : showTimeline ? (
+        <MobileTimeline
+          talks={scheduled.flatMap(([, list]) => list)}
+          now={usingSample ? null : now}
+          nextStart={usingSample ? null : nextStart}
+          lang={lang}
+          onOpen={openTalk}
+        />
       ) : (
         <div
           className={
@@ -647,7 +730,7 @@ export default function AgendaBrowser({
 
               <div className="mt-4 flex flex-col gap-4">
                 {list.map((k, i) => (
-                  <TalkCard key={k.id} talk={k} index={col * 2 + i} lang={lang} wide={!!stage} />
+                  <TalkCard key={k.id} talk={k} index={col * 2 + i} lang={lang} wide={!!stage} onOpen={openTalk} />
                 ))}
               </div>
             </section>
@@ -684,6 +767,7 @@ export default function AgendaBrowser({
           </div>
         </div>
       )}
+      {selected && <TalkDetail talk={selected} lang={lang} onClose={closeTalk} />}
     </div>
   );
 }
@@ -745,11 +829,13 @@ function TalkCard({
   index,
   lang,
   wide,
+  onOpen,
 }: {
   talk: AgendaTalk;
   index: number;
   lang: "es" | "en";
   wide: boolean;
+  onOpen: (talk: AgendaTalk) => void;
 }) {
   const t = T[lang];
 
@@ -769,7 +855,11 @@ function TalkCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: Math.min(index, 10) * 0.04, ease: "easeOut" }}
-      className="rounded-2xl"
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("a,button")) return;
+        onOpen(talk);
+      }}
+      className="cursor-pointer rounded-2xl"
       style={{
         border: "1px solid rgba(230,238,242,0.14)",
         background: "rgba(255,255,255,0.02)",
@@ -782,8 +872,15 @@ function TalkCard({
             <p style={{ ...labelStyle, color: "#FF4E01", fontSize: 10, marginBottom: 6 }}>{when}</p>
           )}
           {/* Texto de la organización: tal cual, sin uppercase. */}
-          <h3 style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.3vw, 16px)", lineHeight: 1.35 }}>
-            {talk.title}
+          <h3>
+            <button
+              type="button"
+              onClick={() => onOpen(talk)}
+              className="text-left"
+              style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(14px, 1.3vw, 16px)", lineHeight: 1.35 }}
+            >
+              {talk.title}
+            </button>
           </h3>
         </div>
         <AgendaToggle talkId={talk.id} />

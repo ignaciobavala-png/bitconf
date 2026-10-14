@@ -5,7 +5,9 @@ import Footer from "@/components/home/Footer";
 import QaChatWidget from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import SpeakerProfileView from "@/components/speakers/SpeakerProfileView";
-import { getSpeakerBySlug, getSpeakerSlugs } from "@/lib/speakers/queries";
+import { getSpeakerBySlug, getSpeakerSlugs, getSpeakers } from "@/lib/speakers/queries";
+import { getSessions } from "@/lib/agenda/source";
+import { toAgendaTalks } from "@/lib/agenda/match";
 
 export const revalidate = 3600;
 
@@ -46,10 +48,16 @@ export default async function SpeakerPage({
   // confirmarle a nadie que ese speaker existe en la planilla.
   if (!speaker) notFound();
 
+  // Las sesiones del temario donde figura este speaker: el mismo cruce por
+  // nombre que usa la agenda, así la ficha y la agenda nunca discrepan.
+  const sessions = toAgendaTalks(await getSessions(), await getSpeakers()).filter((k) =>
+    k.speakers?.some((p) => p.slug === slug)
+  );
+
   return (
     <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
-      <SpeakerProfileView speaker={speaker} />
+      <SpeakerProfileView speaker={speaker} sessions={sessions} />
       <Footer fadeFrom="#000" />
       <QaChatWidget />
       <MyAgendaButton />

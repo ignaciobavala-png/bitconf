@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLangStore } from "@/lib/store/lang";
 import { TAG_LABELS } from "@/lib/speakers/tags";
-import { DAY_LABELS, isDay, stageLabel } from "@/lib/speakers/schedule";
-import type { SpeakerProfile } from "@/lib/speakers/queries";
+import { DAY_LABELS, eventMinutes, formatMinutes, isDay, stageColor, stageLabel } from "@/lib/speakers/schedule";
+import type { AgendaTalk, SpeakerProfile } from "@/lib/speakers/queries";
 import { SHOW_TALKS } from "@/lib/flags";
 
 const labelStyle: React.CSSProperties = {
@@ -34,6 +34,10 @@ const T = {
     // duración, pero no el horario. Se dice explícitamente en vez de dejar un
     // hueco que parezca un error.
     timeTba: "Horario a confirmar",
+    session: "Su charla",
+    sessions: "Sus charlas",
+    seeInAgenda: "Ver en la agenda →",
+    withOthers: "Con",
   },
   en: {
     back: "← All speakers",
@@ -45,10 +49,21 @@ const T = {
     panel: "Panel",
     level: { general: "General", intermedio: "Intermediate", avanzado: "Advanced", todos: "All levels" } as Record<string, string>,
     timeTba: "Time to be confirmed",
+    session: "Their talk",
+    sessions: "Their talks",
+    seeInAgenda: "See in the agenda →",
+    withOthers: "With",
   },
 } as const;
 
-export default function SpeakerProfileView({ speaker }: { speaker: SpeakerProfile }) {
+export default function SpeakerProfileView({
+  speaker,
+  sessions = [],
+}: {
+  speaker: SpeakerProfile;
+  /** Sesiones del temario en las que figura este speaker. */
+  sessions?: AgendaTalk[];
+}) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -164,6 +179,64 @@ export default function SpeakerProfileView({ speaker }: { speaker: SpeakerProfil
             )}
           </div>
         </div>
+
+        {sessions.length > 0 && (
+          <div className="mt-12">
+            <h2 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(14px, 1.5vw, 19px)" }}>
+              {sessions.length === 1 ? t.session : t.sessions}
+            </h2>
+
+            <div className="mt-5 flex flex-col gap-4">
+              {sessions.map((k) => {
+                const plenary = (k.span ?? 1) > 1;
+                const color = plenary ? "#E6EEF2" : stageColor(k.stage);
+                const start = k.startsAt ? eventMinutes(k.startsAt) : null;
+                const when =
+                  start != null
+                    ? `${formatMinutes(start)}${k.durationMin ? ` – ${formatMinutes(start + k.durationMin)}` : ""}`
+                    : t.timeTba;
+                const others = (k.speakers ?? []).filter((p) => p.slug !== speaker.slug);
+                return (
+                  <Link
+                    key={k.id}
+                    href={`/agenda?talk=${k.id}`}
+                    className="group block rounded-2xl transition-colors duration-200 hover:bg-[rgba(255,255,255,0.04)]"
+                    style={{
+                      border: "1px solid rgba(230,238,242,0.14)",
+                      borderLeft: `3px solid ${color}`,
+                      background: "rgba(255,255,255,0.02)",
+                      padding: "20px 24px",
+                    }}
+                  >
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                      <span className="inline-flex items-center gap-2" style={{ ...labelStyle, color, fontSize: "clamp(9px, 0.95vw, 11px)" }}>
+                        <span aria-hidden className="inline-block rounded-full" style={{ width: 7, height: 7, background: color }} />
+                        {stageLabel(k.stage, lang)}
+                      </span>
+                      {isDay(k.day) && (
+                        <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(9px, 0.95vw, 11px)" }}>
+                          {DAY_LABELS[k.day][lang]}
+                        </span>
+                      )}
+                      <span style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(9px, 0.95vw, 11px)" }}>{when}</span>
+                    </div>
+                    <h3 className="mt-3" style={{ ...bodyStyle, fontWeight: 500, color: "#F3F7F9", fontSize: "clamp(16px, 1.7vw, 21px)", lineHeight: 1.3 }}>
+                      {k.title}
+                    </h3>
+                    {others.length > 0 && (
+                      <p className="mt-2" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
+                        {t.withOthers} {others.map((p) => p.name).join(", ")}
+                      </p>
+                    )}
+                    <p className="mt-3 transition-colors duration-200 group-hover:text-[#ABF760]" style={{ ...labelStyle, color: "#A5A8B1", fontSize: "clamp(9px, 0.95vw, 11px)" }}>
+                      {t.seeInAgenda}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {speaker.bio && (
           <div className="mt-14">

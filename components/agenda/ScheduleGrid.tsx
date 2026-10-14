@@ -93,10 +93,12 @@ export default function ScheduleGrid({
   day,
   columns,
   lang,
+  onOpen,
 }: {
   day: Day;
   columns: [string, ScheduledTalk[]][];
   lang: "es" | "en";
+  onOpen: (talk: ScheduledTalk) => void;
 }) {
   const win = DAY_WINDOW[day];
 
@@ -201,7 +203,7 @@ export default function ScheduleGrid({
           {columns.map(([stage, list]) => (
             <div key={stage} className="relative min-w-0">
               {list.map((k) => (
-                <GridCard key={k.id} talk={k} stage={stage} opens={opens} lang={lang} />
+                <GridCard key={k.id} talk={k} stage={stage} opens={opens} lang={lang} onOpen={onOpen} />
               ))}
             </div>
           ))}
@@ -216,11 +218,13 @@ function GridCard({
   stage,
   opens,
   lang,
+  onOpen,
 }: {
   talk: ScheduledTalk;
   stage: string;
   opens: number;
   lang: "es" | "en";
+  onOpen: (talk: ScheduledTalk) => void;
 }) {
   const t = T[lang];
   const plenary = (talk.span ?? 1) > 1;
@@ -253,7 +257,11 @@ function GridCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute left-0 overflow-hidden rounded-xl"
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("a,button")) return;
+        onOpen(talk);
+      }}
+      className="absolute left-0 cursor-pointer overflow-hidden rounded-xl"
       style={{
         top: (talk.startMin - opens) * PX_PER_MIN,
         height,
@@ -286,6 +294,14 @@ function GridCard({
       <h3
         className="mt-1.5"
         title={talk.title}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpen(talk);
+          }
+        }}
         style={{
           ...bodyStyle,
           // Peso 500 y hasta 15px: con ~100 charlas por día el título es lo
