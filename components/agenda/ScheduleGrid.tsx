@@ -54,9 +54,9 @@ const CARD_GAP = 6;
 const PAD_Y = 9;
 const TIME_H = 20;
 const TITLE_MT = 6;
-const SPEAKER_H = 38;
+const SPEAKER_H = 42;
 const META_H = 19;
-const LINE_H = 16;
+const LINE_H = 20;
 
 /** Ancho del eje. Entra "09:30" a 11px sin cortarse. */
 const AXIS_W = 58;
@@ -274,7 +274,7 @@ function GridCard({
       }}
     >
       <div className="flex items-start justify-between gap-2">
-        <span style={{ ...labelStyle, color, fontSize: 9.5, whiteSpace: "nowrap" }}>
+        <span style={{ ...labelStyle, color, fontSize: 10.5, whiteSpace: "nowrap" }}>
           {formatMinutes(talk.startMin)} – {formatMinutes(talk.startMin + dur)}
           {plenary && ` · ${t.plenary}`}
         </span>
@@ -288,8 +288,13 @@ function GridCard({
         title={talk.title}
         style={{
           ...bodyStyle,
-          color: "#E6EEF2",
-          fontSize: "clamp(11px, 0.85vw, 13px)",
+          // Peso 500 y hasta 15px: con ~100 charlas por día el título es lo
+          // que tiene que ganarle al resto de la tarjeta. La altura de la
+          // tarjeta no cambia (sale de la duración); `LINE_H` reparte cuántas
+          // líneas entran.
+          fontWeight: 500,
+          color: "#F3F7F9",
+          fontSize: "clamp(13px, 1.02vw, 15px)",
           lineHeight: `${LINE_H}px`,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
@@ -342,7 +347,7 @@ function GridCard({
               ...labelStyle,
               textTransform: "none",
               color: "#A5A8B1",
-              fontSize: 10.5,
+              fontSize: 11.5,
               lineHeight: 1.35,
               display: "-webkit-box",
               WebkitBoxOrient: "vertical",

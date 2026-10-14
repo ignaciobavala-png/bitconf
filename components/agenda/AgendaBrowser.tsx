@@ -34,6 +34,9 @@ const bodyStyle: React.CSSProperties = {
   fontWeight: 300,
 };
 
+const BANNER_VIDEO_SRC =
+  "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/media-partners-bg.mp4";
+
 const T = {
   es: {
     allStages: "Todos los escenarios",
@@ -231,7 +234,13 @@ function FilterSelect({
   );
 }
 
-export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
+export default function AgendaBrowser({
+  talks,
+  header,
+}: {
+  talks: AgendaTalk[];
+  header?: React.ReactNode;
+}) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -375,8 +384,40 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
 
   return (
     <div className="w-full">
-      {/* Los dos días de conferencia. */}
-      <div className="flex flex-wrap gap-2 sm:gap-3">
+      {/* Banner: fondo full-bleed solo hasta los botones de día; de ahí para
+          abajo la agenda queda sobre fondo liso. */}
+      <div
+        className="relative overflow-hidden -ml-6 sm:-ml-10 w-screen px-6 sm:px-10 pt-32 sm:pt-40 pb-8"
+      >
+        {/* Loop de fondo (mismo clip de Media Partners, sin texto horneado,
+            que sí tendría el video del hero de la home). Va desde el bucket
+            público: no se trackean binarios en git. */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" style={{ zIndex: 0, opacity: 0.45 }}>
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/assets/home/hashes.jpg"
+            aria-hidden
+          >
+            <source src={BANNER_VIDEO_SRC} type="video/mp4" />
+          </video>
+        </div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            background:
+              "linear-gradient(to bottom, #171616 0%, rgba(23,22,22,0.4) 25%, rgba(23,22,22,0.4) 70%, #171616 100%)",
+          }}
+        />
+        <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
+          {header}
+        </div>
+      <div className="relative mt-8 flex flex-wrap gap-2 sm:gap-3" style={{ zIndex: 2 }}>
         {DAYS.map((d) => {
           const on = d === day;
           return (
@@ -400,6 +441,7 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
             </button>
           );
         })}
+      </div>
       </div>
 
       {/* Horario y acceso de la jornada elegida: contesta la primera pregunta
@@ -613,7 +655,35 @@ export default function AgendaBrowser({ talks }: { talks: AgendaTalk[] }) {
         </div>
       )}
 
-      {day === HODLWEEN.day && <HodlweenBlock lang={lang} />}
+      {day === HODLWEEN.day && (
+        // Full-bleed: el fondo llena el ancho de la pantalla y se funde con el
+        // liso de arriba y abajo, así el recuadro no queda flotando en negro.
+        <div
+          className="relative -ml-6 sm:-ml-10 w-screen px-6 sm:px-10 mt-10 overflow-hidden"
+          style={{ paddingTop: "clamp(56px, 8vh, 96px)", paddingBottom: "clamp(56px, 8vh, 96px)" }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none select-none"
+            style={{
+              opacity: 0.55,
+              maskImage: "linear-gradient(to bottom, transparent 0, #000 30%, #000 70%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 30%, #000 70%, transparent 100%)",
+            }}
+          >
+            <Image
+              src="/assets/home/lluvia-naranja.png"
+              alt=""
+              fill
+              sizes="100vw"
+              aria-hidden
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+          <div className="relative w-full max-w-[1600px]">
+            <HodlweenBlock lang={lang} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -625,14 +695,28 @@ function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="mt-10 rounded-2xl"
+      className="relative overflow-hidden rounded-2xl"
       style={{
         border: "1px solid rgba(255,78,1,0.45)",
         background: "rgba(255,78,1,0.06)",
         padding: "24px 26px",
       }}
     >
-      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+      {/* Lluvia naranja de fondo: la marca de HODLween, sin competir con el texto. */}
+      <Image
+        src="/assets/home/lluvia-naranja.png"
+        alt=""
+        fill
+        sizes="(max-width: 1600px) 100vw, 1600px"
+        aria-hidden
+        className="pointer-events-none select-none"
+        style={{ objectFit: "cover", opacity: 0.35 }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(90deg, rgba(23,22,22,0.85) 0%, rgba(23,22,22,0.45) 60%, rgba(23,22,22,0.2) 100%)" }}
+      />
+      <div className="relative flex flex-wrap items-baseline gap-x-4 gap-y-2">
         <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
           {HODLWEEN.tag[lang]}
         </span>
@@ -641,14 +725,14 @@ function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
         </span>
       </div>
       <h2
-        className="mt-3"
+        className="relative mt-3"
         style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(20px, 2.6vw, 34px)", lineHeight: 1.1 }}
       >
         {HODLWEEN.title[lang]}
       </h2>
       <p
-        className="mt-3"
-        style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6, maxWidth: "52ch" }}
+        className="relative mt-3"
+        style={{ ...bodyStyle, color: "#C4C7CE", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6, maxWidth: "52ch" }}
       >
         {HODLWEEN.lead[lang]}
       </p>
