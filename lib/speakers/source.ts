@@ -1,3 +1,4 @@
+import { WEB_LIST } from "./web-list";
 import { splitRawTags, toCanonicalTags, type CanonicalTag } from "./tags";
 
 // Lectura de la planilla de la organización.
@@ -367,6 +368,19 @@ export async function fetchSpeakersFromSource(): Promise<{
       tags,
       talks,
     });
+  }
+
+  // La lista editorial de la org (web-list.ts) manda sobre `landing`/`web_order`
+  // de la hoja: publica exactamente a los que figuran y en su "Orden final".
+  const listed = new Map(WEB_LIST.map((w) => [w.key, w.order]));
+  for (const sp of speakers) {
+    const order = listed.get(sp.sourceKey);
+    sp.landing = order !== undefined;
+    sp.webOrder = order ?? null;
+  }
+  const found = new Set(speakers.map((sp) => sp.sourceKey));
+  for (const w of WEB_LIST) {
+    if (!found.has(w.key)) console.warn(`[speakers] web-list: sin fila en la planilla: ${w.label} (${w.key})`);
   }
 
   return { speakers, version: sp.version ?? null };

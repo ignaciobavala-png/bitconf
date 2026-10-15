@@ -172,9 +172,8 @@ create trigger talks_touch before update on public.talks
 alter table public.speakers enable row level security;
 alter table public.talks    enable row level security;
 
--- 14/10/2026: la organización no usa el tilde (no lo entienden) y quiere ver en
--- la web todo lo que tiene cargado. Se publica `landing` O estado `disponible`;
--- 'revision' y 'respaldo' siguen ocultos. Sin foto tampoco sale (queries.ts).
+-- 14/10/2026 noche: se publica solo `landing`, que el sync deriva de la lista
+-- editorial de la org (lib/speakers/web-list.ts). Sin foto tampoco sale.
 --
 -- Qué es "publicado" para el sitio: el tilde `landing` (ver arriba).
 -- Hasta el 28/09/2026 era `status = 'confirmado'`, pero la organización
@@ -183,7 +182,7 @@ alter table public.talks    enable row level security;
 drop policy if exists "speakers_public_read" on public.speakers;
 create policy "speakers_public_read"
   on public.speakers for select to anon, authenticated
-  using (present and (landing or status = 'disponible'));
+  using (present and landing);
 
 -- Las charlas siguen filtrando por SU estado (el de cada propuesta
 -- dentro de `temas`): un speaker publicado puede tener varias
@@ -195,7 +194,7 @@ create policy "talks_public_read"
     status = 'confirmado'
     and exists (
       select 1 from public.speakers s
-      where s.id = talks.speaker_id and s.present and (s.landing or s.status = 'disponible')
+      where s.id = talks.speaker_id and s.present and s.landing
     )
   );
 
