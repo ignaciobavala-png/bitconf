@@ -14,7 +14,6 @@ import {
   compareStages,
   eventMinutes,
   formatMinutes,
-  stageColor,
   stageLabel,
   type Day,
 } from "@/lib/speakers/schedule";
@@ -275,10 +274,9 @@ function FilterSelect({
 }
 
 /**
- * Filtro en pills a la vista, sin desplegable (solo escritorio, pedido de la
- * org 15/10/2026): se ve todo de un vistazo y se elige con un click. Tocar la
- * pill activa la apaga. `colorOf` pinta cada pill con el color de su
- * escenario; sin él usa `accent`.
+ * Filtro en pills a la vista, sin desplegable (solo escritorio, devolución de
+ * la org 15/10/2026): se usa para los temas; el escenario sigue en desplegable.
+ * Tocar la pill activa la apaga.
  */
 function FilterPills({
   label,
@@ -287,7 +285,6 @@ function FilterPills({
   value,
   onChange,
   options,
-  colorOf,
 }: {
   label: string;
   allLabel: string;
@@ -295,7 +292,6 @@ function FilterPills({
   value: string | null;
   onChange: (v: string | null) => void;
   options: { value: string; label: string; count: number }[];
-  colorOf?: (value: string) => string;
 }) {
   const pill = (key: string, text: string, color: string, on: boolean, next: string | null) => (
     <button
@@ -311,7 +307,7 @@ function FilterPills({
         whiteSpace: "nowrap",
         color: on ? "#171616" : "#E6EEF2",
         background: on ? color : "transparent",
-        border: `1px solid ${on ? color : colorOf ? `${color}99` : "rgba(230,238,242,0.25)"}`,
+        border: `1px solid ${on ? color : "rgba(230,238,242,0.25)"}`,
       }}
     >
       {text}
@@ -321,7 +317,7 @@ function FilterPills({
     <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
       {pill("all", allLabel, accent, value === null, null)}
       {options.map((o) =>
-        pill(o.value, `${o.label} (${o.count})`, colorOf ? colorOf(o.value) : accent, value === o.value, value === o.value ? null : o.value)
+        pill(o.value, `${o.label} (${o.count})`, accent, value === o.value, value === o.value ? null : o.value)
       )}
     </div>
   );
@@ -632,14 +628,8 @@ export default function AgendaBrowser({
           temas la fila se salía de la pantalla y nada indicaba que había más
           hacia los costados; una lista desplegable muestra todo de una vez y
           en mobile abre el selector nativo. */}
-      <div className={wideScreen ? "mt-6 flex flex-col gap-3" : "mt-6 flex flex-wrap gap-3"}>
-        {(() => {
-          const Filter = wideScreen ? FilterPills : FilterSelect;
-          const stageProps = wideScreen ? { colorOf: stageColor } : {};
-          return (
-            <>
-        <Filter
-          {...stageProps}
+      <div className={wideScreen ? "mt-6 flex flex-col items-start gap-3" : "mt-6 flex flex-wrap gap-3"}>
+        <FilterSelect
           label={t.stage}
           allLabel={t.allStages}
           accent="#FF4E01"
@@ -651,23 +641,24 @@ export default function AgendaBrowser({
             count: ofDay.filter((k) => touchesStage(k, s)).length,
           }))}
         />
-        {tagsOfDay.length > 0 && (
-          <Filter
-            label={t.topic}
-            allLabel={t.allTopics}
-            accent="#ABF760"
-            value={tag}
-            onChange={(v) => setTag(v as CanonicalTag | null)}
-            options={tagsOfDay.map((c) => ({
-              value: c,
-              label: TAG_LABELS[c][lang],
-              count: ofDay.filter((k) => k.tags.includes(c)).length,
-            }))}
-          />
-        )}
-            </>
-          );
-        })()}
+        {tagsOfDay.length > 0 &&
+          (() => {
+            const Topic = wideScreen ? FilterPills : FilterSelect;
+            return (
+              <Topic
+                label={t.topic}
+                allLabel={t.allTopics}
+                accent="#ABF760"
+                value={tag}
+                onChange={(v) => setTag(v as CanonicalTag | null)}
+                options={tagsOfDay.map((c) => ({
+                  value: c,
+                  label: TAG_LABELS[c][lang],
+                  count: ofDay.filter((k) => k.tags.includes(c)).length,
+                }))}
+              />
+            );
+          })()}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">

@@ -33,7 +33,6 @@ const T = {
     close: "Cerrar",
     minutes: "min",
     panel: "Panel",
-    plenary: "Plenaria",
     speakers: "Quién habla",
     moderator: "Modera",
     topics: "Temas",
@@ -44,7 +43,6 @@ const T = {
     close: "Close",
     minutes: "min",
     panel: "Panel",
-    plenary: "Plenary",
     speakers: "Speaking",
     moderator: "Moderator",
     topics: "Topics",
@@ -140,7 +138,6 @@ export default function TalkDetail({
             <span aria-hidden className="inline-block rounded-full" style={{ width: 8, height: 8, background: color }} />
             {stagesOf(talk, lang)}
           </span>
-          {plenary && <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: 10 }}>{t.plenary}</span>}
         </div>
 
         <h2 className="mt-4" style={{ ...bodyStyle, fontWeight: 500, color: "#F3F7F9", fontSize: "clamp(20px, 3.4vw, 26px)", lineHeight: 1.25 }}>

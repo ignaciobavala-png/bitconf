@@ -20,8 +20,8 @@ const bodyStyle: React.CSSProperties = {
 };
 
 const T = {
-  es: { now: "Ahora", next: "Próxima", minutes: "min", panel: "Panel", plenary: "Plenaria" },
-  en: { now: "Now", next: "Up next", minutes: "min", panel: "Panel", plenary: "Plenary" },
+  es: { now: "Ahora", next: "Próxima", minutes: "min", panel: "Panel" },
+  en: { now: "Now", next: "Up next", minutes: "min", panel: "Panel" },
 } as const;
 
 type Status = "past" | "live" | "upcoming";
@@ -262,7 +262,6 @@ function TimelineCard({
             {talk.durationMin} {labels.minutes}
           </span>
         ) : null}
-        {plenary && <span style={{ ...labelStyle, color: "#6F727A", fontSize: 9 }}>{labels.plenary}</span>}
         {talk.isPanel && <span style={{ ...labelStyle, color: "#6F727A", fontSize: 9 }}>{labels.panel}</span>}
       </div>
     </article>

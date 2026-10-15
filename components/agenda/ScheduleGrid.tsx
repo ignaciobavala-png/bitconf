@@ -73,8 +73,8 @@ const TOP_PAD = 14;
 const NAV_OFFSET = 76;
 
 const T = {
-  es: { stage: "Escenario", minutes: "min", panel: "Panel", plenary: "Plenaria", to: "a" },
-  en: { stage: "Stage", minutes: "min", panel: "Panel", plenary: "Plenary", to: "to" },
+  es: { stage: "Escenario", minutes: "min", panel: "Panel", to: "a" },
+  en: { stage: "Stage", minutes: "min", panel: "Panel", to: "to" },
 } as const;
 
 /** Colchón antes de la primera charla y después de la última. */
@@ -295,7 +295,6 @@ function GridCard({
       <div className="flex items-start justify-between gap-2">
         <span style={{ ...labelStyle, color, fontSize: 10.5, whiteSpace: "nowrap", lineHeight: `${rowH}px` }}>
           {formatMinutes(talk.startMin)} – {formatMinutes(talk.startMin + dur)}
-          {plenary && ` · ${t.plenary}`}
         </span>
         <AgendaToggle talkId={talk.id} size={compact ? 26 : 32} />
       </div>
