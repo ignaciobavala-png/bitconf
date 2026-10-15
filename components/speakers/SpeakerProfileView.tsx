@@ -202,8 +202,7 @@ export default function SpeakerProfileView({
                     href={`/agenda?talk=${k.id}`}
                     className="group block rounded-2xl transition-colors duration-200 hover:bg-[rgba(255,255,255,0.04)]"
                     style={{
-                      border: "1px solid rgba(230,238,242,0.14)",
-                      borderLeft: `3px solid ${color}`,
+                      border: `1.5px solid ${color}`,
                       background: "rgba(255,255,255,0.02)",
                       padding: "20px 24px",
                     }}

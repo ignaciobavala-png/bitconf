@@ -165,9 +165,8 @@ function TimelineCard({
       }}
       className="cursor-pointer rounded-2xl"
       style={{
-        border: `1px solid ${highlight ?? "rgba(230,238,242,0.14)"}`,
-        borderLeftWidth: 3,
-        borderLeftColor: highlight ?? color,
+        // Borde completo del color del escenario; "en vivo" / "siguiente" lo pisan.
+        border: `1.5px solid ${highlight ?? color}`,
         background: "#1D1C1C",
         padding: "14px 16px",
         // Lo que ya pasó se apaga, sin esconderse: alguien puede querer leer

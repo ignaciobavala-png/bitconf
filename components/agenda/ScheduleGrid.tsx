@@ -272,9 +272,8 @@ function GridCard({
           ? `calc(${(talk.span ?? 1) * 100}% + ${((talk.span ?? 1) - 1) * 0.5}rem)`
           : "100%",
         zIndex: plenary ? 2 : 1,
-        border: "1px solid rgba(230,238,242,0.12)",
-        borderLeftWidth: 3,
-        borderLeftColor: color,
+        // Borde completo del color del escenario: individualiza cada tarjeta.
+        border: `1.5px solid ${color}`,
         // Opaco a propósito: con el translúcido, las líneas de media hora se
         // veían A TRAVÉS de la tarjeta y parecían cortarla.
         background: "#1D1C1C",

@@ -197,14 +197,17 @@ export const DAY_WINDOW: Record<Day, DayWindow> = {
  * paleta, más apagado, no un color nuevo.
  *
  * El orden pone primero los más legibles sobre fondo oscuro. Electric Ekko es
- * el más flojo de los cinco, así que va último de los plenos.
+ * el más flojo de los cinco, así que va último de los plenos (y se usa aclarado).
  */
 const STAGE_ACCENTS = [
   "#FF4E01", // Orange 021 C
   "#ABF760", // Brote
   "#FFAB0B", // Almico
   "#E6EEF2", // Lactica
-  "#1311FC", // Electric Ekko
+  // Electric Ekko (#1311FC) aclarado hacia el celeste: sobre el fondo oscuro se
+  // veía eléctrico y opaco (pedido de la org, 14/10/2026). Excepción acotada a
+  // este acento: no es un color nuevo de paleta.
+  "#5B8DFF",
   "#A23809", // Orange 021 C al 60% sobre Alamo
   "#709D42", // Brote al 60% sobre Alamo
   "#9A6A0A", // Almico al 60% sobre Alamo
