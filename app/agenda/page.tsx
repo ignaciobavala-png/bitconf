@@ -37,7 +37,7 @@ export default async function AgendaPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer fadeFrom="#000" />
       <QaChatWidget />
       <MyAgendaButton />
     </main>
