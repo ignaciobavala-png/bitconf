@@ -152,6 +152,7 @@ function TimelineCard({
   const plenary = (talk.span ?? 1) > 1;
   const color = plenary ? "#E6EEF2" : stageColor(talk.stage);
   const past = status === "past";
+  const dim = !!talk.dim;
   const live = status === "live";
   const highlight = live ? "#FF4E01" : isNext && status === "upcoming" ? "#ABF760" : null;
   const people = talk.speakers ?? (talk.speaker ? [talk.speaker] : []);
@@ -163,7 +164,7 @@ function TimelineCard({
         if ((e.target as HTMLElement).closest("a,button")) return;
         onOpen(talk);
       }}
-      className="cursor-pointer rounded-2xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
+      className="cursor-pointer rounded-2xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:opacity-100! hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
       style={{
         ["--c" as string]: highlight ?? color,
         // Borde completo del color del escenario; "en vivo" / "siguiente" lo pisan.
@@ -171,8 +172,8 @@ function TimelineCard({
         padding: "14px 16px",
         // Lo que ya pasó se apaga, sin esconderse: alguien puede querer leer
         // qué se perdió.
-        opacity: past ? 0.42 : 1,
-        filter: past ? "grayscale(0.85)" : undefined,
+        opacity: dim ? 0.3 : past ? 0.42 : 1,
+        filter: past || dim ? "grayscale(0.85)" : undefined,
         transition: "opacity 300ms",
       }}
     >

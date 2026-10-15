@@ -265,13 +265,13 @@ function GridCard({
   return (
     <motion.article
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: talk.dim ? 0.3 : 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest("a,button")) return;
         onOpen(talk);
       }}
-      className="absolute left-0 cursor-pointer overflow-hidden rounded-xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:z-[5]! hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
+      className="absolute left-0 cursor-pointer overflow-hidden rounded-xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:z-[5]! hover:opacity-100! hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
       style={{
         top: (talk.startMin - opens) * PX_PER_MIN,
         height,
@@ -288,6 +288,7 @@ function GridCard({
         // con el translúcido, las líneas de media hora se veían A TRAVÉS de la
         // tarjeta y parecían cortarla.
         ["--c" as string]: color,
+        filter: talk.dim ? "grayscale(0.8)" : undefined,
         padding: compact ? "6px 10px" : "9px 11px",
       }}
     >

@@ -407,15 +407,17 @@ export default function AgendaBrowser({
   const filtered = useMemo(() => {
     const out: AgendaTalk[] = [];
     for (const k of ofDay) {
-      if (tag && !k.tags.includes(tag)) continue;
+      // El tema NO oculta: las que no lo tienen se muestran atenuadas
+      // (pedido de la org, 15/10/2026), así se ve qué hay fuera del tema.
+      const dim = !!tag && !k.tags.includes(tag);
       if (needle && !(index.get(k.id) ?? "").includes(needle)) continue;
       if (stage) {
         // Una plenaria toca varias columnas: con un escenario elegido aparece
         // en cada una de ellas, y ahí ocupa una sola (hay una columna).
         if (!touchesStage(k, stage)) continue;
-        out.push({ ...k, stage, span: 1 });
+        out.push({ ...k, stage, span: 1, dim });
       } else {
-        out.push(k);
+        out.push({ ...k, dim });
       }
     }
     return out;
@@ -920,7 +922,7 @@ function TalkCard({
   return (
     <motion.article
       initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ opacity: talk.dim ? 0.3 : 1, y: 0 }}
       transition={{ duration: 0.4, delay: Math.min(index, 10) * 0.04, ease: "easeOut" }}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest("a,button")) return;

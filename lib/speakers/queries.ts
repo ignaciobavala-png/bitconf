@@ -192,6 +192,8 @@ export type AgendaTalk = {
   level: string | null;
   durationMin: number | null;
   isPanel: boolean;
+  /** Lo pone la UI, no la base: la charla no pertenece al tema elegido y se muestra atenuada. */
+  dim?: boolean;
   stage: string;
   day: string;
   /** null mientras la planilla no traiga hora — ver getAgenda(). */
