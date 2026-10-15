@@ -9,6 +9,7 @@
 import type { AgendaTalk, SpeakerCard } from "@/lib/speakers/queries";
 import { TRACKS, type Session } from "./temario";
 import { sessionUuid } from "./ids";
+import { DESCRIPTIONS } from "./descriptions.generated";
 
 function norm(v: string): string {
   return v
@@ -91,7 +92,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     return {
       id: sessionUuid(s.id),
       title: s.title,
-      abstract: s.description ?? null,
+      abstract: s.description ?? DESCRIPTIONS[s.id] ?? null,
       tags: s.tags,
       level: null,
       durationMin: s.dur,
