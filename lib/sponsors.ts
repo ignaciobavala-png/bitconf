@@ -42,6 +42,8 @@ export type SponsorTier = {
    * ancho disponible y no al revés (pedido de la organización, 29/09).
    */
   oneLine?: boolean;
+  /** Fila centrada en vez de alineada al borde izquierdo (solo Whale). */
+  centered?: boolean;
   sponsors: Sponsor[];
 };
 
@@ -55,7 +57,11 @@ const s = (slug: string, alt: string, scale = 0.72, maxAspect?: number): Sponsor
 export const SPONSOR_TIERS: SponsorTier[] = ([
   {
     id: "whale",
-    logoH: "clamp(56px, 7vw, 96px)",
+    // Más chico que antes (era clamp(56px, 7vw, 96px)) y centrado, a pedido de
+    // la organización (15/10/2026): con 96px los logos igualaban el alto del
+    // título "SPONSORS" y competían con él.
+    logoH: "clamp(44px, 5.4vw, 76px)",
+    centered: true,
     // FBI salió de la primera fila a pedido de la organización (29/09): Exness
     // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
     // NEXO sumado el 12/10/2026 (refe de la organización por WhatsApp):
@@ -81,18 +87,27 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // Bitcoin.ar sumado el 06/10/2026: wordmark 6.1:1, mismo trato que Bull
       // Market. El naranja del isologo pasa a blanco como el resto.
       s("bitcoin-ar", "Bitcoin.ar", 0.6),
+      // IKIGII y Rootstock sumados el 15/10/2026 (posición: captura de la
+      // organización por WhatsApp). IKIGII es el lockup con "by Towerbank"
+      // (1.7:1, casi cuadrado: con la caja de la fila el texto no se lee, va
+      // con caja más alta como VnishCom). Rootstock es 6.1:1, mismo trato que
+      // Bull Market.
+      { ...s("ikigii", "IKIGII", 1), boxScale: 1.5 },
+      s("rootstock", "Rootstock", 0.6),
     ],
   },
   {
     id: "node",
-    // Los ocho en una línea: la suma de anchos de los logos a su `scale` da
+    // Los nueve en una línea (Bull Bitcoin sumado el 15/10: divisor 25.4 →
+    // 28.1, ocho huecos de 3vw = 24vw, piso de 28px → 24px para que siga
+    // entrando a 1024). Antes eran ocho: la suma de anchos de los logos a su `scale` da
     // ~25.4 veces el alto de la caja (20.5 de los seis originales + 2.6 de
     // Coinbox, sumado el 05/10, + 2.3 de Money On Chain, subido de Satoshi el
     // 10/10), y quedan siete huecos de 3vw. 80px es el padding lateral de la
     // sección. Con el piso de 28px entra desde ~1000px de ancho, así que el
     // `nowrap` desde lg (1024) no desborda. Si se suma otro logo, recalcular
     // el divisor.
-    logoH: "clamp(28px, calc((100vw - 80px - 21vw) / 25.4), 48px)",
+    logoH: "clamp(24px, calc((100vw - 80px - 24vw) / 28.1), 48px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -105,6 +120,9 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("coinbox", "Coin Box Mining", 0.9),
       // Subido de Satoshi a Node el 10/10/2026, a pedido de la organización.
       s("money-on-chain", "Money On Chain", 0.9),
+      // Bull Bitcoin sumado el 15/10/2026: isologo + wordmark 4.3:1, pesa
+      // como Bull Market (suma ~2.6 al divisor de `logoH`).
+      s("bull-bitcoin", "Bull Bitcoin", 0.62),
     ],
   },
   {
@@ -134,6 +152,9 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // quedaba ilegible, así que va con caja alta como VnishCom.
       s("eolax", "EOLAX", 0.8),
       { ...s("tienda-cripto", "Tienda Cripto", 1), boxScale: 1.6 },
+      // Bitget Wallet sumado el 15/10/2026: la versión blanca del Drive ya trae
+      // la flecha calada. Wordmark 6.3:1, mismo trato que Bull Market.
+      s("bitget-wallet", "Bitget Wallet", 0.6),
     ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);

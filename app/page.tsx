@@ -1028,7 +1028,7 @@ export default function HomePage() {
           <div className={TITLE_GAP}>
             {SPONSOR_TIERS.map((tier, i) => {
               const gapX = tier.oneLine ? "gap-x-10 lg:gap-x-[3vw]" : "gap-x-10 sm:gap-x-16";
-              const renderLogo = (logo: (typeof tier.sponsors)[number]) => (
+              const renderLogo = (logo: (typeof tier.sponsors)[number], inPair = false) => (
                 <div
                   key={logo.src}
                   className="flex items-center justify-center"
@@ -1046,7 +1046,9 @@ export default function HomePage() {
                     className="h-full w-auto object-contain"
                     style={{
                       maxHeight: `${logo.scale * 100}%`,
-                      maxWidth: `min(80vw, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
+                      // En el par final cada logo tiene como tope la mitad del
+                      // ancho útil: el par nunca parte en dos renglones.
+                      maxWidth: `min(${inPair ? "calc(50vw - 44px)" : "80vw"}, calc(${tier.logoH} * ${logo.maxAspect ?? 4.5}))`,
                     }}
                   />
                 </div>
@@ -1054,24 +1056,25 @@ export default function HomePage() {
               // Los dos últimos logos van juntos en un grupo: si la fila hace
               // wrap, el grupo baja entero y el último nunca queda solo en su
               // renglón (pedido de la organización, 10/10 — VnishCom quedaba
-              // huérfano). El grupo también hace wrap: si el par no entra ni
-              // en un renglón propio (Bull Market + Bitcoin.ar en mobile), se
-              // parte en vez de desbordar.
-              const tail = tier.sponsors.length > 2 ? 2 : 0;
+              // huérfano). El grupo NO hace wrap (pedido de la organización,
+              // 15/10): dos sponsors nunca quedan uno abajo del otro; si el par
+              // no entra, los logos se achican (tope de ancho en renglón propio).
+              // Los tiers de uno o dos logos (Whale) son todos par.
+              const tail = Math.min(tier.sponsors.length, 2);
               const head = tier.sponsors.slice(0, tier.sponsors.length - tail);
               return (
                 <Reveal key={tier.id} delay={0.1 + i * 0.08}>
                   <div
-                    className={`flex flex-wrap items-center justify-start gap-y-6 py-8 sm:py-10 ${gapX} ${
+                    className={`flex flex-wrap items-center ${tier.centered ? "justify-center" : "justify-start"} gap-y-6 py-8 sm:py-10 ${gapX} ${
                       tier.oneLine ? "lg:flex-nowrap" : ""
                     } ${
                       i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""
                     }`}
                   >
-                    {head.map(renderLogo)}
+                    {head.map((logo) => renderLogo(logo))}
                     {tail > 0 && (
-                      <div className={`flex flex-wrap items-center gap-y-6 ${gapX}`}>
-                        {tier.sponsors.slice(-tail).map(renderLogo)}
+                      <div className={`flex flex-nowrap items-center ${gapX}`}>
+                        {tier.sponsors.slice(-tail).map((logo) => renderLogo(logo, true))}
                       </div>
                     )}
                   </div>
