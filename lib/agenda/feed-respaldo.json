@@ -1,0 +1,4978 @@
+{
+ "schema": "labitconf.temario.v1",
+ "generatedAt": "2026-10-13T23:12:23Z",
+ "stages": [
+  {
+   "key": "s1",
+   "name": "Pastilla"
+  },
+  {
+   "key": "s2",
+   "name": "Visión"
+  },
+  {
+   "key": "s3",
+   "name": "ABC"
+  },
+  {
+   "key": "s4",
+   "name": "WorkShop"
+  },
+  {
+   "key": "s5",
+   "name": "Business"
+  },
+  {
+   "key": "s6",
+   "name": "BitcoinAR"
+  },
+  {
+   "key": "s7",
+   "name": "La Bitcoineta"
+  }
+ ],
+ "sessions": [
+  {
+   "id": "t138",
+   "day": "2026-10-30",
+   "start": "09:00",
+   "durationMin": 15,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Apertura y Bienvenida",
+   "speakers": [
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t1",
+   "day": "2026-10-30",
+   "start": "09:15",
+   "durationMin": 45,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Porqué HODL: La escaséz de Bitcoin en un futuro de abundancia",
+   "speakers": [
+    {
+     "key": "0",
+     "name": "Rodo"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t135",
+   "day": "2026-10-30",
+   "start": "09:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Entrega graduación Bitcoin School",
+   "speakers": [
+    {
+     "key": "132",
+     "name": "Luis J. Canessa"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t70",
+   "day": "2026-10-30",
+   "start": "09:30",
+   "durationMin": 80,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Sacate tus dudas sobre sobre Bitcoin y Crypto con Bitcoin.AR",
+   "speakers": [
+    {
+     "key": "547",
+     "name": "Fede Andragnes"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "privacidad",
+    "tecnico",
+    "mining",
+    "adopcion",
+    "legal"
+   ]
+  },
+  {
+   "id": "t137",
+   "day": "2026-10-30",
+   "start": "10:00",
+   "durationMin": 15,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "\"El Genesis de Satoshi Nakamoto\" El Monumento Argentino",
+   "speakers": [
+    {
+     "key": "528",
+     "name": "Aida Pippo"
+    },
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "178",
+     "name": "Jimena Vallone"
+    },
+    {
+     "key": "560",
+     "name": "Ricardo Alonso"
+    },
+    {
+     "key": "559",
+     "name": "Celeste Difabio Videla"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t17",
+   "day": "2026-10-30",
+   "start": "10:00",
+   "durationMin": 45,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cuan cerca estamos de las AGI y las ASI y qué podría pasar",
+   "speakers": [
+    {
+     "key": "190",
+     "name": "Maximiliano Firtman"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t141",
+   "day": "2026-10-30",
+   "start": "10:00",
+   "durationMin": 15,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Qué hace Bitcoin.AR",
+   "speakers": [
+    {
+     "key": "218",
+     "name": "Lucia Victoria"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t45",
+   "day": "2026-10-30",
+   "start": "10:00",
+   "durationMin": 45,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "¿Cómo funciona realmente la Inteligencia Artificial?",
+   "speakers": [
+    {
+     "key": "506",
+     "name": "CODEMIA"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t2",
+   "day": "2026-10-30",
+   "start": "10:15",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Estados Unidos, Argentina y Bitcoin",
+   "speakers": [
+    {
+     "key": "192",
+     "name": "Alberto Mera"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas",
+    "legal"
+   ]
+  },
+  {
+   "id": "t39",
+   "day": "2026-10-30",
+   "start": "10:15",
+   "durationMin": 45,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El ABC de Bitcoin, Crypto, Blockchain y Custodia",
+   "speakers": [],
+   "moderator": null,
+   "tags": [
+    "custodia",
+    "adopcion",
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t3",
+   "day": "2026-10-30",
+   "start": "10:45",
+   "durationMin": 45,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "Why We HODL: The Bitcoin Standard Revisited",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t46",
+   "day": "2026-10-30",
+   "start": "10:45",
+   "durationMin": 45,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Creando Agentes: Workshop Oficial de OpenAI Codex. Entrega Créditos.",
+   "speakers": [
+    {
+     "key": "190",
+     "name": "Maximiliano Firtman"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t178",
+   "day": "2026-10-30",
+   "start": "10:50",
+   "durationMin": 40,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Proyecto Escuelas y Bitcoin de Bitcoin.AR",
+   "speakers": [
+    {
+     "key": "551",
+     "name": "Paz Polli"
+    },
+    {
+     "key": "547",
+     "name": "Fede Andragnes"
+    },
+    {
+     "key": "178",
+     "name": "Jimena Vallone"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t29",
+   "day": "2026-10-30",
+   "start": "11:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "8, 18, 80: Un Bitcoin para cada edad",
+   "speakers": [
+    {
+     "key": "14",
+     "name": "Diego Coria"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t4",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo se ven los mercados usando el Bitcoin como un Standard",
+   "speakers": [
+    {
+     "key": "46",
+     "name": "Borja Martel Seward"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t18",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Qué es lo que la IA hará con nuestra conciencia",
+   "speakers": [
+    {
+     "key": "180",
+     "name": "Iván Cristini"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t31",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El Estado y tu Bitcoin",
+   "speakers": [
+    {
+     "key": "68",
+     "name": "mi.contadora"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t47",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo delegar procesos reales a empleados digitales.",
+   "speakers": [
+    {
+     "key": "102",
+     "name": "SebaChuffer"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t60",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Estrategias para posicionar tu marca entre las respuestas de la IA",
+   "speakers": [
+    {
+     "key": "48",
+     "name": "Nicolás Seguro"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t198",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Los desafíos del periodismo Crypto, FinTech e IA.",
+   "speakers": [
+    {
+     "key": "558",
+     "name": "Gina Giraldo"
+    }
+   ],
+   "moderator": {
+    "key": "558",
+    "name": "Gina Giraldo"
+   },
+   "tags": [
+    "bitcoin",
+    "ia",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t193",
+   "day": "2026-10-30",
+   "start": "11:30",
+   "durationMin": 60,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Book Signing : \"The Bitcoin Standard\"",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t5",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "Mathematical Science applied to the Bitcoin Price \"The Power Law\"",
+   "speakers": [
+    {
+     "key": "23",
+     "name": "Giovanni Santostasi"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t19",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Identidad y responsabilidad en el mundo de los Agentes",
+   "speakers": [
+    {
+     "key": "56",
+     "name": "Ana Ojeda"
+    },
+    {
+     "key": "60",
+     "name": "Alejandro Narancio"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t32",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Vos también tenés algo que ocultar",
+   "speakers": [
+    {
+     "key": "171",
+     "name": "Diego Gurpegui"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t48",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 60,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Taller de Finanzas Descentralizadas con Bitcoin (DeFi)",
+   "speakers": [
+    {
+     "key": "166",
+     "name": "Manuel Ferrari"
+    },
+    {
+     "key": "55",
+     "name": "Damián Silva"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t61",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "IA Aplicada a la Rentabilidad Empresaria. Del HYPE al P&L",
+   "speakers": [
+    {
+     "key": "117",
+     "name": "Lorena Martin"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t142",
+   "day": "2026-10-30",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Autocustodia Básica : Ventajas en el uso de \"Passphrase\"",
+   "speakers": [
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t6",
+   "day": "2026-10-30",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Explorando la frontera",
+   "speakers": [
+    {
+     "key": "189",
+     "name": "Santi Siri"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "ia",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t33",
+   "day": "2026-10-30",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "¿De dónde vienen tus bitcoins? Seguí el rastro on-chain",
+   "speakers": [
+    {
+     "key": "165",
+     "name": "Gabi Battiato"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t160",
+   "day": "2026-10-30",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Clínica de Orientación Legal Inicial para víctimas de estafas",
+   "speakers": [
+    {
+     "key": "165",
+     "name": "Gabi Battiato"
+    },
+    {
+     "key": "563",
+     "name": "Policia"
+    },
+    {
+     "key": "145",
+     "name": "Ezequiel Olgiatti"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t209",
+   "day": "2026-10-30",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "otro",
+   "language": "es",
+   "title": "Firma de libros",
+   "speakers": [
+    {
+     "key": "73",
+     "name": "Adrián Bernabéu"
+    },
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    },
+    {
+     "key": "9",
+     "name": "Iván Kaleja"
+    },
+    {
+     "key": "79",
+     "name": "Micael Margiotta"
+    },
+    {
+     "key": "53",
+     "name": "Gabriela Serkin"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t7",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "La riqueza no ganada ¿Qué hacemos con el privilegio de haber descubierto Bitcoin antes que el resto?",
+   "speakers": [
+    {
+     "key": "16",
+     "name": "Miguel Klagges"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t20",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 40,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Propiedad Intelectual e IA: ¿Vestigio del pasado o necesidad esencial para el desarrollo tecnológico?",
+   "speakers": [
+    {
+     "key": "70",
+     "name": "Camilo Jorajuria de León"
+    },
+    {
+     "key": "74",
+     "name": "Agus Rizzo"
+    },
+    {
+     "key": "80",
+     "name": "Julián Landerreche"
+    },
+    {
+     "key": "177",
+     "name": "Gonzalo Nazar de la Vega"
+    }
+   ],
+   "moderator": {
+    "key": "70",
+    "name": "Camilo Jorajuria de León"
+   },
+   "tags": [
+    "ia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t34",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Herencias en Bitcoin ¿Cómo preparar todo para cuando ya no estés?",
+   "speakers": [
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t49",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "PayJoin, CoinJoin y otras técnicas de ofuscación y privacidad Online",
+   "speakers": [
+    {
+     "key": "10",
+     "name": "Lucas Ontivero"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "privacidad",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t203",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 40,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El Periodismo en tiempos de Redes Sociales e IA",
+   "speakers": [
+    {
+     "key": "558",
+     "name": "Gina Giraldo"
+    },
+    {
+     "key": "189",
+     "name": "Santi Siri"
+    },
+    {
+     "key": "190",
+     "name": "Maximiliano Firtman"
+    },
+    {
+     "key": "561",
+     "name": "2 Periodistas"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t158",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Por qué debería incorporar Bitcoin en mi empresa",
+   "speakers": [
+    {
+     "key": "545",
+     "name": "Nicolás Bourbon"
+    },
+    {
+     "key": "166",
+     "name": "Manuel Ferrari"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t161",
+   "day": "2026-10-30",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Presentación de La Bitcoineta",
+   "speakers": [
+    {
+     "key": "553",
+     "name": "Fer Secchi"
+    },
+    {
+     "key": "554",
+     "name": "Dany Alos"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t8",
+   "day": "2026-10-30",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Solarpunk & Bitcoin: Financiando la Civilización Regenerativa",
+   "speakers": [
+    {
+     "key": "124",
+     "name": "Franz Tuñez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t35",
+   "day": "2026-10-30",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Heredá sin conflictos legales: Del \"Code is Law\" al Derecho que garantiza la continuidad patrimonial",
+   "speakers": [
+    {
+     "key": "510",
+     "name": "Gilberto León Santamaría"
+    },
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    },
+    {
+     "key": "165",
+     "name": "Gabi Battiato"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t50",
+   "day": "2026-10-30",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "No todo está perdido: recuperación de seeds, passphrases y billeteras de Bitcoin",
+   "speakers": [
+    {
+     "key": "67",
+     "name": "Nicolás Schteinschraber"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t157",
+   "day": "2026-10-30",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "¿Cómo congelan tus Stablecoins?",
+   "speakers": [
+    {
+     "key": "544",
+     "name": "José Seco"
+    },
+    {
+     "key": "27",
+     "name": "BTC Andrés"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t205",
+   "day": "2026-10-30",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Kahoot (abierto)",
+   "speakers": [
+    {
+     "key": "551",
+     "name": "Paz Polli"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t21",
+   "day": "2026-10-30",
+   "start": "13:40",
+   "durationMin": 20,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "\"Seed\" Propiedad Intelectual Programable en la Era de la IA",
+   "speakers": [
+    {
+     "key": "47",
+     "name": "Andrés Felipe Durán"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t63",
+   "day": "2026-10-30",
+   "start": "13:40",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Towerbank: TOYOTA y el escenario Boliviano",
+   "speakers": [
+    {
+     "key": "515",
+     "name": "Johan"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "finanzas",
+    "legal"
+   ]
+  },
+  {
+   "id": "t9",
+   "day": "2026-10-30",
+   "start": "14:00",
+   "durationMin": 40,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Importancia y Desafíos de la de Autocustodia",
+   "speakers": [
+    {
+     "key": "191",
+     "name": "Lunaticoin"
+    },
+    {
+     "key": "27",
+     "name": "BTC Andrés"
+    },
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    },
+    {
+     "key": "1",
+     "name": "visionariobtc"
+    },
+    {
+     "key": "524",
+     "name": "Franco Amati"
+    }
+   ],
+   "moderator": {
+    "key": "524",
+    "name": "Franco Amati"
+   },
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t22",
+   "day": "2026-10-30",
+   "start": "14:00",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Del estereo a la musica liquida",
+   "speakers": [
+    {
+     "key": "123",
+     "name": "Nicolás Madoery"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t36",
+   "day": "2026-10-30",
+   "start": "14:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "LABIF: Impulsando el Impacto Real y la Adopción de Bitcoin en América Latina",
+   "speakers": [
+    {
+     "key": "36",
+     "name": "Alexandra Navarro"
+    },
+    {
+     "key": "132",
+     "name": "Luis J. Canessa"
+    },
+    {
+     "key": "196",
+     "name": "Román Martínez"
+    },
+    {
+     "key": "526",
+     "name": "Vicente"
+    }
+   ],
+   "moderator": {
+    "key": "132",
+    "name": "Luis J. Canessa"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t51",
+   "day": "2026-10-30",
+   "start": "14:00",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Tributación de las Finanzas Descentralizadas en Bitcoin y criptoactivos",
+   "speakers": [
+    {
+     "key": "44",
+     "name": "Marcos Zocaro"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t202",
+   "day": "2026-10-30",
+   "start": "14:00",
+   "durationMin": 40,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Mesa Redonda: Impacto en crypto de los casos Libra y Adorni",
+   "speakers": [
+    {
+     "key": "546",
+     "name": "Sergio Strangis"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t64",
+   "day": "2026-10-30",
+   "start": "14:10",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Who Moves the Markets? Brokers, Derivatives & Institutional Trading",
+   "speakers": [
+    {
+     "key": "512",
+     "name": "Ray Nasser"
+    },
+    {
+     "key": "564",
+     "name": "Vantage"
+    },
+    {
+     "key": "565",
+     "name": "Exness"
+    },
+    {
+     "key": "515",
+     "name": "Johan"
+    }
+   ],
+   "moderator": {
+    "key": "515",
+    "name": "Johan"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t23",
+   "day": "2026-10-30",
+   "start": "14:30",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Gobiernos Agénticos: más inteligencia, menos impuestos",
+   "speakers": [
+    {
+     "key": "15",
+     "name": "Darío Nieto"
+    },
+    {
+     "key": "533",
+     "name": "Martín Yeza"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t37",
+   "day": "2026-10-30",
+   "start": "14:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Tips para el desarrollo de economías circulares",
+   "speakers": [
+    {
+     "key": "9",
+     "name": "Iván Kaleja"
+    },
+    {
+     "key": "196",
+     "name": "Román Martínez"
+    },
+    {
+     "key": "3",
+     "name": "Gaku"
+    }
+   ],
+   "moderator": {
+    "key": "3",
+    "name": "Gaku"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t52",
+   "day": "2026-10-30",
+   "start": "14:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Framework legal, tributario y regulatorio para lanzar proyectos crypto desde Argentina en 2026",
+   "speakers": [
+    {
+     "key": "161",
+     "name": "Juanma Cáceres"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t139",
+   "day": "2026-10-30",
+   "start": "14:40",
+   "durationMin": 20,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "La misión sigue. LABITCONF termina.",
+   "speakers": [
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    },
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "524",
+     "name": "Franco Amati"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t65",
+   "day": "2026-10-30",
+   "start": "14:40",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "¿Quién se quedó con la prima? Juicio a las tesorerías corporativas de Bitcoin",
+   "speakers": [
+    {
+     "key": "92",
+     "name": "Pedro Solimano"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t173",
+   "day": "2026-10-30",
+   "start": "14:40",
+   "durationMin": 20,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Tips para tener ordenado tus impuestos en crypto",
+   "speakers": [
+    {
+     "key": "68",
+     "name": "mi.contadora"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t10",
+   "day": "2026-10-30",
+   "start": "15:00",
+   "durationMin": 40,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Abróchense los cinturonse: ¿Se viene el Bull Run?",
+   "speakers": [
+    {
+     "key": "203",
+     "name": "Norbert"
+    },
+    {
+     "key": "204",
+     "name": "Joven Inversor"
+    },
+    {
+     "key": "205",
+     "name": "Papa Bitcoin"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t40",
+   "day": "2026-10-30",
+   "start": "15:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "#RetoBitcoin365: Cómo lograr una adopción progresiva en tu territorio",
+   "speakers": [
+    {
+     "key": "129",
+     "name": "Daniel Peláez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t53",
+   "day": "2026-10-30",
+   "start": "15:00",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Taller \"Tu primer Smart Contract en Solidity\". Caso \"P2P en Ethereum\"",
+   "speakers": [
+    {
+     "key": "108",
+     "name": "Jere Souto"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t172",
+   "day": "2026-10-30",
+   "start": "15:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Autocustodia Avanzada : Wallets Multifirma",
+   "speakers": [
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t164",
+   "day": "2026-10-30",
+   "start": "15:00",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Rol de los Nodos de Bitcoin",
+   "speakers": [
+    {
+     "key": "225",
+     "name": "Julian Drangosch"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t41",
+   "day": "2026-10-30",
+   "start": "15:30",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Arbitraje P2P: una nueva profesión financiera",
+   "speakers": [
+    {
+     "key": "126",
+     "name": "Axel Arellano"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t54",
+   "day": "2026-10-30",
+   "start": "15:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Vibe Codeando una Bitcoin Wallet: Velocidad, Errores y Aprendizajes",
+   "speakers": [
+    {
+     "key": "519",
+     "name": "Andrés Galvis"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "ia"
+   ]
+  },
+  {
+   "id": "t66",
+   "day": "2026-10-30",
+   "start": "15:30",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Riesgos jurídicos y penales en Crypto y Web3",
+   "speakers": [
+    {
+     "key": "161",
+     "name": "Juanma Cáceres"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "legal"
+   ]
+  },
+  {
+   "id": "t163",
+   "day": "2026-10-30",
+   "start": "15:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Las diferentes formas para comprar y obtener Bitcoin",
+   "speakers": [
+    {
+     "key": "547",
+     "name": "Fede Andragnes"
+    },
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t183",
+   "day": "2026-10-30",
+   "start": "15:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo leer la mempool de Bitcoin",
+   "speakers": [
+    {
+     "key": "553",
+     "name": "Fer Secchi"
+    },
+    {
+     "key": "554",
+     "name": "Dany Alos"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t11",
+   "day": "2026-10-30",
+   "start": "15:40",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Bitcoin el Salvavidas en paises bajo sanciones y bloqueos",
+   "speakers": [
+    {
+     "key": "202",
+     "name": "Forte"
+    },
+    {
+     "key": "157",
+     "name": "elsultanbitcoin"
+    },
+    {
+     "key": "103",
+     "name": "Jhon Martínez"
+    },
+    {
+     "key": "228",
+     "name": "Catrya"
+    }
+   ],
+   "moderator": {
+    "key": "228",
+    "name": "Catrya"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t24",
+   "day": "2026-10-30",
+   "start": "15:40",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Los desafíos de la educación Universitaria frente a la IA",
+   "speakers": [
+    {
+     "key": "132",
+     "name": "Luis J. Canessa"
+    },
+    {
+     "key": "243",
+     "name": "Marcelo De Vincenzi"
+    },
+    {
+     "key": "244",
+     "name": "Raúl Marino"
+    },
+    {
+     "key": "245",
+     "name": "Rodolfo Giro"
+    },
+    {
+     "key": "242",
+     "name": "Sergio Omar Aguilera"
+    }
+   ],
+   "moderator": {
+    "key": "132",
+    "name": "Luis J. Canessa"
+   },
+   "tags": [
+    "ia",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t38",
+   "day": "2026-10-30",
+   "start": "15:50",
+   "durationMin": 40,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cashu: Bitcoin privado, simple y accesible",
+   "speakers": [
+    {
+     "key": "229",
+     "name": "Forte11"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t55",
+   "day": "2026-10-30",
+   "start": "16:00",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Bit2: El L2 de Bitcoin para comercio entre agentes",
+   "speakers": [
+    {
+     "key": "139",
+     "name": "Sergio Demian Lerner"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "ia"
+   ]
+  },
+  {
+   "id": "t67",
+   "day": "2026-10-30",
+   "start": "16:00",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo instalar y escalar una empresa B2B en Latinoamérica",
+   "speakers": [
+    {
+     "key": "57",
+     "name": "Ary Frischman"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "legal"
+   ]
+  },
+  {
+   "id": "t179",
+   "day": "2026-10-30",
+   "start": "16:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Lo que preguntan los chicos sobre Bitcoin (y los adultos no se animan a preguntar)",
+   "speakers": [
+    {
+     "key": "552",
+     "name": "Silvina Acevedo"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t12",
+   "day": "2026-10-30",
+   "start": "16:10",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Escenario actual y claves de la adopción de Bitcoin en Latinoamérica",
+   "speakers": [
+    {
+     "key": "97",
+     "name": "Pedro Rey"
+    },
+    {
+     "key": "62",
+     "name": "Luis Satoshi"
+    },
+    {
+     "key": "142",
+     "name": "Wesley Andrade"
+    },
+    {
+     "key": "13",
+     "name": "Melisa Barrantes"
+    },
+    {
+     "key": "134",
+     "name": "Juan Sebastián Landy"
+    }
+   ],
+   "moderator": {
+    "key": "134",
+    "name": "Juan Sebastián Landy"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t25",
+   "day": "2026-10-30",
+   "start": "16:10",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Presente y futuro de la tokenización",
+   "speakers": [
+    {
+     "key": "516",
+     "name": "Rodolfo Vigliiano"
+    },
+    {
+     "key": "562",
+     "name": "Martín Gonzalez"
+    },
+    {
+     "key": "104",
+     "name": "Carla Torazzi"
+    },
+    {
+     "key": "570",
+     "name": "Gonzalo Blousson"
+    }
+   ],
+   "moderator": {
+    "key": "570",
+    "name": "Gonzalo Blousson"
+   }
+  },
+  {
+   "id": "t30",
+   "day": "2026-10-30",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Nadie hackeó a Bitcoin pero así se roban tus criptomonedas",
+   "speakers": [
+    {
+     "key": "69",
+     "name": "Gonzaccardi"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t56",
+   "day": "2026-10-30",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "Privacy for Stablecoins: RGB on Bitcoin",
+   "speakers": [
+    {
+     "key": "17",
+     "name": "Birkan Kayadibi"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t168",
+   "day": "2026-10-30",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "No tires tu minero, veni a arreglarlo",
+   "speakers": [
+    {
+     "key": "549",
+     "name": "Joel"
+    },
+    {
+     "key": "550",
+     "name": "Karim Hallar"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "mining"
+   ]
+  },
+  {
+   "id": "t170",
+   "day": "2026-10-30",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Kahoot (abierto)",
+   "speakers": [
+    {
+     "key": "551",
+     "name": "Paz Polli"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t13",
+   "day": "2026-10-30",
+   "start": "16:40",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Offgrid Mining y Rentabilidad",
+   "speakers": [
+    {
+     "key": "84",
+     "name": "Adolfo Raed"
+    },
+    {
+     "key": "199",
+     "name": "Ariel Perelmann"
+    },
+    {
+     "key": "232",
+     "name": "@vakanoBTC"
+    },
+    {
+     "key": "223",
+     "name": "@fede"
+    },
+    {
+     "key": "555",
+     "name": "José Sarasola"
+    }
+   ],
+   "moderator": {
+    "key": "84",
+    "name": "Adolfo Raed"
+   },
+   "tags": [
+    "bitcoin",
+    "mining"
+   ]
+  },
+  {
+   "id": "t26",
+   "day": "2026-10-30",
+   "start": "16:40",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "The future of international regulation (Bitcoin Policy Institute)",
+   "speakers": [
+    {
+     "key": "34",
+     "name": "David Zell"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t149",
+   "day": "2026-10-30",
+   "start": "16:40",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "firetalk",
+   "language": "es",
+   "title": "El camino hacia los Bancos Agénticos",
+   "speakers": [
+    {
+     "key": "195",
+     "name": "Manuel Beaudroit"
+    },
+    {
+     "key": "253",
+     "name": "Sebastián Camiser"
+    }
+   ],
+   "moderator": {
+    "key": "253",
+    "name": "Sebastián Camiser"
+   }
+  },
+  {
+   "id": "t42",
+   "day": "2026-10-30",
+   "start": "17:00",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Bitcoin Walking Tour: Como enseñar bitcoin en el mundo real.",
+   "speakers": [
+    {
+     "key": "184",
+     "name": "Jeronimo Ferrer"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t59",
+   "day": "2026-10-30",
+   "start": "17:00",
+   "durationMin": 20,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "De HODL a continuidad: Smart Contracts y Capas 2 sobre Bitcoin",
+   "speakers": [
+    {
+     "key": "11",
+     "name": "Jonathan Bravetti"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t156",
+   "day": "2026-10-30",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Herramientas para combatir la censura",
+   "speakers": [
+    {
+     "key": "543",
+     "name": "Hernán González"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t204",
+   "day": "2026-10-30",
+   "start": "17:00",
+   "durationMin": 60,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "The BitcoinAR Halving Games",
+   "speakers": [
+    {
+     "key": "0",
+     "name": "Rodo"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t14",
+   "day": "2026-10-30",
+   "start": "17:10",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "Quantum is FUD or is a reality next door",
+   "speakers": [
+    {
+     "key": "5",
+     "name": "Graeme Moore"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t27",
+   "day": "2026-10-30",
+   "start": "17:10",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Bancos, DeFi y KYC: ¿pueden convivir?",
+   "speakers": [
+    {
+     "key": "146",
+     "name": "Alfredo Roisenzvit"
+    },
+    {
+     "key": "504",
+     "name": "Maximiliano Carjuzaa"
+    },
+    {
+     "key": "511",
+     "name": "Gabriel Campa"
+    },
+    {
+     "key": "566",
+     "name": "Agustín Pesce"
+    },
+    {
+     "key": "572",
+     "name": "Pablo Magro"
+    }
+   ],
+   "moderator": {
+    "key": "146",
+    "name": "Alfredo Roisenzvit"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas",
+    "legal"
+   ]
+  },
+  {
+   "id": "t214",
+   "day": "2026-10-30",
+   "start": "17:10",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Por qué a los economistas les cuesta aceptar Bitcoin",
+   "speakers": [
+    {
+     "key": "525",
+     "name": "Iván Carrino"
+    },
+    {
+     "key": "570",
+     "name": "Gonzalo Blousson"
+    },
+    {
+     "key": "571",
+     "name": "claudio zuchovicki"
+    }
+   ],
+   "moderator": {
+    "key": "570",
+    "name": "Gonzalo Blousson"
+   }
+  },
+  {
+   "id": "t43",
+   "day": "2026-10-30",
+   "start": "17:20",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "firetalk",
+   "language": "es",
+   "title": "Entrevista a Tomi Cristal, el inversor más Joven de Argentina",
+   "speakers": [
+    {
+     "key": "513",
+     "name": "Tomi Cristal"
+    },
+    {
+     "key": "509",
+     "name": "Yayi Morales"
+    }
+   ],
+   "moderator": {
+    "key": "509",
+    "name": "Yayi Morales"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t57",
+   "day": "2026-10-30",
+   "start": "17:20",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Del prompt al backtest: Agente de IA que investiga estrategias de trading sin engañarte",
+   "speakers": [
+    {
+     "key": "40",
+     "name": "El Bull"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t186",
+   "day": "2026-10-30",
+   "start": "17:30",
+   "durationMin": 50,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Ronda Abierta : Bitcoin vs. Oro vs. Dolar",
+   "speakers": [
+    {
+     "key": "171",
+     "name": "Diego Gurpegui"
+    },
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    },
+    {
+     "key": "79",
+     "name": "Micael Margiotta"
+    },
+    {
+     "key": "573",
+     "name": "Lui Elizondo"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t15",
+   "day": "2026-10-30",
+   "start": "17:40",
+   "durationMin": 40,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "en",
+   "title": "Bitcoin Treasuries Under the Microscope",
+   "speakers": [
+    {
+     "key": "21",
+     "name": "Jeremy Almond"
+    },
+    {
+     "key": "23",
+     "name": "Giovanni Santostasi"
+    },
+    {
+     "key": "512",
+     "name": "Ray Nasser"
+    },
+    {
+     "key": "92",
+     "name": "Pedro Solimano"
+    },
+    {
+     "key": "531",
+     "name": "Guillaume ₿ajczman"
+    },
+    {
+     "key": "250",
+     "name": "Guiga Ferreira"
+    }
+   ],
+   "moderator": {
+    "key": "92",
+    "name": "Pedro Solimano"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t28",
+   "day": "2026-10-30",
+   "start": "17:40",
+   "durationMin": 40,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Hacia donde van los Exchanges",
+   "speakers": [
+    {
+     "key": "50",
+     "name": "Andrés Ondarra"
+    },
+    {
+     "key": "96",
+     "name": "Julián Colombo"
+    },
+    {
+     "key": "195",
+     "name": "Manuel Beaudroit"
+    },
+    {
+     "key": "215",
+     "name": "El Criptoparcero"
+    }
+   ],
+   "moderator": {
+    "key": "215",
+    "name": "El Criptoparcero"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas",
+    "legal"
+   ]
+  },
+  {
+   "id": "t146",
+   "day": "2026-10-30",
+   "start": "17:40",
+   "durationMin": 40,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "More Sats per Watt: Optimizing Your ASICs",
+   "speakers": [
+    {
+     "key": "534",
+     "name": "Vnish"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t44",
+   "day": "2026-10-30",
+   "start": "17:50",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Ganadores Concurso IFEB",
+   "speakers": [
+    {
+     "key": "3",
+     "name": "Gaku"
+    },
+    {
+     "key": "132",
+     "name": "Luis J. Canessa"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t58",
+   "day": "2026-10-30",
+   "start": "17:50",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Holdeando la neurociencia del Bitcoin",
+   "speakers": [
+    {
+     "key": "20",
+     "name": "Bianca Prieto"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t16",
+   "day": "2026-10-30",
+   "start": "18:20",
+   "durationMin": 40,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "en",
+   "title": "Sound Money in Argentina: Reform the Central Bank or End It?",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    },
+    {
+     "key": "525",
+     "name": "Iván Carrino"
+    },
+    {
+     "key": "509",
+     "name": "Yayi Morales"
+    }
+   ],
+   "moderator": {
+    "key": "509",
+    "name": "Yayi Morales"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas",
+    "legal"
+   ]
+  },
+  {
+   "id": "t191",
+   "day": "2026-10-31",
+   "start": "09:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Apertura Día 2",
+   "speakers": [
+    {
+     "key": "0",
+     "name": "Rodo"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t131",
+   "day": "2026-10-31",
+   "start": "09:30",
+   "durationMin": 90,
+   "stages": [
+    "s6"
+   ],
+   "kind": "otro",
+   "language": "es",
+   "title": "Desayuno de Mujeres : Paystand y Bitcoin.AR",
+   "speakers": [
+    {
+     "key": "36",
+     "name": "Alexandra Navarro"
+    },
+    {
+     "key": "178",
+     "name": "Jimena Vallone"
+    },
+    {
+     "key": "218",
+     "name": "Lucia Victoria"
+    },
+    {
+     "key": "26",
+     "name": "Lorena Ortiz"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t71",
+   "day": "2026-10-31",
+   "start": "10:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Bitcoin nunca va a ser fácil",
+   "speakers": [
+    {
+     "key": "171",
+     "name": "Diego Gurpegui"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t88",
+   "day": "2026-10-31",
+   "start": "10:00",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Del HODL al MOVIMIENTO: Cuando Bitcoin se encuentra con la IA física y la robótica",
+   "speakers": [
+    {
+     "key": "182",
+     "name": "Francisco Jose Coronel Calvet"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "ia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t101",
+   "day": "2026-10-31",
+   "start": "10:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cripto para gente nueva: de Cero a usarla",
+   "speakers": [
+    {
+     "key": "41",
+     "name": "Noelia Robles"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t115",
+   "day": "2026-10-31",
+   "start": "10:00",
+   "durationMin": 60,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "De cero a negocio con IA: creá y lanzá un emprendimiento en tiempo récord",
+   "speakers": [
+    {
+     "key": "153",
+     "name": "Elisandro Santos"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t72",
+   "day": "2026-10-31",
+   "start": "10:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Por que la Gen Z necesita Bitcoin",
+   "speakers": [
+    {
+     "key": "1",
+     "name": "visionariobtc"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t89",
+   "day": "2026-10-31",
+   "start": "10:30",
+   "durationMin": 20,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El Robot GAUCHO y su visión del futuro",
+   "speakers": [
+    {
+     "key": "241",
+     "name": "Gaucho"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t102",
+   "day": "2026-10-31",
+   "start": "10:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Problemas y laberintos del ser bitcoiner en Argentina",
+   "speakers": [
+    {
+     "key": "81",
+     "name": "Richard Bitzhan"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion",
+    "legal"
+   ]
+  },
+  {
+   "id": "t90",
+   "day": "2026-10-31",
+   "start": "10:50",
+   "durationMin": 20,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Identidad soberana y Criptografía Cuántica.",
+   "speakers": [
+    {
+     "key": "111",
+     "name": "Luis Rodriguez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t73",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Ser Full Bitcoiner vs. ser inversor en BTC?",
+   "speakers": [
+    {
+     "key": "502",
+     "name": "Agustín Kassis"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "privacidad",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t200",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Proyecto Paystand.org",
+   "speakers": [
+    {
+     "key": "36",
+     "name": "Alexandra Navarro"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t116",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "La nueva guerra por la atención: Cómo posicionar una marca dentro de la inteligencia artificial",
+   "speakers": [
+    {
+     "key": "45",
+     "name": "Malena Martin"
+    },
+    {
+     "key": "181",
+     "name": "Alfredo Perotti"
+    },
+    {
+     "key": "48",
+     "name": "Nicolás Seguro"
+    }
+   ],
+   "moderator": {
+    "key": "48",
+    "name": "Nicolás Seguro"
+   },
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t128",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Stablecoins y proyectos web2.5 en LATAM: el patchwork regulatorio que nadie te explicó",
+   "speakers": [
+    {
+     "key": "77",
+     "name": "Camila Soria"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "legal"
+   ]
+  },
+  {
+   "id": "t174",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 60,
+   "stages": [
+    "s6"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Mesa Redonda: \"El rol de las instituciones en la educacion financiera\"",
+   "speakers": [
+    {
+     "key": "218",
+     "name": "Lucia Victoria"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t210",
+   "day": "2026-10-31",
+   "start": "11:00",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo leer la mempool de Bitcoin",
+   "speakers": [
+    {
+     "key": "553",
+     "name": "Fer Secchi"
+    },
+    {
+     "key": "554",
+     "name": "Dany Alos"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t91",
+   "day": "2026-10-31",
+   "start": "11:10",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "La IA ya tiene dinero: agentes autónomos, crypto y una economía sin humanos",
+   "speakers": [
+    {
+     "key": "153",
+     "name": "Elisandro Santos"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t100",
+   "day": "2026-10-31",
+   "start": "11:20",
+   "durationMin": 40,
+   "stages": [
+    "s3"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Mujeres en Bitcoin y su ecosistema",
+   "speakers": [
+    {
+     "key": "36",
+     "name": "Alexandra Navarro"
+    },
+    {
+     "key": "26",
+     "name": "Lorena Ortiz"
+    },
+    {
+     "key": "501",
+     "name": "Alejandra Guajardo"
+    },
+    {
+     "key": "4",
+     "name": "Delfina Elizalde"
+    },
+    {
+     "key": "174",
+     "name": "Pilar Sánchez Ordóñez"
+    },
+    {
+     "key": "248",
+     "name": "Carolina Canessa"
+    }
+   ],
+   "moderator": {
+    "key": "36",
+    "name": "Alexandra Navarro"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t74",
+   "day": "2026-10-31",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Cómo impactará Bitcoin en el futuro de la humanidad",
+   "speakers": [
+    {
+     "key": "73",
+     "name": "Adrián Bernabéu"
+    },
+    {
+     "key": "79",
+     "name": "Micael Margiotta"
+    },
+    {
+     "key": "27",
+     "name": "BTC Andrés"
+    },
+    {
+     "key": "26",
+     "name": "Lorena Ortiz"
+    },
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    }
+   ],
+   "moderator": {
+    "key": "26",
+    "name": "Lorena Ortiz"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t117",
+   "day": "2026-10-31",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Dont Trust the AI. Verify: cómo usar IA para HODL, DCA, trading y research en Bitcoin",
+   "speakers": [
+    {
+     "key": "146",
+     "name": "Alfredo Roisenzvit"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "ia",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t129",
+   "day": "2026-10-31",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Fundraising con Bitcoin y Crypto",
+   "speakers": [
+    {
+     "key": "161",
+     "name": "Juanma Cáceres"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t177",
+   "day": "2026-10-31",
+   "start": "11:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Explorando un nodo de Bitcoin en vivo",
+   "speakers": [
+    {
+     "key": "543",
+     "name": "Hernán González"
+    },
+    {
+     "key": "225",
+     "name": "Julian Drangosch"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t92",
+   "day": "2026-10-31",
+   "start": "11:40",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Abuso de Infraestructura IA: Phishing, Cryptofakes y Envenenamiento de LLM",
+   "speakers": [
+    {
+     "key": "225",
+     "name": "Julian Drangosch"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t75",
+   "day": "2026-10-31",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "Technologies of Freedom 2026: Disruptive Crypto & AI",
+   "speakers": [
+    {
+     "key": "58",
+     "name": "Pavol Lupták"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "ia",
+    "privacidad",
+    "legal"
+   ]
+  },
+  {
+   "id": "t103",
+   "day": "2026-10-31",
+   "start": "12:00",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Que es la descentralización?",
+   "speakers": [
+    {
+     "key": "94",
+     "name": "Ariel Rajovitzky"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t118",
+   "day": "2026-10-31",
+   "start": "12:00",
+   "durationMin": 45,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Workshop Exness",
+   "speakers": [],
+   "moderator": null,
+   "tags": [
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t130",
+   "day": "2026-10-31",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Legalidad de los Prediction Markets en Argentina",
+   "speakers": [
+    {
+     "key": "6",
+     "name": "Juan Manuel Campos Álvarez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "legal",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t196",
+   "day": "2026-10-31",
+   "start": "12:00",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Autores de libros sobre Bitcoin en Español",
+   "speakers": [
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    },
+    {
+     "key": "73",
+     "name": "Adrián Bernabéu"
+    },
+    {
+     "key": "9",
+     "name": "Iván Kaleja"
+    },
+    {
+     "key": "79",
+     "name": "Micael Margiotta"
+    },
+    {
+     "key": "556",
+     "name": "Federico Camargo"
+    },
+    {
+     "key": "53",
+     "name": "Gabriela Serkin"
+    }
+   ],
+   "moderator": {
+    "key": "556",
+    "name": "Federico Camargo"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t93",
+   "day": "2026-10-31",
+   "start": "12:10",
+   "durationMin": 40,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "IA: El arma y el escudo del Open Source",
+   "speakers": [
+    {
+     "key": "167",
+     "name": "Mauricio Tovar"
+    },
+    {
+     "key": "521",
+     "name": "Herman Mariño"
+    },
+    {
+     "key": "105",
+     "name": "Mati Armándola"
+    },
+    {
+     "key": "541",
+     "name": "Louis Marquenet"
+    },
+    {
+     "key": "542",
+     "name": "Matias Huala"
+    }
+   ],
+   "moderator": {
+    "key": "521",
+    "name": "Herman Mariño"
+   },
+   "tags": [
+    "ia",
+    "custodia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t104",
+   "day": "2026-10-31",
+   "start": "12:20",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Estafas: como reconocerlas y evitarlas",
+   "speakers": [
+    {
+     "key": "145",
+     "name": "Ezequiel Olgiatti"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t76",
+   "day": "2026-10-31",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "La importancia de promover Economías Circulares",
+   "speakers": [
+    {
+     "key": "3",
+     "name": "Gaku"
+    },
+    {
+     "key": "196",
+     "name": "Román Martínez"
+    },
+    {
+     "key": "227",
+     "name": "Valentin Popescu"
+    },
+    {
+     "key": "36",
+     "name": "Alexandra Navarro"
+    }
+   ],
+   "moderator": {
+    "key": "36",
+    "name": "Alexandra Navarro"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t197",
+   "day": "2026-10-31",
+   "start": "12:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "otro",
+   "language": "es",
+   "title": "Firma de libros",
+   "speakers": [
+    {
+     "key": "73",
+     "name": "Adrián Bernabéu"
+    },
+    {
+     "key": "222",
+     "name": "Ariel Aguilar"
+    },
+    {
+     "key": "9",
+     "name": "Iván Kaleja"
+    },
+    {
+     "key": "79",
+     "name": "Micael Margiotta"
+    },
+    {
+     "key": "53",
+     "name": "Gabriela Serkin"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t120",
+   "day": "2026-10-31",
+   "start": "12:45",
+   "durationMin": 20,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Taller de Trading View",
+   "speakers": [
+    {
+     "key": "111",
+     "name": "Luis Rodriguez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t96",
+   "day": "2026-10-31",
+   "start": "12:50",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "IE vs IA : Como manejar la Inteligencia Emocional en la era de la IA",
+   "speakers": [
+    {
+     "key": "183",
+     "name": "Rodolfo Hornus"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t105",
+   "day": "2026-10-31",
+   "start": "12:50",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Educación del bitcoin para niños y su impacto en la familia",
+   "speakers": [
+    {
+     "key": "18",
+     "name": "Yuri da Silva Barbosa"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t79",
+   "day": "2026-10-31",
+   "start": "13:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Code is law: Debate sobre la responsabilidad ante ataques a los proyectos Open Source",
+   "speakers": [
+    {
+     "key": "237",
+     "name": "Jazmín Ruhay F"
+    },
+    {
+     "key": "167",
+     "name": "Mauricio Tovar"
+    },
+    {
+     "key": "70",
+     "name": "Camilo Jorajuria de León"
+    },
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    }
+   ],
+   "moderator": {
+    "key": "529",
+    "name": "Diego Gutierrez Zaldivar"
+   },
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "legal"
+   ]
+  },
+  {
+   "id": "t171",
+   "day": "2026-10-31",
+   "start": "13:00",
+   "durationMin": 60,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Todo sobre Hardware Wallets, Entropía y Estrategias",
+   "speakers": [
+    {
+     "key": "191",
+     "name": "Lunaticoin"
+    },
+    {
+     "key": "27",
+     "name": "BTC Andrés"
+    },
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    },
+    {
+     "key": "1",
+     "name": "visionariobtc"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t122",
+   "day": "2026-10-31",
+   "start": "13:05",
+   "durationMin": 20,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Read the code! La nueva vagancia cognitiva de los devs",
+   "speakers": [
+    {
+     "key": "173",
+     "name": "Ramiro Carnicer Souble"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "tecnico",
+    "ia"
+   ]
+  },
+  {
+   "id": "t140",
+   "day": "2026-10-31",
+   "start": "13:20",
+   "durationMin": 35,
+   "stages": [
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "HODL creativo: qué sostiene a un creador cuando la IA lo hace todo",
+   "speakers": [
+    {
+     "key": "532",
+     "name": "Gabi Cortéz"
+    }
+   ],
+   "moderator": {
+    "key": "532",
+    "name": "Gabi Cortéz"
+   },
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t107",
+   "day": "2026-10-31",
+   "start": "13:20",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El cine, la mente y Bitcoin: Navegando las paradojas del HODL",
+   "speakers": [
+    {
+     "key": "43",
+     "name": "Leonardo Klug"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t121",
+   "day": "2026-10-31",
+   "start": "13:25",
+   "durationMin": 25,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Nostr: rompé el algoritmo",
+   "speakers": [
+    {
+     "key": "75",
+     "name": "Jaqui"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "privacidad",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t77",
+   "day": "2026-10-31",
+   "start": "13:30",
+   "durationMin": 25,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "31 Oct : WhitePaper, Lutero y 2000 años de historia.",
+   "speakers": [
+    {
+     "key": "200",
+     "name": "Alejandro Palantzas"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t62",
+   "day": "2026-10-31",
+   "start": "13:30",
+   "durationMin": 45,
+   "stages": [
+    "s5"
+   ],
+   "kind": "firetalk",
+   "language": "en",
+   "title": "Tet-a-Tet con Saifedean Ammous",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    },
+    {
+     "key": "192",
+     "name": "Alberto Mera"
+    }
+   ],
+   "moderator": {
+    "key": "187",
+    "name": "Saifedean Ammous"
+   },
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t206",
+   "day": "2026-10-31",
+   "start": "13:30",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Kahoot (exclusivo socios) + Foto Grupal de socios ONG Bitcoin Argentina",
+   "speakers": [
+    {
+     "key": "551",
+     "name": "Paz Polli"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t106",
+   "day": "2026-10-31",
+   "start": "13:50",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Impacto de las redes sociales en las Economías Circulares de Bitcoin",
+   "speakers": [
+    {
+     "key": "217",
+     "name": "TechSavvy Frank"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t212",
+   "day": "2026-10-31",
+   "start": "13:50",
+   "durationMin": 25,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Nostr-wot",
+   "speakers": [
+    {
+     "key": "51",
+     "name": "León Acosta"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t152",
+   "day": "2026-10-31",
+   "start": "13:55",
+   "durationMin": 35,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Cómo invertir en Bitcoin con Plata, Paciencia y Pelotas",
+   "speakers": [
+    {
+     "key": "240",
+     "name": "Axel Becker"
+    },
+    {
+     "key": "536",
+     "name": "Nicolás Rosso"
+    },
+    {
+     "key": "537",
+     "name": "Liam Wickham"
+    },
+    {
+     "key": "538",
+     "name": "Pablo Aguer"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t151",
+   "day": "2026-10-31",
+   "start": "14:00",
+   "durationMin": 40,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Monumento: y Arte en la Cultura Bitcoiner",
+   "speakers": [
+    {
+     "key": "528",
+     "name": "Aida Pippo"
+    },
+    {
+     "key": "559",
+     "name": "Celeste Difabio Videla"
+    },
+    {
+     "key": "560",
+     "name": "Ricardo Alonso"
+    },
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    },
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "524",
+     "name": "Franco Amati"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t136",
+   "day": "2026-10-31",
+   "start": "14:15",
+   "durationMin": 25,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "LaWallet NWC: direcciones Lightning para todos, sin custodiar un solo sat",
+   "speakers": [
+    {
+     "key": "502",
+     "name": "Agustín Kassis"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t143",
+   "day": "2026-10-31",
+   "start": "14:15",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "firetalk",
+   "language": "es",
+   "title": "Building a business strategy around The Power Law",
+   "speakers": [
+    {
+     "key": "23",
+     "name": "Giovanni Santostasi"
+    },
+    {
+     "key": "146",
+     "name": "Alfredo Roisenzvit"
+    }
+   ],
+   "moderator": {
+    "key": "146",
+    "name": "Alfredo Roisenzvit"
+   }
+  },
+  {
+   "id": "t108",
+   "day": "2026-10-31",
+   "start": "14:20",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Charla Comunidades",
+   "speakers": [],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t80",
+   "day": "2026-10-31",
+   "start": "14:30",
+   "durationMin": 30,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Usanda la Inteligencia Artifical para tu estrategia de trading",
+   "speakers": [
+    {
+     "key": "500",
+     "name": "Ramiro Marra"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t208",
+   "day": "2026-10-31",
+   "start": "14:30",
+   "durationMin": 60,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "The BitcoinAR Halving Games",
+   "speakers": [
+    {
+     "key": "0",
+     "name": "Rodo"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t150",
+   "day": "2026-10-31",
+   "start": "14:40",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Shielded Bitcoin, Privacidad en Bitcoin",
+   "speakers": [
+    {
+     "key": "249",
+     "name": "Sebastián Luján"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t181",
+   "day": "2026-10-31",
+   "start": "14:40",
+   "durationMin": 45,
+   "stages": [
+    "s6"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Mesa Redonda de Universidades con foco en Bitcoin, Blockchain e IA",
+   "speakers": [
+    {
+     "key": "132",
+     "name": "Luis J. Canessa"
+    },
+    {
+     "key": "248",
+     "name": "Carolina Canessa"
+    },
+    {
+     "key": "254",
+     "name": "Mariano Merlo"
+    },
+    {
+     "key": "556",
+     "name": "Federico Camargo"
+    },
+    {
+     "key": "567",
+     "name": "Moira Goldenhörn"
+    },
+    {
+     "key": "151",
+     "name": "javier__mateos"
+    },
+    {
+     "key": "568",
+     "name": "Javier Cabrera"
+    }
+   ],
+   "moderator": {
+    "key": "556",
+    "name": "Federico Camargo"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t213",
+   "day": "2026-10-31",
+   "start": "14:50",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Obelisk",
+   "speakers": [
+    {
+     "key": "502",
+     "name": "Agustín Kassis"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t81",
+   "day": "2026-10-31",
+   "start": "15:00",
+   "durationMin": 30,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Porqué el Bitcoin Bull Market se mantiene intacto",
+   "speakers": [
+    {
+     "key": "188",
+     "name": "Carlos Maslatón"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t109",
+   "day": "2026-10-31",
+   "start": "15:10",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "¿Bear Market o nuevos horizontes para los eventos Crypto?",
+   "speakers": [
+    {
+     "key": "520",
+     "name": "Francisco Carvalho"
+    },
+    {
+     "key": "196",
+     "name": "Román Martínez"
+    },
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "535",
+     "name": "Fran"
+    }
+   ],
+   "moderator": {
+    "key": "0",
+    "name": "Rodo"
+   },
+   "tags": [
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t123",
+   "day": "2026-10-31",
+   "start": "15:10",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Latam no es el mercado, es el maestro",
+   "speakers": [
+    {
+     "key": "26",
+     "name": "Lorena Ortiz"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t147",
+   "day": "2026-10-31",
+   "start": "15:15",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Build first, lawyers later? 5 errores legales que una startup debería evitar desde el día uno",
+   "speakers": [
+    {
+     "key": "251",
+     "name": "Maria Fiorentini"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t166",
+   "day": "2026-10-31",
+   "start": "15:25",
+   "durationMin": 45,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "¿En cuanto tiempo la Computación cuántica romperá a Bitcoin?",
+   "speakers": [
+    {
+     "key": "521",
+     "name": "Herman Mariño"
+    },
+    {
+     "key": "171",
+     "name": "Diego Gurpegui"
+    },
+    {
+     "key": "210",
+     "name": "MrBillonarie"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t82",
+   "day": "2026-10-31",
+   "start": "15:30",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "¿Es posible vivir de Bitcoin sin gastarlo?",
+   "speakers": [
+    {
+     "key": "515",
+     "name": "Johan"
+    },
+    {
+     "key": "50",
+     "name": "Andrés Ondarra"
+    },
+    {
+     "key": "73",
+     "name": "Adrián Bernabéu"
+    },
+    {
+     "key": "46",
+     "name": "Borja Martel Seward"
+    },
+    {
+     "key": "99",
+     "name": "Emily Ruiz"
+    }
+   ],
+   "moderator": {
+    "key": "99",
+    "name": "Emily Ruiz"
+   },
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t98",
+   "day": "2026-10-31",
+   "start": "15:30",
+   "durationMin": 25,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Soberanía IA: Cómo lograr Privacidad, Autonomía y Libertad",
+   "speakers": [
+    {
+     "key": "194",
+     "name": "Rodrigo Benzaquén"
+    }
+   ],
+   "moderator": {
+    "key": "60",
+    "name": "Alejandro Narancio"
+   },
+   "tags": [
+    "ia",
+    "privacidad"
+   ]
+  },
+  {
+   "id": "t110",
+   "day": "2026-10-31",
+   "start": "15:40",
+   "durationMin": 20,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Bitcoin desde una perspectiva austríaca",
+   "speakers": [
+    {
+     "key": "128",
+     "name": "Sara Plencovich"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t124",
+   "day": "2026-10-31",
+   "start": "15:40",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "libmultiprocess: Cómo bitcoind se está dividiendo en varios procesos",
+   "speakers": [
+    {
+     "key": "230",
+     "name": "xyzconstant"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t211",
+   "day": "2026-10-31",
+   "start": "15:55",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "The Sovereignpreneur",
+   "speakers": [
+    {
+     "key": "539",
+     "name": "Jordan Urbs"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t83",
+   "day": "2026-10-31",
+   "start": "16:00",
+   "durationMin": 25,
+   "stages": [
+    "s1"
+   ],
+   "kind": "charla",
+   "language": "en",
+   "title": "What separates Bitcoin from Crypto?",
+   "speakers": [
+    {
+     "key": "30",
+     "name": "Chris Guida"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t111",
+   "day": "2026-10-31",
+   "start": "16:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Confiscación, embargos y Bitcoin: ¿puede el Estado argentino ejecutar tus sats?",
+   "speakers": [
+    {
+     "key": "161",
+     "name": "Juanma Cáceres"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t194",
+   "day": "2026-10-31",
+   "start": "16:00",
+   "durationMin": 60,
+   "stages": [
+    "s7"
+   ],
+   "kind": "otro",
+   "language": "es",
+   "title": "Book Signing : \"The Bitcoin Standard\"",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin"
+   ]
+  },
+  {
+   "id": "t126",
+   "day": "2026-10-31",
+   "start": "16:10",
+   "durationMin": 30,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Vamos a mirar Bitcoin desde dentro de un nodo",
+   "speakers": [
+    {
+     "key": "63",
+     "name": "Guille Schettino"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t187",
+   "day": "2026-10-31",
+   "start": "16:10",
+   "durationMin": 40,
+   "stages": [
+    "s6"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Jugamos la Entropía",
+   "speakers": [
+    {
+     "key": "19",
+     "name": "Matías Mathey"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t84",
+   "day": "2026-10-31",
+   "start": "16:25",
+   "durationMin": 35,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "en",
+   "title": "Who decides in Bitcoin?",
+   "speakers": [
+    {
+     "key": "30",
+     "name": "Chris Guida"
+    },
+    {
+     "key": "139",
+     "name": "Sergio Demian Lerner"
+    },
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    },
+    {
+     "key": "524",
+     "name": "Franco Amati"
+    },
+    {
+     "key": "17",
+     "name": "Birkan Kayadibi"
+    }
+   ],
+   "moderator": {
+    "key": "529",
+    "name": "Diego Gutierrez Zaldivar"
+   },
+   "tags": [
+    "bitcoin",
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t99",
+   "day": "2026-10-31",
+   "start": "16:25",
+   "durationMin": 35,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "HODL, ¿con todo tu sueldo? Repensando el riesgo más allá de la volatilidad",
+   "speakers": [
+    {
+     "key": "158",
+     "name": "Javier García Sánchez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "finanzas"
+   ]
+  },
+  {
+   "id": "t112",
+   "day": "2026-10-31",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Reflexiones sobre la Minería para principiantes",
+   "speakers": [
+    {
+     "key": "88",
+     "name": "Juan Manuel Dominguez"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "mining"
+   ]
+  },
+  {
+   "id": "t68",
+   "day": "2026-10-31",
+   "start": "16:30",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "IA lingüística para cripto en Argentina: precisión, localización y compliance",
+   "speakers": [
+    {
+     "key": "127",
+     "name": "Agostina Macagno"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t127",
+   "day": "2026-10-31",
+   "start": "16:40",
+   "durationMin": 50,
+   "stages": [
+    "s4"
+   ],
+   "kind": "taller",
+   "language": "es",
+   "title": "Bitcoin Post-Cuántico en 50 Minutos, del Cero a una Demo",
+   "speakers": [
+    {
+     "key": "51",
+     "name": "León Acosta"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "tecnico",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t199",
+   "day": "2026-10-31",
+   "start": "16:50",
+   "durationMin": 40,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Mesa Redonda Empresaria",
+   "speakers": [
+    {
+     "key": "218",
+     "name": "Lucia Victoria"
+    }
+   ],
+   "moderator": null
+  },
+  {
+   "id": "t85",
+   "day": "2026-10-31",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s1"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "Escenario y Oportunidades de la Minería en la región",
+   "speakers": [
+    {
+     "key": "38",
+     "name": "Bruno Vaccotti"
+    },
+    {
+     "key": "157",
+     "name": "elsultanbitcoin"
+    },
+    {
+     "key": "198",
+     "name": "Mario Morlas"
+    },
+    {
+     "key": "49",
+     "name": "Fabrizio Bianchi"
+    },
+    {
+     "key": "569",
+     "name": "Juan Caccia"
+    }
+   ],
+   "moderator": {
+    "key": "38",
+    "name": "Bruno Vaccotti"
+   },
+   "tags": [
+    "bitcoin",
+    "mining"
+   ]
+  },
+  {
+   "id": "t94",
+   "day": "2026-10-31",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s2"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Qué HODLear de vos (y qué soltar) en la era de la IA",
+   "speakers": [
+    {
+     "key": "176",
+     "name": "stephie cherni"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "ia"
+   ]
+  },
+  {
+   "id": "t113",
+   "day": "2026-10-31",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "El Ciclo de vida de la Autocustodia Soberana",
+   "speakers": [
+    {
+     "key": "12",
+     "name": "Marco Esparza Montejo"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia"
+   ]
+  },
+  {
+   "id": "t69",
+   "day": "2026-10-31",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s5"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Hallos: La capa de confianza del Ticketing con Blockchain",
+   "speakers": [
+    {
+     "key": "144",
+     "name": "Mauricio Castillo"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "tecnico"
+   ]
+  },
+  {
+   "id": "t207",
+   "day": "2026-10-31",
+   "start": "17:00",
+   "durationMin": 30,
+   "stages": [
+    "s7"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Kahoot (abierto)",
+   "speakers": [
+    {
+     "key": "551",
+     "name": "Paz Polli"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  },
+  {
+   "id": "t154",
+   "day": "2026-10-31",
+   "start": "17:30",
+   "durationMin": 40,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "en",
+   "title": "Halving 2028: Impact on the Mining Industry",
+   "speakers": [
+    {
+     "key": "187",
+     "name": "Saifedean Ammous"
+    },
+    {
+     "key": "24",
+     "name": "Dušan Matuška"
+    },
+    {
+     "key": "38",
+     "name": "Bruno Vaccotti"
+    },
+    {
+     "key": "540",
+     "name": "Nacho Pauls"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "mining"
+   ]
+  },
+  {
+   "id": "t114",
+   "day": "2026-10-31",
+   "start": "17:30",
+   "durationMin": 30,
+   "stages": [
+    "s3"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "Criptoactivos sin fronteras: planificación de sucesiones multijurisdiccionales",
+   "speakers": [
+    {
+     "key": "116",
+     "name": "Camila Da Silva Tabares"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "custodia",
+    "legal"
+   ]
+  },
+  {
+   "id": "t190",
+   "day": "2026-10-31",
+   "start": "17:30",
+   "durationMin": 30,
+   "stages": [
+    "s6"
+   ],
+   "kind": "charla",
+   "language": "es",
+   "title": "AMA Impositivo",
+   "speakers": [
+    {
+     "key": "44",
+     "name": "Marcos Zocaro"
+    }
+   ],
+   "moderator": null,
+   "tags": [
+    "bitcoin",
+    "legal"
+   ]
+  },
+  {
+   "id": "t87",
+   "day": "2026-10-31",
+   "start": "18:10",
+   "durationMin": 50,
+   "stages": [
+    "s1",
+    "s2"
+   ],
+   "kind": "panel",
+   "language": "es",
+   "title": "+18 : ¿Es hora de que Bitcoin camine solo?",
+   "speakers": [
+    {
+     "key": "27",
+     "name": "BTC Andrés"
+    },
+    {
+     "key": "191",
+     "name": "Lunaticoin"
+    },
+    {
+     "key": "192",
+     "name": "Alberto Mera"
+    },
+    {
+     "key": "205",
+     "name": "Papa Bitcoin"
+    },
+    {
+     "key": "0",
+     "name": "Rodo"
+    },
+    {
+     "key": "524",
+     "name": "Franco Amati"
+    },
+    {
+     "key": "529",
+     "name": "Diego Gutierrez Zaldivar"
+    }
+   ],
+   "moderator": {
+    "key": "524",
+    "name": "Franco Amati"
+   },
+   "tags": [
+    "bitcoin",
+    "adopcion"
+   ]
+  }
+ ]
+}

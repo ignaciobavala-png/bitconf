@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { SESSIONS, type Session } from "./temario";
 import { toSessions, validateTemario, type SnapshotPayload } from "./snapshot";
+import feedRespaldo from "./feed-respaldo.json";
 
 // Lectura del temario publicado por la organización.
 //
@@ -95,14 +96,25 @@ async function getPulledPayload(): Promise<SnapshotPayload | null> {
   }
 }
 
+function getRespaldoPayload(): SnapshotPayload | null {
+  const v = validateTemario(feedRespaldo);
+  return v.ok ? v.payload : null;
+}
+
 /**
  * Las sesiones que muestra la web, por orden de preferencia:
  *   1. el temario que la organización publica y la web LEE (TEMARIO_SOURCE_URL),
  *   2. el último que la organización ENVIÓ (POST /api/org/temario),
- *   3. el cargado a mano en `lib/agenda/temario.ts`.
+ *   3. una copia congelada del feed de la organización (`feed-respaldo.json`),
+ *   4. el cargado a mano en `lib/agenda/temario.ts`.
+ *
+ * (3) existe porque `TEMARIO_SOURCE_URL` no está cargada en Production (15/10/2026:
+ * el token de la cuenta del cliente no sirve) y el temario a mano tenía 76 sesiones
+ * contra las 184 del feed. Es una foto: se vuelve a bajar a mano mientras no haya (1).
  */
 export async function getSessions(): Promise<Session[]> {
-  const payload = (await getPulledPayload()) ?? (await getLatestSnapshot())?.payload;
+  const payload =
+    (await getPulledPayload()) ?? (await getLatestSnapshot())?.payload ?? getRespaldoPayload();
   if (!payload) return SESSIONS;
   const sessions = toSessions(payload);
   return sessions.length > 0 ? sessions : SESSIONS;
