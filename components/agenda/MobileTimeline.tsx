@@ -163,11 +163,11 @@ function TimelineCard({
         if ((e.target as HTMLElement).closest("a,button")) return;
         onOpen(talk);
       }}
-      className="cursor-pointer rounded-2xl"
+      className="cursor-pointer rounded-2xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
       style={{
+        ["--c" as string]: highlight ?? color,
         // Borde completo del color del escenario; "en vivo" / "siguiente" lo pisan.
         border: `1.5px solid ${highlight ?? color}`,
-        background: "#1D1C1C",
         padding: "14px 16px",
         // Lo que ya pasó se apaga, sin esconderse: alguien puede querer leer
         // qué se perdió.

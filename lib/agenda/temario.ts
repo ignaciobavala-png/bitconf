@@ -31,11 +31,11 @@ export type TrackId = (typeof TRACKS)[number];
 
 /** Nombre que usa la organización en el encabezado de cada columna. */
 export const TRACK_NAMES: Record<TrackId, string> = {
-  pastilla: "Pastilla",
+  pastilla: "Orange Pill",
   vision: "Visión",
   abc: "ABC",
-  workshop: "WorkShop",
-  business: "Business",
+  workshop: "Workshop",
+  business: "B2B by IKIGII",
   // s6: la org la renombró de "Autocustodia" a "BitcoinAR" (relevamiento 13/10).
   // El id queda: las 76 sesiones del boceto y sus ids de Mi Agenda cuelgan de él.
   autocustodia: "BitcoinAR",

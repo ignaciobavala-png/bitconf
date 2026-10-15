@@ -14,6 +14,7 @@ import {
   compareStages,
   eventMinutes,
   formatMinutes,
+  stageColor,
   stageLabel,
   type Day,
 } from "@/lib/speakers/schedule";
@@ -273,6 +274,59 @@ function FilterSelect({
   );
 }
 
+/**
+ * Filtro en pills a la vista, sin desplegable (solo escritorio, pedido de la
+ * org 15/10/2026): se ve todo de un vistazo y se elige con un click. Tocar la
+ * pill activa la apaga. `colorOf` pinta cada pill con el color de su
+ * escenario; sin él usa `accent`.
+ */
+function FilterPills({
+  label,
+  allLabel,
+  accent,
+  value,
+  onChange,
+  options,
+  colorOf,
+}: {
+  label: string;
+  allLabel: string;
+  accent: string;
+  value: string | null;
+  onChange: (v: string | null) => void;
+  options: { value: string; label: string; count: number }[];
+  colorOf?: (value: string) => string;
+}) {
+  const pill = (key: string, text: string, color: string, on: boolean, next: string | null) => (
+    <button
+      key={key}
+      type="button"
+      onClick={() => onChange(next)}
+      aria-pressed={on}
+      className="rounded-full transition-colors duration-200"
+      style={{
+        ...labelStyle,
+        fontSize: "clamp(10px, 0.9vw, 12px)",
+        padding: "9px 16px",
+        whiteSpace: "nowrap",
+        color: on ? "#171616" : "#E6EEF2",
+        background: on ? color : "transparent",
+        border: `1px solid ${on ? color : colorOf ? `${color}99` : "rgba(230,238,242,0.25)"}`,
+      }}
+    >
+      {text}
+    </button>
+  );
+  return (
+    <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
+      {pill("all", allLabel, accent, value === null, null)}
+      {options.map((o) =>
+        pill(o.value, `${o.label} (${o.count})`, colorOf ? colorOf(o.value) : accent, value === o.value, value === o.value ? null : o.value)
+      )}
+    </div>
+  );
+}
+
 export default function AgendaBrowser({
   talks,
   header,
@@ -434,8 +488,10 @@ export default function AgendaBrowser({
     scheduled.every(([, list], i) => list.length === columns[i][1].length);
 
   const showGrid = hasSchedule && wideScreen && view === "grid";
-  // Mobile: línea de tiempo del día en vez de una lista por escenario.
-  const showTimeline = hasSchedule && !wideScreen;
+  // Línea de tiempo del día (por hora, con el color de cada escenario) en vez
+  // de una lista por escenario: es la vista de mobile y también la de "Lista"
+  // en pantalla ancha (pedido de la org, 15/10/2026).
+  const showTimeline = hasSchedule && (!wideScreen || view === "list");
 
   // Inicio de la próxima charla de TODO el programa (no solo de lo filtrado):
   // que "próxima" no dependa de qué filtro tenga puesto la persona.
@@ -486,7 +542,7 @@ export default function AgendaBrowser({
           style={{
             zIndex: 1,
             background:
-              "linear-gradient(to bottom, #171616 0%, rgba(23,22,22,0.4) 25%, rgba(23,22,22,0.4) 70%, #171616 100%)",
+              "linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.4) 25%, rgba(0,0,0,0.4) 70%, #000 100%)",
           }}
         />
         <div className="relative w-full max-w-6xl" style={{ zIndex: 2 }}>
@@ -574,8 +630,14 @@ export default function AgendaBrowser({
           temas la fila se salía de la pantalla y nada indicaba que había más
           hacia los costados; una lista desplegable muestra todo de una vez y
           en mobile abre el selector nativo. */}
-      <div className="mt-6 flex flex-wrap gap-3">
-        <FilterSelect
+      <div className={wideScreen ? "mt-6 flex flex-col gap-3" : "mt-6 flex flex-wrap gap-3"}>
+        {(() => {
+          const Filter = wideScreen ? FilterPills : FilterSelect;
+          const stageProps = wideScreen ? { colorOf: stageColor } : {};
+          return (
+            <>
+        <Filter
+          {...stageProps}
           label={t.stage}
           allLabel={t.allStages}
           accent="#FF4E01"
@@ -588,7 +650,7 @@ export default function AgendaBrowser({
           }))}
         />
         {tagsOfDay.length > 0 && (
-          <FilterSelect
+          <Filter
             label={t.topic}
             allLabel={t.allTopics}
             accent="#ABF760"
@@ -601,6 +663,9 @@ export default function AgendaBrowser({
             }))}
           />
         )}
+            </>
+          );
+        })()}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
@@ -699,13 +764,15 @@ export default function AgendaBrowser({
           <ScheduleGrid day={day as Day} columns={scheduled} lang={lang} onOpen={openTalk} />
         </div>
       ) : showTimeline ? (
-        <MobileTimeline
-          talks={scheduled.flatMap(([, list]) => list)}
-          now={usingSample ? null : now}
-          nextStart={usingSample ? null : nextStart}
-          lang={lang}
-          onOpen={openTalk}
-        />
+        <div className="mx-auto w-full max-w-3xl">
+          <MobileTimeline
+            talks={scheduled.flatMap(([, list]) => list)}
+            now={usingSample ? null : now}
+            nextStart={usingSample ? null : nextStart}
+            lang={lang}
+            onOpen={openTalk}
+          />
+        </div>
       ) : (
         <div
           className={
@@ -798,7 +865,7 @@ function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
       />
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, rgba(23,22,22,0.85) 0%, rgba(23,22,22,0.45) 60%, rgba(23,22,22,0.2) 100%)" }}
+        style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.2) 100%)" }}
       />
       <div className="relative flex flex-wrap items-baseline gap-x-4 gap-y-2">
         <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
@@ -904,7 +971,7 @@ function TalkCard({
                   href={`/speakers/${p.slug}`}
                   aria-label={p.name}
                   className="relative block overflow-hidden rounded-full"
-                  style={{ width: 34, height: 34, background: "#2A2929", border: "2px solid #171616" }}
+                  style={{ width: 34, height: 34, background: "#2A2929", border: "2px solid #000" }}
                 >
                   {p.photoUrl ? (
                     <Image src={p.photoUrl} alt={p.name} fill sizes="34px" style={{ objectFit: "cover" }} />

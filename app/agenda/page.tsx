@@ -23,7 +23,7 @@ export const revalidate = 3600;
 export default async function AgendaPage() {
   const talks = toAgendaTalks(await getSessions(), await getSpeakers());
   return (
-    <main className="relative min-h-screen" style={{ background: "#171616" }}>
+    <main className="relative min-h-screen" style={{ background: "#000" }}>
       <Navbar />
 
       <section className="relative overflow-hidden px-6 sm:px-10 pb-20 sm:pb-28">

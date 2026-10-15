@@ -37,11 +37,11 @@ export function isDay(value: string | null): value is Day {
  */
 export const STAGE_NAMES: Record<string, { es: string; en: string }> = {
   // Columnas del Boceto de Temario 2026 (13/10/2026), en su orden.
-  s1: { es: "Pastilla", en: "Pastilla" },
+  s1: { es: "Orange Pill", en: "Orange Pill" },
   s2: { es: "Visión", en: "Vision" },
   s3: { es: "ABC", en: "ABC" },
-  s4: { es: "WorkShop", en: "WorkShop" },
-  s5: { es: "Business", en: "Business" },
+  s4: { es: "Workshop", en: "Workshop" },
+  s5: { es: "B2B by IKIGII", en: "B2B by IKIGII" },
   s6: { es: "BitcoinAR", en: "BitcoinAR" },
   s7: { es: "La Bitcoineta", en: "La Bitcoineta" },
 };
@@ -189,28 +189,24 @@ export const DAY_WINDOW: Record<Day, DayWindow> = {
 };
 
 /**
- * Color de cada escenario.
+ * Color de cada escenario, FIJO por escenario según el doc ESCENARIOS de la org
+ * (15/10/2026): Orange Pill naranja, Visión azul, ABC amarillo, Workshop verde,
+ * B2B plata. Antes salía de la posición de la columna y no significaba nada.
  *
- * La paleta oficial tiene 6 colores, pero Alamo `#171616` es el fondo: como
- * acento quedan 5, y los escenarios son 7. Por eso la segunda vuelta reusa los
- * mismos hex mezclados con el fondo al 60% — sigue siendo el color de la
- * paleta, más apagado, no un color nuevo.
- *
- * El orden pone primero los más legibles sobre fondo oscuro. Electric Ekko es
- * el más flojo de los cinco, así que va último de los plenos (y se usa aclarado).
+ * s6 y s7 (BitcoinAR y La Bitcoineta) no son escenarios sino sectores: van en
+ * gris para no robarle el color a ninguno de los cinco.
  */
 const STAGE_ACCENTS = [
-  "#FF4E01", // Orange 021 C
-  "#ABF760", // Brote
-  "#FFAB0B", // Almico
-  "#E6EEF2", // Lactica
-  // Electric Ekko (#1311FC) aclarado hacia el celeste: sobre el fondo oscuro se
-  // veía eléctrico y opaco (pedido de la org, 14/10/2026). Excepción acotada a
-  // este acento: no es un color nuevo de paleta.
+  "#FF4E01", // s1 Orange Pill — Orange 021 C
+  // s2 Visión — Electric Ekko (#1311FC) aclarado hacia el celeste: sobre el
+  // fondo oscuro se veía eléctrico y opaco (pedido de la org, 14/10/2026).
+  // Excepción acotada a este acento: no es un color nuevo de paleta.
   "#5B8DFF",
-  "#A23809", // Orange 021 C al 60% sobre Alamo
-  "#709D42", // Brote al 60% sobre Alamo
-  "#9A6A0A", // Almico al 60% sobre Alamo
+  "#FFAB0B", // s3 ABC — Almico
+  "#ABF760", // s4 Workshop — Brote
+  "#A5A8B1", // s5 B2B — plata (el gris secundario ya aceptado como excepción)
+  "#8A8F91", // s6 BitcoinAR — Lactica al 60% sobre negro
+  "#8A8F91", // s7 La Bitcoineta — ídem
 ] as const;
 
 /**

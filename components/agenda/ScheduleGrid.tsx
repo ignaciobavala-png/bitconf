@@ -37,7 +37,7 @@ const bodyStyle: React.CSSProperties = {
  * Eso es esperado: lo que el pedido descarta es el scroll HORIZONTAL, para que
  * los siete escenarios se vean de una sola mirada.
  */
-const PX_PER_MIN = 5;
+const PX_PER_MIN = 5.5;
 
 /**
  * Piso de altura para que una charla corta siga siendo legible. Con las
@@ -52,7 +52,8 @@ const CARD_GAP = 6;
 
 // Medidas del interior de la tarjeta, para repartir el alto disponible.
 const PAD_Y = 9;
-const TIME_H = 20;
+const TOGGLE_H = 32; // alto de la fila hora + botón de agenda
+const COMPACT_BELOW = 100;
 const TITLE_MT = 6;
 const SPEAKER_H = 42;
 const META_H = 19;
@@ -136,8 +137,8 @@ export default function ScheduleGrid({
         style={{
           top: NAV_OFFSET,
           gridTemplateColumns: template,
-          background: "#171616",
-          boxShadow: "0 10px 18px -12px #171616",
+          background: "#000",
+          boxShadow: "0 10px 18px -12px #000",
         }}
       >
         <div aria-hidden />
@@ -242,15 +243,24 @@ function GridCard({
   // Qué entra en la tarjeta se decide midiendo, no con umbrales al ojo: se
   // descuenta todo lo que ocupa lugar —padding, franja de hora, márgenes— y
   // recién ahí se reparte lo que sobra.
+  //
+  // Las tarjetas de 15 min quedan en ~76px: con el padding y el botón de
+  // agenda de 32px casi no sobraba para el título. En modo compacto todo se
+  // achica (padding, botón, interlineado) para que el título entre en dos líneas.
+  const compact = height < COMPACT_BELOW;
+  const padY = compact ? 6 : PAD_Y;
+  const rowH = compact ? 26 : TOGGLE_H;
+  const titleMt = compact ? 2 : TITLE_MT;
+  const lineH = compact ? 17 : LINE_H;
   const showMeta = height >= 190;
-  let free = height - PAD_Y * 2 - TIME_H - TITLE_MT - (showMeta ? META_H : 0);
+  let free = height - padY * 2 - rowH - titleMt - (showMeta ? META_H : 0);
 
   // Los nombres solo si después de ponerlos quedan al menos dos líneas de
   // título: un título de una línea con los nombres no dice nada.
-  const showWho = !!who && free - SPEAKER_H >= LINE_H * 2;
+  const showWho = !compact && !!who && free - SPEAKER_H >= lineH * 2;
   if (showWho) free -= SPEAKER_H;
 
-  const titleLines = Math.max(1, Math.floor(free / LINE_H));
+  const titleLines = Math.max(1, Math.floor(free / lineH));
 
   return (
     <motion.article
@@ -261,7 +271,7 @@ function GridCard({
         if ((e.target as HTMLElement).closest("a,button")) return;
         onOpen(talk);
       }}
-      className="absolute left-0 cursor-pointer overflow-hidden rounded-xl"
+      className="absolute left-0 cursor-pointer overflow-hidden rounded-xl bg-[#1D1C1C] transition-[background-color,box-shadow] duration-200 hover:z-[5]! hover:bg-[#2A2929] hover:[box-shadow:0_0_0_1px_var(--c),0_10px_28px_-8px_var(--c)]"
       style={{
         top: (talk.startMin - opens) * PX_PER_MIN,
         height,
@@ -274,24 +284,25 @@ function GridCard({
         zIndex: plenary ? 2 : 1,
         // Borde completo del color del escenario: individualiza cada tarjeta.
         border: `1.5px solid ${color}`,
-        // Opaco a propósito: con el translúcido, las líneas de media hora se
-        // veían A TRAVÉS de la tarjeta y parecían cortarla.
-        background: "#1D1C1C",
-        padding: "9px 11px",
+        // Opaco a propósito (fondo en la clase, para poder aclararlo en hover):
+        // con el translúcido, las líneas de media hora se veían A TRAVÉS de la
+        // tarjeta y parecían cortarla.
+        ["--c" as string]: color,
+        padding: compact ? "6px 10px" : "9px 11px",
       }}
     >
       <div className="flex items-start justify-between gap-2">
-        <span style={{ ...labelStyle, color, fontSize: 10.5, whiteSpace: "nowrap" }}>
+        <span style={{ ...labelStyle, color, fontSize: 10.5, whiteSpace: "nowrap", lineHeight: `${rowH}px` }}>
           {formatMinutes(talk.startMin)} – {formatMinutes(talk.startMin + dur)}
           {plenary && ` · ${t.plenary}`}
         </span>
-        <AgendaToggle talkId={talk.id} />
+        <AgendaToggle talkId={talk.id} size={compact ? 26 : 32} />
       </div>
 
       {/* El texto de la organización se muestra tal cual: sin uppercase ni
           capitalize. `title` deja leer completo lo que el clamp recorta. */}
       <h3
-        className="mt-1.5"
+        className={compact ? "mt-0.5" : "mt-1.5"}
         title={talk.title}
         role="button"
         tabIndex={0}
@@ -310,7 +321,7 @@ function GridCard({
           fontWeight: 500,
           color: "#F3F7F9",
           fontSize: "clamp(13px, 1.02vw, 15px)",
-          lineHeight: `${LINE_H}px`,
+          lineHeight: `${lineH}px`,
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",
           WebkitLineClamp: titleLines,

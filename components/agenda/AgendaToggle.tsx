@@ -18,7 +18,7 @@ const T = {
  * servidor no puede saber qué tiene guardado este dispositivo, y pintar el
  * estado real antes de tiempo produce mismatch de hidratación.
  */
-export default function AgendaToggle({ talkId }: { talkId: string }) {
+export default function AgendaToggle({ talkId, size = 32 }: { talkId: string; size?: number }) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -35,15 +35,20 @@ export default function AgendaToggle({ talkId }: { talkId: string }) {
       title={on ? t.remove : t.add}
       className="flex shrink-0 items-center justify-center rounded-full transition-colors duration-200"
       style={{
-        width: 32,
-        height: 32,
+        width: size,
+        height: size,
         background: on ? "#ABF760" : "transparent",
         border: `1px solid ${on ? "#ABF760" : "rgba(230,238,242,0.25)"}`,
         color: on ? "#171616" : "#A5A8B1",
       }}
     >
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        {on ? <polyline points="20 6 9 17 4 12" /> : <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>}
+      {/* Agendita: tildada cuando la charla ya está en el itinerario. */}
+      <svg viewBox="0 0 24 24" width={size <= 26 ? 13 : 16} height={size <= 26 ? 13 : 16} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+        <line x1="8" y1="3" x2="8" y2="7" />
+        <line x1="16" y1="3" x2="16" y2="7" />
+        <line x1="3.5" y1="10" x2="20.5" y2="10" />
+        {on && <polyline points="8.5 15 11 17.5 15.5 13" />}
       </svg>
     </button>
   );
