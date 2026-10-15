@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Solo desarrollo: sin esto, abrir el dev server desde el celular por la IP
+  // de la red LAN funciona pero el hot reload queda bloqueado. No tiene ningún
+  // efecto en producción. Si cambia la IP que da el router, se actualiza acá.
+  allowedDevOrigins: ["192.168.0.78"],
   images: {
     // Next 16 valida `quality` contra esta lista: cualquier valor que no esté
     // acá devuelve 400 (INVALID_IMAGE_OPTIMIZE_REQUEST) y el `quality` del

@@ -172,6 +172,9 @@ create trigger talks_touch before update on public.talks
 alter table public.speakers enable row level security;
 alter table public.talks    enable row level security;
 
+-- 14/10/2026 noche: se publica solo `landing`, que el sync deriva de la lista
+-- editorial de la org (lib/speakers/web-list.ts). Sin foto tampoco sale.
+--
 -- Qué es "publicado" para el sitio: el tilde `landing` (ver arriba).
 -- Hasta el 28/09/2026 era `status = 'confirmado'`, pero la organización
 -- pasó casi todos a "disponible" y aclaró que el estado es interno.

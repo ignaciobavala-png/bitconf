@@ -19,6 +19,12 @@ function publicClient() {
 export type SpeakerCard = {
   slug: string;
   name: string;
+  /**
+   * Nombre y apellido reales. La planilla guarda en `name` el alias que eligió
+   * la persona ("jimevallone"), pero el temario de la organización usa el
+   * nombre real ("Jimena Vallone"): sirve solo para cruzarlos, no se muestra.
+   */
+  fullName: string | null;
   role: string | null;
   company: string | null;
   country: string | null;
@@ -48,7 +54,7 @@ export type SpeakerProfile = SpeakerCard & {
   talks: SpeakerTalk[];
 };
 
-const CARD_COLUMNS = "slug, name, role, company, country, photo_url, tags";
+const CARD_COLUMNS = "slug, name, first_name, last_name, role, company, country, photo_url, tags";
 
 /**
  * Sin foto no se publica. La organización (05/10/2026) pidió esconder a
@@ -61,6 +67,8 @@ const HAS_PHOTO = ["photo_url", "is", null] as const;
 type CardRow = {
   slug: string;
   name: string;
+  first_name: string | null;
+  last_name: string | null;
   role: string | null;
   company: string | null;
   country: string | null;
@@ -69,9 +77,11 @@ type CardRow = {
 };
 
 function toCard(r: CardRow): SpeakerCard {
+  const full = [r.first_name, r.last_name].filter(Boolean).join(" ").trim();
   return {
     slug: r.slug,
     name: r.name,
+    fullName: full && full !== r.name ? full : null,
     role: r.role,
     company: r.company,
     country: r.country,
@@ -182,11 +192,23 @@ export type AgendaTalk = {
   level: string | null;
   durationMin: number | null;
   isPanel: boolean;
+  /** Lo pone la UI, no la base: la charla no pertenece al tema elegido y se muestra atenuada. */
+  dim?: boolean;
   stage: string;
   day: string;
   /** null mientras la planilla no traiga hora — ver getAgenda(). */
   startsAt: string | null;
   speaker: { slug: string; name: string; photoUrl: string | null } | null;
+
+  // Solo las completa el temario estático (lib/agenda/match.ts); las charlas
+  // que vienen de la base no las tienen y la UI cae a `speaker`.
+  /** Speakers tal cual los escribió la organización. Se muestra literal. */
+  whoText?: string;
+  mod?: string;
+  /** Los que se pudieron cruzar con un speaker publicado (foto + ficha). */
+  speakers?: { slug: string; name: string; photoUrl: string | null }[];
+  /** Columnas que ocupa: 2 = plenaria entre este escenario y el siguiente. */
+  span?: number;
 };
 
 type AgendaRow = {

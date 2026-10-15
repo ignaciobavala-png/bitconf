@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/home/Navbar";
 import HeroVideo from "@/components/home/HeroVideo";
 import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
+import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Reveal from "@/components/home/Reveal";
@@ -1562,6 +1563,7 @@ export default function HomePage() {
       <Footer lang={lang} />
 
       <QaChatWidget />
+      <MyAgendaButton />
 
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </main>

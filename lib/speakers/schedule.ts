@@ -35,7 +35,29 @@ export function isDay(value: string | null): value is Day {
  * "Escenario N", que es correcto pero no ayuda a elegir — que es justamente
  * para lo que sirve filtrar por escenario.
  */
-export const STAGE_NAMES: Record<string, { es: string; en: string }> = {};
+export const STAGE_NAMES: Record<string, { es: string; en: string }> = {
+  // Columnas del Boceto de Temario 2026 (13/10/2026), en su orden.
+  s1: { es: "Orange Pill", en: "Orange Pill" },
+  s2: { es: "Visión", en: "Vision" },
+  s3: { es: "ABC", en: "ABC" },
+  s4: { es: "Workshop", en: "Workshop" },
+  s5: { es: "B2B by IKIGII", en: "B2B by IKIGII" },
+  s6: { es: "BitcoinAR", en: "BitcoinAR" },
+  s7: { es: "La Bitcoineta", en: "La Bitcoineta" },
+};
+
+/**
+ * Aclaración de acceso de un escenario, para mostrar chica debajo del nombre
+ * (pedido de la org, 15/10/2026). Hoy solo B2B by IKIGII, que es únicamente
+ * para tickets Business y Experience.
+ */
+const STAGE_NOTES: Record<string, { es: string; en: string }> = {
+  s5: { es: "(Solo Ticket Business y Experience)", en: "(Business and Experience tickets only)" },
+};
+
+export function stageNote(stage: string, lang: "es" | "en"): string | null {
+  return STAGE_NOTES[stage]?.[lang] ?? null;
+}
 
 export function stageLabel(stage: string, lang: "es" | "en"): string {
   const named = STAGE_NAMES[stage];
@@ -108,12 +130,12 @@ export const PROGRAM: Record<ProgramDay, ProgramDayInfo> = {
   },
   oct30: {
     tag: { es: "Day 1", en: "Day 1" },
-    hours: { es: "09:30 — 18:00", en: "09:30 — 18:00" },
+    hours: { es: "09:00 — 19:00", en: "09:00 — 19:00" },
     access: { es: "General · Business · Experience", en: "General · Business · Experience" },
   },
   oct31: {
     tag: { es: "Day 2", en: "Day 2" },
-    hours: { es: "09:30 — 18:00", en: "09:30 — 18:00" },
+    hours: { es: "09:30 — 19:00", en: "09:30 — 19:00" },
     access: { es: "General · Business · Experience", en: "General · Business · Experience" },
   },
   nov1: {
@@ -171,34 +193,33 @@ export const EVENT_TZ = "America/Argentina/Buenos_Aires";
 export type DayWindow = { opens: number; closes: number };
 
 /**
- * De 09:30 a 18:00 según `PROGRAM`. Se guarda en minutos y no como texto
+ * Las horas de `PROGRAM`, según el Boceto de Temario (vie 09:00–19:00, sáb 09:30–19:00; relevamiento de la org, 13/10). Se guarda en minutos y no como texto
  * porque acá el dato se usa para calcular píxeles, no para mostrar.
  */
 export const DAY_WINDOW: Record<Day, DayWindow> = {
-  oct30: { opens: 9 * 60 + 30, closes: 18 * 60 },
-  oct31: { opens: 9 * 60 + 30, closes: 18 * 60 },
+  oct30: { opens: 9 * 60, closes: 19 * 60 },
+  oct31: { opens: 9 * 60 + 30, closes: 19 * 60 },
 };
 
 /**
- * Color de cada escenario.
+ * Color de cada escenario, FIJO por escenario según el doc ESCENARIOS de la org
+ * (15/10/2026): Orange Pill naranja, Visión azul, ABC amarillo, Workshop verde,
+ * B2B plata. Antes salía de la posición de la columna y no significaba nada.
  *
- * La paleta oficial tiene 6 colores, pero Alamo `#171616` es el fondo: como
- * acento quedan 5, y los escenarios son 7. Por eso la segunda vuelta reusa los
- * mismos hex mezclados con el fondo al 60% — sigue siendo el color de la
- * paleta, más apagado, no un color nuevo.
- *
- * El orden pone primero los más legibles sobre fondo oscuro. Electric Ekko es
- * el más flojo de los cinco, así que va último de los plenos.
+ * s6 y s7 (BitcoinAR y La Bitcoineta) no son escenarios sino sectores: van en
+ * mostaza clarito, para no robarle el color a ninguno de los cinco.
  */
 const STAGE_ACCENTS = [
-  "#FF4E01", // Orange 021 C
-  "#ABF760", // Brote
-  "#FFAB0B", // Almico
-  "#E6EEF2", // Lactica
-  "#1311FC", // Electric Ekko
-  "#A23809", // Orange 021 C al 60% sobre Alamo
-  "#709D42", // Brote al 60% sobre Alamo
-  "#9A6A0A", // Almico al 60% sobre Alamo
+  "#FF4E01", // s1 Orange Pill — Orange 021 C
+  // s2 Visión — Electric Ekko (#1311FC) aclarado hacia el celeste: sobre el
+  // fondo oscuro se veía eléctrico y opaco (pedido de la org, 14/10/2026).
+  // Excepción acotada a este acento: no es un color nuevo de paleta.
+  "#5B8DFF",
+  "#FFAB0B", // s3 ABC — Almico
+  "#ABF760", // s4 Workshop — Brote
+  "#A5A8B1", // s5 B2B — plata (el gris secundario ya aceptado como excepción)
+  "#E8CB6A", // s6 BitcoinAR — mostaza clarito (pedido de la org 15/10; no es de paleta)
+  "#E8CB6A", // s7 La Bitcoineta — ídem
 ] as const;
 
 /**

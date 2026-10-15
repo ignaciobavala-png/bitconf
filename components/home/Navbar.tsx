@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLangStore } from "@/lib/store/lang";
 import LangToggle from "@/components/LangToggle";
-import { SHOW_SPEAKERS } from "@/lib/flags";
+import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 
 const labelStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-machina), sans-serif",
@@ -29,11 +29,13 @@ const LEFT_LINKS = {
   es: [
     { label: "Tickets", href: "/#tickets" },
     ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+    ...(SHOW_AGENDA ? [{ label: "Agenda", href: "/agenda" }] : []),
     { label: "Edu Hub", href: "/mas/edu-hub" },
   ],
   en: [
     { label: "Tickets", href: "/#tickets" },
     ...(SHOW_SPEAKERS ? [{ label: "Speakers", href: "/speakers" }] : []),
+    ...(SHOW_AGENDA ? [{ label: "Agenda", href: "/agenda" }] : []),
     { label: "Edu Hub", href: "/mas/edu-hub" },
   ],
 } as const;
