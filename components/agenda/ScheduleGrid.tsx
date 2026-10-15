@@ -154,15 +154,16 @@ export default function ScheduleGrid({
               >
                 {stageLabel(stage, lang)}
               </h2>
+              <div className="mt-2" style={{ height: 3, background: color, borderRadius: 2 }} />
+              {/* Debajo de la barra: arriba empujaba la línea de esta columna más abajo que las demás. */}
               {stageNote(stage, lang) && (
                 <p
-                  className="mt-1"
+                  className="mt-1.5"
                   style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(9px, 0.75vw, 11px)", lineHeight: 1.25 }}
                 >
                   {stageNote(stage, lang)}
                 </p>
               )}
-              <div className="mt-2" style={{ height: 3, background: color, borderRadius: 2 }} />
             </div>
           );
         })}
