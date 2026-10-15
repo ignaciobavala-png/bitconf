@@ -58,7 +58,7 @@ export default function MyAgendaButton() {
     >
       <Link
         href="/mi-agenda"
-        className="block transition-opacity duration-200 hover:opacity-85"
+        className="flex items-center gap-2 transition-opacity duration-200 hover:opacity-85"
         style={{
           writingMode: "vertical-rl",
           // vertical-rl escribe de arriba hacia abajo; rotado se lee de abajo
@@ -77,8 +77,18 @@ export default function MyAgendaButton() {
           whiteSpace: "nowrap",
         }}
       >
-        {T[lang].label}
-        {count}
+        {/* Mismo ícono que el botón de cada charla (AgendaToggle). Como la solapa
+            va rotada 180°, el svg se contra-rota para quedar derecho. */}
+        <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ transform: "rotate(180deg)", flexShrink: 0 }}>
+          <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+          <line x1="8" y1="3" x2="8" y2="7" />
+          <line x1="16" y1="3" x2="16" y2="7" />
+          <line x1="3.5" y1="10" x2="20.5" y2="10" />
+        </svg>
+        <span>
+          {T[lang].label}
+          {count}
+        </span>
       </Link>
     </motion.div>
   );

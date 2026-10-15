@@ -13,13 +13,13 @@ const T = {
   es: {
     title: "Agenda",
     lede:
-      "Los dos días de conferencia, viernes 30 y sábado 31 de octubre. Elegí el día y mirá qué pasa en cada escenario.",
+      "Los dos días de conferencia, viernes 30 y sábado 31 de octubre.\nElegí el día y mirá qué pasa en cada escenario.",
     count: (n: number) => `${n} sesiones en los dos días de conferencia`,
   },
   en: {
     title: "Agenda",
     lede:
-      "The two conference days, Friday the 30th and Saturday the 31st of October. Pick a day and see what happens on each stage.",
+      "The two conference days, Friday the 30th and Saturday the 31st of October.\nPick a day and see what happens on each stage.",
     count: (n: number) => `${n} sessions across the two conference days`,
   },
 } as const;
@@ -41,7 +41,9 @@ export default function AgendaHeader({ total }: { total: number }) {
           color: "#E6EEF2",
           fontSize: "clamp(15px, 1.5vw, 20px)",
           lineHeight: 1.6,
-          maxWidth: "58ch",
+          maxWidth: "72ch",
+          // La segunda oración arranca en renglón propio (pedido de la org, 15/10).
+          whiteSpace: "pre-line",
         }}
       >
         {t.lede}

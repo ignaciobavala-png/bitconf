@@ -46,6 +46,19 @@ export const STAGE_NAMES: Record<string, { es: string; en: string }> = {
   s7: { es: "La Bitcoineta", en: "La Bitcoineta" },
 };
 
+/**
+ * Aclaración de acceso de un escenario, para mostrar chica debajo del nombre
+ * (pedido de la org, 15/10/2026). Hoy solo B2B by IKIGII, que es únicamente
+ * para tickets Business y Experience.
+ */
+const STAGE_NOTES: Record<string, { es: string; en: string }> = {
+  s5: { es: "(Solo Ticket Business y Experience)", en: "(Business and Experience tickets only)" },
+};
+
+export function stageNote(stage: string, lang: "es" | "en"): string | null {
+  return STAGE_NOTES[stage]?.[lang] ?? null;
+}
+
 export function stageLabel(stage: string, lang: "es" | "en"): string {
   const named = STAGE_NAMES[stage];
   if (named) return named[lang];
@@ -194,7 +207,7 @@ export const DAY_WINDOW: Record<Day, DayWindow> = {
  * B2B plata. Antes salía de la posición de la columna y no significaba nada.
  *
  * s6 y s7 (BitcoinAR y La Bitcoineta) no son escenarios sino sectores: van en
- * gris para no robarle el color a ninguno de los cinco.
+ * mostaza clarito, para no robarle el color a ninguno de los cinco.
  */
 const STAGE_ACCENTS = [
   "#FF4E01", // s1 Orange Pill — Orange 021 C
@@ -205,8 +218,8 @@ const STAGE_ACCENTS = [
   "#FFAB0B", // s3 ABC — Almico
   "#ABF760", // s4 Workshop — Brote
   "#A5A8B1", // s5 B2B — plata (el gris secundario ya aceptado como excepción)
-  "#8A8F91", // s6 BitcoinAR — Lactica al 60% sobre negro
-  "#8A8F91", // s7 La Bitcoineta — ídem
+  "#E8CB6A", // s6 BitcoinAR — mostaza clarito (pedido de la org 15/10; no es de paleta)
+  "#E8CB6A", // s7 La Bitcoineta — ídem
 ] as const;
 
 /**

@@ -15,6 +15,7 @@ import {
   eventMinutes,
   formatMinutes,
   stageLabel,
+  stageNote,
   type Day,
 } from "@/lib/speakers/schedule";
 import { demoStartTimes } from "@/lib/speakers/demo";
@@ -780,9 +781,16 @@ export default function AgendaBrowser({
                 className="flex items-baseline justify-between gap-3 pb-3"
                 style={{ borderBottom: "1px solid rgba(255,78,1,0.35)" }}
               >
-                <h2 style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(13px, 1.4vw, 17px)" }}>
-                  {stageLabel(s, lang)}
-                </h2>
+                <div>
+                  <h2 style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(13px, 1.4vw, 17px)" }}>
+                    {stageLabel(s, lang)}
+                  </h2>
+                  {stageNote(s, lang) && (
+                    <p className="mt-1" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(10px, 1vw, 12px)" }}>
+                      {stageNote(s, lang)}
+                    </p>
+                  )}
+                </div>
                 <span style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(10px, 1vw, 12px)" }}>
                   {t.talksIn(list.length)}
                 </span>
