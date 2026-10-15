@@ -21,6 +21,20 @@ function norm(v: string): string {
     .trim();
 }
 
+/**
+ * Cómo nombra la agenda a quien en la ficha figura con otro nombre (apodo o
+ * handle vs nombre real). Clave: el nombre del temario normalizado; valor: el
+ * nombre de la ficha. Parche hasta que el temario traiga ids de speaker.
+ */
+const ALIASES: Record<string, string> = {
+  rodo: "Rodolfo Andragnes",
+  visionariobtc: "Adrián Treviño",
+  johan: "Johan Hernández",
+  "jere souto": "Jeremias Souto",
+  "nicolas seguro": "Niko Seguro",
+  "ray nasser": "Raymond Nasser",
+};
+
 const SEP = /\s*(?:,|\+|&|\/|\sy\s)\s*/i;
 
 /** Nombres sueltos dentro de un "who": separa por coma, +, &, / y " y ". */
@@ -61,7 +75,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     const seen = new Set<string>();
     const found: NonNullable<AgendaTalk["speakers"]> = [];
     for (const n of names(source)) {
-      const words = norm(n).split(" ");
+      const words = norm(ALIASES[norm(n)] ?? n).split(" ");
       const hit =
         byAlias.find((x) => sameName(words, x.words)) ?? byReal.find((x) => sameName(words, x.words));
       if (hit && !seen.has(hit.card.slug)) {
