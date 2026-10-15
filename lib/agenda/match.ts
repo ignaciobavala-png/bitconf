@@ -91,7 +91,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     return {
       id: sessionUuid(s.id),
       title: s.title,
-      abstract: null,
+      abstract: s.description ?? null,
       tags: s.tags,
       level: null,
       durationMin: s.dur,

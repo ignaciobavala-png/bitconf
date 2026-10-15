@@ -34,6 +34,8 @@ export type SnapshotSession = {
   title: string;
   speakers: { key: string | null; name: string }[];
   moderator: string | null;
+  /** Descripción de la charla. El temario de la org todavía no la trae. */
+  description: string | null;
   tags: CanonicalTag[];
 };
 
@@ -175,6 +177,7 @@ export function validateTemario(body: unknown): Validation {
           title,
           speakers,
           moderator: str(raw.moderator, 120),
+          description: str(raw.description ?? raw.abstract ?? raw.descripcion, 4000),
           tags,
         });
       }
@@ -235,6 +238,7 @@ export function toSessions(payload: SnapshotPayload): Session[] {
       title: s.title,
       who: s.speakers.length ? s.speakers.map((x) => x.name).join(", ") : undefined,
       mod: s.moderator ?? undefined,
+      description: s.description ?? undefined,
       tags: s.tags.length ? s.tags : (FALLBACK_TAGS.get(slug(s.title)) ?? []),
     });
   }

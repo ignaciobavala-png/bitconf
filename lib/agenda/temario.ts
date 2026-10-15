@@ -68,6 +68,8 @@ export type Session = {
   who?: string;
   /** Moderador, cuando el boceto lo marca como MOD. */
   mod?: string;
+  /** Descripción de la charla; si no viene, la ficha no muestra el bloque. */
+  description?: string;
   /**
    * Temas para el filtro. El boceto NO trae temas: estos los asignó el equipo
    * leyendo el título, con los 12 clusters de la organización. Provisorio, a
