@@ -15,7 +15,10 @@
 // final en orden alfabético.
 //
 // Con # WEB pero SIN fila en la planilla (no se pueden publicar hasta que
-// carguen sus datos): 300 Alejandro Palantzas, 300 Bruno Torossi, 59 claudio zuchovicki, 200 Forte (Cuba), 300 Fran (Crecimiento), 300 Gabi Cortéz, 300 Karim Hallar, 300 Mario Morlas, 53 Rodolfo Vigliiano, 200 Vnish.
+// carguen sus datos): 300 Alejandro Palantzas, 300 Bruno Torossi, 59 claudio zuchovicki, 200 Forte (Cuba), 300 Fran (Crecimiento), 300 Karim Hallar, 300 Mario Morlas, 200 Vnish.
+// Nombres escritos distinto en la app y en la planilla (se emparejaron a mano):
+// Gabi Cortéz = Gabi Cortés (300|gabi cortes), Rodolfo Vigliiano = Rodolfo Vigliano
+// (296|rodolfo vigliano). "Forte (Cuba)" parece duplicar a Forte11 (192): sin publicar.
 // Sin # WEB ni fila: Alfredo Perotti, Gabriel Campa, Marcela Aizcorbe y las fichas
 // "creadas a mano" vacías (2 Periodistas, Alejandro Gonzalez Rossi, Ana Segovia,
 // CONECTARG, Enrico Colombres, Ernesto Elias, Jorge Miguez, Vantage).
@@ -74,6 +77,7 @@ export const WEB_LIST: { order: number; key: string; label: string }[] = [
   { order: 50, key: "57|gaucho paisano", label: "Gaucho (robot de Paisanos)" },
   { order: 51, key: "254|guiga ferreira", label: "Guiga Ferreira" },
   { order: 52, key: "259|martin ivan yeza", label: "Martín Yeza" },
+  { order: 53, key: "296|rodolfo vigliano", label: "Rodolfo Vigliiano" },
   { order: 54, key: "260|pablo aguer", label: "Pablo Aguer" },
   { order: 56, key: "261|nacho pauls", label: "Nacho Pauls" },
   { order: 57, key: "294|nicolas rosso", label: "Nicolás Rosso (Mítico)" },
@@ -140,6 +144,7 @@ export const WEB_LIST: { order: number; key: string; label: string }[] = [
   { order: 123, key: "293|fernando secchi", label: "Fer Secchi" },
   { order: 125, key: "110|franz tunez", label: "Franz Tuñez" },
   { order: 126, key: "151|gabriela battiato", label: "Gabi Battiato" },
+  { order: 127, key: "300|gabi cortes", label: "Gabi Cortéz" },
   { order: 128, key: "180|gabriela serkin", label: "Gabriela Serkin" },
   { order: 129, key: "299|gina giraldo", label: "Gina Giraldo" },
   { order: 130, key: "247|guillaume bajczman", label: "Guillaume ₿ajczman" },
