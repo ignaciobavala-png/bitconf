@@ -99,6 +99,7 @@ const T = {
     mediaTitle: "Media Partners",
     mediaSubtitle: "Los medios que cuentan LABITCONF.",
     sponsorsTitle: "Sponsors",
+    sponsorsSubtitle: "Quienes nos acompañan.",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -122,6 +123,7 @@ const T = {
     mediaTitle: "Media Partners",
     mediaSubtitle: "The media covering LABITCONF.",
     sponsorsTitle: "Sponsors",
+    sponsorsSubtitle: "Those who stand with us.",
   },
 } as const;
 
@@ -209,7 +211,7 @@ const TICKET_FEATURES = {
     experienceSummary: "Todo lo del Ticket Business",
     experienceExtra: [
       "Inauguración Monumento Satoshi (29 de octubre)",
-      "Open Fest Network & Mayúmana show (29 de octubre)",
+      "XAPO Opening Cocktail & Mayúmana Show (29 de octubre)",
       "Closing Chill Out Full Day (1 de noviembre)",
       "Exclusive HODL merch",
     ],
@@ -233,7 +235,7 @@ const TICKET_FEATURES = {
     experienceSummary: "Everything in the Business Ticket",
     experienceExtra: [
       "Satoshi Monument Unveiling (October 29)",
-      "Open Fest Network & Mayúmana show (October 29)",
+      "XAPO Opening Cocktail & Mayúmana Show (October 29)",
       "Closing Chill Out Full Day (November 1)",
       "Exclusive HODL merch",
     ],
@@ -1026,6 +1028,20 @@ export default function HomePage() {
             />
           </Reveal>
 
+          <Reveal delay={0.1}>
+            <p
+              className="mt-3"
+              style={{
+                fontFamily: "var(--font-neue-machina), sans-serif",
+                fontWeight: 300,
+                color: "#A5A8B1",
+                fontSize: BODY_FS,
+              }}
+            >
+              {t.sponsorsSubtitle}
+            </p>
+          </Reveal>
+
           <div className={TITLE_GAP}>
             {SPONSOR_TIERS.map((tier, i) => {
               const gapX = tier.oneLine ? "gap-x-10 lg:gap-x-[3vw]" : "gap-x-10 sm:gap-x-16";
@@ -1066,7 +1082,7 @@ export default function HomePage() {
               return (
                 <Reveal key={tier.id} delay={0.1 + i * 0.08}>
                   <div
-                    className={`flex flex-wrap items-center ${tier.centered ? "justify-center" : "justify-start"} gap-y-6 py-8 sm:py-10 ${gapX} ${
+                    className={`flex flex-wrap items-center ${tier.centered ? "justify-center" : "justify-start"} gap-y-4 py-5 sm:py-6 ${gapX} ${
                       tier.oneLine ? "lg:flex-nowrap" : ""
                     } ${
                       i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""

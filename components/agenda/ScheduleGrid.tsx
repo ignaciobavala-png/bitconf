@@ -58,6 +58,7 @@ const COMPACT_BELOW = 100;
 const TITLE_MT = 6;
 const SPEAKER_H = 42;
 const META_H = 19;
+const META_H_TIGHT = 16;
 const LINE_H = 20;
 
 /** Ancho del eje. Entra "09:30" a 11px sin cortarse. */
@@ -262,8 +263,15 @@ function GridCard({
   const rowH = compact ? 26 : TOGGLE_H;
   const titleMt = compact ? 2 : TITLE_MT;
   const lineH = compact ? 17 : LINE_H;
-  const showMeta = height >= 190;
-  let free = height - padY * 2 - rowH - titleMt - (showMeta ? META_H : 0);
+  // La fila de meta (duración, MOD, panel) entra desde 190px. Si la charla tiene
+  // moderador baja a 150px: la org pidió que se vea en la tarjeta (16/10), y las
+  // charlas de 30 min (~160px) son 27 de las 38 con moderador. `free` ya
+  // descuenta META_H, así que el título se acorta en vez de desbordar.
+  const showMeta = height >= 190 || (!!talk.mod && height >= 150);
+  // En ese caso justo la fila va ajustada (4px de margen, sin wrap): con el
+  // margen normal de 8px la línea MOD quedaba cortada por abajo.
+  const tightMeta = showMeta && height < 190;
+  let free = height - padY * 2 - rowH - titleMt - (showMeta ? (tightMeta ? META_H_TIGHT : META_H) : 0);
 
   // Los nombres solo si después de ponerlos quedan al menos dos líneas de
   // título: un título de una línea con los nombres no dice nada.
@@ -397,12 +405,14 @@ function GridCard({
       )}
 
       {showMeta && (
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span style={{ ...labelStyle, color: "#5C5F66", fontSize: 9 }}>
+        <div className={`flex items-center gap-x-2 gap-y-1 ${tightMeta ? "mt-1 flex-nowrap" : "mt-2 flex-wrap"}`}>
+          <span style={{ ...labelStyle, color: "#5C5F66", fontSize: 9, whiteSpace: "nowrap", flexShrink: 0 }}>
             {dur} {t.minutes}
           </span>
           {talk.mod && (
-            <span style={{ ...labelStyle, textTransform: "none", color: "#5C5F66", fontSize: 9 }}>
+            <span
+              style={{ ...labelStyle, textTransform: "none", color: "#5C5F66", fontSize: 9, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+            >
               MOD: {talk.mod}
             </span>
           )}

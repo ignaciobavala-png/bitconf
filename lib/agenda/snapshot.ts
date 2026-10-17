@@ -176,7 +176,9 @@ export function validateTemario(body: unknown): Validation {
           language: str(raw.language, 10),
           title,
           speakers,
-          moderator: str(raw.moderator, 120),
+          // La org manda el moderador como { key, name } (igual que los speakers);
+          // el temario de ejemplo lo traía como texto. Se aceptan los dos.
+          moderator: str(isObj(raw.moderator) ? raw.moderator.name : raw.moderator, 120),
           description: str(raw.description ?? raw.abstract ?? raw.descripcion, 4000),
           tags,
         });

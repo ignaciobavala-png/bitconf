@@ -8,6 +8,9 @@
  *
  * T2 - BITCOIN todavía no tiene logos: un tier vacío no se renderiza, y entra
  * solo con agregar sus sponsors acá.
+ *
+ * 16/10/2026: todos los tiers ~35% más chicos a pedido de la organización
+ * (guiarse por Media Partners; que entren todos en una pantalla).
  */
 
 export type Sponsor = {
@@ -60,7 +63,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     // Más chico que antes (era clamp(56px, 7vw, 96px)) y centrado, a pedido de
     // la organización (15/10/2026): con 96px los logos igualaban el alto del
     // título "SPONSORS" y competían con él.
-    logoH: "clamp(44px, 5.4vw, 76px)",
+    logoH: "clamp(30px, 3.6vw, 50px)",
     centered: true,
     // FBI salió de la primera fila a pedido de la organización (29/09): Exness
     // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
@@ -76,7 +79,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   {
     id: "full-node",
     // Más grande que la fila de Node, que va apretada en una línea.
-    logoH: "clamp(46px, 5.4vw, 72px)",
+    logoH: "clamp(30px, 3.6vw, 46px)",
     // Bull Market sumado el 05/10/2026 (refe de la organización:
     // ~/Descargas/refe.jpeg). Wordmark 6.3:1 con isologo: va más bajo que
     // los otros dos para no pasar del tope de ancho y pesar lo mismo.
@@ -107,7 +110,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     // sección. Con el piso de 28px entra desde ~1000px de ancho, así que el
     // `nowrap` desde lg (1024) no desborda. Si se suma otro logo, recalcular
     // el divisor.
-    logoH: "clamp(24px, calc((100vw - 80px - 24vw) / 28.1), 48px)",
+    logoH: "clamp(20px, calc((100vw - 80px - 24vw) / 28.1), 32px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -128,7 +131,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   {
     id: "satoshi",
     // La fila más chica: por debajo del alto visible de los logos de Node.
-    logoH: "clamp(18px, 2.2vw, 30px)",
+    logoH: "clamp(14px, 1.5vw, 21px)",
     // Metamind y Oracle Numeris sumados el 05/10/2026 (referencia de la
     // organización: ~/Descargas/REFE.jpeg). Money On Chain entró acá también y
     // el 10/10 pasó a Node.
