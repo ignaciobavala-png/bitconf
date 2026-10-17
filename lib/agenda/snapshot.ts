@@ -36,6 +36,9 @@ export type SnapshotSession = {
   moderator: string | null;
   /** Descripción de la charla. El temario de la org todavía no la trae. */
   description: string | null;
+  /** v1.1: ids de `publico/speakers` de quienes hablan (sin el moderador). */
+  speakerIds: string[];
+  moderatorId: string | null;
   tags: CanonicalTag[];
 };
 
@@ -180,6 +183,10 @@ export function validateTemario(body: unknown): Validation {
           // el temario de ejemplo lo traía como texto. Se aceptan los dos.
           moderator: str(isObj(raw.moderator) ? raw.moderator.name : raw.moderator, 120),
           description: str(raw.description ?? raw.abstract ?? raw.descripcion, 4000),
+          speakerIds: Array.isArray(raw.speakerIds)
+            ? raw.speakerIds.map((x) => str(x, 20)).filter((x): x is string => !!x)
+            : [],
+          moderatorId: str(raw.moderatorId, 20),
           tags,
         });
       }
@@ -224,6 +231,13 @@ export function validateTemario(body: unknown): Validation {
  */
 const FALLBACK_TAGS = new Map(SESSIONS.map((s) => [slug(s.title), s.tags]));
 
+function whoNames(s: SnapshotSession): string | undefined {
+  const names = s.speakers
+    .filter((x) => !(s.moderatorId && x.key && `sp${x.key}` === s.moderatorId))
+    .map((x) => x.name);
+  return names.length ? names.join(", ") : undefined;
+}
+
 export function toSessions(payload: SnapshotPayload): Session[] {
   const out: Session[] = [];
   for (const s of payload.sessions) {
@@ -238,7 +252,11 @@ export function toSessions(payload: SnapshotPayload): Session[] {
       start: minutesOf(s.start) as number,
       dur: s.durationMin,
       title: s.title,
-      who: s.speakers.length ? s.speakers.map((x) => x.name).join(", ") : undefined,
+      // En el campo viejo `speakers` el moderador también aparece: se saca para
+      // que "Habla" no lo repita (el rol es de la sesión, no de la persona).
+      who: whoNames(s),
+      speakerIds: s.speakerIds,
+      moderatorId: s.moderatorId ?? undefined,
       mod: s.moderator ?? undefined,
       description: s.description ?? undefined,
       tags: s.tags.length ? s.tags : (FALLBACK_TAGS.get(slug(s.title)) ?? []),

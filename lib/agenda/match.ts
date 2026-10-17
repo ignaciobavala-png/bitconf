@@ -25,7 +25,8 @@ function norm(v: string): string {
 /**
  * Cómo nombra la agenda a quien en la ficha figura con otro nombre (apodo o
  * handle vs nombre real). Clave: el nombre del temario normalizado; valor: el
- * nombre de la ficha. Parche hasta que el temario traiga ids de speaker.
+ * nombre de la ficha. Último recurso: solo corre con sesiones SIN `speakerIds`
+ * (temario del repo, respaldo o envíos viejos). Con el temario v1.1 no hace falta.
  */
 const ALIASES: Record<string, string> = {
   rodo: "Rodolfo Andragnes",
@@ -58,6 +59,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
   // Dos claves por speaker: el nombre publicado (alias) y el nombre real. Se
   // prueba primero contra todos los alias y recién después contra los nombres
   // reales, para que un alias exacto nunca pierda contra un parecido.
+  const bySlug = new Map(speakers.map((x) => [x.slug, x]));
   const byAlias = speakers.map((s) => ({ card: s, words: norm(s.name).split(" ") }));
   const byReal = speakers
     .filter((s) => s.fullName)
@@ -75,7 +77,19 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
     const source = s.who ?? (s.title.split(" ").length <= 4 ? s.title : "");
     const seen = new Set<string>();
     const found: NonNullable<AgendaTalk["speakers"]> = [];
-    for (const n of names(source)) {
+
+    // Cruce por id (temario v1.1): exacto, sin alias. Un id que no está entre
+    // los speakers visibles (sin foto, fuera de grilla) queda como texto.
+    for (const id of s.speakerIds ?? []) {
+      const card = bySlug.get(id);
+      if (card && !seen.has(card.slug)) {
+        seen.add(card.slug);
+        found.push({ slug: card.slug, name: card.name, photoUrl: card.photoUrl });
+      }
+    }
+    // Si ningún id se resolvió (temario sin ids, o respaldo con la base vieja
+    // cuyos slugs no son ids) se cae al cruce por nombre.
+    for (const n of found.length ? [] : names(source)) {
       const words = norm(ALIASES[norm(n)] ?? n).split(" ");
       const hit =
         byAlias.find((x) => sameName(words, x.words)) ?? byReal.find((x) => sameName(words, x.words));
@@ -103,7 +117,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
       startsAt: `${date}T${hh}:${mm}:00-03:00`,
       speaker: found[0] ?? null,
       whoText: s.who,
-      mod: s.mod,
+      mod: (s.moderatorId && bySlug.get(s.moderatorId)?.name) || s.mod,
       speakers: found,
       span: s.span,
     };

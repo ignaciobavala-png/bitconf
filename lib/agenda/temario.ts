@@ -70,6 +70,9 @@ export type Session = {
   mod?: string;
   /** Descripción de la charla; si no viene, la ficha no muestra el bloque. */
   description?: string;
+  /** Ids de `publico/speakers` (temario v1.1). Sin ellos el cruce cae al nombre. */
+  speakerIds?: string[];
+  moderatorId?: string;
   /**
    * Temas para el filtro. El boceto NO trae temas: estos los asignó el equipo
    * leyendo el título, con los 12 clusters de la organización. Provisorio, a

@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { onlyCanonical, type CanonicalTag } from "./tags";
+import { getPublicSpeakers, SPEAKER_ID, type PublicSpeaker } from "./publico";
 
 // Lectura pública de speakers y charlas.
 //
@@ -90,11 +91,52 @@ function toCard(r: CardRow): SpeakerCard {
   };
 }
 
+// ── Fuente principal: publico/speakers (app de la organización) ─────────
+//
+// Si el documento responde, ÉL manda: qué speakers salen (`enGrilla`), en qué
+// orden (`webOrder`) y con qué foto. La base propia (planilla + web-list.ts)
+// queda como respaldo para cuando el origen no responde.
+
 /**
- * Todos los speakers publicables, en el "Orden final" de la organización
- * (`web_order`, ver web-list.ts). Sin número, al final y alfabético.
+ * La organización pidió (05/10/2026) no mostrar a nadie sin foto "hasta que
+ * aparezca". Con publico/speakers hay 24 en grilla sin foto: el PDF de
+ * integración sugiere mostrarlos con placeholder. Se mantiene el pedido de la
+ * organización hasta que confirme; pasar a `false` los muestra con inicial.
+ */
+const HIDE_WITHOUT_PHOTO = true;
+
+function publicCard(p: PublicSpeaker): SpeakerCard {
+  return {
+    slug: p.id,
+    name: p.nombre,
+    fullName: p.nombreReal !== p.nombre ? p.nombreReal : null,
+    role: null,
+    company: p.empresa,
+    country: null,
+    photoUrl: p.foto,
+    tags: [],
+  };
+}
+
+async function getPublicCards(): Promise<SpeakerCard[] | null> {
+  const list = await getPublicSpeakers();
+  if (!list) return null;
+  return list.filter((p) => p.enGrilla && (!HIDE_WITHOUT_PHOTO || p.foto)).map(publicCard);
+}
+
+/** `x` llega como URL; el perfil la dibuja como `@usuario`. */
+function xHandleOf(url: string | null): string | null {
+  const m = url && /^https?:\/\/(?:www\.)?(?:x|twitter)\.com\/@?([A-Za-z0-9_]{1,15})\/?(?:[?#].*)?$/.exec(url);
+  return m ? m[1] : null;
+}
+
+/**
+ * Todos los speakers publicables, en el orden de la organización (`webOrder`
+ * de publico/speakers; en el respaldo, `web_order` de la base).
  */
 export async function getSpeakers(): Promise<SpeakerCard[]> {
+  const pub = await getPublicCards();
+  if (pub) return pub;
   const { data, error } = await publicClient()
     .from("speakers")
     .select(`${CARD_COLUMNS}, web_order`)
@@ -118,6 +160,24 @@ export async function getSpeakers(): Promise<SpeakerCard[]> {
 }
 
 export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | null> {
+  // `sp54` es un id de publico/speakers; cualquier otra cosa es un slug viejo
+  // de la base (links ya compartidos) y sigue resolviéndose ahí.
+  if (SPEAKER_ID.test(slug)) {
+    const p = (await getPublicSpeakers())?.find((x) => x.id === slug && x.enGrilla);
+    if (!p || (HIDE_WITHOUT_PHOTO && !p.foto)) return null;
+    return {
+      ...publicCard(p),
+      bio: null,
+      languages: [],
+      website: p.web,
+      linkedin: null,
+      xHandle: xHandleOf(p.x),
+      instagram: null,
+      github: null,
+      talks: [],
+    };
+  }
+
   const supabase = publicClient();
 
   const { data, error } = await supabase
@@ -178,6 +238,8 @@ export async function getSpeakerBySlug(slug: string): Promise<SpeakerProfile | n
 
 /** Slugs publicables — para generar las rutas estáticas de los perfiles. */
 export async function getSpeakerSlugs(): Promise<string[]> {
+  const pub = await getPublicCards();
+  if (pub) return pub.map((c) => c.slug);
   const { data } = await publicClient().from("speakers").select("slug").not(...HAS_PHOTO);
   return (data ?? []).map((r) => r.slug as string);
 }

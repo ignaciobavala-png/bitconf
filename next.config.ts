@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
         hostname: "cryexzchtnerqkcchboj.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      // Fotos de speakers que publica la app de la organización (Firebase Storage).
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/v0/b/labitconf-2026.*/o/**",
+      },
     ],
   },
 };
