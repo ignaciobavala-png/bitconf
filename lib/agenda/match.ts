@@ -33,6 +33,7 @@ const ALIASES: Record<string, string> = {
   johan: "Johan Hernández",
   "jere souto": "Jeremias Souto",
   "nicolas seguro": "Niko Seguro",
+  "jose seco": "JoseDryBit",
 };
 
 const SEP = /\s*(?:,|\+|&|\/|\sy\s)\s*/i;
