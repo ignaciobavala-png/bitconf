@@ -737,6 +737,8 @@ export default function AgendaBrowser({
         </button>
       )}
 
+      {day === HODLWEEN.day && <HodlweenBlock lang={lang} />}
+
       {filtered.length === 0 ? (
         <div className="mt-10 flex flex-col items-start gap-4">
           <p style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(14px, 1.4vw, 18px)" }}>{t.empty}</p>
@@ -806,88 +808,47 @@ export default function AgendaBrowser({
         </div>
       )}
 
-      {day === HODLWEEN.day && (
-        // Full-bleed: el fondo llena el ancho de la pantalla y se funde con el
-        // liso de arriba y abajo, así el recuadro no queda flotando en negro.
-        <div
-          className="relative -ml-6 sm:-ml-10 w-screen px-6 sm:px-10 mt-10 overflow-hidden"
-          style={{ paddingTop: "clamp(56px, 8vh, 96px)", paddingBottom: "clamp(56px, 8vh, 96px)" }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none select-none"
-            style={{
-              opacity: 0.55,
-              maskImage: "linear-gradient(to bottom, transparent 0, #000 30%, #000 70%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 30%, #000 70%, transparent 100%)",
-            }}
-          >
-            <Image
-              src="/assets/home/lluvia-naranja.png"
-              alt=""
-              fill
-              sizes="100vw"
-              aria-hidden
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-          <div className="relative w-full max-w-[1600px]">
-            <HodlweenBlock lang={lang} />
-          </div>
-        </div>
-      )}
       {selected && <TalkDetail talk={selected} lang={lang} onClose={closeTalk} />}
     </div>
   );
 }
 
-/** Evento transversal del sábado: va al pie del día, fuera de los escenarios. */
+/**
+ * Evento transversal del sábado: va ARRIBA del día, antes de la grilla (pedido de
+ * la org, 16/10). El banner ya trae el nombre, el lugar y la fecha horneados, así
+ * que el texto de abajo solo suma lo que el banner no dice: horario y qué es.
+ */
 function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="relative overflow-hidden rounded-2xl"
-      style={{
-        border: "1px solid rgba(255,78,1,0.45)",
-        background: "rgba(255,78,1,0.06)",
-        padding: "24px 26px",
-      }}
+      // Full-bleed: el banner nuevo es panorámico (~3,5:1), pensado de lado a lado
+      // (pedido de la org, 19/10). A 1600px de ancho mide ~450px de alto.
+      className="mt-8 -ml-6 sm:-ml-10 w-screen overflow-hidden"
+      style={{ borderTop: "1px solid rgba(255,78,1,0.45)", borderBottom: "1px solid rgba(255,78,1,0.45)" }}
     >
-      {/* Lluvia naranja de fondo: la marca de HODLween, sin competir con el texto. */}
       <Image
-        src="/assets/home/lluvia-naranja.png"
-        alt=""
-        fill
-        sizes="(max-width: 1600px) 100vw, 1600px"
-        aria-hidden
-        className="pointer-events-none select-none"
-        style={{ objectFit: "cover", opacity: 0.35 }}
+        src="/assets/home/hodlween-banner-wide.jpg"
+        alt="HODLWEEN — Costa Salguero, Buenos Aires — sábado 31 de octubre"
+        width={2051}
+        height={580}
+        sizes="100vw"
+        className="block h-auto w-full"
+        priority
       />
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.2) 100%)" }}
-      />
-      <div className="relative flex flex-wrap items-baseline gap-x-4 gap-y-2">
+        className="flex flex-wrap items-baseline gap-x-4 gap-y-1"
+        style={{ background: "rgba(255,78,1,0.08)", padding: "14px 24px" }}
+      >
         <span style={{ ...labelStyle, color: "#FF4E01", fontSize: "clamp(10px, 1vw, 12px)" }}>
-          {HODLWEEN.tag[lang]}
+          {HODLWEEN.tag[lang]} · {HODLWEEN.hours[lang]}
         </span>
-        <span style={{ ...bodyStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
-          {HODLWEEN.hours[lang]}
+        <span style={{ ...bodyStyle, color: "#C4C7CE", fontSize: "clamp(12px, 1.15vw, 14px)" }}>
+          {HODLWEEN.lead[lang]}
         </span>
       </div>
-      <h2
-        className="relative mt-3"
-        style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(20px, 2.6vw, 34px)", lineHeight: 1.1 }}
-      >
-        {HODLWEEN.title[lang]}
-      </h2>
-      <p
-        className="relative mt-3"
-        style={{ ...bodyStyle, color: "#C4C7CE", fontSize: "clamp(13px, 1.25vw, 16px)", lineHeight: 1.6, maxWidth: "52ch" }}
-      >
-        {HODLWEEN.lead[lang]}
-      </p>
     </motion.section>
   );
 }
