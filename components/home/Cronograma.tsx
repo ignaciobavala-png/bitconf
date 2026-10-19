@@ -67,7 +67,7 @@ const CARDS: Card[] = [
         en: "INAUGURATION OF THE SATOSHI NAKAMOTO MONUMENT",
       },
     ],
-    link: { es: "+ MANUMAYA SHOW", en: "+ MANUMAYA SHOW" },
+    link: { es: "+ MAYUMANA SHOW", en: "+ MAYUMANA SHOW" },
     href: "/mas/monumento",
     rows: [3, 5],
   },
