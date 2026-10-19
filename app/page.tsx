@@ -1082,7 +1082,7 @@ export default function HomePage() {
               return (
                 <Reveal key={tier.id} delay={0.1 + i * 0.08}>
                   <div
-                    className={`flex flex-wrap items-center ${tier.centered ? "justify-center" : "justify-start"} gap-y-4 py-5 sm:py-6 ${gapX} ${
+                    className={`flex flex-wrap items-center justify-center gap-y-4 py-5 sm:py-6 ${gapX} ${
                       tier.oneLine ? "lg:flex-nowrap" : ""
                     } ${
                       i < SPONSOR_TIERS.length - 1 ? "border-b border-white/10" : ""

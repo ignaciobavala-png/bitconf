@@ -11,6 +11,9 @@
  *
  * 16/10/2026: todos los tiers ~35% más chicos a pedido de la organización
  * (guiarse por Media Partners; que entren todos en una pantalla).
+ *
+ * 19/10/2026: todas las filas centradas, como Media Partners (pedido de la
+ * organización); los tamaños siguen el orden de tier, de mayor a menor.
  */
 
 export type Sponsor = {
@@ -45,8 +48,6 @@ export type SponsorTier = {
    * ancho disponible y no al revés (pedido de la organización, 29/09).
    */
   oneLine?: boolean;
-  /** Fila centrada en vez de alineada al borde izquierdo (solo Whale). */
-  centered?: boolean;
   sponsors: Sponsor[];
 };
 
@@ -64,7 +65,6 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     // la organización (15/10/2026): con 96px los logos igualaban el alto del
     // título "SPONSORS" y competían con él.
     logoH: "clamp(30px, 3.6vw, 50px)",
-    centered: true,
     // FBI salió de la primera fila a pedido de la organización (29/09): Exness
     // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
     // NEXO sumado el 12/10/2026 (refe de la organización por WhatsApp):
