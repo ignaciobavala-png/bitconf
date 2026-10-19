@@ -12,6 +12,7 @@ import type { Lang } from "@/lib/store/lang";
 // entran cuatro columnas: pasa a una lista por día con las mismas tarjetas.
 
 const FONT = "var(--font-neue-machina), sans-serif";
+const DAY_FONT = '"Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif';
 const ORANGE = "#FF4E01";
 const AMBER = "#FFAB0B";
 const LIGHT = "#E6EEF2";
@@ -199,8 +200,10 @@ function CardView({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight
         )}
         <h3
           style={{
-            fontFamily: FONT,
-            fontWeight: 900,
+            // DAY 1 / DAY 2 van en grotesca bold, como la pieza: en Neue Machina la
+            // Y tiene un corte en el tronco y la organización la quiere continua.
+            fontFamily: card.titleSize > 60 ? DAY_FONT : FONT,
+            fontWeight: card.titleSize > 60 ? 700 : 900,
             fontSize: s(card.titleSize, card.titleSize > 60 ? 44 : 24),
             lineHeight: card.titleSize > 60 ? 0.95 : 1.02,
             color: card.titleColor ?? (onLight ? ink : LIGHT),
