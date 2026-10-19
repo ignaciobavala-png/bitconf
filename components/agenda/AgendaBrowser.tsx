@@ -14,6 +14,7 @@ import {
   compareStages,
   eventMinutes,
   formatMinutes,
+  isDay,
   stageLabel,
   stageNote,
   type Day,
@@ -341,7 +342,11 @@ export default function AgendaBrowser({
     () => DAYS.filter((d) => talks.some((k) => k.day === d)),
     [talks]
   );
-  const [day, setDay] = useState<Day>(daysWithContent[0] ?? DAYS[0]);
+  // `?day=oct30|oct31` (links del cronograma de la home) manda sobre el
+  // default; después de elegir a mano, manda la elección.
+  const dayParam = useQueryParam("day");
+  const [pickedDay, setDay] = useState<Day | null>(null);
+  const day: Day = pickedDay ?? (isDay(dayParam) ? dayParam : (daysWithContent[0] ?? DAYS[0]));
 
   // La agenda son los dos días de conferencia. El jueves (Open Fest) y el
   // domingo (Closing Day) quedaron fuera por decisión de la organización: son

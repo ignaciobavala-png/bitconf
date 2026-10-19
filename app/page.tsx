@@ -10,6 +10,7 @@ import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
 import Cronograma from "@/components/home/Cronograma";
+import TecweekBanner from "@/components/home/TecweekBanner";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
@@ -1012,6 +1013,9 @@ export default function HomePage() {
 
       {/* Cronograma — entre Tickets y Sponsors (pedido de la organización, pieza Cronograma_LABITCONF26_HODL). */}
       <Cronograma lang={lang} />
+
+      {/* Tecweek x LABITCONF — pieza "Ventanas 2" de la org, entre Cronograma y Sponsors. */}
+      <TecweekBanner />
 
       {/* Sponsors — entre Tickets y Media Partners. Sigue la referencia de la
           organización (Descargas/refe.jpeg, 28/09): una fila por tier de

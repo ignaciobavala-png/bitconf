@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLangStore } from "@/lib/store/lang";
 
 const labelStyle: React.CSSProperties = {
@@ -8,6 +9,9 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: "0.03em",
   textTransform: "uppercase",
 };
+
+// Altura uniforme de los títulos PNG de la org (igual que SpeakersHeader y la home).
+const TITLE_H = "clamp(40px, 5.5vw, 68px)";
 
 const T = {
   es: {
@@ -30,8 +34,14 @@ export default function AgendaHeader({ total }: { total: number }) {
 
   return (
     <>
-      <h1 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(38px, 7vw, 86px)", lineHeight: 1.02 }}>
-        {t.title}
+      <h1 className="relative w-full" style={{ height: TITLE_H }}>
+        <Image
+          src={`/assets/home/titulos/agenda-${lang}-trim.png`}
+          alt={t.title}
+          fill
+          priority
+          style={{ objectFit: "contain", objectPosition: "left center" }}
+        />
       </h1>
       <p
         className="mt-5"

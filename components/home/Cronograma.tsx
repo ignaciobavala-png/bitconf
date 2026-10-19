@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import Reveal from "@/components/home/Reveal";
 import type { Lang } from "@/lib/store/lang";
 
@@ -14,7 +16,6 @@ import type { Lang } from "@/lib/store/lang";
 const FONT = "var(--font-neue-machina), sans-serif";
 const DAY_FONT = '"Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif';
 const ORANGE = "#FF4E01";
-const AMBER = "#FFAB0B";
 const LIGHT = "#E6EEF2";
 const MUTED = "#A5A8B1";
 
@@ -31,7 +32,7 @@ interface Card {
   slot: Slot;
   tone: Tone;
   pill: { es: string; en: string };
-  pillColor: "orange" | "ink";
+  pillColor: "orange" | "ink" | "muted";
   eyebrow?: { es: string; en: string };
   title: { es: string; en: string };
   /** Tamaño del título en unidades de la pieza. */
@@ -41,6 +42,8 @@ interface Card {
   bottom?: boolean;
   extra?: { es: string; en: string }[];
   link?: { es: string; en: string };
+  /** Destino al clickear la tarjeta (pedido de la org, 19/10: burbujas interactivas como la agenda). */
+  href?: string;
   /** Grilla desktop: filas (líneas: 1 cabecera, 2 mañana, 3 tarde arriba, 4 tarde abajo). */
   rows: [number, number];
 }
@@ -65,6 +68,7 @@ const CARDS: Card[] = [
       },
     ],
     link: { es: "+ MANUMAYA SHOW", en: "+ MANUMAYA SHOW" },
+    href: "/mas/monumento",
     rows: [3, 5],
   },
   {
@@ -78,6 +82,7 @@ const CARDS: Card[] = [
     titleSize: 88,
     titleColor: ORANGE,
     bottom: true,
+    href: "/agenda?day=oct30",
     rows: [2, 4],
   },
   {
@@ -86,8 +91,9 @@ const CARDS: Card[] = [
     slot: "afternoon",
     tone: "darker",
     pill: { es: "SPEAKERS · BUSINESS · INVITADOS", en: "SPEAKERS · BUSINESS · GUESTS" },
-    pillColor: "orange",
-    eyebrow: { es: "NETWORKING COCKTAIL BY", en: "NETWORKING COCKTAIL BY" },
+    // Pedido de la org (19/10): burbuja y letras en gris, sin naranja.
+    pillColor: "muted",
+    eyebrow: { es: "SIDE EVENT: NETWORKING COCKTAIL BY", en: "SIDE EVENT: NETWORKING COCKTAIL BY" },
     title: { es: "ARDUA", en: "ARDUA" },
     titleSize: 50,
     rows: [4, 5],
@@ -103,6 +109,7 @@ const CARDS: Card[] = [
     titleSize: 88,
     titleColor: ORANGE,
     bottom: true,
+    href: "/agenda?day=oct31",
     rows: [2, 4],
   },
   {
@@ -116,6 +123,7 @@ const CARDS: Card[] = [
     title: { es: "HODLWEEN", en: "HODLWEEN" },
     titleSize: 50,
     titleColor: LIGHT,
+    href: "/agenda?day=oct31",
     rows: [4, 5],
   },
   {
@@ -150,10 +158,25 @@ const TONE_BG: Record<Tone, string> = {
 };
 
 function CardView({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight?: number }) {
+  const view = <CardBody card={card} lang={lang} minHeight={minHeight} />;
+  if (!card.href) return view;
+  return (
+    <Link
+      href={card.href}
+      className="block h-full transition duration-200 hover:-translate-y-0.5 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ABF760]"
+      style={{ borderRadius: s(26, 14) }}
+      aria-label={`${card.title[lang]}`}
+    >
+      {view}
+    </Link>
+  );
+}
+
+function CardBody({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight?: number }) {
   const onLight = card.tone === "light";
   const onOrange = card.tone === "orange";
   const ink = "#171616";
-  const pillColor = card.pillColor === "orange" ? ORANGE : ink;
+  const pillColor = card.pillColor === "orange" ? ORANGE : card.pillColor === "muted" ? MUTED : ink;
 
   return (
     <div
@@ -171,13 +194,13 @@ function CardView({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight
         style={{
           fontFamily: FONT,
           fontWeight: 900,
-          fontSize: s(12.5, 9),
-          letterSpacing: "0.05em",
+          fontSize: s(10.5, 8),
+          letterSpacing: "0.04em",
           whiteSpace: "nowrap",
           color: pillColor,
           border: `${s(1.8, 1)} solid ${pillColor}`,
           borderRadius: 999,
-          padding: `${s(5, 3)} ${s(13, 8)}`,
+          padding: `${s(5, 3)} ${s(11, 6)}`,
         }}
       >
         {card.pill[lang]}
@@ -189,8 +212,8 @@ function CardView({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight
             style={{
               fontFamily: FONT,
               fontWeight: 900,
-              fontSize: s(15, 11),
-              letterSpacing: "0.14em",
+              fontSize: s(13, 9),
+              letterSpacing: "0.1em",
               color: onOrange ? ink : MUTED,
               marginBottom: s(4, 2),
             }}
@@ -242,7 +265,7 @@ function CardView({ card, lang, minHeight }: { card: Card; lang: Lang; minHeight
                 fontFamily: FONT,
                 fontWeight: 900,
                 fontSize: s(16, 12),
-                color: AMBER,
+                color: LIGHT,
                 marginTop: s(10, 6),
               }}
             >
@@ -278,7 +301,15 @@ export default function Cronograma({ lang }: { lang: Lang }) {
       className="relative px-6 sm:px-10 py-16 sm:py-20"
       style={{ zIndex: 3 }}
     >
-      <Reveal className="w-full" style={{ containerType: "inline-size" } as React.CSSProperties}>
+      <Reveal className="relative w-full" style={{ height: "clamp(40px, 5.5vw, 68px)" }}>
+        <Image
+          src={`/assets/home/titulos/${lang === "es" ? "cronograma-es" : "schedule-en"}-trim.png`}
+          alt={aria}
+          fill
+          style={{ objectFit: "contain", objectPosition: "left center" }}
+        />
+      </Reveal>
+      <Reveal className="mt-10 sm:mt-14 w-full xl:mx-auto xl:w-[80%]" style={{ containerType: "inline-size" } as React.CSSProperties}>
         {/* Desktop: grilla fiel a la pieza. */}
         <div
           className="hidden xl:grid"
@@ -287,7 +318,7 @@ export default function Cronograma({ lang }: { lang: Lang }) {
               "--u": "calc(100cqw / 1760)",
               gridTemplateColumns: "12.2% repeat(4, minmax(0, 1fr))",
               // header · mañana · tarde (arriba) · tarde (abajo)
-              gridTemplateRows: `${s(66)} ${s(266)} ${s(120)} ${s(172)}`,
+              gridTemplateRows: `${s(66)} ${s(266)} ${s(120)} ${s(200)}`,
               columnGap: s(8),
               rowGap: s(8),
             } as React.CSSProperties

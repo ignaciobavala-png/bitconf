@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useAgendaStore } from "@/lib/store/agenda";
@@ -88,8 +89,14 @@ export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
 
   return (
     <div className="w-full">
-      <h1 style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(34px, 6.5vw, 76px)", lineHeight: 1.02 }}>
-        {t.title}
+      <h1 className="relative w-full" style={{ height: "clamp(40px, 5.5vw, 68px)" }}>
+        <Image
+          src={`/assets/home/titulos/${lang === "es" ? "mi-agenda-es" : "my-agenda-en"}-trim.png`}
+          alt={t.title}
+          fill
+          priority
+          style={{ objectFit: "contain", objectPosition: "left center" }}
+        />
       </h1>
 
       {hydrated && (
