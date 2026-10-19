@@ -9,6 +9,7 @@ import QaChatWidget, { openQubitChat } from "@/components/home/QaChatWidget";
 import MyAgendaButton from "@/components/home/MyAgendaButton";
 import CheckoutModal from "@/components/home/CheckoutModal";
 import Footer from "@/components/home/Footer";
+import Cronograma from "@/components/home/Cronograma";
 import Reveal from "@/components/home/Reveal";
 import Floating from "@/components/home/Floating";
 import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
@@ -1008,6 +1009,9 @@ export default function HomePage() {
           </Floating>
         </div>
       </section>
+
+      {/* Cronograma — entre Tickets y Sponsors (pedido de la organización, pieza Cronograma_LABITCONF26_HODL). */}
+      <Cronograma lang={lang} />
 
       {/* Sponsors — entre Tickets y Media Partners. Sigue la referencia de la
           organización (Descargas/refe.jpeg, 28/09): una fila por tier de
