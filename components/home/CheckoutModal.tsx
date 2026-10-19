@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLangStore } from "@/lib/store/lang";
 
@@ -15,6 +15,27 @@ export const HALLOS_CHECKOUT_URL =
 // link de escape del modal.
 const HALLOS_CHECKOUT_STANDALONE =
   "https://www.hallos.io/event/labitconf/checkout";
+
+// Atribución de ventas en Hallos (pedido de Hallos vía la org, 19/10/2026):
+// el dashboard del evento muestra las UTM en "referidos". Si la persona llegó a
+// labitconf.com con utm_* (anuncios, newsletters), se reenvían tal cual al
+// checkout —la "opción mejor" de Hallos—; si llegó sin ninguna, van las fijas
+// (la "opción simple") para que igual se vea cuántas ventas salen del botón.
+const DEFAULT_UTM: Record<string, string> = {
+  utm_source: "labitconf",
+  utm_medium: "web",
+  utm_campaign: "boton-comprar",
+};
+
+/** Agrega las UTM a una URL de Hallos. Solo en el cliente (lee location.search). */
+function withUtm(base: string): string {
+  const url = new URL(base);
+  const incoming = new URLSearchParams(window.location.search);
+  const forwarded = [...incoming].filter(([k]) => k.startsWith("utm_"));
+  const utm = forwarded.length > 0 ? forwarded : Object.entries(DEFAULT_UTM);
+  for (const [k, v] of utm) url.searchParams.set(k, v);
+  return url.toString();
+}
 
 const T = {
   es: {
@@ -42,6 +63,15 @@ export default function CheckoutModal({
 }) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
+
+  // Solo con el modal abierto (siempre en el cliente): el SSR no toca `window`.
+  const { embedUrl, standaloneUrl } = useMemo(
+    () =>
+      open
+        ? { embedUrl: withUtm(HALLOS_CHECKOUT_URL), standaloneUrl: withUtm(HALLOS_CHECKOUT_STANDALONE) }
+        : { embedUrl: "", standaloneUrl: "" },
+    [open]
+  );
 
   // Esc para cerrar + bloqueo del scroll del body mientras el modal está abierto
   useEffect(() => {
@@ -142,7 +172,7 @@ export default function CheckoutModal({
                     link es la única salida del usuario. Vive en la barra (y no
                     en una franja al pie) para no gastar alto útil del iframe. */}
                 <a
-                  href={HALLOS_CHECKOUT_STANDALONE}
+                  href={standaloneUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={t.fallback}
@@ -179,7 +209,7 @@ export default function CheckoutModal({
             {/* iframe: se monta solo con el modal abierto (no carga Hallos en
                 cada visita a la landing) */}
             <iframe
-              src={HALLOS_CHECKOUT_URL}
+              src={embedUrl}
               title={t.title}
               className="flex-1 w-full"
               // `minHeight: 0` es necesario: sin eso el flex item toma como
