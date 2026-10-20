@@ -88,10 +88,9 @@ export default function PhotoCarousel({
               alt={slides[index].alt[lang]}
               fill
               sizes="100vw"
-              // Las placas se sirven tal cual (PNG de la org): cualquier recompresión
-              // —el WebP q90 del optimizador sobre el JPG ya comprimido llegaba a
-              // 36 dB— ablandaba el texto horneado. No recupera detalle: siguen
-              // siendo 851px estirados; eso depende de que la org mande >=2560px.
+              // Las placas ya vienen en WebP q97 desde el PNG de la org (2340px, una sola
+              // pasada): pasarlas otra vez por el optimizador —el WebP q90 sobre un
+              // JPG ya comprimido llegaba a 36 dB— ablandaba el texto horneado.
               unoptimized
               priority={index === 0}
               style={{ objectFit: "cover" }}

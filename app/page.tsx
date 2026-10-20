@@ -403,45 +403,48 @@ const SE_PARTE_ACCENTS = [
    está cacheado un año. v4 son los PNG tal cual los mandó la org (20/10): el
    JPEG q92 de v3 más el WebP del optimizador sumaban dos pasadas con pérdida
    sobre el texto horneado y se veían más blandos que el original. Se sirven
-   con `unoptimized` (ver PhotoCarousel). */
+   con `unoptimized` (ver PhotoCarousel).
+   v5 (20/10, tarde): la org mandó las placas a 2340x866 (antes 851x315). Se
+   pasan una sola vez de PNG (1-5 MB) a WebP q97 con PIL (~0.3-0.7 MB, PSNR ~40
+   dB contra el original) y se sirven tal cual: unoptimized con PNG pesaría 26 MB. */
 const CAROUSEL_BASE =
   "https://cryexzchtnerqkcchboj.supabase.co/storage/v1/object/public/media/home/carrusel";
 
 const CAROUSEL_SLIDES: CarouselSlide[] = [
   {
-    src: `${CAROUSEL_BASE}/slide-01-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-01-v5.webp`,
     alt: { es: "Todo esto sucede en LABITCONF", en: "All of this happens at LABITCONF" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-02-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-02-v5.webp`,
     alt: { es: "+5 escenarios", en: "+5 stages" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-03-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-03-v5.webp`,
     alt: { es: "Workshops: aprendé, probá, construí", en: "Workshops: learn, try, build" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-04-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-04-v5.webp`,
     alt: { es: "Hodlween: fiesta de disfraces, sábado 31 de octubre, Costa Salguero", en: "Hodlween: costume party, Saturday October 31, Costa Salguero" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-05-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-05-v5.webp`,
     alt: { es: "El génesis de Satoshi Nakamoto: inauguración del Monumento, 29 de octubre", en: "The genesis of Satoshi Nakamoto: Monument inauguration, October 29" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-06-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-06-v5.webp`,
     alt: { es: "Experiencias: todo lo que pasa, todo lo que vivís", en: "Experiences: everything that happens, everything you live" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-07-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-07-v5.webp`,
     alt: { es: "+200 speakers: las voces que están construyendo el futuro", en: "+200 speakers: the voices building the future" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-08-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-08-v5.webp`,
     alt: { es: "LABITCONF Bitcoin College: certificación en Bitcoin, 29 de octubre", en: "LABITCONF Bitcoin College: Bitcoin certification, October 29" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-09-v4.png`,
+    src: `${CAROUSEL_BASE}/slide-09-v5.webp`,
     alt: { es: "EduHub: el espacio de la comunidad educativa en LABITCONF", en: "EduHub: the educational community space at LABITCONF" },
   },
 ];
