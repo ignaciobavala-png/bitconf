@@ -48,13 +48,13 @@ export default function TecweekBanner() {
         }}
       />
 
-      <Reveal className="relative mx-auto w-full max-w-5xl" style={{ zIndex: 2 }}>
+      <Reveal className="relative mx-auto w-full max-w-[819px]" style={{ zIndex: 2 }}>
         <Image
-          src="/assets/home/ventanas-tecweek.png"
+          src="/assets/home/ventanas-tecweek-v2.png"
           alt={alt}
           width={2000}
           height={970}
-          sizes="(min-width: 1024px) 1024px, 100vw"
+          sizes="(min-width: 1024px) 819px, 100vw"
           style={{ width: "100%", height: "auto" }}
         />
       </Reveal>
