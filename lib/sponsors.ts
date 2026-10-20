@@ -104,6 +104,8 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   },
   {
     id: "node",
+    // 20/10: XAPO sumado → nueve logos: divisor 28.9 (25.4 + 3.5) y ocho huecos
+    // de 3vw = 24vw.
     // Los ocho en una línea (Bull Bitcoin sumado el 15/10 y movido a Full Node
     // el 19/10: divisor vuelve a 25.4 y siete huecos de 3vw = 21vw). La suma de anchos de los logos a su `scale` da
     // ~25.4 veces el alto de la caja (20.5 de los seis originales + 2.6 de
@@ -112,7 +114,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     // sección. Con el piso de 28px entra desde ~1000px de ancho, así que el
     // `nowrap` desde lg (1024) no desborda. Si se suma otro logo, recalcular
     // el divisor.
-    logoH: "clamp(20px, calc((100vw - 80px - 21vw) / 25.4), 32px)",
+    logoH: "clamp(20px, calc((100vw - 80px - 24vw) / 28.9), 32px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -125,16 +127,27 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("coinbox", "Coin Box Mining", 0.9),
       // Subido de Satoshi a Node el 10/10/2026, a pedido de la organización.
       s("money-on-chain", "Money On Chain", 0.9),
+      // XAPO sumado el 20/10/2026 (captura de la organización: al final de Node).
+      // Lockup 3.9:1 con "EST. 2013" abajo del isologo: ~3.5 cajas de ancho.
+      s("xapo", "XAPO Bank", 0.9),
     ],
   },
   {
     id: "satoshi",
     // La fila más chica: por debajo del alto visible de los logos de Node.
-    logoH: "clamp(14px, 1.5vw, 21px)",
+    // 20/10: con ARDUA, IDERO y Regalale Bitcoin son 13 logos y la fila partía en
+    // dos renglones; la captura de la organización los tiene en uno. Suma de
+    // anchos (aspect × scale, con topes) = 46.3 cajas de alto + doce huecos de
+    // 3vw = 36vw. Si se suma otro logo, recalcular el divisor.
+    logoH: "clamp(12px, calc((100vw - 80px - 36vw) / 46.3), 21px)",
+    oneLine: true,
     // Metamind y Oracle Numeris sumados el 05/10/2026 (referencia de la
     // organización: ~/Descargas/REFE.jpeg). Money On Chain entró acá también y
     // el 10/10 pasó a Node.
     sponsors: [
+      // ARDUA sumado el 20/10/2026 (captura de la organización: primero de la fila).
+      // Wordmark 3.8:1 con isologo, mismo trato que IDERO.
+      s("ardua", "Ardua", 0.7),
       s("belo", "Belo", 0.9),
       s("pala", "Pala Blockchain", 0.9),
       s("metamind", "Metamind", 0.66),
@@ -157,6 +170,10 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // Bitget Wallet sumado el 15/10/2026: la versión blanca del Drive ya trae
       // la flecha calada. Wordmark 6.3:1, mismo trato que Bull Market.
       s("bitget-wallet", "Bitget Wallet", 0.6),
+      // IDERO (4.4:1) y Regalale Bitcoin (7.7:1, con ₿ calado en el regalo) sumados
+      // el 20/10/2026, al final de la fila como en la captura de la organización.
+      s("idero", "IDERO", 0.7),
+      s("regalale-bitcoin", "Regalale Bitcoin", 0.6, 5),
     ],
   },
 ] satisfies SponsorTier[]).filter((tier) => tier.sponsors.length > 0);
