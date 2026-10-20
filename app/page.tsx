@@ -129,14 +129,17 @@ const T = {
   },
 } as const;
 
-// Media partners — alto de la caja de cada logo. Lo único que se repite entre
-// todos es esta caja; lo que cambia por logo es cuánto de esa caja ocupa
-// (`scale` en lib/media-partners.ts), nunca la caja.
-const MEDIA_LOGO_H = "clamp(36px, 4.65vw, 57px)";
-// Fila destacada (iProUP + CriptoNoticias, pedido 23/09): misma caja que el
-// resto pero ~40% más alta, para que se note que tienen más lugar sin salirse
-// del lenguaje visual de la sección.
-const FEATURED_MEDIA_LOGO_H = "clamp(50px, 6.5vw, 80px)";
+// Media partners — mismas medidas que Sponsors (pedido de la organización,
+// 20/10/2026: "algunos media partner están más grandes y no puede ser").
+// La caja es la de la fila Full Node de sponsors y la fila destacada usa la de
+// Whale, la más alta de esa sección: ningún media partner puede quedar por
+// encima del mayor sponsor. Y el logo ocupa la misma fracción de caja que un
+// sponsor por defecto (`SPONSOR_FILL`, el 0.72 de `s()` en lib/sponsors.ts),
+// multiplicada por la compensación óptica del logo (`scale`).
+const tierH = (id: string) => SPONSOR_TIERS.find((t) => t.id === id)!.logoH;
+const MEDIA_LOGO_H = tierH("full-node");
+const FEATURED_MEDIA_LOGO_H = tierH("whale");
+const SPONSOR_FILL = 0.72;
 
 // El reparto en filas no depende de nada del render: se calcula una vez.
 const mediaRows = mediaPartnerLanes();
@@ -405,31 +408,40 @@ const CAROUSEL_BASE =
 
 const CAROUSEL_SLIDES: CarouselSlide[] = [
   {
-    src: `${CAROUSEL_BASE}/slide-01-v2.jpg`,
+    src: `${CAROUSEL_BASE}/slide-01-v3.jpg`,
     alt: { es: "Todo esto sucede en LABITCONF", en: "All of this happens at LABITCONF" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-02-v2.jpg`,
+    src: `${CAROUSEL_BASE}/slide-02-v3.jpg`,
     alt: { es: "+5 escenarios", en: "+5 stages" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-03-v2.jpg`,
+    src: `${CAROUSEL_BASE}/slide-03-v3.jpg`,
     alt: { es: "Workshops: aprendé, probá, construí", en: "Workshops: learn, try, build" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-04-v2.jpg`,
-    alt: { es: "Closing party: fiesta de disfraces Hodlween", en: "Closing party: Hodlween costume party" },
+    src: `${CAROUSEL_BASE}/slide-04-v3.jpg`,
+    alt: { es: "Hodlween: fiesta de disfraces, sábado 31 de octubre, Costa Salguero", en: "Hodlween: costume party, Saturday October 31, Costa Salguero" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-05-v2.jpg`,
+    src: `${CAROUSEL_BASE}/slide-05-v3.jpg`,
+    alt: { es: "El génesis de Satoshi Nakamoto: inauguración del Monumento, 29 de octubre", en: "The genesis of Satoshi Nakamoto: Monument inauguration, October 29" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-06-v3.jpg`,
     alt: { es: "Experiencias: todo lo que pasa, todo lo que vivís", en: "Experiences: everything that happens, everything you live" },
   },
   {
-    src: `${CAROUSEL_BASE}/slide-06-v2.jpg`,
-    alt: {
-      es: "Speakers internacionales: las voces que están construyendo el futuro",
-      en: "International speakers: the voices building the future",
-    },
+    src: `${CAROUSEL_BASE}/slide-07-v3.jpg`,
+    alt: { es: "+200 speakers: las voces que están construyendo el futuro", en: "+200 speakers: the voices building the future" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-08-v3.jpg`,
+    alt: { es: "LABITCONF Bitcoin College: certificación en Bitcoin, 29 de octubre", en: "LABITCONF Bitcoin College: Bitcoin certification, October 29" },
+  },
+  {
+    src: `${CAROUSEL_BASE}/slide-09-v3.jpg`,
+    alt: { es: "EduHub: el espacio de la comunidad educativa en LABITCONF", en: "EduHub: the educational community space at LABITCONF" },
   },
 ];
 
@@ -483,7 +495,11 @@ export default function HomePage() {
           <HeroVideo src={HERO_VIDEO_URL} mobileSrc={HERO_VIDEO_MOBILE_URL} />
         </div>
 
-        <Reveal delay={0.15} className="relative flex flex-col items-center gap-5" style={{ zIndex: 1 }}>
+        {/* En mobile el CTA sube sobre el video (pedido de la org, 20/10): el master
+            vertical deja el tercio inferior en negro, así que `-mt-[31vw]` lo
+            monta ahí en vez de dejarlo en un bloque aparte debajo. En desktop el
+            video ya es el fondo y el CTA va al pie del hero. */}
+        <Reveal delay={0.15} className="relative flex flex-col items-center gap-5 -mt-[31vw] sm:mt-0" style={{ zIndex: 1 }}>
           {/* Botón más grande (~10%) y animado con pulso idle sutil (reunión 16/7) */}
           <motion.button
             type="button"
@@ -1217,7 +1233,7 @@ export default function HomePage() {
                     height={152}
                     className="h-full w-auto object-contain"
                     style={{
-                      maxHeight: `${logo.scale * 100}%`,
+                      maxHeight: `${logo.scale * SPONSOR_FILL * 100}%`,
                       maxWidth: `calc(${FEATURED_MEDIA_LOGO_H} * 4.5)`,
                     }}
                   />
@@ -1252,7 +1268,7 @@ export default function HomePage() {
                         // logo en una fila llena. Se topea contra el alto de
                         // la caja, que es igual en todas las filas.
                         style={{
-                          maxHeight: `${logo.scale * 100}%`,
+                          maxHeight: `${logo.scale * SPONSOR_FILL * 100}%`,
                           maxWidth: `min(100%, calc(${MEDIA_LOGO_H} * 4.5))`,
                         }}
                       />
