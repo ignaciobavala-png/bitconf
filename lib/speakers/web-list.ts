@@ -22,6 +22,7 @@
 // Sin # WEB ni fila: Alfredo Perotti, Gabriel Campa, Marcela Aizcorbe y las fichas
 // "creadas a mano" vacías (2 Periodistas, Alejandro Gonzalez Rossi, Ana Segovia,
 // CONECTARG, Enrico Colombres, Ernesto Elias, Jorge Miguez, Vantage).
+// Rodrigo Benzaquén (229) sacado a pedido de la organización el 20/10/2026.
 // Salieron de la grilla respecto del 14/10: Giacomo Zucco, Mike Germano, Richi
 // Espinosa, Jordi Llonch Esteve, Liam Wickham.
 export const WEB_LIST: { order: number; key: string; label: string }[] = [
@@ -55,7 +56,6 @@ export const WEB_LIST: { order: number; key: string; label: string }[] = [
   { order: 28, key: "177|andres ondarra", label: "Andrés Ondarra" },
   { order: 29, key: "82|julian colombo", label: "Julián Colombo" },
   { order: 30, key: "228|manuel beaudroit", label: "Manuel Beaudroit" },
-  { order: 31, key: "229|rodrigo benzaquen", label: "Rodrigo Benzaquén" },
   { order: 32, key: "38|alexandra navarro", label: "Alexandra Navarro" },
   { order: 33, key: "103|lorena martin", label: "Lorena Martin" },
   { order: 34, key: "172|malena martin", label: "Malena Martin" },
