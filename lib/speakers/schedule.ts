@@ -167,12 +167,12 @@ export const PROGRAM: Record<ProgramDay, ProgramDayInfo> = {
  */
 export const HODLWEEN = {
   day: "oct31" as ProgramDay,
-  tag: { es: "Special event", en: "Special event" },
+  tag: { es: "Cierre Especial", en: "Special Closing" },
   title: { es: "HODLween", en: "HODLween" },
-  hours: { es: "19:00 → 00:00", en: "19:00 → 00:00" },
+  hours: { es: "de 19:00 a 21:00", en: "19:00 to 21:00" },
   lead: {
-    es: "La fiesta de cierre del sábado, con show performático y DJ.",
-    en: "Saturday's closing party, with a performance show and DJ.",
+    es: "Veníte Disfrazado",
+    en: "Come in Costume",
   },
 } as const;
 
