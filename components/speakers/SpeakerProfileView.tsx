@@ -38,6 +38,7 @@ const T = {
     sessions: "Sus charlas",
     seeInAgenda: "Ver en la agenda →",
     withOthers: "Con",
+    moderating: "Modera",
   },
   en: {
     back: "← All speakers",
@@ -53,6 +54,7 @@ const T = {
     sessions: "Their talks",
     seeInAgenda: "See in the agenda →",
     withOthers: "With",
+    moderating: "Moderates",
   },
 } as const;
 
@@ -196,6 +198,7 @@ export default function SpeakerProfileView({
                     ? `${formatMinutes(start)}${k.durationMin ? ` – ${formatMinutes(start + k.durationMin)}` : ""}`
                     : t.timeTba;
                 const others = (k.speakers ?? []).filter((p) => p.slug !== speaker.slug);
+                const isMod = k.moderator?.slug === speaker.slug;
                 return (
                   <Link
                     key={k.id}
@@ -218,6 +221,9 @@ export default function SpeakerProfileView({
                         </span>
                       )}
                       <span style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(9px, 0.95vw, 11px)" }}>{when}</span>
+                      {isMod && (
+                        <span style={{ ...labelStyle, color: "#ABF760", fontSize: "clamp(9px, 0.95vw, 11px)" }}>{t.moderating}</span>
+                      )}
                     </div>
                     <h3 className="mt-3" style={{ ...bodyStyle, fontWeight: 500, color: "#F3F7F9", fontSize: "clamp(16px, 1.7vw, 21px)", lineHeight: 1.3 }}>
                       {k.title}

@@ -51,7 +51,7 @@ export default async function SpeakerPage({
   // Las sesiones del temario donde figura este speaker: el mismo cruce por
   // nombre que usa la agenda, así la ficha y la agenda nunca discrepan.
   const sessions = toAgendaTalks(await getSessions(), await getSpeakers()).filter((k) =>
-    k.speakers?.some((p) => p.slug === slug)
+    k.speakers?.some((p) => p.slug === slug) || k.moderator?.slug === slug
   );
 
   return (

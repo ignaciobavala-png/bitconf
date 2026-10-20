@@ -267,6 +267,8 @@ export type AgendaTalk = {
   /** Speakers tal cual los escribió la organización. Se muestra literal. */
   whoText?: string;
   mod?: string;
+  /** El moderador, cuando se pudo cruzar con un speaker publicado (foto + ficha). */
+  moderator?: { slug: string; name: string; photoUrl: string | null } | null;
   /** Los que se pudieron cruzar con un speaker publicado (foto + ficha). */
   speakers?: { slug: string; name: string; photoUrl: string | null }[];
   /** Columnas que ocupa: 2 = plenaria entre este escenario y el siguiente. */

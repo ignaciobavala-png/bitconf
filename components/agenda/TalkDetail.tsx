@@ -206,11 +206,40 @@ export default function TalkDetail({
           </div>
         )}
 
-        {talk.mod && (
-          <p className="mt-4" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: 13 }}>
-            <span style={{ ...labelStyle, fontSize: 10 }}>{t.moderator}: </span>
-            {talk.mod}
-          </p>
+        {talk.moderator ? (
+          <div className="mt-5">
+            <p style={{ ...labelStyle, color: "#A5A8B1", fontSize: 10 }}>{t.moderator}</p>
+            <Link href={`/speakers/${talk.moderator.slug}`} className="group mt-3 flex items-center gap-3">
+              <span
+                className="relative block shrink-0 overflow-hidden rounded-full"
+                style={{ width: 44, height: 44, background: "#2A2929" }}
+              >
+                {talk.moderator.photoUrl ? (
+                  <Image src={talk.moderator.photoUrl} alt="" fill sizes="44px" style={{ objectFit: "cover" }} />
+                ) : (
+                  <span
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{ ...labelStyle, color: "rgba(230,238,242,0.3)", fontSize: 16 }}
+                  >
+                    {talk.moderator.name.slice(0, 1)}
+                  </span>
+                )}
+              </span>
+              <span className="min-w-0">
+                <span className="block transition-colors duration-200 group-hover:text-[#ABF760]" style={{ ...bodyStyle, fontWeight: 500, color: "#E6EEF2", fontSize: 15 }}>
+                  {talk.moderator.name}
+                </span>
+                <span style={{ ...labelStyle, color: "#A5A8B1", fontSize: 9 }}>{t.profile} →</span>
+              </span>
+            </Link>
+          </div>
+        ) : (
+          talk.mod && (
+            <p className="mt-4" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: 13 }}>
+              <span style={{ ...labelStyle, fontSize: 10 }}>{t.moderator}: </span>
+              {talk.mod}
+            </p>
+          )
         )}
 
         {talk.tags.length > 0 && (

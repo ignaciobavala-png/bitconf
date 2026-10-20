@@ -99,6 +99,19 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
       }
     }
 
+    // Moderador: por id si la org lo manda, si no por nombre (mismo criterio que
+    // los speakers: sin match dudoso, queda solo el texto de `mod`).
+    let moderator: AgendaTalk["moderator"] = null;
+    const modCard = s.moderatorId ? bySlug.get(s.moderatorId) : undefined;
+    if (modCard) {
+      moderator = { slug: modCard.slug, name: modCard.name, photoUrl: modCard.photoUrl };
+    } else if (s.mod) {
+      const words = norm(ALIASES[norm(s.mod)] ?? s.mod).split(" ");
+      const hit =
+        byAlias.find((x) => sameName(words, x.words)) ?? byReal.find((x) => sameName(words, x.words));
+      if (hit) moderator = { slug: hit.card.slug, name: hit.card.name, photoUrl: hit.card.photoUrl };
+    }
+
     // Hora del evento: Buenos Aires es UTC-3 todo el año (sin horario de verano).
     const date = s.day === "oct30" ? "2026-10-30" : "2026-10-31";
     const hh = String(Math.floor(s.start / 60)).padStart(2, "0");
@@ -118,6 +131,7 @@ export function toAgendaTalks(sessions: Session[], speakers: SpeakerCard[]): Age
       speaker: found[0] ?? null,
       whoText: s.who,
       mod: (s.moderatorId && bySlug.get(s.moderatorId)?.name) || s.mod,
+      moderator,
       speakers: found,
       span: s.span,
     };
