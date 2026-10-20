@@ -88,13 +88,11 @@ export default function PhotoCarousel({
               alt={slides[index].alt[lang]}
               fill
               sizes="100vw"
-              // Las placas vienen a 851px de ancho nativo y la pieza es
-              // full-bleed, así que ya se estiran 2-4x. Con el default (75) el
-              // optimizador suma una segunda pasada de pérdida justo sobre el
-              // texto horneado, que es lo que más se nota. 90 no recupera
-              // detalle —eso depende de que la organización mande las placas a
-              // >=2560px— pero evita empeorar lo que sí hay.
-              quality={90}
+              // Las placas se sirven tal cual (PNG de la org): cualquier recompresión
+              // —el WebP q90 del optimizador sobre el JPG ya comprimido llegaba a
+              // 36 dB— ablandaba el texto horneado. No recupera detalle: siguen
+              // siendo 851px estirados; eso depende de que la org mande >=2560px.
+              unoptimized
               priority={index === 0}
               style={{ objectFit: "cover" }}
             />
