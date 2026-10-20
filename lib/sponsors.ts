@@ -97,20 +97,22 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       // Bull Market.
       { ...s("ikigii", "IKIGII", 1), boxScale: 1.5 },
       s("rootstock", "Rootstock", 0.6),
+      // Bull Bitcoin pasó de Node a Full Node el 19/10/2026, al lado de
+      // Rootstock (pedido de la organización). Wordmark 4.3:1.
+      s("bull-bitcoin", "Bull Bitcoin", 0.62),
     ],
   },
   {
     id: "node",
-    // Los nueve en una línea (Bull Bitcoin sumado el 15/10: divisor 25.4 →
-    // 28.1, ocho huecos de 3vw = 24vw, piso de 28px → 24px para que siga
-    // entrando a 1024). Antes eran ocho: la suma de anchos de los logos a su `scale` da
+    // Los ocho en una línea (Bull Bitcoin sumado el 15/10 y movido a Full Node
+    // el 19/10: divisor vuelve a 25.4 y siete huecos de 3vw = 21vw). La suma de anchos de los logos a su `scale` da
     // ~25.4 veces el alto de la caja (20.5 de los seis originales + 2.6 de
     // Coinbox, sumado el 05/10, + 2.3 de Money On Chain, subido de Satoshi el
     // 10/10), y quedan siete huecos de 3vw. 80px es el padding lateral de la
     // sección. Con el piso de 28px entra desde ~1000px de ancho, así que el
     // `nowrap` desde lg (1024) no desborda. Si se suma otro logo, recalcular
     // el divisor.
-    logoH: "clamp(20px, calc((100vw - 80px - 24vw) / 28.1), 32px)",
+    logoH: "clamp(20px, calc((100vw - 80px - 21vw) / 25.4), 32px)",
     oneLine: true,
     sponsors: [
       s("criptala", "Criptala"),
@@ -123,9 +125,6 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
       s("coinbox", "Coin Box Mining", 0.9),
       // Subido de Satoshi a Node el 10/10/2026, a pedido de la organización.
       s("money-on-chain", "Money On Chain", 0.9),
-      // Bull Bitcoin sumado el 15/10/2026: isologo + wordmark 4.3:1, pesa
-      // como Bull Market (suma ~2.6 al divisor de `logoH`).
-      s("bull-bitcoin", "Bull Bitcoin", 0.62),
     ],
   },
   {
