@@ -829,9 +829,10 @@ function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      // Full-bleed: el banner nuevo es panorámico (~3,5:1), pensado de lado a lado
-      // (pedido de la org, 19/10). A 1600px de ancho mide ~450px de alto.
-      className="mt-8 -ml-6 sm:-ml-10 w-screen overflow-hidden"
+      // Panorámico (~3,5:1), pensado de lado a lado (pedido de la org, 19/10), pero
+      // al 90% del ancho de la pantalla y centrado, no al 100% (pedido del 20/10).
+      // El margen izquierdo se calcula contra el centro del padre, que es simétrico.
+      className="mt-8 w-[90vw] ml-[calc(50%-45vw)] overflow-hidden"
       style={{ borderTop: "1px solid rgba(255,78,1,0.45)", borderBottom: "1px solid rgba(255,78,1,0.45)" }}
     >
       <Image
@@ -839,7 +840,7 @@ function HodlweenBlock({ lang }: { lang: "es" | "en" }) {
         alt="HODLWEEN — Costa Salguero, Buenos Aires — sábado 31 de octubre"
         width={2051}
         height={580}
-        sizes="100vw"
+        sizes="90vw"
         className="block h-auto w-full"
         priority
       />
