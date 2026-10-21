@@ -23,6 +23,8 @@
 // "creadas a mano" vacías (2 Periodistas, Alejandro Gonzalez Rossi, Ana Segovia,
 // CONECTARG, Enrico Colombres, Ernesto Elias, Jorge Miguez, Vantage).
 // Rodrigo Benzaquén (229) sacado a pedido de la organización el 20/10/2026.
+// Papa Bitcoin (227) sacado a pedido de la organización el 21/10/2026, junto con
+// Karim Hallar y Claudio Zuchovicki (estos dos ya no se publicaban: sin fila en la planilla).
 // Salieron de la grilla respecto del 14/10: Giacomo Zucco, Mike Germano, Richi
 // Espinosa, Jordi Llonch Esteve, Liam Wickham.
 export const WEB_LIST: { order: number; key: string; label: string }[] = [
@@ -45,7 +47,6 @@ export const WEB_LIST: { order: number; key: string; label: string }[] = [
   { order: 17, key: "28|yayi morales", label: "Yayi Morales" },
   { order: 18, key: "225|santi siri", label: "Santi Siri" },
   { order: 19, key: "226|maximiliano firtman", label: "Maximiliano Firtman" },
-  { order: 20, key: "227|juan rodriguez", label: "Papa Bitcoin" },
   { order: 21, key: "26|dusan matuska", label: "Dušan Matuška" },
   { order: 22, key: "6|graeme moore", label: "Graeme Moore" },
   { order: 23, key: "22|jeremy almond", label: "Jeremy Almond" },
