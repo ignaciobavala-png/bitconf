@@ -131,7 +131,7 @@ const FRIDAY = day("oct30", [
   { track: "pastilla", at: "12:00", title: "Qué aprendimos de usar Bitcoin como un Standard", who: "Borja Matel", tags: ["bitcoin"] },
   { track: "pastilla", at: "12:30", title: "Carlos Maslatón" },
   { track: "pastilla", at: "14:30", title: "Invertir en Bitcoin o esclavitud", who: "JJ Chagerben", tags: ["finanzas", "bitcoin"] },
-  { track: "pastilla", span: 2, at: "15:00", title: "Encendiendo los motores del Cohete To the Moon", who: "Norbert, Joven Inversor, Papa Bitcoin, Mariel & Co.", tags: ["finanzas"] },
+  { track: "pastilla", span: 2, at: "15:00", title: "Encendiendo los motores del Cohete To the Moon", who: "Norbert, Joven Inversor, Mariel & Co.", tags: ["finanzas"] },
   { track: "pastilla", at: "15:30", title: "Mathematical Science applied to the Bitcoin Price \"The Power Law\"", who: "Giovanni Santostasi", tags: ["finanzas", "tecnico"] },
   { track: "pastilla", span: 2, at: "17:00", title: "Hacia donde van los negocios en un mundo de Agente e IA", who: "Daniel Rabinovich + Rodrigo Benzaquén", tags: ["ia", "emprendimiento"] },
   { track: "pastilla", span: 2, at: "18:30", title: "Why and How do we HODL", who: "Dušan Matuška , Saifedean Ammous , Jerremy Almond , Giaccomo Zucco, Giovanni Santostassi", tags: ["bitcoin"] },
@@ -198,7 +198,7 @@ const SATURDAY = day("oct31", [
   { track: "pastilla", at: "16:00", title: "Offgrid Mining y Rentabilidad", who: "Ariel Perelmann, Tomás Ocampo, Walter Sebastián Schanz.", mod: "Adolfo Raed", tags: ["mining"] },
   { track: "pastilla", span: 2, at: "17:00", title: "Panel con Saifedean Ammous y otros", tags: ["bitcoin"] },
   { track: "pastilla", at: "18:00", title: "Panel Economías Circulares", who: "Gabriel Kurman, Motiv, Bitcoin Beach, Brasil, Ivan", tags: ["adopcion"] },
-  { track: "pastilla", span: 2, at: "18:30", dur: 60, title: "Porqué Hodleamos", who: "Lunaticoin , Alberto Mera , Papa Bitcoin , Andrés BTC , Lorena Ortiz", tags: ["bitcoin"] },
+  { track: "pastilla", span: 2, at: "18:30", dur: 60, title: "Porqué Hodleamos", who: "Lunaticoin , Alberto Mera , Andrés BTC , Lorena Ortiz", tags: ["bitcoin"] },
 
   { track: "vision", at: "10:30", title: "Qué HODLear de vos (y qué soltar) en la era de la IA", who: "Stephie Cherni", tags: ["ia"] },
   { track: "vision", at: "11:00", title: "¿Quién es, y quién responde? — Identidad, responsabilidad y wallets en la era de los agentes de IA", who: "Alejandro Narancio y Ana Ojeda (criptolawyer)", tags: ["ia", "legal"] },
