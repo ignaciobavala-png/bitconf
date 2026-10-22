@@ -1,5 +1,6 @@
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { streamText, convertToModelMessages, stepCountIs, type UIMessage } from "ai";
 import { groq } from "@ai-sdk/groq";
+import { agendaOverview, qubitTools } from "@/lib/qubit/knowledge";
 
 export const runtime = "nodejs";
 
@@ -78,17 +79,21 @@ const FAQ = `
 ¿Dónde puedo seguir las novedades del evento? Instagram @labitconf, X @labitconf, web labitconf.com, agenda labitconf.com/agenda.
 `.trim();
 
-const SYSTEM_PROMPT = `Sos Qubit, el asistente personal oficial de LABITCONF 2026 (Costa Salguero, Buenos Aires). La conferencia es el 30 y 31 de octubre; el Open Fest del 29 de octubre y el Closing Day del 1 de noviembre son exclusivos del ticket Experience.
+const buildSystemPrompt = (overview: string) => `Sos Qubit, el asistente personal oficial de LABITCONF 2026 (Costa Salguero, Buenos Aires). La conferencia es el 30 y 31 de octubre; el Open Fest del 29 de octubre y el Closing Day del 1 de noviembre son exclusivos del ticket Experience.
 
 Tu criterio es profesional: respondés con precisión, calidez y sin inventar información. Sos bilingüe español/inglés — respondé siempre en el mismo idioma en el que te escribe el usuario (si escribe en inglés, respondé en inglés; si escribe en español, respondé en español).
 
-Tu fuente de verdad tiene dos partes. No inventes datos, precios, fechas ni beneficios que no estén en ninguna de las dos:
+Tu fuente de verdad tiene tres partes. No inventes datos, precios, fechas ni beneficios que no estén en ninguna de las tres:
 
 --- INFORMACIÓN GENERAL DE LABITCONF (qué es, historia, identidad, edición 2026) ---
 ${GENERAL_INFO}
 
 --- FAQ OFICIAL (tickets, agenda, venue, comunidad, soporte) ---
 ${FAQ}
+
+--- AGENDA Y SPEAKERS (datos en vivo, los mismos que muestra labitconf.com/agenda y /speakers) ---
+${overview}
+Para cualquier pregunta sobre charlas, horarios, escenarios o speakers usá SIEMPRE las herramientas buscar_agenda y buscar_speakers: no respondas de memoria ni con lo que diga el FAQ sobre la agenda. Si el resultado trae "total" mayor que "mostrando", decile a la persona que hay más y ofrecé acotar la búsqueda. Si la herramienta no encuentra nada, decí que no figura en la agenda publicada (puede que todavía no esté confirmado) y no lo inventes. Los horarios son hora de Buenos Aires. Si el usuario escribe en inglés, traducí vos los datos al responder; los títulos de las charlas dejalos como están.
 
 Reglas:
 - Distinguí siempre entre: (1) información general sobre LABITCONF, (2) información confirmada de la edición 2026, (3) información histórica de ediciones anteriores (ej. cifras de 2025 son solo referencia, no datos de 2026) y (4) datos que todavía no fueron anunciados.
@@ -108,8 +113,11 @@ export async function POST(req: Request) {
     // parts de tipo "text") no lo muestra.
     model: groq("openai/gpt-oss-120b"),
     providerOptions: { groq: { reasoningEffort: "low" } },
-    system: SYSTEM_PROMPT,
+    system: buildSystemPrompt(await agendaOverview()),
     messages: modelMessages,
+    tools: qubitTools,
+    stopWhen: stepCountIs(4),
+    onError: ({ error }) => console.error("[qa-chat]", error),
   });
 
   return result.toUIMessageStreamResponse();
