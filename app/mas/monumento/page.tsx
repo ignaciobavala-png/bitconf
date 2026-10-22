@@ -69,7 +69,7 @@ const T = {
     ],
     ctaTop: "No te pierdas la",
     ctaBottom: "Inauguración",
-    heroDate: ["29 de octubre", "Open Fest LABITCONF 26"],
+    heroDate: ["29 de octubre", "XAPO Opening Cocktail"],
     heroAccess: "Solo acceso con el ticket EXPERIENCE",
     origenTitle: "El origen de todo",
     origen: [
@@ -136,7 +136,7 @@ const T = {
     ],
     ctaTop: "Don't miss the",
     ctaBottom: "Unveiling",
-    heroDate: ["October 29", "Open Fest LABITCONF 26"],
+    heroDate: ["October 29", "XAPO Opening Cocktail"],
     heroAccess: "Access only with the EXPERIENCE ticket",
     origenTitle: "Where it all began",
     origen: [
@@ -392,7 +392,7 @@ export default function MonumentoPage() {
               textWrap: "balance",
             }}
           >
-            {/* En mobile, una línea por parte en vez de partir "Open / Fest". */}
+            {/* En mobile, una línea por parte en vez de partir "XAPO / Opening Cocktail". */}
             {t.heroDate[0]}
             <span className="hidden sm:inline"> — </span>
             <br className="sm:hidden" />
