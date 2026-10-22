@@ -28,6 +28,16 @@ const SCALE: Record<string, number> = {
   sla: 0.8,
   "territorio-bitcoin": 1.1,
   thenewscrypto: 1.04,
+  // Tanda del 22/10 (a ojo, contra la fila anterior).
+  "agencia-informar": 1,
+  "bitcoin-news": 1,
+  "comunidad-inversores": 1.2,
+  "jornal-bitcoin": 1.4,
+  "payspace-magazine": 1.1,
+  shecrypto: 1.3,
+  "somos-bulls": 1.15,
+  "tech-observer": 1,
+  "women-in-bitcoin": 1.2,
 };
 
 export type MediaPartner = {
@@ -53,11 +63,35 @@ export const FEATURED_MEDIA_PARTNERS: MediaPartner[] = FEATURED_SLUGS
   .filter((f): f is (typeof MEDIA_PARTNER_FILES)[number] => Boolean(f))
   .map(toMediaPartner);
 
+// Los 29 logos de la grilla original, en su orden. Sus filas y tamaños no se
+// tocan: la organización se queja cada vez que algo cambia de lugar o de
+// tamaño. Si se sumaran a las mismas 3 filas, las celdas pasarían de 10 a 13
+// por fila y todos los logos viejos se achicarían.
+const BASE_SLUGS = [
+  "bank-magazine", "bitcoin-argentina", "bitcoin-only-events", "blockvoz",
+  "builders-off-the-record", "ccs", "cripto-contador", "cripto247",
+  "criptoinforme", "crypto-events", "cryptopolitan", "decentral-club",
+  "deed-to-chain", "diario-bitcoin", "fxstreet", "go-latam", "inversor-latam",
+  "livebnews", "noticias-fintech-latam", "random-access", "revista-plebs",
+  "roadshow", "sla", "territorio-bitcoin", "thenewscrypto",
+  "the-startup-journal", "tyn-magazine", "women-in-crypto", "yellow-media",
+];
+
+const isFeatured = (slug: string) => FEATURED_SLUGS.includes(slug);
+
 export const MEDIA_PARTNERS: MediaPartner[] = MEDIA_PARTNER_FILES.filter(
-  (f) => !FEATURED_SLUGS.includes(f.slug),
+  (f) => BASE_SLUGS.includes(f.slug) && !isFeatured(f.slug),
 ).map(toMediaPartner);
 
-/** Cuántas filas tiene la sección. Fijo a propósito — ver `mediaPartnerLanes`. */
+/** Logos que no están en `BASE_SLUGS`: entran en filas nuevas debajo. */
+export const EXTRA_MEDIA_PARTNERS: MediaPartner[] = MEDIA_PARTNER_FILES.filter(
+  (f) => !BASE_SLUGS.includes(f.slug) && !isFeatured(f.slug),
+).map(toMediaPartner);
+
+/** Tope de logos por fila: el de la grilla original (10 celdas). */
+const MAX_PER_ROW = 10;
+
+/** Cuántas filas tiene la grilla base. Fija — ver `mediaPartnerLanes`. */
 export const MEDIA_LANES = 3;
 
 /**
@@ -80,4 +114,17 @@ export function mediaPartnerLanes(
   const out: MediaPartner[][] = Array.from({ length: lanes }, () => []);
   items.forEach((item, i) => out[i % lanes].push(item));
   return out.filter((lane) => lane.length > 0);
+}
+
+/**
+ * Grilla completa: las 3 filas base y, debajo, los logos nuevos en filas de a
+ * 10 (mismo ancho de celda que arriba, así ninguno cambia de tamaño). Un logo
+ * que se deje en la carpeta entra solo al final.
+ */
+export function mediaPartnerRows(): MediaPartner[][] {
+  const rows = mediaPartnerLanes();
+  for (let i = 0; i < EXTRA_MEDIA_PARTNERS.length; i += MAX_PER_ROW) {
+    rows.push(EXTRA_MEDIA_PARTNERS.slice(i, i + MAX_PER_ROW));
+  }
+  return rows;
 }

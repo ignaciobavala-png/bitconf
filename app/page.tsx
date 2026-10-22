@@ -16,7 +16,7 @@ import Floating from "@/components/home/Floating";
 import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
 import { useLangStore } from "@/lib/store/lang";
-import { mediaPartnerLanes, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
+import { mediaPartnerRows, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 import { SPONSOR_TIERS } from "@/lib/sponsors";
 import { bgOpacity } from "@/lib/ui/bg";
@@ -142,7 +142,7 @@ const FEATURED_MEDIA_LOGO_H = tierH("whale");
 const SPONSOR_FILL = 0.72;
 
 // El reparto en filas no depende de nada del render: se calcula una vez.
-const mediaRows = mediaPartnerLanes();
+const mediaRows = mediaPartnerRows();
 // Ancho de celda = el de la fila MÁS llena. Así la fila incompleta no estira
 // sus celdas: queda centrada con medio hueco de cada lado, que se nota mucho
 // menos que un hueco entero contra el margen derecho.
