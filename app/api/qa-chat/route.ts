@@ -48,6 +48,7 @@ const FAQ = `
 ¿Hay acceso gratuito? Sí: jubilados, menores de 16 años (acompañados por un mayor), personas con discapacidad (más acompañante) y estudiantes universitarios de instituciones aliadas. Jubilados y personas con discapacidad deben escribir a contacto@labitconf.com para gestionar su entrada.
 ¿Los menores de 16 pueden entrar solos? No, deben estar acompañados por un mayor de edad en todo momento dentro del predio.
 ¿Se pueden transferir o revender tickets? No, los tickets son personales e intransferibles. LABITCONF no se responsabiliza por compras fuera de la plataforma oficial.
+¿Cómo recibo mi entrada y cómo ingreso al evento? Al completar la compra llega por mail la Confirmación de compra con el código QR de la entrada adjunto. Ese QR es la entrada: hay que presentarlo en el acceso para validar el ingreso. Además, un día antes del evento llega un mail de recordatorio con los códigos QR de las entradas, para tenerlos a mano al ingresar.
 ¿Puedo comprar el ticket el día del evento? Depende de la disponibilidad; se recomienda comprar con anticipación porque los tickets pueden agotarse, especialmente las tandas más baratas.
 ¿Se puede ingresar a la zona VIP con niños? Sí: los adultos con entrada a la zona VIP pueden ingresar acompañados de niños, siempre bajo la responsabilidad del adulto a cargo.
 
