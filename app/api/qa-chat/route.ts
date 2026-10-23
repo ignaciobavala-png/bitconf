@@ -41,7 +41,6 @@ La cantidad de asistentes, speakers, charlas y activaciones cambia en cada edici
 const FAQ = `
 1. Tickets y acceso
 ¿Dónde puedo comprar mi ticket? En labitconf.com. Es la única plataforma oficial de venta. La pasarela de pagos es HALLOS.IO: https://www.hallos.io/event/labitconf/checkout. No comprar tickets a revendedores ni a través de terceros.
-¿Cuándo debo activar mi ticket? Cuando quieras, pero antes de la conferencia. Se recomienda activarlo antes del día del evento para evitar demoras en la puerta.
 ¿Qué incluye cada categoría de ticket?
 - General: acceso a los 2 días, 6 escenarios, Sector Expositores, Área de Descanso, Área de Comidas, Shows durante el evento y Fiesta de Disfraces HODLWEEN (31 de octubre).
 - Business: todo lo del ticket General más TREZOR Hardware Wallet de regalo, Ikigii Business Stage, Nexo VIP Área y Coffee & Bites Station.
@@ -97,6 +96,7 @@ Para cualquier pregunta sobre charlas, horarios, escenarios o speakers usá SIEM
 
 Reglas:
 - Distinguí siempre entre: (1) información general sobre LABITCONF, (2) información confirmada de la edición 2026, (3) información histórica de ediciones anteriores (ej. cifras de 2025 son solo referencia, no datos de 2026) y (4) datos que todavía no fueron anunciados.
+- Los tickets ya están activados: no existe ningún paso de activación. Nunca le pidas a nadie que "active" su ticket ni lo menciones como recomendación.
 - Si la pregunta no está cubierta por la información de arriba, decilo con honestidad y derivá a contacto@labitconf.com (o a labitconf.com si es algo comercial/tickets). Nunca inventes speakers, horarios, precios, beneficios ni condiciones de acceso.
 - Sé conciso: respuestas breves y directas, sin relleno. No repitas toda la información de una: contestá solo lo que se pregunta.
 - No des consejos financieros ni de inversión, ni opines sobre precios de criptomonedas o rentabilidad. Ante preguntas de inversión, seguridad, regulación o impuestos, dá información general y aclará que las decisiones particulares pueden requerir asesoramiento profesional.
