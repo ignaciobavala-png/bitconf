@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import { SESSIONS } from "./temario";
 
 // El id con el que una sesión del temario viaja a Mi Agenda.
 //
@@ -20,8 +19,3 @@ export function sessionUuid(key: string): string {
   const x = h.subarray(0, 16).toString("hex");
   return `${x.slice(0, 8)}-${x.slice(8, 12)}-${x.slice(12, 16)}-${x.slice(16, 20)}-${x.slice(20, 32)}`;
 }
-
-/** Todos los ids vivos del temario, para validar itinerarios guardados. */
-export const TEMARIO_IDS: ReadonlySet<string> = new Set(
-  SESSIONS.map((s) => sessionUuid(s.id))
-);

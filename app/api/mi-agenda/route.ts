@@ -3,8 +3,8 @@ import { createHash } from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { hashIdentity } from "@/lib/itinerary/identity";
 import { isValidIdentity } from "@/lib/itinerary/rules";
-import { TEMARIO_IDS, sessionUuid } from "@/lib/agenda/ids";
-import { getLatestSnapshot } from "@/lib/agenda/source";
+import { sessionUuid } from "@/lib/agenda/ids";
+import { getSessions } from "@/lib/agenda/source";
 
 // Respaldo y recuperación del itinerario.
 //
@@ -62,14 +62,15 @@ async function rateLimited(supabase: Supabase, ipHash: string): Promise<boolean>
  * la borra y crea una nueva (ver `talkKey` en lib/speakers/source.ts). Un
  * itinerario viejo queda apuntando a un id muerto y hay que ignorarlo, no
  * romper la respuesta.
+ *
+ * Los ids de sesión los calcula la página con `getSessions()` + `sessionUuid`
+ * (lib/agenda/match.ts). Acá se valida contra ESA MISMA fuente: si fuera otra
+ * (el temario del repo, o solo el último envío), cualquier temario que no sea
+ * esa lista descartaría todas las charlas y el guardado daría 0.
  */
 async function keepLiveTalks(supabase: Supabase, ids: string[]): Promise<string[]> {
   if (ids.length === 0) return [];
-  // Las sesiones del temario no están en la base: se validan contra el archivo.
-  // Vale tanto el temario del repo como el último que publicó la organización.
-  const published = await getLatestSnapshot(supabase);
-  const known = new Set<string>(TEMARIO_IDS);
-  for (const s of published?.payload.sessions ?? []) known.add(sessionUuid(s.id));
+  const known = new Set<string>((await getSessions()).map((s) => sessionUuid(s.id)));
 
   const fromDb = ids.filter((id) => !known.has(id));
   const live = new Set<string>(ids.filter((id) => known.has(id)));
