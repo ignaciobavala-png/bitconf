@@ -64,7 +64,7 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
     // Más chico que antes (era clamp(56px, 7vw, 96px)) y centrado, a pedido de
     // la organización (15/10/2026): con 96px los logos igualaban el alto del
     // título "SPONSORS" y competían con él.
-    logoH: "clamp(30px, 3.6vw, 50px)",
+    logoH: "clamp(38px, 4.5vw, 62px)",
     // FBI salió de la primera fila a pedido de la organización (29/09): Exness
     // queda solo como Whale. El PNG sigue en /sponsors por si vuelve a otro tier.
     // NEXO sumado el 12/10/2026 (refe de la organización por WhatsApp):
@@ -73,13 +73,16 @@ export const SPONSOR_TIERS: SponsorTier[] = ([
   },
   {
     id: "bitcoin",
-    logoH: "clamp(44px, 5.2vw, 68px)",
+    logoH: "clamp(55px, 6.5vw, 85px)",
     sponsors: [],
   },
   {
     id: "full-node",
     // Más grande que la fila de Node, que va apretada en una línea.
-    logoH: "clamp(30px, 3.6vw, 46px)",
+    // Whale, Bitcoin y Full Node subieron 25% el 27/10/2026 (la org pidió los
+    // tamaños de Content Partners y Partners LABITCONF). Node y Satoshi no: su
+    // alto sale del ancho de pantalla para entrar en una línea.
+    logoH: "clamp(38px, 4.5vw, 57px)",
     // Bull Market sumado el 05/10/2026 (refe de la organización:
     // ~/Descargas/refe.jpeg). Wordmark 6.3:1 con isologo: va más bajo que
     // los otros dos para no pasar del tope de ancho y pesar lo mismo.

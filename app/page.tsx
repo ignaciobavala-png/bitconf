@@ -146,6 +146,9 @@ const tierH = (id: string) => SPONSOR_TIERS.find((t) => t.id === id)!.logoH;
 const MEDIA_LOGO_H = tierH("full-node");
 const FEATURED_MEDIA_LOGO_H = tierH("whale");
 const SPONSOR_FILL = 0.72;
+// Partners LABITCONF conserva la caja que la org aprobó el 27/10 (la de Full
+// Node antes de subirla 25%): no sigue a MEDIA_LOGO_H.
+const PARTNERS_LOGO_H = "clamp(30px, 3.6vw, 46px)";
 
 // Content Partners: los tres comparten esta caja ("mismo tamaño, no muy grande").
 const CONTENT_LOGO_H = "clamp(28px, 3.6vw, 48px)";
@@ -1335,9 +1338,8 @@ export default function HomePage() {
                 items={lane}
                 direction={i === 0 ? "left" : "right"}
                 duration={i === 0 ? 40 : 46}
-                // Misma caja que Media Partners: ningún logo por encima del
-                // mayor sponsor (regla de la org del 20/10).
-                height={MEDIA_LOGO_H}
+                // Caja aprobada por la org (27/10), debajo del mayor sponsor.
+                height={PARTNERS_LOGO_H}
               />
             ))}
           </div>
