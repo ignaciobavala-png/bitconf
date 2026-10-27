@@ -12,6 +12,7 @@ import Footer from "@/components/home/Footer";
 import Cronograma from "@/components/home/Cronograma";
 import TecweekBanner from "@/components/home/TecweekBanner";
 import Reveal from "@/components/home/Reveal";
+import LogoMarquee from "@/components/home/LogoMarquee";
 import Floating from "@/components/home/Floating";
 import PhotoCarousel, { type CarouselSlide } from "@/components/home/PhotoCarousel";
 import { useHeadlineWidth } from "@/components/home/useHeadlineWidth";
@@ -19,6 +20,7 @@ import { useLangStore } from "@/lib/store/lang";
 import { mediaPartnerRows, FEATURED_MEDIA_PARTNERS } from "@/lib/media-partners";
 import { SHOW_AGENDA, SHOW_SPEAKERS } from "@/lib/flags";
 import { SPONSOR_TIERS } from "@/lib/sponsors";
+import { CONTENT_PARTNERS, PARTNER_LANES } from "@/lib/partners";
 import { bgOpacity } from "@/lib/ui/bg";
 
 // Fondo de "Media Partners": reemplaza fondo-iconos.jpg (estático) por
@@ -102,6 +104,8 @@ const T = {
     mediaSubtitle: "Los medios que cuentan LABITCONF.",
     sponsorsTitle: "Sponsors",
     sponsorsSubtitle: "Quienes nos acompañan.",
+    contentTitle: "Content Partners",
+    partnersTitle: "Partners LABITCONF",
   },
   en: {
     heroButton: "Buy Ticket",
@@ -126,6 +130,8 @@ const T = {
     mediaSubtitle: "The media covering LABITCONF.",
     sponsorsTitle: "Sponsors",
     sponsorsSubtitle: "Those who stand with us.",
+    contentTitle: "Content Partners",
+    partnersTitle: "LABITCONF Partners",
   },
 } as const;
 
@@ -140,6 +146,19 @@ const tierH = (id: string) => SPONSOR_TIERS.find((t) => t.id === id)!.logoH;
 const MEDIA_LOGO_H = tierH("full-node");
 const FEATURED_MEDIA_LOGO_H = tierH("whale");
 const SPONSOR_FILL = 0.72;
+
+// Content Partners: los tres comparten esta caja ("mismo tamaño, no muy grande").
+const CONTENT_LOGO_H = "clamp(28px, 3.6vw, 48px)";
+// Títulos de texto, misma tipografía que los PNG (blanco, Neue Machina 900).
+const PARTNER_TITLE_STYLE = {
+  fontFamily: "var(--font-neue-machina), sans-serif",
+  fontWeight: 900,
+  textTransform: "uppercase",
+  color: "#E6EEF2",
+  fontSize: "clamp(28px, 4vw, 52px)",
+  lineHeight: 1.1,
+  textWrap: "balance",
+} as const;
 
 // El reparto en filas no depende de nada del render: se calcula una vez.
 const mediaRows = mediaPartnerRows();
@@ -1263,6 +1282,63 @@ export default function HomePage() {
                   ))}
                 </div>
               </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Content Partners y Partners LABITCONF — debajo de Media Partners
+          (pedido de la organización, 27/10/2026). Content Partners: pegados en
+          pantalla, sin movimiento, los tres en una línea y del mismo tamaño.
+          Partners LABITCONF: carrusel de dos carriles con movimiento, el mismo
+          `LogoMarquee` de /mas (comunidades), en sentidos opuestos.
+          Los títulos van como texto: todavía no hay PNG de la org para estos dos. */}
+      <section
+        id="partners"
+        className="relative flex flex-col px-6 sm:px-10 py-16 sm:py-24 overflow-hidden"
+        style={{ zIndex: 3 }}
+      >
+        <div className="relative w-full">
+          <Reveal>
+            <h2 style={PARTNER_TITLE_STYLE}>{t.contentTitle}</h2>
+          </Reveal>
+          {/* grid de 3 columnas iguales: los tres logos comparten caja y nunca
+              pasan a un segundo renglón, ni en el celular. */}
+          <Reveal delay={0.1} className={TITLE_GAP}>
+            <div className="grid grid-cols-3 items-center gap-4 sm:gap-12 max-w-5xl mx-auto">
+              {CONTENT_PARTNERS.map((logo) => (
+                <div
+                  key={logo.alt}
+                  className="flex items-center justify-center"
+                  style={{ height: CONTENT_LOGO_H }}
+                >
+                  <Image
+                    src={logo.src!}
+                    alt={logo.alt}
+                    width={440}
+                    height={152}
+                    className="h-full w-auto object-contain"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1} className="mt-16 sm:mt-24">
+            <h2 style={PARTNER_TITLE_STYLE}>{t.partnersTitle}</h2>
+          </Reveal>
+          <div className={`${TITLE_GAP} flex flex-col gap-6 sm:gap-8`}>
+            {PARTNER_LANES.map((lane, i) => (
+              <LogoMarquee
+                key={i}
+                items={lane}
+                direction={i === 0 ? "left" : "right"}
+                duration={i === 0 ? 40 : 46}
+                // Misma caja que Media Partners: ningún logo por encima del
+                // mayor sponsor (regla de la org del 20/10).
+                height={MEDIA_LOGO_H}
+              />
             ))}
           </div>
         </div>
