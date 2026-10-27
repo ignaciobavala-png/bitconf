@@ -14,6 +14,7 @@ import {
   stageLabel,
   type Day,
 } from "@/lib/speakers/schedule";
+import AgendaToggle from "@/components/agenda/AgendaToggle";
 import type { AgendaTalk } from "@/lib/speakers/queries";
 
 // Paleta oficial: Brote (en vivo / agregar), Orange 021 C (lo que viene),
@@ -52,7 +53,7 @@ const T = {
     mine: "Mi agenda",
     mineEmpty: "No elegiste charlas para hoy todavía.",
     nudgeTitle: "Armá tu recorrido",
-    nudgeBody: "Tocá + en las charlas que quieras ver y las vas a tener acá, con el aviso de cuánto falta.",
+    nudgeBody: "Tocá la agendita en las charlas que quieras ver y las vas a tener acá, con el aviso de cuánto falta.",
     nudgeCta: "Ver la agenda",
     before: "El evento todavía no empezó",
     beforeSub: "Estas son las primeras charlas.",
@@ -81,7 +82,7 @@ const T = {
     mine: "My agenda",
     mineEmpty: "You haven't picked talks for today yet.",
     nudgeTitle: "Plan your route",
-    nudgeBody: "Tap + on the talks you want to see and they'll show up here with a countdown.",
+    nudgeBody: "Tap the agenda icon on the talks you want to see and they'll show up here with a countdown.",
     nudgeCta: "See the agenda",
     before: "The event hasn't started yet",
     beforeSub: "These are the first talks.",
@@ -161,38 +162,9 @@ function Faces({ talk, size }: { talk: AgendaTalk; size: number }) {
   );
 }
 
-function AddButton({ id, t, big = false }: { id: string; t: TT; big?: boolean }) {
-  const picked = useAgendaStore((s) => s.picked);
-  const hydrated = useAgendaStore((s) => s.hydrated);
-  const toggle = useAgendaStore((s) => s.toggle);
-  const on = hydrated && picked.includes(id);
-  const size = big ? 44 : 38;
-  return (
-    <button
-      type="button"
-      onClick={() => toggle(id)}
-      aria-label={on ? t.remove : t.add}
-      aria-pressed={on}
-      className="grid shrink-0 place-items-center rounded-full transition-colors active:scale-95"
-      style={{
-        width: size,
-        height: size,
-        background: on ? AMBER : "transparent",
-        border: `1.5px solid ${on ? AMBER : "rgba(230,238,242,0.35)"}`,
-        color: on ? "#000" : TEXT,
-      }}
-    >
-      {on ? (
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 10.5l4 4 8-9" />
-        </svg>
-      ) : (
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-          <path d="M10 4v12M4 10h12" />
-        </svg>
-      )}
-    </button>
-  );
+/** El botón de agenda (la agendita con tilde) de siempre, no un "+": ver /agenda. */
+function AddButton({ id, big = false }: { id: string; t?: TT; big?: boolean }) {
+  return <AgendaToggle talkId={id} size={big ? 44 : 38} />;
 }
 
 function LiveDot({ color }: { color: string }) {
