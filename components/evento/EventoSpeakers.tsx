@@ -177,7 +177,7 @@ export default function EventoSpeakers({
           </button>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-7">
+        <div className="mt-6 grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-4">
           {filtered.map((s) => {
             const own = (slots[s.slug] ?? []).filter((x) => (!day || x.day === day) && (!stage || x.stage === stage));
             const first = own[0];
@@ -193,26 +193,26 @@ function Tile({ speaker, slot, lang, showSlot }: { speaker: SpeakerCard; slot?: 
   const sub = [speaker.role, speaker.company].filter(Boolean).join(" · ");
   return (
     <Link href={`/speakers/${speaker.slug}`} className="block min-w-0">
-      <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "1 / 1", background: "rgba(230,238,242,0.05)" }}>
+      <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: "1 / 1", background: "rgba(230,238,242,0.05)" }}>
         {speaker.photoUrl ? (
-          <Image src={speaker.photoUrl} alt={speaker.name} fill sizes="50vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} />
+          <Image src={speaker.photoUrl} alt={speaker.name} fill sizes="33vw" style={{ objectFit: "cover", objectPosition: "center 20%" }} />
         ) : (
           <div className="absolute inset-0 grid place-items-center" style={{ background: "linear-gradient(150deg, #2A2D33 0%, #171616 70%)" }}>
-            <span style={{ ...labelStyle, color: "rgba(230,238,242,0.25)", fontSize: 36 }}>{speaker.name.slice(0, 1)}</span>
+            <span style={{ ...labelStyle, color: "rgba(230,238,242,0.25)", fontSize: 26 }}>{speaker.name.slice(0, 1)}</span>
           </div>
         )}
       </div>
       {/* Alturas fijas: nombre a 2 renglones y cargo a 2, así las filas de la
           grilla arrancan y terminan a la misma altura. */}
-      <p className="mt-3 line-clamp-2 text-[14px] leading-tight" style={{ ...labelStyle, color: TEXT, minHeight: "2.5em" }}>
+      <p className="mt-2 line-clamp-2 text-[11px] leading-tight" style={{ ...labelStyle, color: TEXT, minHeight: "2.4em" }}>
         {speaker.name}
       </p>
-      <p className="mt-1 line-clamp-2 text-[12px] leading-snug" style={{ ...bodyStyle, color: MUTED, minHeight: "2.9em" }}>
+      <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug" style={{ ...bodyStyle, color: MUTED, minHeight: "2.7em" }}>
         {sub}
       </p>
       {showSlot && (
-        <p className="mt-1.5 truncate text-[11px]" style={{ ...labelStyle, color: AMBER, minHeight: "1.2em" }}>
-          {slot ? `${isDay(slot.day) ? DAY_SHORT[slot.day][lang] : slot.day} · ${slot.at}` : ""}
+        <p className="mt-1 truncate text-[10px]" style={{ ...labelStyle, color: AMBER, minHeight: "1.2em" }}>
+          {slot ? `${isDay(slot.day) ? DAY_SHORT[slot.day][lang].split(" ")[0] : slot.day} ${slot.at}` : ""}
         </p>
       )}
     </Link>

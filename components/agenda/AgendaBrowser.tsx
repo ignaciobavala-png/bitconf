@@ -328,9 +328,12 @@ function FilterPills({
 export default function AgendaBrowser({
   talks,
   header,
+  listOnly = false,
 }: {
   talks: AgendaTalk[];
   header?: React.ReactNode;
+  /** Siempre la línea de tiempo, sin grilla ni toggle (app del evento, mobile first). */
+  listOnly?: boolean;
 }) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
@@ -358,7 +361,7 @@ export default function AgendaBrowser({
   const [query, setQuery] = useState("");
 
   const sampleAllowed = useSampleTimesAllowed();
-  const wideScreen = useWideScreen();
+  const wideScreen = useWideScreen() && !listOnly;
   const now = useNow();
 
   // Ficha de charla abierta. `undefined` = el usuario todavía no tocó nada y

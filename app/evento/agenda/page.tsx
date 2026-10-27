@@ -18,7 +18,7 @@ export default async function EventoAgendaPage() {
   // negativo recorta el aire que el banner de AgendaBrowser reserva arriba.
   return (
     <main style={{ zoom: ZOOM, padding: `${32 / ZOOM}px ${16 / ZOOM}px 0`, marginTop: -90 / ZOOM }}>
-      <AgendaBrowser talks={talks} header={<ScreenTitle size={34 / ZOOM}>Agenda</ScreenTitle>} />
+      <AgendaBrowser talks={talks} listOnly header={<ScreenTitle size={34 / ZOOM}>Agenda</ScreenTitle>} />
     </main>
   );
 }
