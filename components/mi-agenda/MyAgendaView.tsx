@@ -54,7 +54,7 @@ function whenOf(k: AgendaTalk): string | null {
   return `${formatMinutes(start)} – ${formatMinutes(start + (k.durationMin ?? 30))}`;
 }
 
-export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
+export default function MyAgendaView({ talks, glass = false }: { talks: AgendaTalk[]; glass?: boolean }) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -191,7 +191,7 @@ export default function MyAgendaView({ talks }: { talks: AgendaTalk[] }) {
       )}
 
       <div className="mt-12">
-        <BackupPanel />
+        <BackupPanel glass={glass} />
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ const T = {
   },
 } as const;
 
-export default function BackupPanel() {
+export default function BackupPanel({ glass = false }: { glass?: boolean }) {
   const lang = useLangStore((s) => s.lang);
   const t = T[lang];
 
@@ -112,7 +112,19 @@ export default function BackupPanel() {
   return (
     <section
       className="rounded-2xl"
-      style={{ border: "1px solid rgba(230,238,242,0.14)", background: "rgba(255,255,255,0.02)", padding: "22px 24px" }}
+      style={{
+        border: "1px solid rgba(230,238,242,0.14)",
+        padding: "22px 24px",
+        // `glass`: vidrio opaco para ponerlo sobre un video (app del evento).
+        ...(glass
+          ? {
+              background: "rgba(14,14,14,0.82)",
+              backdropFilter: "blur(18px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(18px) saturate(1.2)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.45)",
+            }
+          : { background: "rgba(255,255,255,0.02)" }),
+      }}
     >
       <h2 style={{ ...labelStyle, color: "#E6EEF2", fontSize: "clamp(12px, 1.2vw, 15px)" }}>{t.title}</h2>
       <p className="mt-2" style={{ ...bodyStyle, color: "#A5A8B1", fontSize: "clamp(12px, 1.15vw, 14px)", lineHeight: 1.6, maxWidth: "56ch" }}>
