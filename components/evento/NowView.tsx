@@ -102,8 +102,20 @@ type TT = (typeof T)[Lang];
 const startMs = (x: AgendaTalk) => new Date(x.startsAt!).getTime();
 const endMs = (x: AgendaTalk) => startMs(x) + (x.durationMin ?? 30) * 60000;
 
-/** 7 → "7 min", 65 → "1 h 05". */
-function span(min: number): string {
+/** Parte de un tiempo largo: días y horas restantes (las horas pueden ser 0). */
+function dayParts(min: number, lang: Lang): { days: string; hours: string | null } {
+  const d = Math.floor(min / 1440);
+  const h = Math.floor((min % 1440) / 60);
+  const dayWord = lang === "es" ? (d === 1 ? "día" : "días") : d === 1 ? "day" : "days";
+  return { days: `${d} ${dayWord}`, hours: h > 0 ? `${h} h` : null };
+}
+
+/** 7 → "7 min", 65 → "1 h 05", 3800 → "2 días 15 h". Más de un día nunca se dice en horas. */
+function spanL(lang: Lang, min: number): string {
+  if (min >= 1440) {
+    const { days, hours } = dayParts(min, lang);
+    return hours ? `${days} ${hours}` : days;
+  }
   if (min < 60) return `${Math.max(min, 1)} min`;
   const h = Math.floor(min / 60);
   const m = min % 60;
@@ -232,13 +244,19 @@ function HeroCard({
       </div>
 
       <div className="mt-4 flex items-end gap-3">
-        <span className="text-[44px] leading-none" style={{ ...labelStyle, color: accent }}>
-          {live ? t.live : mins <= 0 ? t.now : t.inMin(span(mins))}
-        </span>
+        {(() => {
+          const big = live ? t.live : mins <= 0 ? t.now : t.inMin(spanL(lang, mins));
+          // "EN 2 DÍAS 15 H" no entra a 44px en un celular: baja el cuerpo, no el texto.
+          return (
+            <span className="whitespace-nowrap leading-none" style={{ ...labelStyle, color: accent, fontSize: big.length > 11 ? 30 : 44 }}>
+              {big}
+            </span>
+          );
+        })()}
       </div>
       <p className="mt-1 text-sm" style={{ ...bodyStyle, color: MUTED }}>
         {clockOf(talk.startsAt!)} · {talk.durationMin ?? 30} {t.min}
-        {live && ` · ${t.endsIn(span(Math.max(1, Math.ceil((endMs(talk) - now) / 60000))))}`}
+        {live && ` · ${t.endsIn(spanL(lang, Math.max(1, Math.ceil((endMs(talk) - now) / 60000))))}`}
       </p>
 
       {live && (
@@ -275,7 +293,21 @@ function SoonRow({ talk, now, t, lang }: { talk: AgendaTalk; now: number; t: TT;
     <div className="flex items-center gap-3 rounded-2xl p-3.5" style={{ background: CARD, border: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="w-[72px] shrink-0 text-center">
         <div className="whitespace-nowrap text-[15px] leading-none" style={{ ...labelStyle, color: urgent ? ORANGE : TEXT }}>
-          {mins === 0 ? t.now : span(mins)}
+          {mins === 0 ? (
+            t.now
+          ) : mins >= 1440 ? (
+            <>
+              {dayParts(mins, lang).days}
+              {dayParts(mins, lang).hours && (
+                <>
+                  <br />
+                  {dayParts(mins, lang).hours}
+                </>
+              )}
+            </>
+          ) : (
+            spanL(lang, mins)
+          )}
         </div>
         <div className="mt-1 text-[11px]" style={{ ...bodyStyle, color: MUTED }}>
           {clockOf(talk.startsAt!)}
@@ -327,7 +359,7 @@ function StageBlock({
         <div className="px-4 pt-3 pb-4">
           <div className="flex items-center gap-2 text-[11px]" style={{ ...labelStyle, color: GREEN }}>
             <LiveDot color={GREEN} />
-            {t.live} · {t.endsIn(span(Math.max(1, Math.ceil((endMs(live) - now) / 60000))))}
+            {t.live} · {t.endsIn(spanL(lang, Math.max(1, Math.ceil((endMs(live) - now) / 60000))))}
           </div>
           <div className="mt-2 flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -371,7 +403,7 @@ function StageBlock({
               {clockOf(next.startsAt!)}
             </div>
             <div className="mt-1 text-[11px]" style={{ ...bodyStyle, color: MUTED }}>
-              {nextMins === 0 ? t.now : t.inMin(span(nextMins))}
+              {nextMins === 0 ? t.now : t.inMin(spanL(lang, nextMins))}
             </div>
           </div>
           <div className="min-w-0 flex-1">
