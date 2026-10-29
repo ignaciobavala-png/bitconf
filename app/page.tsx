@@ -344,6 +344,12 @@ const SE_PARTE_CARDS = {
       cta: "Descargá",
       href: SPONSOR_DECK_URL,
     },
+    {
+      title: "Media Partners",
+      description: "¿Querés ser parte de la cobertura oficial de LABITCONF? Postulate como Media Partner y accedé a beneficios exclusivos para medios aliados.",
+      cta: "Postulate",
+      href: "https://forms.gle/fuLpfnE6puDcv1tx7",
+    },
   ],
   en: [
     {
@@ -351,6 +357,12 @@ const SE_PARTE_CARDS = {
       description: "Check out the sponsor proposals and be part of the most relevant Bitcoin and Blockchain event in LATAM.",
       cta: "Download",
       href: SPONSOR_DECK_URL,
+    },
+    {
+      title: "Media Partners",
+      description: "Want to be part of LABITCONF's official coverage? Apply as a Media Partner and get exclusive benefits for allied media.",
+      cta: "Apply",
+      href: "https://forms.gle/fuLpfnE6puDcv1tx7",
     },
   ],
 } as const;
@@ -1372,9 +1384,9 @@ export default function HomePage() {
             />
           </Reveal>
 
-          {/* Una sola card (Sponsor Deck): la de Media Partners se sacó a pedido
-              de la org el 29/10. Columna única centrada. */}
-          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 gap-6 sm:gap-8 max-w-sm items-stretch`}>
+          {/* 2 cards: 1 columna en mobile y fila de 2 desde tablet —
+              sin quedar nunca una sola en una segunda fila. */}
+          <div className={`${TITLE_GAP} mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-sm md:max-w-3xl items-stretch`}>
             {seParteCards.map((card, i) => {
               const accent = SE_PARTE_ACCENTS[i] ?? SE_PARTE_ACCENTS[0];
               const ink = accent.dark ? "#E6EEF2" : "#000";
