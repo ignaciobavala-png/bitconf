@@ -1,6 +1,8 @@
 import { streamText, convertToModelMessages, stepCountIs, type UIMessage } from "ai";
 import { groq } from "@ai-sdk/groq";
+import { createHash } from "crypto";
 import { agendaOverview, qubitTools } from "@/lib/qubit/knowledge";
+import { createServiceClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -104,8 +106,57 @@ Reglas:
 - Escribí en texto plano, sin markdown: nada de asteriscos para negrita ni de almohadillas para títulos. Si necesitás enumerar, poné cada ítem en su propia línea empezando con un guion.
 - No presentes a LABITCONF como una promesa de rentabilidad ni como recomendación para comprar activos: es un evento de educación, debate, conexiones y experiencias.`;
 
+// Topes para no agotar la cuota de Groq ni las invocaciones del plan Hobby.
+const MAX_MESSAGES = 20; // mensajes en el historial que manda el cliente
+const MAX_CHARS = 1000; // largo del último mensaje del usuario
+const MAX_PER_WINDOW = 20; // preguntas por IP en la ventana
+const WINDOW_MINUTES = 10;
+
+function tooMany(status: number, error: string) {
+  return Response.json({ error }, { status });
+}
+
+async function rateLimited(req: Request): Promise<boolean> {
+  try {
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
+    // Sufijo propio: el contador no se mezcla con el de razones ni Mi Agenda.
+    const ipHash = createHash("sha256")
+      .update(ip + (process.env.RATE_LIMIT_SALT ?? "dev-salt") + ":qubit")
+      .digest("hex");
+    const supabase = createServiceClient();
+    const since = new Date(Date.now() - WINDOW_MINUTES * 60_000).toISOString();
+    const { count } = await supabase
+      .from("rate_limit")
+      .select("*", { count: "exact", head: true })
+      .eq("ip_hash", ipHash)
+      .gte("window_start", since);
+    if ((count ?? 0) >= MAX_PER_WINDOW) return true;
+    await supabase.from("rate_limit").insert({ ip_hash: ipHash });
+    return false;
+  } catch {
+    // Si la base falla, Qubit sigue respondiendo: mejor sin límite que caído.
+    return false;
+  }
+}
+
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const body = await req.json().catch(() => null);
+  const messages: UIMessage[] | undefined = body?.messages;
+  if (!Array.isArray(messages) || messages.length === 0 || messages.length > MAX_MESSAGES) {
+    return tooMany(400, "Conversación inválida o demasiado larga.");
+  }
+  const last = messages[messages.length - 1];
+  const lastLen = (last.parts ?? []).reduce(
+    (n, p) => n + (p.type === "text" ? p.text.length : 0),
+    0,
+  );
+  if (lastLen > MAX_CHARS) return tooMany(400, "Mensaje demasiado largo.");
+  if (await rateLimited(req)) {
+    return tooMany(429, "Muchas preguntas seguidas. Probá de nuevo en unos minutos.");
+  }
   const modelMessages = await convertToModelMessages(messages);
 
   const result = streamText({

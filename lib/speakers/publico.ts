@@ -13,7 +13,7 @@ export const SPEAKERS_SCHEMA = "labitconf.speakers.v1";
 
 const DEFAULT_URL =
   "https://firestore.googleapis.com/v1/projects/labitconf-2026/databases/(default)/documents/publico/speakers";
-const REVALIDATE_SECONDS = 300;
+const REVALIDATE_SECONDS = 60 * 60 * 6; // 6 h: terminado el evento el feed casi no cambia (plan Hobby)
 
 export type PublicSpeaker = {
   /** "sp" + nº de ficha. Estable aunque cambie el nombre. No es el id de un escenario (s1..s7). */

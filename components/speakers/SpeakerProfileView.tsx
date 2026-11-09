@@ -103,6 +103,7 @@ export default function SpeakerProfileView({
             {speaker.photoUrl ? (
               <Image
                 src={speaker.photoUrl}
+                unoptimized
                 alt={speaker.name}
                 fill
                 sizes="260px"

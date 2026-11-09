@@ -59,7 +59,7 @@ export async function getLatestSnapshot(
  *
  * Una respuesta que no valida NO se usa: se sigue con lo anterior.
  */
-const PULL_REVALIDATE_SECONDS = 300;
+const PULL_REVALIDATE_SECONDS = 60 * 60 * 6; // 6 h: terminado el evento el feed casi no cambia (plan Hobby)
 
 /**
  * La API REST de Firestore no devuelve el documento tal cual: lo envuelve en

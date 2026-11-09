@@ -43,7 +43,13 @@ interface DBReason {
   is_static: boolean;
 }
 
-export default function WatermarkLayer() {
+/**
+ * `live` abre el canal de Realtime para que las frases nuevas aparezcan solas.
+ * Va apagado por defecto: el Footer monta esta capa en TODAS las páginas y un
+ * websocket por visitante agota las 200 conexiones concurrentes del plan Free
+ * de Supabase. Sin `live` alcanza con la lectura inicial.
+ */
+export default function WatermarkLayer({ live = false }: { live?: boolean } = {}) {
   const [approved, setApproved] = useState<DBReason[]>([]);
   const [newIds, setNewIds] = useState<Set<string>>(new Set());
 
@@ -58,6 +64,8 @@ export default function WatermarkLayer() {
       .then(({ data }) => {
         if (data) setApproved(data);
       });
+
+    if (!live) return;
 
     const channel = supabase
       .channel("approved-reasons")
@@ -90,7 +98,7 @@ export default function WatermarkLayer() {
       .subscribe();
 
     return () => { getSupabaseClient().removeChannel(channel); };
-  }, []);
+  }, [live]);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">

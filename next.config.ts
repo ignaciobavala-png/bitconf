@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
     // estiran y no aguantan una segunda pasada de compresión; 75 sigue siendo
     // el default del resto del sitio.
     qualities: [75, 90],
+    // Plan Hobby de Vercel: 5.000 transformaciones/mes con corte duro. Cada
+    // combinación (imagen, ancho, calidad) cuenta una vez, así que se achica la
+    // lista de anchos y se alarga el caché (default: 4 h) para no regenerar.
+    minimumCacheTTL: 60 * 60 * 24 * 31,
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [48, 96, 256, 384],
     // Fotos de galería servidas desde el bucket público de Supabase Storage.
     remotePatterns: [
       {
